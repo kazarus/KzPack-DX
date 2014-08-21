@@ -34,3 +34,19 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+#############
+## delphi
+#############
+*.~pas
+*.~dfm
+*.~dcu
+*.~ddp
+*.~dpr
+*.dcu
+*.exe
+*.ddp
+
+*.~1~
+*.~2~
+*.~3~
