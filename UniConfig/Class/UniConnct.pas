@@ -178,7 +178,11 @@ begin
      //UniConnectionA.SpecificOptions.Clear;
       Result.SpecificOptions.Add('Oracle.Direct=True');
     end;  
-  end;   
+  end else
+  if Result.ProviderName=CONST_PROVIDER_SQLITE then
+  begin
+    Result.SpecificOptions.Add('SQLite.ForceCreateDatabase=True');
+  end;
 
   try
     Result.Connected :=True;
@@ -225,8 +229,9 @@ begin
   
   Result:=TUniConnection.Create(nil);
   Result.LoginPrompt :=False;
-  Result.ProviderName:='SQLite';
+  Result.ProviderName:=CONST_PROVIDER_SQLITE;
   Result.Database    :=ExtractFilePath(ParamStr(0))+CONST_DB_UNICONFIG;
+  Result.SpecificOptions.Add('SQLite.ForceCreateDatabase=True');
   Result.Connected   :=True;
 end;
 
@@ -281,7 +286,11 @@ begin
      //Result.SpecificOptions.Clear;
       Result.SpecificOptions.Add('Oracle.Direct=True');
     end;  
-  end;   
+  end else
+  if Result.ProviderName=CONST_PROVIDER_SQLITE then
+  begin
+    Result.SpecificOptions.Add('SQLite.ForceCreateDatabase=True');
+  end;
   
   try
     Result.Connected :=True;

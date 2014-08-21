@@ -188,7 +188,9 @@ begin
 
   UniConnection.ProviderName:=CONST_PROVIDER_SQLITE;
   UniConnection.Database    :=FilPath;
-  UniConnection.Connected   :=True;    
+  UniConnection.SpecificOptions.Add('SQLite.ForceCreateDatabase=True');
+  UniConnection.Connected   :=True;
+
 
   if not ExistTable('TBL_UNICONFIG',UniConnection) then
   begin
