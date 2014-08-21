@@ -1,0 +1,23 @@
+object FormView: TFormView
+  Left = 330
+  Top = 233
+  AutoScroll = False
+  Caption = 'FormView'
+  ClientHeight = 442
+  ClientWidth = 684
+  Color = clBtnFace
+  Font.Charset = GB2312_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = #23435#20307
+  Font.Style = []
+  FormStyle = fsMDIChild
+  OldCreateOrder = False
+  Position = poDefault
+  Visible = True
+  WindowState = wsMaximized
+  OnClose = FormClose
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+end

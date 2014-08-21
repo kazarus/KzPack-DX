@@ -1,0 +1,20 @@
+object DialogView: TDialogView
+  Left = 259
+  Top = 137
+  BorderStyle = bsDialog
+  Caption = 'DialogView'
+  ClientHeight = 442
+  ClientWidth = 684
+  Color = clBtnFace
+  Font.Charset = GB2312_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = #23435#20307
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+end
