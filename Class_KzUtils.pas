@@ -48,11 +48,13 @@ type
     class function  jsencode(const value: Widestring): Widestring;
     class function  jsdecode(const value: Widestring): Widestring;
 
-    class procedure TryFreeAndNil(AObject:TObject);
-    class procedure JustCleanList(AObject:TObject);
+    class procedure TryFreeAndNil(var AObject);
+    class procedure JustCleanList(var AObject);
 
     class function  StrToDateX(Value:string):Integer;
     class function  IntToDateX(Value:Integer):TDateTime;
+    class function  DateToInt(Value:TDateTime):Integer;
+    
     class function  DateIsNull(ADate:TDateTime):Boolean;
     class function  NumbInRect(ANumb:Integer;APrev,ANext:Integer):Boolean;overload;
     class function  NumbInRect(ANumb:Extended;APrev,ANext:Extended):Boolean;overload;
@@ -241,13 +243,13 @@ begin
   end;
 end;
 
-class procedure TKzUtils.JustCleanList(AObject:TObject);
+class procedure TKzUtils.JustCleanList(var AObject);
 var
   I:Integer;
 begin
-  if AObject=nil then Exit;
+  if TObject(AObject)=nil then Exit;
 
-  if (AObject.ClassType = TStringList) or (AObject.InheritsFrom(TStringList)) then
+  if (TObject(AObject).ClassType = TStringList) or (TObject(AObject).InheritsFrom(TStringList)) then
   begin
     for I:=0 to TStringList(AObject).Count -1 do
     begin
@@ -260,7 +262,7 @@ begin
     TStringList(AObject).Clear;
     TStringList(AObject).Sorted:=False;
   end else
-  if (AObject.ClassType = TList) or (AObject.InheritsFrom(TList)) then
+  if (TObject(AObject).ClassType = TList) or (TObject(AObject).InheritsFrom(TList)) then
   begin
     for I:=0 to TList(AObject).Count-1 do
     begin
@@ -485,13 +487,13 @@ begin
   Result:=DupeString(AText,ALength-(Length(IntToStr(AValue))))+IntToStr(AValue);
 end;
 
-class procedure TKzUtils.TryFreeAndNil(AObject: TObject);
+class procedure TKzUtils.TryFreeAndNil(var AObject);
 var
   I:Integer;
 begin
-  if AObject=nil then Exit;
+  if TObject(AObject)=nil then Exit;
 
-  if (AObject.ClassType = TStringList) or (AObject.InheritsFrom(TStringList)) then
+  if (TObject(AObject).ClassType = TStringList) or (TObject(AObject).InheritsFrom(TStringList)) then
   begin
     for I:=0 to TStringList(AObject).Count -1 do
     begin
@@ -504,7 +506,7 @@ begin
     TStringList(AObject).Clear;
     FreeAndNil(AObject);
   end else
-  if (AObject.ClassType = TList) or (AObject.InheritsFrom(TList)) then
+  if (TObject(AObject).ClassType = TList) or (TObject(AObject).InheritsFrom(TList)) then
   begin
     for I:=0 to TList(AObject).Count-1 do
     begin
@@ -624,6 +626,10 @@ begin
     DateSeparator:='-';
     Result:=StrToDate(TempB);
   except
+    on E:Exception do
+    begin
+      raise Exception.Create(E.Message);
+    end;  
   end;
 end;
 
@@ -836,6 +842,11 @@ var
 begin
   SysUtils.CreateGUID(GUID);
   Result:=GUIDToString(GUID);
+end;
+
+class function TKzUtils.DateToInt(Value: TDateTime): Integer;
+begin
+  Result:=StrToIntDef(FormatDateTime('YYYYMMDD',Value),18991230);
 end;
 
 end.
