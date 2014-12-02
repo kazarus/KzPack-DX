@@ -85,11 +85,13 @@ type
     FontColor:Integer;         //[0..55].cell.style.font.fontcolor
     BackColor:Integer;         //[0..55].cell.style.brush.backgroundcolor
   public
-    function GetxlsDataFormat:Word;
+    function GetxlsDataFormat:Word;overload;
   public
     constructor Create;overload;
     constructor Create(ADataType:TCxDataType);overload;
     constructor Create(ACellStyl:TCxCellStyl);overload;
+  public
+    class function GetxlsDataFormat(ADataType:TCxDataType):Word;overload;
   end;
 
   TKzGridStyl=class(TObject)
@@ -123,11 +125,11 @@ type
   TKzExcel=class(TObject)
   private
     FCxExcel: TcxSpreadSheetBook;
-    StrsRows: TStringList;       //strs of interger
-    StrsCols: TStringList;       //strs of interger;
+    ListRows: TStringList;       //*list of interger
+    ListCols: TStringList;       //*list of interger;
+    ListGrid: TStringList;       //*list of &tadvstringgrid.multi.
   public
-    ActvGrid: TAdvStringGrid;    //TAdvStringGrid.single.
-    StrsGrid: TStringList;       //strs of TAdvStringGrid.multi.
+    ActvGrid: TAdvStringGrid;    //tadvstringgrid.single.
     FileName: string;            //文件名称
     ShetName: string;            //Sheet标签
 
@@ -160,6 +162,7 @@ type
     function  GetValidSheetName:string;
     function  GetValidSheetIdex:string;//Sheet1,Sheet2...
   public
+    procedure PushGrid(AGridStyl:TKzGridStyl);
     procedure SetValidArea(AColStart,AColEnd,ARowStart,ARowEnd:Integer);overload;
     procedure Initialize;
 
@@ -181,9 +184,13 @@ type
 
     //set cxSSheet
     class procedure SetACellText(ASheetBook: TcxSpreadSheetBook; ACol, ARow: Integer; AText: string;
-         AFontName: TFontName='宋体'; AFontSize: Integer=10;AAlign: TcxHorzTextAlign=haCENTER);
+         AFontName: TFontName='宋体'; AFontSize: Integer=10;AAlign: TcxHorzTextAlign=haCENTER;ADataType:TCxDataType=cxdtText);
     class procedure SetACellStyle(ASheetBook: TcxSpreadSheetBook; ACol, ARow: Integer; bBorder: array of Integer; ASheet: TcxSSBookSheet=nil);
-    
+
+    //rename it 
+    class procedure SetCellText(ASheetBook: TcxSpreadSheetBook; ACol, ARow: Integer; AText: string;
+         AFontName: TFontName='宋体'; AFontSize: Integer=10;AAlign: TcxHorzTextAlign=haCENTER;ADataType:TCxDataType=cxdtText);
+    class procedure SetCellStyl(ASheetBook: TcxSpreadSheetBook; ACol, ARow: Integer; bBorder: array of Integer; ASheet: TcxSSBookSheet=nil);    
   end;
 
   TFkExcel=class(TKzExcel) //分栏导出.Fuck.Excel.
@@ -207,7 +214,6 @@ type
   public
     function TruncEx(AValue,AAxis:Integer):Integer;  //这个函数是那个啥.无论小数点,都取整.
     function GetRowx(AValue,AAxis:Integer):Integer;
-
   public
     procedure Execute;
   public
@@ -229,6 +235,7 @@ uses
 constructor TKzExcel.Create;
 begin
   ActvGrid:=nil;
+  ListGrid:=nil;
   
   ColTotal:=-1;
   ColStart:=-1;
@@ -251,25 +258,11 @@ end;
 
 destructor TKzExcel.Destroy;
 begin
-  if FCxExcel<>nil then
-  begin
-    FreeAndNil(FCxExcel);
-  end;
-
-  if StrsRows<>nil then
-  begin
-    FreeAndNil(StrsRows);
-  end;
-  
-  if StrsCols<>nil then
-  begin
-    FreeAndNil(StrsCols);
-  end;  
-  
-  if DefaultCellStyl<>nil then
-  begin
-    FreeAndNil(DefaultCellStyl);
-  end;  
+  if FCxExcel<>nil then FreeAndNil(FCxExcel);
+  if ListRows<>nil then FreeAndNil(ListRows);
+  if ListCols<>nil then FreeAndNil(ListCols);
+  if DefaultCellStyl<>nil then  FreeAndNil(DefaultCellStyl);
+  if ListGrid<>nil then TKzUtils.TryFreeAndNil(ListGrid);
 end;
 
 procedure TKzExcel.Execute;
@@ -325,10 +318,12 @@ begin
 
     if FileExists(PathA) then
     begin
-      TempA:='文件名己经存在.请选择导出方式:覆盖或者追加标签页.'+#13
+      TempA:='文件名[%S]己存在.'+#13
+            +'请选择导出方式:覆盖或者追加标签页.'+#13
             +'选择[是]:覆盖文件.'+#13
             +'选择[否]:追加标签页.'+#13
             +'选择[取消]:取消导出.';
+      TempA:=Format(TempA,[PathA]);
             
       NumbA:=Application.MessageBox(PChar(TempA), '提示', MB_YESNOCANCEL +MB_ICONINFORMATION);
 
@@ -486,7 +481,7 @@ begin
 
           if Assigned(OnKzExcelGetCellStyl) then
           begin
-            OnKzExcelGetCellStyl(FCxExcel,RowxA,ColxA,StylA);
+            OnKzExcelGetCellStyl(Self,RowxA,ColxA,StylA);
           end;
 
           CellA.Style.Font.Name:=StylA.FontName;
@@ -760,7 +755,7 @@ begin
     Exit;
   end;  
 
-  if (StrsGrid=nil) or (StrsGrid.Count=0) then Exit;
+  if (ListGrid=nil) or (ListGrid.Count=0) then Exit;
 
   with FCxExcel do
   begin
@@ -774,12 +769,12 @@ begin
     end;
 
     FCxExcel.ClearAll;
-    for I:= 0 to StrsGrid.Count-1 do
+    for I:= 0 to ListGrid.Count-1 do
     begin
       AddSheetPage(GetValidSheetName);
-      FCxExcel.Pages[FCxExcel.PageCount-1].Caption:=TKzGridStyl(StrsGrid.Objects[I]).LablName;
+      FCxExcel.Pages[FCxExcel.PageCount-1].Caption:=TKzGridStyl(ListGrid.Objects[I]).LablName;
 
-      ActvGrid :=TKzGridStyl(StrsGrid.Objects[I]).ActvGrid;
+      ActvGrid :=TKzGridStyl(ListGrid.Objects[I]).ActvGrid;
       ActivePage:=FCxExcel.PageCount-1;
 
       with ActvGrid do
@@ -1049,10 +1044,12 @@ begin
 
     if FileExists(PathA) then
     begin
-      TempA:='文件名己经存在.请选择导出方式:覆盖或者追加标签页.'+#13
+      TempA:='文件名[%S]己存在.'+#13
+            +'请选择导出方式:覆盖或者追加标签页.'+#13
             +'选择[是]:覆盖文件.'+#13
             +'选择[否]:追加标签页.'+#13
             +'选择[取消]:取消导出.';
+      TempA:=Format(TempA,[PathA]);
             
       NumbA:=Application.MessageBox(PChar(TempA), '提示', MB_YESNOCANCEL +MB_ICONINFORMATION);
 
@@ -1099,9 +1096,9 @@ begin
       SetValidRows;
 
       //for ColxA := ColStart to ColEnd do
-      for I:=0 to StrsCols.Count-1 do 
+      for I:=0 to ListCols.Count-1 do 
       begin
-        ColxA:=StrToInt(StrsCols.Strings[I]);
+        ColxA:=StrToInt(ListCols.Strings[I]);
 
         //YXC_2012_02_20_15_48_10
         if (not IncludeHideCols) then
@@ -1130,10 +1127,10 @@ begin
         //YXC_2012_11_08_16_59_50_>        
 
         RowxB:=0;
-        for M:=0 to StrsRows.Count-1 do
+        for M:=0 to ListRows.Count-1 do
         //for RowxA := RowStart to RowEnd do
         begin
-          RowxA:=StrToInt(StrsRows.Strings[M]);
+          RowxA:=StrToInt(ListRows.Strings[M]);
 
           //YXC_2012_05_17_08_26_45_<
           if ShowCellsBorder then
@@ -1228,7 +1225,7 @@ begin
 
           if Assigned(OnKzExcelGetCellStyl) then
           begin
-            OnKzExcelGetCellStyl(FCxExcel,RowxA,ColxA,StylA);
+            OnKzExcelGetCellStyl(Self,RowxA,ColxA,StylA);
           end;
 
           CellA.Style.Font.Name:=StylA.FontName;
@@ -1304,12 +1301,12 @@ var
 begin
   Valid:=True;
 
-  if StrsRows=nil then
+  if ListRows=nil then
   begin
-    StrsRows:=TStringList.Create;
+    ListRows:=TStringList.Create;
   end else
   begin
-    StrsRows.Clear;
+    ListRows.Clear;
   end;    
 
   with ActvGrid do
@@ -1324,7 +1321,7 @@ begin
 
       if Valid then
       begin
-        StrsRows.Add(IntToStr(I));
+        ListRows.Add(IntToStr(I));
       end;  
     end;
   end;
@@ -1332,7 +1329,7 @@ end;
 
 function TKzExcel.ExeNeglAll:Boolean;
 var
-  I,M:Integer;
+  I,M,N:Integer;
   ColxA:Integer;
   RowxA:Integer;
   ColxB:Integer;        //范围导出时发生的列偏移
@@ -1379,7 +1376,7 @@ begin
     Exit;
   end;  
 
-  if (StrsGrid=nil) or (StrsGrid.Count=0) then Exit;
+  if (ListGrid=nil) or (ListGrid.Count=0) then Exit;
 
   with FCxExcel do
   begin
@@ -1393,12 +1390,12 @@ begin
     end;
 
     FCxExcel.ClearAll;
-    for I:= 0 to StrsGrid.Count-1 do
+    for I:= 0 to ListGrid.Count-1 do
     begin
       AddSheetPage(GetValidSheetName);
-      FCxExcel.Pages[FCxExcel.PageCount-1].Caption:=TKzGridStyl(StrsGrid.Objects[I]).LablName;
+      FCxExcel.Pages[FCxExcel.PageCount-1].Caption:=TKzGridStyl(ListGrid.Objects[I]).LablName;
 
-      ActvGrid :=TKzGridStyl(StrsGrid.Objects[I]).ActvGrid;
+      ActvGrid :=TKzGridStyl(ListGrid.Objects[I]).ActvGrid;
       ActivePage:=FCxExcel.PageCount-1;
 
       with ActvGrid do
@@ -1419,10 +1416,14 @@ begin
           ColxB:=0;
           ExcursionA:=0;
 
+          SetValidCols;
           SetValidRows;
 
-          for ColxA := ColStart to ColEnd do
+
+          //for ColxA := ColStart to ColEnd do
+          for N:=0 to ListCols.Count-1 do
           begin
+            ColxA:=StrToInt(ListCols.Strings[N]);
             //YXC_2012_02_20_15_48_10
             if (not IncludeHideCols) then
             begin
@@ -1451,9 +1452,9 @@ begin
 
             RowxB:=0;
             //for RowxA := RowStart to RowEnd do
-            for M:=0 to StrsRows.Count-1 do
+            for M:=0 to ListRows.Count-1 do
             begin
-              RowxA:=StrToInt(StrsRows.Strings[M]);
+              RowxA:=StrToInt(ListRows.Strings[M]);
 
               //YXC_2012_05_17_08_26_45_<
               if ShowCellsBorder then
@@ -1626,12 +1627,12 @@ var
 begin
   Valid:=True;
 
-  if StrsCols=nil then
+  if ListCols=nil then
   begin
-    StrsCols:=TStringList.Create;
+    ListCols:=TStringList.Create;
   end else
   begin
-    StrsCols.Clear;
+    ListCols.Clear;
   end;    
 
   with ActvGrid do
@@ -1641,12 +1642,12 @@ begin
       Valid:=True;
       if Assigned(OnKzExcelGridValidCols) then
       begin
-        OnKzExcelGridValidCols(FCxExcel,ActvGrid,I,Valid);
+        OnKzExcelGridValidCols(Self,ActvGrid,I,Valid);
       end;
 
       if Valid then
       begin
-        StrsCols.Add(IntToStr(I));
+        ListCols.Add(IntToStr(I));
       end;  
     end;
   end;
@@ -1799,6 +1800,29 @@ begin
   end;  
 end;
 
+class procedure TKzExcel.SetCellStyl(ASheetBook: TcxSpreadSheetBook; ACol,
+  ARow: Integer; bBorder: array of Integer; ASheet: TcxSSBookSheet);
+begin
+  TKzExcel.SetACellStyle(ASheetBook,ACol,ARow,bBorder,ASheet);
+end;
+
+class procedure TKzExcel.SetCellText(ASheetBook: TcxSpreadSheetBook; ACol,
+  ARow: Integer; AText: string; AFontName: TFontName; AFontSize: Integer;
+  AAlign: TcxHorzTextAlign; ADataType: TCxDataType);
+begin
+  TKzExcel.SetACellText(ASheetBook,ACol,ARow,AText,AFontName,AFontSize,AAlign,ADataType);
+end;
+
+procedure TKzExcel.PushGrid(AGridStyl: TKzGridStyl);
+begin
+  if ListGrid=nil then
+  begin
+    ListGrid:=TStringList.Create;
+  end;
+
+  ListGrid.AddObject('',AGridStyl);
+end;
+
 { TCxCellStyl }
 
 constructor TCxCellStyl.Create;
@@ -1865,6 +1889,22 @@ begin
     FreeAndNil(KzExcel);
   end;
 end;}
+
+class function TCxCellStyl.GetxlsDataFormat(ADataType: TCxDataType): Word;
+begin
+  Result:=$00;
+
+  case ADataType of
+    cxdtText :Result:=$00;
+    cxdtNumb :Result:=$01;
+    cxdtDoub :Result:=$04;
+    cxdtDate :Result:=$0E;
+    cxdtLongText  :Result:=$22;//老版本.TcxSpreadSheetBook.长字段类型
+    cxdtLongTextEx:Result:=$23;//新版本.TcxSpreadSheetBook.长字段类型
+    cxdtDoubEx    :Result:=$03;//没有角分的数据值类型.
+    cxdtNumbEx    :Result:=$02;//    
+  end;
+end;
 
 { TFkExcel }
 
@@ -2205,7 +2245,7 @@ begin
 end;
 
 class procedure TKzExcel.SetACellText(ASheetBook: TcxSpreadSheetBook; ACol,
-  ARow: Integer; AText: string; AFontName: TFontName; AFontSize: Integer;AAlign: TcxHorzTextAlign);
+  ARow: Integer; AText: string; AFontName: TFontName; AFontSize: Integer;AAlign: TcxHorzTextAlign;ADataType:TCxDataType);
 var
   ACell: TcxSSCellObject;
 begin
@@ -2215,9 +2255,12 @@ begin
     ACell.Text:= AText;
     ACell.Style.Font.Size:=AFontSize;
     if AFontSize>15 then
+    begin
       ACell.Style.Font.Style:= [fsBold];
+    end;
     ACell.Style.Font.Name:=AFontName;
     ACell.Style.HorzTextAlign:=AAlign;
+    ACell.Style.Format   :=TCxCellStyl.GetxlsDataFormat(ADataType);
   finally
     ACell.Free;
     ASheetBook.EndUpdate;
