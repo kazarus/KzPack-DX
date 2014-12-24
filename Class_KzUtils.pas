@@ -623,7 +623,8 @@ begin
   TempB:=Format('%s-%s-%s',[Copy(TempA,1,4),Copy(TempA,5,2),Copy(TempA,7,2)]);
 
   try
-    DateSeparator:='-';
+
+    //DateSeparator:='-';
     Result:=StrToDate(TempB);
   except
     on E:Exception do
