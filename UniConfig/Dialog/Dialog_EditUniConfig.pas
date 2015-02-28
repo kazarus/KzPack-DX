@@ -88,6 +88,7 @@ begin
     DialogEditUniConfig.FEditMode:=AEditMode;
     DialogEditUniConfig.FRealCnfg:=ACnfg;
     DialogEditUniConfig.FConnectionMark:=AConnectionMark;
+    DialogEditUniConfig.BorderStyle:=bsSizeable;
     Result:=DialogEditUniConfig.ShowModal;
   finally
     FreeAndNil(DialogEditUniConfig);

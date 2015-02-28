@@ -235,12 +235,14 @@ var
   TempA:string;
 begin
   Result:=False;
+  Result:=Pos(APart,ALong)=1;
+  {Result:=False;
   NumbA:=Length(APart);
   TempA:=Copy(ALong,1,NumbA);
   if TempA=APart then
   begin
     Result:=True;
-  end;
+  end;}
 end;
 
 class procedure TKzUtils.JustCleanList(var AObject);
@@ -273,6 +275,10 @@ begin
       end;  
     end;
     TList(AObject).Clear;
+  end else
+  if (TObject(AObject).ClassType = TCollection) then 
+  begin
+    TCollection(AObject).Clear;
   end;
 end;
 
@@ -623,7 +629,6 @@ begin
   TempB:=Format('%s-%s-%s',[Copy(TempA,1,4),Copy(TempA,5,2),Copy(TempA,7,2)]);
 
   try
-
     //DateSeparator:='-';
     Result:=StrToDate(TempB);
   except

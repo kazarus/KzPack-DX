@@ -12,8 +12,10 @@ type
     Memo_1: TRzMemo;
     Btnx_Mrok: TButton;
     Btnx_Quit: TButton;
+    Btnx_Expt: TButton;
     procedure Btnx_QuitClick(Sender: TObject);
     procedure Btnx_MrokClick(Sender: TObject);
+    procedure Btnx_ExptClick(Sender: TObject);
   private
     FTitl:string;
     FMemo:string;
@@ -26,6 +28,7 @@ type
     procedure SetComboItems;override;
     procedure TryFreeAndNil;override;  
   public
+    procedure ExptText;
   end;
 
 var
@@ -72,6 +75,7 @@ begin
 
   Btnx_Mrok.Caption:='确定';
   Btnx_Quit.Caption:='取消';
+  Btnx_Expt.Caption:='导出';
 
   if Trim(FMrokLabl)<>'' then
   begin
@@ -102,6 +106,33 @@ procedure TDialogViewMemo.TryFreeAndNil;
 begin
   inherited;
 
+end;
+
+procedure TDialogViewMemo.ExptText;
+var
+  FN:string;
+  SD:TSaveDialog;
+begin
+  try
+    SD:=TSaveDialog.Create(nil);
+    SD.Filter:='*.txt';
+    if SD.Execute then
+    begin
+      FN:=SD.FileName;
+      if ExtractFileExt(FN)='' then
+      begin
+        FN:=Format('%S.txt',[FN]);
+      end;
+      Memo_1.Lines.SaveToFile(FN);    
+    end;
+  finally
+    FreeAndNil(SD);
+  end;
+end;
+
+procedure TDialogViewMemo.Btnx_ExptClick(Sender: TObject);
+begin
+  ExptText;
 end;
 
 end.

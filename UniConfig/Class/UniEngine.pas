@@ -36,7 +36,7 @@ type
   TUniEngineClass=class of TUniEngine;
   TOperateType   =(otNone, otAddx, otEdit, otDelt,otNormal,otUpperCase,otLowerCase);
 
-  TUniEngine=class(TPersistent)
+  TUniEngine=class(TCollectionItem)
   public
     FStrSQL:string;
     FUniSQL:TUniSQL;
@@ -71,6 +71,8 @@ type
     function  TOJSON(AOperateType:TOperateType=otNormal):string;overload;
     procedure INJSON(AValue:string);overload;
   public
+    constructor Create; virtual;  
+  public
     property UniSQL:TUniSQL read GetUniSQL;
   public
     class function  ReadDS(AUniQuery: TUniQuery): TUniEngine;overload;virtual;abstract;
@@ -93,6 +95,7 @@ type
     class function  ListDB(ASQL:string;Fields:array of string;withSorted:Boolean=False):TStringList;overload;virtual;
 
     class procedure ListDB(ASQL:string;AUniConnection:TUniConnection;var Result:TStringList;withSorted:Boolean=False);overload;virtual;
+    class procedure ListDB(ASQL:string;AUniConnection:TUniConnection;var Result:TCollection;withSorted:Boolean=False);overload;virtual;
     class procedure ListDB(ASQL:string;Fields:array of string;AUniConnection:TUniConnection;var Result:TStringList;withSorted:Boolean=False);overload;virtual;
 
     class function  TOJSON(AList:TStringList;AOperateType:TOperateType=otNormal):string;overload;
@@ -102,12 +105,14 @@ type
 
     class procedure STRIDX(Args:array of string;AList:TStringList;ASeparator:string;withQuoted:Boolean=False);overload;
     class function  STRDIY(Args:array of string;AList:TStringList;ASeparator:string=',';withQuoted:Boolean=False):string;overload;
-    
+    class function  STRDIY(Args:array of string;AList:TCollection;ASeparator:string=',';BSeparator:string='-';withQuoted:Boolean=False):string;overload;
+
     class function  GetUniQuery(ASQL:string;AUniConnection:TUniConnection):TUniQuery;overload;
     class function  GetUniQuery(ASQL:string):TUniQuery;overload;
 
     class function  GetDataSet(ASQL:string;AUniConnection:TUniConnection):TUniQuery;overload;
     class function  GetDataSet(ASQL:string):TUniQuery;overload;
+    class procedure GetDataSet(ASQL:string;Fields:array of string;AUniConnection:TUniConnection;var Result:TStringList;ASeparator:string=',');overload;    
 
     class function  GetServDat(AUniConnection:TUniConnection):TDateTime;
 
@@ -121,6 +126,7 @@ type
 
     class function  ExistTable(ATable:string;AUniConnection:TUniConnection):Boolean;
     class function  ExistField(ATable,AField:string;AUniConnection:TUniConnection):Boolean;
+    class function  ExistFieldInOracle(ATable,AField:string;AUniConnection:TUniConnection):Boolean;
     class function  ExistConst(AConstraintType,AConstraintName:string;AUniConnection:TUniConnection):Boolean;
     class function  ExistInKey(AConstraintType,AField,ATable:string;AUniConnection:TUniConnection):Boolean;
 
@@ -317,27 +323,27 @@ end;
 class function TUniEngine.ReadDB(ASQL: string;
   AUniConnection: TUniConnection): TUniEngine;
 var
-  UniQueryA:TUniQuery;
+  UniQuery:TUniQuery;
 begin
   Result:=nil;
   try
-    UniQueryA:=TUniQuery.Create(nil);
-    UniQueryA.Connection :=AUniConnection;
-    //UniQueryA.Prepared   :=True;
+    UniQuery:=TUniQuery.Create(nil);
+    UniQuery.Connection :=AUniConnection;
+    //UniQuery.Prepared   :=True;
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
 
-    UniQueryA.SQL.Text:=ASQL;
-    UniQueryA.Open;
+    UniQuery.SQL.Text:=ASQL;
+    UniQuery.Open;
 
-    if UniQueryA.RecordCount=0 then Exit;
-    while not UniQueryA.Eof do
+    if UniQuery.RecordCount=0 then Exit;
+    while not UniQuery.Eof do
     begin
-      Result:=ReadDS(UniQueryA);
-      UniQueryA.Next;
+      Result:=ReadDS(UniQuery);
+      UniQuery.Next;
     end;
   finally
-    FreeAndNil(UniQueryA);
+    FreeAndNil(UniQuery);
   end;
 end;
 
@@ -345,43 +351,43 @@ end;
 class function TUniEngine.StrsDB(ASQL: string; Fields: array of string;
   AUniConnection: TUniConnection;withSorted:Boolean): TStringList;
 var
-  UniQueryA:TUniQuery;
+  UniQuery:TUniQuery;
   UniEngine:TUniEngine;
   //YXC_2010_08_09_11_30_01
   I:Integer;
-  TempA:string;
-  TempB:string;
+  TMPA:string;
+  TMPB:string;
 begin
   Result:=nil;
   try
-    UniQueryA:=TUniQuery.Create(nil);
-    UniQueryA.Connection :=AUniConnection;
+    UniQuery:=TUniQuery.Create(nil);
+    UniQuery.Connection :=AUniConnection;
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
 
-    UniQueryA.SQL.Text:=ASQL;
-    UniQueryA.Open;
+    UniQuery.SQL.Text:=ASQL;
+    UniQuery.Open;
 
-    if UniQueryA.RecordCount=0 then Exit;
+    if UniQuery.RecordCount=0 then Exit;
 
     Result:=TStringList.Create;
-    while not UniQueryA.Eof do
+    while not UniQuery.Eof do
     begin
-      UniEngine:=ReadDS(UniQueryA);
+      UniEngine:=ReadDS(UniQuery);
 
-      TempA:='';
+      TMPA:='';
       if Length(Fields)<>0 then
       begin
         for I:=0 to Length(Fields)-1 do
         begin
-          TempB:=Trim(UniQueryA.FieldByName(Fields[I]).AsString);
-          TempA:=TempA+'-'+TempB;
+          TMPB:=Trim(UniQuery.FieldByName(Fields[I]).AsString);
+          TMPA:=TMPA+'-'+TMPB;
         end;
-        Delete(TempA,1,1);
+        Delete(TMPA,1,1);
       end;
 
-      Result.AddObject(TempA,UniEngine);
-      UniQueryA.Next;
+      Result.AddObject(TMPA,UniEngine);
+      UniQuery.Next;
     end;
 
     if withSorted then
@@ -389,7 +395,7 @@ begin
       Result.Sorted:=True;
     end;
   finally
-    FreeAndNil(UniQueryA);
+    FreeAndNil(UniQuery);
   end;
 end;
 
@@ -402,27 +408,27 @@ end;
 class function TUniEngine.StrsDB(ASQL: string;
   AUniConnection: TUniConnection; withSorted:Boolean): TStringList;
 var
-  UniQueryA:TUniQuery;
+  UniQuery:TUniQuery;
   UniEngine:TUniEngine;
 begin
   Result:=nil;
   try
-    UniQueryA:=TUniQuery.Create(nil);
-    UniQueryA.Connection :=AUniConnection;
+    UniQuery:=TUniQuery.Create(nil);
+    UniQuery.Connection :=AUniConnection;
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
 
-    UniQueryA.SQL.Text:=ASQL;
-    UniQueryA.Open;
+    UniQuery.SQL.Text:=ASQL;
+    UniQuery.Open;
 
-    if UniQueryA.RecordCount=0 then Exit;
+    if UniQuery.RecordCount=0 then Exit;
 
     Result:=TStringList.Create;
-    while not UniQueryA.Eof do
+    while not UniQuery.Eof do
     begin
-      UniEngine:=ReadDS(UniQueryA);
+      UniEngine:=ReadDS(UniQuery);
       Result.AddObject(UniEngine.GetStrsIndex,UniEngine);
-      UniQueryA.Next;
+      UniQuery.Next;
     end;
 
     if withSorted then
@@ -430,7 +436,7 @@ begin
       Result.Sorted:=True;
     end;
   finally
-    FreeAndNil(UniQueryA);
+    FreeAndNil(UniQuery);
   end;
 end;
 
@@ -838,7 +844,7 @@ end;
 class procedure TUniEngine.ListDB(ASQL: string;
   AUniConnection: TUniConnection; var Result: TStringList;withSorted:Boolean);
 var
-  UniQueryA:TUniQuery;
+  UniQuery :TUniQuery;
   UniEngine:TUniEngine;
 begin
   if Result=nil then Exit;
@@ -856,21 +862,21 @@ begin
   Result.Sorted:=False;
   
   try
-    UniQueryA:=TUniQuery.Create(nil);
-    UniQueryA.Connection :=AUniConnection;
+    UniQuery:=TUniQuery.Create(nil);
+    UniQuery.Connection :=AUniConnection;
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
 
-    UniQueryA.SQL.Text:=ASQL;
-    UniQueryA.Open;
+    UniQuery.SQL.Text:=ASQL;
+    UniQuery.Open;
 
-    if UniQueryA.RecordCount=0 then Exit;
+    if UniQuery.RecordCount=0 then Exit;
 
-    while not UniQueryA.Eof do
+    while not UniQuery.Eof do
     begin
-      UniEngine:=ReadDS(UniQueryA);
+      UniEngine:=ReadDS(UniQuery);
       Result.AddObject(UniEngine.GetStrsIndex,UniEngine);
-      UniQueryA.Next;
+      UniQuery.Next;
     end;
 
     if withSorted then
@@ -878,7 +884,7 @@ begin
       Result.Sorted:=True;
     end;
   finally
-    FreeAndNil(UniQueryA);
+    FreeAndNil(UniQuery);
   end;
 end;
 
@@ -886,12 +892,12 @@ end;
 class procedure TUniEngine.ListDB(ASQL: string; Fields: array of string;
   AUniConnection: TUniConnection; var Result: TStringList;withSorted:Boolean);
 var
-  UniQueryA:TUniQuery;
+  UniQuery :TUniQuery;
   UniEngine:TUniEngine;
   //YXC_2010_08_09_11_30_01
   I:Integer;
-  TempA:string;
-  TempB:string;
+  TMPA:string;
+  TMPB:string;
 begin
   if Result=nil then Exit;
 
@@ -908,33 +914,33 @@ begin
   Result.Sorted:=False;
   
   try
-    UniQueryA:=TUniQuery.Create(nil);
-    UniQueryA.Connection :=AUniConnection;    
+    UniQuery:=TUniQuery.Create(nil);
+    UniQuery.Connection :=AUniConnection;    
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
     
-    UniQueryA.SQL.Text:=ASQL;
-    UniQueryA.Open;
+    UniQuery.SQL.Text:=ASQL;
+    UniQuery.Open;
     
-    if UniQueryA.RecordCount=0 then Exit;
+    if UniQuery.RecordCount=0 then Exit;
 
-    while not UniQueryA.Eof do
+    while not UniQuery.Eof do
     begin
-      UniEngine:=ReadDS(UniQueryA);
+      UniEngine:=ReadDS(UniQuery);
 
-      TempA:='';
+      TMPA:='';
       if Length(Fields)<>0 then
       begin
         for I:=0 to Length(Fields)-1 do
         begin
-          TempB:=Trim(UniQueryA.FieldByName(Fields[I]).AsString);
-          TempA:=TempA+'-'+TempB;
+          TMPB:=Trim(UniQuery.FieldByName(Fields[I]).AsString);
+          TMPA:=TMPA+'-'+TMPB;
         end;
-        Delete(TempA,1,1);        
+        Delete(TMPA,1,1);        
       end;
 
-      Result.AddObject(TempA,UniEngine);
-      UniQueryA.Next;
+      Result.AddObject(TMPA,UniEngine);
+      UniQuery.Next;
     end;
 
     if withSorted then
@@ -942,35 +948,35 @@ begin
       Result.Sorted:=True;
     end;
   finally
-    FreeAndNil(UniQueryA);
+    FreeAndNil(UniQuery);
   end;
 end;
 
 class procedure TUniEngine.ReadDB(ASQL: string;
   AUniConnection: TUniConnection; var Result: TUniEngine);
 var
-  UniQueryA:TUniQuery;
+  UniQuery:TUniQuery;
 begin
   if Result=nil then Exit;
   
   try
-    UniQueryA:=TUniQuery.Create(nil);
-    UniQueryA.Connection :=AUniConnection;
-    //UniQueryA.Prepared   :=True;
+    UniQuery:=TUniQuery.Create(nil);
+    UniQuery.Connection :=AUniConnection;
+    //UniQuery.Prepared   :=True;
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
 
-    UniQueryA.SQL.Text:=ASQL;
-    UniQueryA.Open;
+    UniQuery.SQL.Text:=ASQL;
+    UniQuery.Open;
 
-    if UniQueryA.RecordCount=0 then Exit;
-    while not UniQueryA.Eof do
+    if UniQuery.RecordCount=0 then Exit;
+    while not UniQuery.Eof do
     begin
-      ReadDS(UniQueryA,Result);
-      UniQueryA.Next;
+      ReadDS(UniQuery,Result);
+      UniQuery.Next;
     end;
   finally
-    FreeAndNil(UniQueryA);
+    FreeAndNil(UniQuery);
   end;
 end;
 
@@ -986,7 +992,7 @@ var
   I,M,N:Integer;
   Instance:TUniEngine;
 
-  TempA:string;
+  TMPA:string;
   
   NameA:string;
   Value:string;
@@ -1001,7 +1007,7 @@ begin
   begin
     Instance:=TUniEngine(AList.Objects[I]);
 
-    TempA:='';
+    TMPA:='';
     M:=GetPropList(Instance,PropList);
     for N:=Low(PropList^) to M-1 do
     begin
@@ -1015,12 +1021,12 @@ begin
       Value:=GetPropValue(Instance,PropList[N]^.Name);
       Value:=TKzUtils.jsencode(Value);
 
-      TempA:=TempA+Format(',"%s":"%s"',[NameA,Value]);
+      TMPA:=TMPA+Format(',"%s":"%s"',[NameA,Value]);
     end;
     
-    Delete(TempA,1,1);
-    TempA :=Format('{%S}',[TempA]);
-    Result:=Result+','+TempA;
+    Delete(TMPA,1,1);
+    TMPA :=Format('{%S}',[TMPA]);
+    Result:=Result+','+TMPA;
     
     FreeMem(PropList);
   end;
@@ -1034,7 +1040,7 @@ var
   I,M,N:Integer; //for avlaue
   X,Y,Z:Integer; //for rtti
 
-  TempA:string;
+  TMPA:string;
   
   ListA:TStrings;
   ListB:TStrings;
@@ -1084,15 +1090,15 @@ begin
     ListA:=TKzUtils.StrsStrCutted(AValue,'\{*\}');
     for I:=0 to ListA.Count-1 do
     begin
-      TempA:=Trim(ListA.Strings[I]);
+      TMPA:=Trim(ListA.Strings[I]);
 
-      TempA:=TKzUtils.RegReplaceAll(TempA,'\:','=');
-      TempA:=TKzUtils.RegReplaceAll(TempA,'\{','');
-      TempA:=TKzUtils.RegReplaceAll(TempA,'\"','');
+      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\:','=');
+      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\{','');
+      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\"','');
       
-      if Trim(TempA)='' then Continue;
+      if Trim(TMPA)='' then Continue;
 
-      ListB:=TKzUtils.StrsStrCutted(TempA,'\,');
+      ListB:=TKzUtils.StrsStrCutted(TMPA,'\,');
 
       Instance:=AClass.Create;
       for X:=Low(PropList^) to Y-1 do
@@ -1125,7 +1131,7 @@ class procedure TUniEngine.STRIDX(Args: array of string;
 var
   I,M  :Integer;
   NameA:string;
-  TempA:string;
+  TMPA:string;
   Instance:TUniEngine;
 begin
   if (AList=nil) or (AList.Count=0) then Exit;
@@ -1136,28 +1142,28 @@ begin
     Instance:=TUniEngine(AList.Objects[I]);
     if Instance=nil then Continue;
 
-    TempA:='';
+    TMPA:='';
     for M:=0 to Length(Args)-1 do
     begin
       NameA:=Args[M];
 
-      TempA:=TempA + ASeparator + VarToStr(GetPropValue(Instance,NameA));
+      TMPA:=TMPA + ASeparator + VarToStr(GetPropValue(Instance,NameA));
       {if withQuoted then
       begin
-        TempA:=TempA + ASeparator +QuotedStr(VarToStr(GetPropValue(Instance,NameA)));
+        TMPA:=TMPA + ASeparator +QuotedStr(VarToStr(GetPropValue(Instance,NameA)));
       end else
       begin
-        TempA:=TempA + ASeparator +VarToStr(GetPropValue(Instance,NameA));
+        TMPA:=TMPA + ASeparator +VarToStr(GetPropValue(Instance,NameA));
       end;}
     end;
-    Delete(TempA,1,Length(ASeparator));
+    Delete(TMPA,1,Length(ASeparator));
 
     if withQuoted then
     begin
-      AList.Strings[I]:=QuotedStr(TempA);
+      AList.Strings[I]:=QuotedStr(TMPA);
     end else
     begin
-      AList.Strings[I]:=TempA;
+      AList.Strings[I]:=TMPA;
     end;
   end;
 end;
@@ -1168,7 +1174,7 @@ var
   I,M:Integer;
   Instance:TUniEngine;
   NameA:string;
-  TempA:string;
+  TMPA:string;
 begin
   Result:='';
   if (AList=nil) or (AList.Count=0) then Exit;
@@ -1178,24 +1184,24 @@ begin
     Instance:=TUniEngine(AList.Objects[I]);
     if Instance=nil then Continue;
 
-    TempA:='';
+    TMPA:='';
     for M:=0 to Length(Args)-1 do
     begin
       NameA:=Args[M];
       
-      TempA:=TempA + '-' + VarToStr(GetPropValue(Instance,NameA));
+      TMPA:=TMPA + '-' + VarToStr(GetPropValue(Instance,NameA));
     end;
-    Delete(TempA,1,1);
+    Delete(TMPA,1,1);
 
     if withQuoted then
     begin
-      Result:=Result +  ASeparator +QuotedStr(TempA);
+      Result:=Result +  ASeparator +QuotedStr(TMPA);
     end else
     begin
-      Result:=Result +  ASeparator +TempA;
+      Result:=Result +  ASeparator +TMPA;
     end;
-
   end;
+  
   Delete(Result,1,Length(ASeparator));
 end;
 
@@ -1216,7 +1222,7 @@ var
   I,M,N:Integer;
   Instance:TUniEngine;
 
-  TempA:string;
+  TMPA:string;
   
   NameA:string;
   Value:string;
@@ -1227,7 +1233,7 @@ begin
 
   Instance:=Self;
 
-  TempA:='';
+  TMPA:='';
   M:=GetPropList(Instance,PropList);
   for N:=Low(PropList^) to M-1 do
   begin
@@ -1241,11 +1247,11 @@ begin
     Value:=GetPropValue(Instance,PropList[N]^.Name);
     Value:=TKzUtils.jsencode(Value);
 
-    TempA:=TempA+Format(',"%s":"%s"',[NameA,Value]);
+    TMPA:=TMPA+Format(',"%s":"%s"',[NameA,Value]);
   end;
     
-  Delete(TempA,1,1);
-  Result:=Format('{%S}',[TempA]);
+  Delete(TMPA,1,1);
+  Result:=Format('{%S}',[TMPA]);
 
     
   FreeMem(PropList);
@@ -1256,7 +1262,7 @@ var
   I,M,N:Integer; //for avlaue
   X,Y,Z:Integer; //for rtti
 
-  TempA:string;
+  TMPA:string;
   
   ListA:TStrings;
   ListB:TStrings;
@@ -1288,15 +1294,15 @@ begin
     ListA:=TKzUtils.StrsStrCutted(AValue,'\{*\}');
     for I:=0 to ListA.Count-1 do
     begin
-      TempA:=Trim(ListA.Strings[I]);
+      TMPA:=Trim(ListA.Strings[I]);
 
-      TempA:=TKzUtils.RegReplaceAll(TempA,'\:','=');
-      TempA:=TKzUtils.RegReplaceAll(TempA,'\{','');
-      TempA:=TKzUtils.RegReplaceAll(TempA,'\"','');
+      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\:','=');
+      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\{','');
+      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\"','');
       
-      if Trim(TempA)='' then Continue;
+      if Trim(TMPA)='' then Continue;
 
-      ListB:=TKzUtils.StrsStrCutted(TempA,'\,');
+      ListB:=TKzUtils.StrsStrCutted(TMPA,'\,');
 
       Instance:=Self;
       for X:=Low(PropList^) to Y-1 do
@@ -1321,6 +1327,155 @@ begin
     FreeAndNil(ListA);
     FreeMem(PropList);
   end;
+end;
+
+class function TUniEngine.ExistFieldInOracle(ATable, AField: string;
+  AUniConnection: TUniConnection): Boolean;
+var
+  IdexA:Integer;
+  ListA:TStringList;
+  UniDataSet:TUniQuery;
+begin
+  Result:=False;
+
+  if not ExistTable(ATable,AUniConnection) then
+  begin
+    raise Exception.CreateFmt('NOT EXIST SUCH TABLE:%S',[ATable]);
+  end;
+
+  UniDataSet:=GetDataSet(Format('SELECT * FROM %S WHERE ROWNUM<1',[ATable]),AUniConnection);
+  if UniDataSet<>nil then
+  begin
+    Result:=UniDataSet.FindField(AField)<>nil;
+    FreeAndNil(UniDataSet);
+  end;
+end;
+
+class procedure TUniEngine.GetDataSet(ASQL:string;Fields:array of string;
+  AUniConnection: TUniConnection; var Result: TStringList;ASeparator:string=',');
+var
+  I:Integer;
+  TMPA:string;
+  TMPB:string;
+  
+  UniQuery:TUniQuery;
+begin
+  if Result=nil then Exit;
+
+  try
+    UniQuery:=GetUniQuery(ASQL,AUniConnection);
+    if UniQuery=nil then Exit;
+    if UniQuery.RecordCount=0 then Exit;
+
+    UniQuery.First;
+    while not UniQuery.Eof do
+    begin
+      TMPA:='';
+      if Length(Fields)<>0 then
+      begin
+        for I:=0 to Length(Fields)-1 do
+        begin
+          TMPB:=Trim(UniQuery.FieldByName(Fields[I]).AsString);
+          TMPA:=TMPA+ASeparator+TMPB;
+        end;
+        Delete(TMPA,1,1);
+      end;
+
+      Result.Add(TMPA);
+
+      UniQuery.Next;
+    end;
+
+  finally
+    FreeAndNil(UniQuery);
+  end;
+end;
+
+constructor TUniEngine.Create;
+begin
+  
+end;
+
+class procedure TUniEngine.ListDB(ASQL: string;
+  AUniConnection: TUniConnection; var Result: TCollection;
+  withSorted: Boolean);
+var
+  UniQuery :TUniQuery;
+  UniEngine:TUniEngine;
+begin
+  if Result=nil then Exit;
+  
+  //make sure the list.sort = false. otherwise, it will be igonre same strsindex. code as follow.
+  {if not Sorted then
+    Result := FCount
+  else
+    if Find(S, Result) then
+      case Duplicates of
+        dupIgnore: Exit;
+        dupError: Error(@SDuplicateString, 0);
+      end;
+  InsertItem(Result, S, AObject);}
+  //#Result.Sorted:=False;
+  
+  try
+    UniQuery:=TUniQuery.Create(nil);
+    UniQuery.Connection :=AUniConnection;
+
+    if ASQL='' then raise Exception.Create('SQL=NIL');
+
+    UniQuery.SQL.Text:=ASQL;
+    UniQuery.Open;
+
+    if UniQuery.RecordCount=0 then Exit;
+
+    while not UniQuery.Eof do
+    begin
+      //#UniEngine:=ReadDS(UniQuery);
+      //#Result.AddObject(UniEngine.GetStrsIndex,UniEngine);
+      UniEngine:=TUniEngine(Result.Add);
+      ReadDS(UniQuery,UniEngine);
+      UniQuery.Next;
+    end;
+  finally
+    FreeAndNil(UniQuery);
+  end;
+end;
+
+class function TUniEngine.STRDIY(Args: array of string; AList: TCollection;
+  ASeparator: string; BSeparator:string; withQuoted: Boolean): string;
+var
+  I,M:Integer;
+  Instance:TUniEngine;
+  NameA:string;
+  TMPA:string;
+begin
+  Result:='';
+  if (AList=nil) or (AList.Count=0) then Exit;
+
+  for I:=0 to AList.Count -1 do
+  begin
+    Instance:=TUniEngine(AList.Items[I]);
+    if Instance=nil then Continue;
+
+    TMPA:='';
+    for M:=0 to Length(Args)-1 do
+    begin
+      NameA:=Args[M];
+      
+      TMPA:=TMPA + BSeparator + VarToStr(GetPropValue(Instance,NameA));
+    end;
+    Delete(TMPA,1,1);
+
+    if withQuoted then
+    begin
+      Result:=Result +  ASeparator +QuotedStr(TMPA);
+    end else
+    begin
+      Result:=Result +  ASeparator +TMPA;
+    end;
+  end;
+  
+  Delete(Result,1,Length(ASeparator));
 end;
 
 end.

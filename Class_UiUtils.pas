@@ -3,7 +3,7 @@ unit Class_UiUtils;
 
 interface
 uses
-  Classes,SysUtils,AdvGrid,frxClass,ElTree,Math;
+  Classes,SysUtils,AdvGrid,frxClass,ElTree,Math,Graphics;
 
 type
   TUiUtils=class(TObject)
@@ -16,6 +16,8 @@ type
     //JYZBGL.SBYOYOO
     class function  SbYoYoGetGetPrevCode(ASelfLevl:Integer;ASelfCode:string;var ALevlCode:string;ATAG:string='.'):string;
     class function  SbYoYoGetGetRuleLevl(ASelfCode:string;ATAG:string='.'):Integer;
+  public
+    class function  StringToColorDef(AValue:string;ADef:string='clWhite'): TColor;
   public
     //grid
     class function  GetCheckBoxState(AGrid:TAdvStringGrid;ACol,ARow:Integer):Integer;
@@ -40,7 +42,19 @@ type
 
     class function  GridCheck(AGrid:TAdvStringGrid;ACol:Integer=1;ARowStart:Integer=1;ARowEnd:Integer=-1):TStringList;
     class procedure CellCheck(AGrid:TAdvStringGrid;AValue:Boolean;ACol:Integer=1;ARowStart:Integer=1;ARowEnd:Integer=-1);
-
+  public
+    {begin
+      if Item.Checked then
+      begin
+        TAppUtil.SetItemNextChecked(TElTree(Sender),Item,True);
+      end else
+      begin
+        TAppUtil.SetItemNextChecked(TElTree(Sender),Item,False);
+        TAppUtil.SetItemPrevChecked(TElTree(Sender),Item,False);
+      end;
+    end;}
+    class procedure SetItemNextChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
+    class procedure SetItemPrevChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
     //eltree.common
     class function  GetTreeItemCheckedCount(ATree:TElTree;ACheckChild:Boolean=False):Integer;
     class procedure SetTreeItemCheckedState(AValue,ALastLevl:Boolean;ATree:TElTree);
@@ -479,6 +493,36 @@ begin
 end;
 
 
+class procedure TUiUtils.SetItemNextChecked(ATree: TElTree;
+  AItem: TElTreeItem; AStat: Boolean);
+var
+  ItemA:TElTreeItem;
+  I:Integer;
+begin
+  if AItem.HasChildren then
+  begin
+    for I:=0 to AItem.Count-1 do
+    begin
+      ItemA:=AItem.Item[I];
+      ItemA.Checked:=AStat;
+      SetItemNextChecked(ATree,ItemA,AStat);
+    end;
+  end;  
+end;
+
+class procedure TUiUtils.SetItemPrevChecked(ATree: TElTree;
+  AItem: TElTreeItem; AStat: Boolean);
+var
+  ItemA:TElTreeItem;
+begin
+  ItemA:=AItem.Parent;
+  while ItemA <>nil do
+  begin
+    ItemA.Checked:=AStat;
+    ItemA:=ItemA.Parent;
+  end;
+end;
+
 class procedure TUiUtils.SetTreeItemCheckedState(AValue,
   ALastLevl: Boolean; ATree: TElTree);
 var
@@ -497,6 +541,18 @@ begin
     end;  
     Items.EndUpdate;
   end;  
+end;
+
+class function TUiUtils.StringToColorDef(AValue, ADef: string): TColor;
+begin
+  Result:=clWhite;
+  if Trim(AValue)='' then
+  begin
+    Result:=StringToColor(ADef);
+  end else
+  begin
+    Result:=StringToColor(Trim(AValue));
+  end;
 end;
 
 class procedure TUiUtils.TreeIndex(ATree: TElTree);

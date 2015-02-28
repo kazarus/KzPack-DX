@@ -42,7 +42,7 @@ type
   TfrxBarcode2DView = class(TfrxView)
   private
     FBarcode : TZintBarcode;//生产条码类
-    FBitmap : TBitmap;//图片类
+    FBitmap : TBitmap;     //图片类
     FAutoSize:Boolean;
     FZoom : Single;        
     FDataFormat: TfrxZintBarcodeDataFormat;//数据格式    
@@ -229,7 +229,7 @@ begin
                             FX+Round(FBitmap.Width * ScaleX * FZoom),
                             FY+Round(FBitmap.Height * ScaleY * FZoom)),
                          FBitmap); 
-    Self.Width:=Round(FBitmap.Width);
+    Self.Width :=Round(FBitmap.Width);
     Self.Height:=Round(FBitmap.Height);
   End Else Begin
     BeginDraw(Canvas, ScaleX, ScaleY, OffsetX, OffsetY);

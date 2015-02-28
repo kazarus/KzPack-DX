@@ -99,9 +99,9 @@ function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;AConnectionMar
 begin
   try
     DialogListUniConfig:=TDialogListUniConfig.Create(nil);
-    
     DialogListUniConfig.FEditMode:=AEditMode;
     DialogListUniConfig.FConnectionMark:=AConnectionMark;
+    DialogListUniConfig.BorderStyle:=bsSizeable;
     Result:=DialogListUniConfig.ShowModal;
   finally
     FreeAndNil(DialogListUniConfig);
@@ -114,7 +114,8 @@ begin
     DialogListUniConfig:=TDialogListUniConfig.Create(nil);
     
     DialogListUniConfig.FEditMode:=AEditMode;
-    DialogListUniConfig.FConnectionMark:=AConnectionMark;    
+    DialogListUniConfig.FConnectionMark:=AConnectionMark;
+    DialogListUniConfig.BorderStyle:=bsSizeable;   
     Result:=DialogListUniConfig.ShowModal;
     if Result=Mrok then
     begin

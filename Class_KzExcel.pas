@@ -74,6 +74,14 @@ type
 
   TCxDataType=(cxdtText,cxdtNumb,cxdtDoub,cxdtDate,cxdtLongText,cxdtLongTextEx,cxdtDoubEx,cxdtNumbEx);
 
+  TCxCellData=class(TObject)
+  public
+    ListData:TStringList;
+  public
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
   TCxCellStyl=class(TObject)
   public
     DataType:TCxDataType;
@@ -171,6 +179,8 @@ type
 
     function  ExeNegl:Boolean;    //singl grid.has neglect rows;
     function  ExeNeglAll:Boolean; //multi grid.has neglect rows;
+
+    procedure ImpData(AFileName:string;ARowStart,ARowEnded,AColStart,AColEnded:Integer;var AListData:TStringList);
   public
     constructor Create;
     destructor  Destroy;override;
@@ -1823,6 +1833,65 @@ begin
   ListGrid.AddObject('',AGridStyl);
 end;
 
+
+
+procedure TKzExcel.ImpData(AFileName: string; ARowStart, ARowEnded,
+  AColStart, AColEnded: Integer; var AListData: TStringList);
+var
+  I,M:Integer;
+  CellObjt:TcxSSCellObject;
+  CellData:TCxCellData;
+  RowStart:Integer;
+  RowEnded:Integer;
+  ColStart:Integer;
+  ColEnded:Integer;
+begin
+  if AListData=nil then Exit;
+  TKzUtils.JustCleanList(AListData);
+
+  
+  FCxExcel.ClearAll;
+  FCxExcel.LoadFromFile(AFileName);
+
+  RowStart:=ARowStart;
+  RowEnded:=ARowEnded;
+  ColStart:=AColStart;
+  ColEnded:=AColEnded;
+
+  if RowStart=-1 then
+  begin
+    RowStart:=0;
+  end;
+  if RowEnded=-1 then
+  begin
+    RowEnded:=FCxExcel.ActiveSheet.ContentRowCount-1;
+  end;
+  if ColStart=-1 then
+  begin
+    ColStart:=0;
+  end;
+  if ColEnded=-1 then
+  begin
+    ColEnded:=FCxExcel.ActiveSheet.ContentColCount-1;
+  end;
+
+  with FCxExcel.ActiveSheet do
+  begin
+    for I:=RowStart to RowEnded do
+    begin
+      CellData:=TCxCellData.Create;
+      for M:=ColStart to ColEnded do
+      begin
+        CellObjt:=GetCellObject(M,I);
+        CellData.ListData.Add(Format('%D=%S',[M,Trim(CellObjt.Text)]));
+        CellObjt.Free;
+      end;
+
+      AListData.AddObject(Format('%D',[I]),CellData);
+    end;
+  end;
+end;
+
 { TCxCellStyl }
 
 constructor TCxCellStyl.Create;
@@ -2279,5 +2348,18 @@ begin
   end;
 end;
 
+
+{ TCxCellData }
+
+constructor TCxCellData.Create;
+begin
+  ListData:=TStringList.Create;
+end;
+
+destructor TCxCellData.Destroy;
+begin
+  if ListData<>nil then FreeAndNil(ListData);
+  inherited;
+end;
 
 end.

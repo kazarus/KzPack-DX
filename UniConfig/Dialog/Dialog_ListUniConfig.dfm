@@ -1,6 +1,6 @@
 object DialogListUniConfig: TDialogListUniConfig
-  Left = 107
-  Top = 153
+  Left = 285
+  Top = 75
   Width = 1024
   Height = 632
   Caption = 'DialogListUniConfig'

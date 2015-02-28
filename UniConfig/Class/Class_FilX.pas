@@ -18,6 +18,7 @@ type
   end;
 
 implementation
+
 uses
   Class_KzUtils;
 
@@ -28,19 +29,18 @@ var
   FilePath :string;
   ResStream:TResourceStream;
 begin
-  {FilePath:='C:\WINDOWS\system32\sqlite3.dll';
+  FilePath:='C:\WINDOWS\system32\sqlite3.dll';
   if not FileExists(FilePath) then
   begin
-    ResStream:=TResourceStream.Create(HInstance,'lit001','dll');
-    ResStream.SaveToFile(FilePath);
-    FreeAndNil(ResStream);
-  end;}
-  FilePath:=TKzUtils.ExePath+'\sqlite3.dll';
-  if not FileExists(FilePath) then
-  begin
-    ResStream:=TResourceStream.Create(HInstance,'lit001','dll');
-    ResStream.SaveToFile(FilePath);
-    FreeAndNil(ResStream);
+    try
+      ResStream:=TResourceStream.Create(HInstance,'lit001','dll');
+      ResStream.SaveToFile(FilePath);
+      FreeAndNil(ResStream);
+    except
+      ResStream:=TResourceStream.Create(HInstance,'lit001','dll');
+      ResStream.SaveToFile(TKzUtils.ExePath+'sqlite3.dll');
+      FreeAndNil(ResStream);
+    end;
   end;
 end;
 

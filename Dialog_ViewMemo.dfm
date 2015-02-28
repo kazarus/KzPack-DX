@@ -1,8 +1,8 @@
 object DialogViewMemo: TDialogViewMemo
   Left = 220
   Top = 234
-  Width = 628
-  Height = 348
+  Width = 659
+  Height = 413
   Caption = 'DialogViewMemo'
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
@@ -15,14 +15,14 @@ object DialogViewMemo: TDialogViewMemo
   TextHeight = 13
   object Panl_1: TPanel
     Left = 0
-    Top = 278
-    Width = 620
+    Top = 339
+    Width = 643
     Height = 36
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
     object Btnx_Mrok: TButton
-      Left = 468
+      Left = 492
       Top = 6
       Width = 75
       Height = 25
@@ -31,7 +31,7 @@ object DialogViewMemo: TDialogViewMemo
       OnClick = Btnx_MrokClick
     end
     object Btnx_Quit: TButton
-      Left = 543
+      Left = 567
       Top = 6
       Width = 75
       Height = 25
@@ -39,12 +39,21 @@ object DialogViewMemo: TDialogViewMemo
       TabOrder = 1
       OnClick = Btnx_QuitClick
     end
+    object Btnx_Expt: TButton
+      Left = 417
+      Top = 6
+      Width = 75
+      Height = 25
+      Caption = 'Btnx_Mrok'
+      TabOrder = 2
+      OnClick = Btnx_ExptClick
+    end
   end
   object Memo_1: TRzMemo
     Left = 0
     Top = 0
-    Width = 620
-    Height = 278
+    Width = 643
+    Height = 339
     Align = alClient
     Lines.Strings = (
       ''

@@ -170,7 +170,9 @@ type
     MargBott:Extended;  //下边距
     Orientation:string; //横纵向
 
-    FTreeCellWhenMultiHead:TKzTreeList;    
+    FTreeCellWhenMultiHead:TKzTreeList;
+    
+    FListVariabl:TStringList; //变量列表
   public
     SourceGrid  :TAdvStringGrid;
     FFilePath   :string;
@@ -201,11 +203,9 @@ type
     BoolBodySize:Boolean;     //BoolBodyContAutoFontSize
     
     BoolReadFromCnfg:Boolean; //读取conf,还是读取*.fr3
-    BoolUseFieldCell:Boolean; //variable.name is named by field%d.therefor,use the cells[x,frowtitle]
+    BoolUseFieldCell:Boolean; //variable.name is named by field%d.otherwise,use the cells[x,frowtitle]
 
     CharLinkPrevPage:string;  //*new like his name.it active only whenmultihead.
-
-    FListVariabl:TStringList;//变量列表
   public
     OnKzPrintGridValidRows:TKzPrintGridValidRows;
     OnKzPrintGridValidCols:TKzPrintGridValidCols;
@@ -242,7 +242,10 @@ type
     function  GetFrameType(AValue:Integer):TfrxFrameTypes;
   protected
     function PreparX:Boolean;
-    function PrepareMultiHead:Boolean;    
+    function PrepareMultiHead:Boolean;
+  public
+    procedure PushVariable(AVarName,Value:string);overload;
+    procedure PushVariable(AValueInFormat:string);overload;
   public
     function DesignX:Boolean;
 
@@ -2910,6 +2913,24 @@ begin
   end;  
   
   Result:=True;
+end;
+
+procedure TKzPrint.PushVariable(AVarName, Value: string);
+begin
+  if FListVariabl=nil then
+  begin
+    FListVariabl:=TStringList.Create;
+  end;
+  FListVariabl.Add(Format('%S=%S',[AVarName,Value]));
+end;
+
+procedure TKzPrint.PushVariable(AValueInFormat: string);
+begin
+  if FListVariabl=nil then
+  begin
+    FListVariabl:=TStringList.Create;
+  end;
+  FListVariabl.Add(AValueInFormat);
 end;
 
 end.
