@@ -615,7 +615,8 @@ begin
   end;
 
   //º”…œ“˛≤ÿ¡–
-  with ActvGrid do
+  //YXC_2015_03_02_13_26_27_add_{}
+  {with ActvGrid do
   begin
     if (ColTotal<>-1) and (ActvGrid.ColCount<>ColTotal) then
     begin
@@ -642,7 +643,7 @@ begin
       end;
       ColEnd:=ColEnd+NumbA;        
     end;
-  end;
+  end;}
 end;
 
 function TKzExcel.GetValidSheetName: string;
