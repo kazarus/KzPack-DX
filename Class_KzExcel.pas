@@ -10,7 +10,7 @@ unit Class_KzExcel;
 //YXC_2012_08_11_11_17_27_add_setvalidcols&setvalidrows
 //YXC_2012_08_11_11_17_55_add_exenegl&exeneglall
 //YXC_2012_08_11_11_18_10_add_gethorztextalign
-//YXC_2012_09_14_14_26_09_modify_colxa-excursiona->colxb-excursiona
+//YXC_2012_09_14_14_26_09_modify_ColInGrid-excursiona->ColInExcl-excursiona
 //YXC_2012_10_30_09_21_37_add_ext_.xls
 //YXC_2012_10_30_09_59_28_add_datatype_cxdtdoubex
 //YXC_2012_11_09_14_30_15_modify_setvalidarea
@@ -277,10 +277,10 @@ end;
 
 procedure TKzExcel.Execute;
 var
-  ColxA:Integer;
-  RowxA:Integer;
-  ColxB:Integer;        //范围导出时发生的列偏移
-  RowxB:Integer;        //范围导出时发生的行偏移
+  ColInGrid:Integer;
+  RowInGrid:Integer;
+  ColInExcl:Integer;        //范围导出时发生的列偏移
+  RowInExcl:Integer;        //范围导出时发生的行偏移
   CellA:TCxSSCellObject;
   StylA:TCxCellStyl;
   SD   :TSaveDialog;
@@ -373,15 +373,15 @@ begin
     begin
       SetValidArea;
 
-      ColxB:=0;
+      ColInExcl:=0;
       ExcursionA:=0;
 
-      for ColxA := ColStart to ColEnd do
+      for ColInGrid := ColStart to ColEnd do
       begin
         //YXC_2012_02_20_15_48_10
         if (not IncludeHideCols) then
         begin
-          if IsHiddenColumn(ColxA) then
+          if IsHiddenColumn(ColInGrid) then
           begin
             Inc(ExcursionA);
             Continue;
@@ -394,25 +394,25 @@ begin
         if IncludeColsSize then
         begin
           ExcursionB:=0;
-          for X:=0 to ColxA do
+          for X:=0 to ColInGrid do
           begin
             if IsHiddenColumn(X) then
             begin
               Inc(ExcursionB);
             end;
           end;
-          ActiveSheet.Cols.Size[ColxB]:=ColWidths[ColxA-ExcursionB]+ColExcursionSiz;
+          ActiveSheet.Cols.Size[ColInExcl]:=ColWidths[ColInGrid-ExcursionB]+ColExcursionSiz;
         end;
         //YXC_2012_11_08_16_59_50_>
 
-        RowxB:=0;
-        for RowxA := RowStart to RowEnd do
+        RowInExcl:=0;
+        for RowInGrid := RowStart to RowEnd do
         begin
 
           //YXC_2012_05_17_08_26_45_<
           if ShowCellsBorder then
           begin
-            CellA:=ActiveSheet.GetCellObject(ColxB-ExcursionA,RowxA);
+            CellA:=ActiveSheet.GetCellObject(ColInExcl-ExcursionA,RowInExcl);
             for BordA := eLeft to eBottom do
             begin
               with CellA.Style.Borders.Edges[BordA] do
@@ -425,34 +425,34 @@ begin
           end;
           //YXC_2012_05_17_08_26_48_>
 
-          if IsMergedCell(ColxA-ExcursionA,RowxA) then
+          if IsMergedCell(ColInGrid-ExcursionA,RowInGrid) then
           begin
-            if not CellProperties[ColxA-ExcursionA,RowxA].IsBaseCell then
+            if not CellProperties[ColInGrid-ExcursionA,RowInGrid].IsBaseCell then
             begin
-              Inc(RowxB);
+              Inc(RowInExcl);
               Continue;
             end;
             //未偏移
-            //FCxExcel.ActiveSheet.SetMergedState(Rect(ColxA,RowxA,CellProperties[ColxA,RowxA].CellSpanX+ColxA,CellProperties[ColxA,RowxA].CellSpanY+RowxA),True);
+            //FCxExcel.ActiveSheet.SetMergedState(Rect(ColInGrid,RowInGrid,CellProperties[ColInGrid,RowInGrid].CellSpanX+ColInGrid,CellProperties[ColInGrid,RowInGrid].CellSpanY+RowInGrid),True);
             //有偏移
-            //FCxExcel.ActiveSheet.SetMergedState(Rect(ColxB,RowxB,CellProperties[ColxA,RowxA].CellSpanX+ColxB,CellProperties[ColxA,RowxA].CellSpanY+RowxB),True);
+            //FCxExcel.ActiveSheet.SetMergedState(Rect(ColInExcl,RowInExcl,CellProperties[ColInGrid,RowInGrid].CellSpanX+ColInExcl,CellProperties[ColInGrid,RowInGrid].CellSpanY+RowInExcl),True);
             //有偏移,有隐藏
 
-            //ALeft:=ColxB;
-            //ATop :=RowxB;
-            //ARight :=CellProperties[ColxA-ExcursionA,RowxA].CellSpanX+ColxB;
-            //ABottom:=CellProperties[ColxA-ExcursionA,RowxA].CellSpanY+RowxB;
+            //ALeft:=ColInExcl;
+            //ATop :=RowInExcl;
+            //ARight :=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanX+ColInExcl;
+            //ABottom:=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanY+RowInExcl;
             //FCxExcel.ActiveSheet.SetMergedState(Rect(ALeft,ATop,ARight,ABottom),True);
 
-            RectA.Left:=ColxB;
-            RectA.Top :=RowxB;
-            RectA.Right :=CellProperties[ColxA-ExcursionA,RowxA].CellSpanX+ColxB;
-            RectA.Bottom:=CellProperties[ColxA-ExcursionA,RowxA].CellSpanY+RowxB;
+            RectA.Left:=ColInExcl;
+            RectA.Top :=RowInExcl;
+            RectA.Right :=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanX+ColInExcl;
+            RectA.Bottom:=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanY+RowInExcl;
             
             FCxExcel.ActiveSheet.SetMergedState(RectA,True);
           end;
 
-          CellA:=ActiveSheet.GetCellObject(ColxB,RowxB);
+          CellA:=ActiveSheet.GetCellObject(ColInExcl,RowInExcl);
           StylA:=TCxCellStyl.Create(DefaultCellStyl);
           
           {if ShowCellsBorder then
@@ -474,10 +474,10 @@ begin
             try
               if StylA.KeepCellTxtStyl then
               begin
-                CellA.Text:=(Cells[ColxA,RowxA]);
+                CellA.Text:=(Cells[ColInGrid,RowInGrid]);
               end else
               begin
-                CellA.Text:=Trim(Cells[ColxA,RowxA]);
+                CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
               end;  
 
               if StylA.DataType=cxdtDoub then
@@ -491,7 +491,7 @@ begin
 
           if Assigned(OnKzExcelGetCellStyl) then
           begin
-            OnKzExcelGetCellStyl(Self,RowxA,ColxA,StylA);
+            OnKzExcelGetCellStyl(Self,RowInGrid,ColInGrid,StylA);
           end;
 
           CellA.Style.Font.Name:=StylA.FontName;
@@ -512,10 +512,10 @@ begin
             try
               if StylA.KeepCellTxtStyl then
               begin
-                CellA.Text:=(Cells[ColxA,RowxA]);
+                CellA.Text:=(Cells[ColInGrid,RowInGrid]);
               end else
               begin
-                CellA.Text:=Trim(Cells[ColxA,RowxA]);
+                CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
               end;
             except
             end;
@@ -524,10 +524,10 @@ begin
           CellA.Free;
           StylA.Free;
           
-          Inc(RowxB);          
+          Inc(RowInExcl);          
         end;
         
-        Inc(ColxB);        
+        Inc(ColInExcl);        
       end;
     end;
     
@@ -722,10 +722,10 @@ end;
 procedure TKzExcel.ExecuteAll;
 var
   I:Integer;
-  ColxA:Integer;
-  RowxA:Integer;
-  ColxB:Integer;        //范围导出时发生的列偏移
-  RowxB:Integer;        //范围导出时发生的行偏移
+  ColInGrid:Integer;
+  RowInGrid:Integer;
+  ColInExcl:Integer;        //范围导出时发生的列偏移
+  RowInExcl:Integer;        //范围导出时发生的行偏移
   CellA:TCxSSCellObject;
   StylA:TCxCellStyl;
   SD   :TSaveDialog;
@@ -803,15 +803,15 @@ begin
 
           SetValidArea;
 
-          ColxB:=0;
+          ColInExcl:=0;
           ExcursionA:=0;
 
-          for ColxA := ColStart to ColEnd do
+          for ColInGrid := ColStart to ColEnd do
           begin
             //YXC_2012_02_20_15_48_10
             if (not IncludeHideCols) then
             begin
-              if IsHiddenColumn(ColxA) then
+              if IsHiddenColumn(ColInGrid) then
               begin
                 Inc(ExcursionA);
                 Continue;
@@ -823,24 +823,24 @@ begin
             if IncludeColsSize then
             begin
               ExcursionB:=0;
-              for X:=0 to ColxA do
+              for X:=0 to ColInGrid do
               begin
                 if IsHiddenColumn(X) then
                 begin
                   Inc(ExcursionB);
                 end;
               end;
-              ActiveSheet.Cols.Size[ColxB]:=ColWidths[ColxA-ExcursionB]+ColExcursionSiz;
+              ActiveSheet.Cols.Size[ColInExcl]:=ColWidths[ColInGrid-ExcursionB]+ColExcursionSiz;
             end;
             //YXC_2012_11_08_16_59_50_>
 
-            RowxB:=0;
-            for RowxA := RowStart to RowEnd do
+            RowInExcl:=0;
+            for RowInGrid := RowStart to RowEnd do
             begin
               //YXC_2012_05_17_08_26_45_<
               if ShowCellsBorder then
               begin
-                CellA:=ActiveSheet.GetCellObject(ColxB-ExcursionA,RowxA);
+                CellA:=ActiveSheet.GetCellObject(ColInExcl-ExcursionA,RowInGrid);
                 for BordA := eLeft to eBottom do
                 begin
                   with CellA.Style.Borders.Edges[BordA] do
@@ -854,41 +854,41 @@ begin
               //YXC_2012_05_17_08_26_48_>
 
 
-              if IsMergedCell(ColxA-ExcursionA,RowxA) then
+              if IsMergedCell(ColInGrid-ExcursionA,RowInGrid) then
               begin
-                if not CellProperties[ColxA-ExcursionA,RowxA].IsBaseCell then
+                if not CellProperties[ColInGrid-ExcursionA,RowInGrid].IsBaseCell then
                 begin
-                  Inc(RowxB);
+                  Inc(RowInExcl);
                   Continue;
                 end;
                 //未偏移
-                //FCxExcel.ActiveSheet.SetMergedState(Rect(ColxA,RowxA,CellProperties[ColxA,RowxA].CellSpanX+ColxA,CellProperties[ColxA,RowxA].CellSpanY+RowxA),True);
+                //FCxExcel.ActiveSheet.SetMergedState(Rect(ColInGrid,RowInGrid,CellProperties[ColInGrid,RowInGrid].CellSpanX+ColInGrid,CellProperties[ColInGrid,RowInGrid].CellSpanY+RowInGrid),True);
                 //有偏移
-                //FCxExcel.ActiveSheet.SetMergedState(Rect(ColxB,RowxB,CellProperties[ColxA,RowxA].CellSpanX+ColxB,CellProperties[ColxA,RowxA].CellSpanY+RowxB),True);
+                //FCxExcel.ActiveSheet.SetMergedState(Rect(ColInExcl,RowInExcl,CellProperties[ColInGrid,RowInGrid].CellSpanX+ColInExcl,CellProperties[ColInGrid,RowInGrid].CellSpanY+RowInExcl),True);
                 //有偏移,有隐藏
 
-                //ALeft:=ColxB;
-                //ATop :=RowxB;
-                //ARight :=CellProperties[ColxA-ExcursionA,RowxA].CellSpanX+ColxB;
-                //ABottom:=CellProperties[ColxA-ExcursionA,RowxA].CellSpanY+RowxB;
+                //ALeft:=ColInExcl;
+                //ATop :=RowInExcl;
+                //ARight :=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanX+ColInExcl;
+                //ABottom:=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanY+RowInExcl;
                 //FCxExcel.ActiveSheet.SetMergedState(Rect(ALeft,ATop,ARight,ABottom),True);
 
-                RectA.Left:=ColxB;
-                RectA.Top :=RowxB;
-                RectA.Right :=CellProperties[ColxA-ExcursionA,RowxA].CellSpanX+ColxB;
-                RectA.Bottom:=CellProperties[ColxA-ExcursionA,RowxA].CellSpanY+RowxB;
+                RectA.Left:=ColInExcl;
+                RectA.Top :=RowInExcl;
+                RectA.Right :=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanX+ColInExcl;
+                RectA.Bottom:=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanY+RowInExcl;
 
                 FCxExcel.ActiveSheet.SetMergedState(RectA,True);
               end;
 
-              CellA:=ActiveSheet.GetCellObject(ColxB,RowxB);
+              CellA:=ActiveSheet.GetCellObject(ColInExcl,RowInExcl);
               StylA:=TCxCellStyl.Create(DefaultCellStyl);
 
               //YXC_2012_02_21_16_41_42_保留一段时间
               {if StylA.DataType<>cxdtLongText then
               begin
                 try
-                  CellA.Text:=Trim(Cells[ColxA,RowxA]);
+                  CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
                   if StylA.DataType=cxdtDoub then
                   begin
                     CellA.Text:=StringReplace(CellA.Text,',','',[rfReplaceAll]);
@@ -902,10 +902,10 @@ begin
                 try
                   if StylA.KeepCellTxtStyl then
                   begin
-                    CellA.Text:=(Cells[ColxA,RowxA]);
+                    CellA.Text:=(Cells[ColInGrid,RowInGrid]);
                   end else
                   begin
-                    CellA.Text:=Trim(Cells[ColxA,RowxA]);
+                    CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
                   end;
 
                   if StylA.DataType=cxdtDoub then
@@ -919,7 +919,7 @@ begin
 
               if Assigned(OnKzExcelGridCellStyl) then
               begin
-                OnKzExcelGridCellStyl(FCxExcel,ActvGrid,RowxA,ColxA,StylA);
+                OnKzExcelGridCellStyl(FCxExcel,ActvGrid,RowInGrid,ColInGrid,StylA);
               end;  
 
               CellA.Style.Font.Name:=StylA.FontName;
@@ -938,7 +938,7 @@ begin
               {if StylA.DataType=cxdtLongText then
               begin
                 try
-                  CellA.Text:=Trim(Cells[ColxA,RowxA]);
+                  CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
                 except
                 end;
               end;}
@@ -947,10 +947,10 @@ begin
                 try
                   if StylA.KeepCellTxtStyl then
                   begin
-                    CellA.Text:=(Cells[ColxA,RowxA]);
+                    CellA.Text:=(Cells[ColInGrid,RowInGrid]);
                   end else
                   begin
-                    CellA.Text:=Trim(Cells[ColxA,RowxA]);
+                    CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
                   end;
                 except
                 end;
@@ -971,10 +971,10 @@ begin
               CellA.Free;
               StylA.Free;
 
-              Inc(RowxB);
+              Inc(RowInExcl);
             end;
 
-            Inc(ColxB);
+            Inc(ColInExcl);
           end;
         end;
       end;
@@ -1002,10 +1002,10 @@ end;
 function TKzExcel.ExeNegl:Boolean;
 var
   I,M:Integer;
-  ColxA:Integer;
-  RowxA:Integer;
-  ColxB:Integer;        //范围导出时发生的列偏移
-  RowxB:Integer;        //范围导出时发生的行偏移
+  ColInGrid:Integer;
+  RowInGrid:Integer;
+  ColInExcl:Integer;        //范围导出时发生的列偏移
+  RowInExcl:Integer;        //范围导出时发生的行偏移
   CellA:TCxSSCellObject;
   StylA:TCxCellStyl;
   SD   :TSaveDialog;
@@ -1100,21 +1100,21 @@ begin
     begin
       SetValidArea;
 
-      ColxB:=0;
+      ColInExcl:=0;
       ExcursionA:=0;
 
       SetValidCols;
       SetValidRows;
 
-      //for ColxA := ColStart to ColEnd do
+      //for ColInGrid := ColStart to ColEnd do
       for I:=0 to ListCols.Count-1 do 
       begin
-        ColxA:=StrToInt(ListCols.Strings[I]);
+        ColInGrid:=StrToInt(ListCols.Strings[I]);
 
         //YXC_2012_02_20_15_48_10
         if (not IncludeHideCols) then
         begin
-          if IsHiddenColumn(ColxA) then
+          if IsHiddenColumn(ColInGrid) then
           begin
             Inc(ExcursionA);
             Continue;
@@ -1126,27 +1126,27 @@ begin
         if IncludeColsSize then
         begin
           ExcursionB:=0;
-          for X:=0 to ColxA do
+          for X:=0 to ColInGrid do
           begin
             if IsHiddenColumn(X) then
             begin
               Inc(ExcursionB);
             end;
           end;
-          ActiveSheet.Cols.Size[ColxB]:=ColWidths[ColxA-ExcursionB]+ColExcursionSiz;
+          ActiveSheet.Cols.Size[ColInExcl]:=ColWidths[ColInGrid-ExcursionB]+ColExcursionSiz;
         end;
         //YXC_2012_11_08_16_59_50_>        
 
-        RowxB:=0;
+        RowInExcl:=0;
         for M:=0 to ListRows.Count-1 do
-        //for RowxA := RowStart to RowEnd do
+        //for RowInGrid := RowStart to RowEnd do
         begin
-          RowxA:=StrToInt(ListRows.Strings[M]);
+          RowInGrid:=StrToInt(ListRows.Strings[M]);
 
           //YXC_2012_05_17_08_26_45_<
           if ShowCellsBorder then
           begin
-            CellA:=ActiveSheet.GetCellObject(ColxB-ExcursionA,RowxB);
+            CellA:=ActiveSheet.GetCellObject(ColInExcl-ExcursionA,RowInExcl);
             for BordA := eLeft to eBottom do
             begin
               with CellA.Style.Borders.Edges[BordA] do
@@ -1159,34 +1159,34 @@ begin
           end;
           //YXC_2012_05_17_08_26_48_>
 
-          if IsMergedCell(ColxA-ExcursionA,RowxA) then
+          if IsMergedCell(ColInGrid-ExcursionA,RowInGrid) then
           begin
-            if not CellProperties[ColxA-ExcursionA,RowxA].IsBaseCell then
+            if not CellProperties[ColInGrid-ExcursionA,RowInGrid].IsBaseCell then
             begin
-              Inc(RowxB);
+              Inc(RowInExcl);
               Continue;
             end;
             //未偏移
-            //FCxExcel.ActiveSheet.SetMergedState(Rect(ColxA,RowxA,CellProperties[ColxA,RowxA].CellSpanX+ColxA,CellProperties[ColxA,RowxA].CellSpanY+RowxA),True);
+            //FCxExcel.ActiveSheet.SetMergedState(Rect(ColInGrid,RowInGrid,CellProperties[ColInGrid,RowInGrid].CellSpanX+ColInGrid,CellProperties[ColInGrid,RowInGrid].CellSpanY+RowInGrid),True);
             //有偏移
-            //FCxExcel.ActiveSheet.SetMergedState(Rect(ColxB,RowxB,CellProperties[ColxA,RowxA].CellSpanX+ColxB,CellProperties[ColxA,RowxA].CellSpanY+RowxB),True);
+            //FCxExcel.ActiveSheet.SetMergedState(Rect(ColInExcl,RowInExcl,CellProperties[ColInGrid,RowInGrid].CellSpanX+ColInExcl,CellProperties[ColInGrid,RowInGrid].CellSpanY+RowInExcl),True);
             //有偏移,有隐藏
 
-            //ALeft:=ColxB;
-            //ATop :=RowxB;
-            //ARight :=CellProperties[ColxA-ExcursionA,RowxA].CellSpanX+ColxB;
-            //ABottom:=CellProperties[ColxA-ExcursionA,RowxA].CellSpanY+RowxB;
+            //ALeft:=ColInExcl;
+            //ATop :=RowInExcl;
+            //ARight :=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanX+ColInExcl;
+            //ABottom:=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanY+RowInExcl;
             //FCxExcel.ActiveSheet.SetMergedState(Rect(ALeft,ATop,ARight,ABottom),True);
 
-            RectA.Left:=ColxB;
-            RectA.Top :=RowxB;
-            RectA.Right :=CellProperties[ColxA-ExcursionA,RowxA].CellSpanX+ColxB;
-            RectA.Bottom:=CellProperties[ColxA-ExcursionA,RowxA].CellSpanY+RowxB;
+            RectA.Left:=ColInExcl;
+            RectA.Top :=RowInExcl;
+            RectA.Right :=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanX+ColInExcl;
+            RectA.Bottom:=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanY+RowInExcl;
             
             FCxExcel.ActiveSheet.SetMergedState(RectA,True);
           end;
 
-          CellA:=ActiveSheet.GetCellObject(ColxB,RowxB);
+          CellA:=ActiveSheet.GetCellObject(ColInExcl,RowInExcl);
           StylA:=TCxCellStyl.Create(DefaultCellStyl);
           
           {if ShowCellsBorder then
@@ -1206,7 +1206,7 @@ begin
           {if StylA.DataType<>cxdtLongText then
           begin
             try
-              CellA.Text:=Trim(Cells[ColxA,RowxA]);
+              CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
               if StylA.DataType=cxdtDoub then
               begin
                 CellA.Text:=StringReplace(CellA.Text,',','',[rfReplaceAll]);
@@ -1219,10 +1219,10 @@ begin
             try
               if StylA.KeepCellTxtStyl then
               begin
-                CellA.Text:=(Cells[ColxA,RowxA]);
+                CellA.Text:=(Cells[ColInGrid,RowInGrid]);
               end else
               begin
-                CellA.Text:=Trim(Cells[ColxA,RowxA]);
+                CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
               end;  
 
               if StylA.DataType=cxdtDoub then
@@ -1236,7 +1236,7 @@ begin
 
           if Assigned(OnKzExcelGetCellStyl) then
           begin
-            OnKzExcelGetCellStyl(Self,RowxA,ColxA,StylA);
+            OnKzExcelGetCellStyl(Self,RowInGrid,ColInGrid,StylA);
           end;
 
           CellA.Style.Font.Name:=StylA.FontName;
@@ -1255,7 +1255,7 @@ begin
           {if StylA.DataType=cxdtLongText then
           begin
             try
-              CellA.Text:=Trim(Cells[ColxA,RowxA]);
+              CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
             except
             end;
           end;}
@@ -1264,10 +1264,10 @@ begin
             try
               if StylA.KeepCellTxtStyl then
               begin
-                CellA.Text:=(Cells[ColxA,RowxA]);
+                CellA.Text:=(Cells[ColInGrid,RowInGrid]);
               end else
               begin
-                CellA.Text:=Trim(Cells[ColxA,RowxA]);
+                CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
               end;
             except
             end;
@@ -1276,10 +1276,10 @@ begin
           CellA.Free;
           StylA.Free;
           
-          Inc(RowxB);          
+          Inc(RowInExcl);          
         end;
         
-        Inc(ColxB);        
+        Inc(ColInExcl);        
       end;
     end;
     
@@ -1341,10 +1341,10 @@ end;
 function TKzExcel.ExeNeglAll:Boolean;
 var
   I,M,N:Integer;
-  ColxA:Integer;
-  RowxA:Integer;
-  ColxB:Integer;        //范围导出时发生的列偏移
-  RowxB:Integer;        //范围导出时发生的行偏移
+  ColInGrid:Integer;
+  RowInGrid:Integer;
+  ColInExcl:Integer;        //范围导出时发生的列偏移
+  RowInExcl:Integer;        //范围导出时发生的行偏移
   CellA:TCxSSCellObject;
   StylA:TCxCellStyl;
   SD   :TSaveDialog;
@@ -1424,21 +1424,21 @@ begin
 
           SetValidArea;
 
-          ColxB:=0;
+          ColInExcl:=0;
           ExcursionA:=0;
 
           SetValidCols;
           SetValidRows;
 
 
-          //for ColxA := ColStart to ColEnd do
+          //for ColInGrid := ColStart to ColEnd do
           for N:=0 to ListCols.Count-1 do
           begin
-            ColxA:=StrToInt(ListCols.Strings[N]);
+            ColInGrid:=StrToInt(ListCols.Strings[N]);
             //YXC_2012_02_20_15_48_10
             if (not IncludeHideCols) then
             begin
-              if IsHiddenColumn(ColxA) then
+              if IsHiddenColumn(ColInGrid) then
               begin
                 Inc(ExcursionA);
                 Continue;
@@ -1450,27 +1450,27 @@ begin
             if IncludeColsSize then
             begin
               ExcursionB:=0;
-              for X:=0 to ColxA do
+              for X:=0 to ColInGrid do
               begin
                 if IsHiddenColumn(X) then
                 begin
                   Inc(ExcursionB);
                 end;
               end;
-              ActiveSheet.Cols.Size[ColxB]:=ColWidths[ColxA-ExcursionB]+ColExcursionSiz;
+              ActiveSheet.Cols.Size[ColInExcl]:=ColWidths[ColInGrid-ExcursionB]+ColExcursionSiz;
             end;
             //YXC_2012_11_08_16_59_50_>            
 
-            RowxB:=0;
-            //for RowxA := RowStart to RowEnd do
+            RowInExcl:=0;
+            //for RowInGrid := RowStart to RowEnd do
             for M:=0 to ListRows.Count-1 do
             begin
-              RowxA:=StrToInt(ListRows.Strings[M]);
+              RowInGrid:=StrToInt(ListRows.Strings[M]);
 
               //YXC_2012_05_17_08_26_45_<
               if ShowCellsBorder then
               begin
-                CellA:=ActiveSheet.GetCellObject(ColxB-ExcursionA,RowxB);
+                CellA:=ActiveSheet.GetCellObject(ColInExcl-ExcursionA,RowInExcl);
                 for BordA := eLeft to eBottom do
                 begin
                   with CellA.Style.Borders.Edges[BordA] do
@@ -1484,41 +1484,41 @@ begin
               //YXC_2012_05_17_08_26_48_>
 
 
-              if IsMergedCell(ColxA-ExcursionA,RowxA) then
+              if IsMergedCell(ColInGrid-ExcursionA,RowInGrid) then
               begin
-                if not CellProperties[ColxA-ExcursionA,RowxA].IsBaseCell then
+                if not CellProperties[ColInGrid-ExcursionA,RowInGrid].IsBaseCell then
                 begin
-                  Inc(RowxB);
+                  Inc(RowInExcl);
                   Continue;
                 end;
                 //未偏移
-                //FCxExcel.ActiveSheet.SetMergedState(Rect(ColxA,RowxA,CellProperties[ColxA,RowxA].CellSpanX+ColxA,CellProperties[ColxA,RowxA].CellSpanY+RowxA),True);
+                //FCxExcel.ActiveSheet.SetMergedState(Rect(ColInGrid,RowInGrid,CellProperties[ColInGrid,RowInGrid].CellSpanX+ColInGrid,CellProperties[ColInGrid,RowInGrid].CellSpanY+RowInGrid),True);
                 //有偏移
-                //FCxExcel.ActiveSheet.SetMergedState(Rect(ColxB,RowxB,CellProperties[ColxA,RowxA].CellSpanX+ColxB,CellProperties[ColxA,RowxA].CellSpanY+RowxB),True);
+                //FCxExcel.ActiveSheet.SetMergedState(Rect(ColInExcl,RowInExcl,CellProperties[ColInGrid,RowInGrid].CellSpanX+ColInExcl,CellProperties[ColInGrid,RowInGrid].CellSpanY+RowInExcl),True);
                 //有偏移,有隐藏
 
-                //ALeft:=ColxB;
-                //ATop :=RowxB;
-                //ARight :=CellProperties[ColxA-ExcursionA,RowxA].CellSpanX+ColxB;
-                //ABottom:=CellProperties[ColxA-ExcursionA,RowxA].CellSpanY+RowxB;
+                //ALeft:=ColInExcl;
+                //ATop :=RowInExcl;
+                //ARight :=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanX+ColInExcl;
+                //ABottom:=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanY+RowInExcl;
                 //FCxExcel.ActiveSheet.SetMergedState(Rect(ALeft,ATop,ARight,ABottom),True);
 
-                RectA.Left:=ColxB;
-                RectA.Top :=RowxB;
-                RectA.Right :=CellProperties[ColxA-ExcursionA,RowxA].CellSpanX+ColxB;
-                RectA.Bottom:=CellProperties[ColxA-ExcursionA,RowxA].CellSpanY+RowxB;
+                RectA.Left:=ColInExcl;
+                RectA.Top :=RowInExcl;
+                RectA.Right :=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanX+ColInExcl;
+                RectA.Bottom:=CellProperties[ColInGrid-ExcursionA,RowInGrid].CellSpanY+RowInExcl;
 
                 FCxExcel.ActiveSheet.SetMergedState(RectA,True);
               end;
 
-              CellA:=ActiveSheet.GetCellObject(ColxB,RowxB);
+              CellA:=ActiveSheet.GetCellObject(ColInExcl,RowInExcl);
               StylA:=TCxCellStyl.Create(DefaultCellStyl);
 
               //YXC_2012_02_21_16_41_42_保留一段时间
               {if StylA.DataType<>cxdtLongText then
               begin
                 try
-                  CellA.Text:=Trim(Cells[ColxA,RowxA]);
+                  CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
                   if StylA.DataType=cxdtDoub then
                   begin
                     CellA.Text:=StringReplace(CellA.Text,',','',[rfReplaceAll]);
@@ -1531,10 +1531,10 @@ begin
                 try
                   if StylA.KeepCellTxtStyl then
                   begin
-                    CellA.Text:=(Cells[ColxA,RowxA]);
+                    CellA.Text:=(Cells[ColInGrid,RowInGrid]);
                   end else
                   begin
-                    CellA.Text:=Trim(Cells[ColxA,RowxA]);
+                    CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
                   end;  
 
                   if StylA.DataType=cxdtDoub then
@@ -1548,7 +1548,7 @@ begin
 
               if Assigned(OnKzExcelGridCellStyl) then
               begin
-                OnKzExcelGridCellStyl(FCxExcel,ActvGrid,RowxA,ColxA,StylA);
+                OnKzExcelGridCellStyl(FCxExcel,ActvGrid,RowInGrid,ColInGrid,StylA);
               end;  
 
               CellA.Style.Font.Name:=StylA.FontName;
@@ -1567,7 +1567,7 @@ begin
               {if StylA.DataType=cxdtLongText then
               begin
                 try
-                  CellA.Text:=Trim(Cells[ColxA,RowxA]);
+                  CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
                 except
                 end;
               end;}
@@ -1577,10 +1577,10 @@ begin
                 try
                   if StylA.KeepCellTxtStyl then
                   begin
-                    CellA.Text:=(Cells[ColxA,RowxA]);
+                    CellA.Text:=(Cells[ColInGrid,RowInGrid]);
                   end else
                   begin
-                    CellA.Text:=Trim(Cells[ColxA,RowxA]);
+                    CellA.Text:=Trim(Cells[ColInGrid,RowInGrid]);
                   end;
                 except
                 end;
@@ -1601,10 +1601,10 @@ begin
               CellA.Free;
               StylA.Free;
 
-              Inc(RowxB);
+              Inc(RowInExcl);
             end;
 
-            Inc(ColxB);
+            Inc(ColInExcl);
           end;
         end;
       end;
@@ -1987,10 +1987,10 @@ end;
 procedure TFkExcel.Execute;
 var
   I,M:Integer;
-  ColxA:Integer;
-  RowxA:Integer;
-  ColxB:Integer;        //范围导出时发生的列偏移
-  RowxB:Integer;        //范围导出时发生的行偏移
+  ColInGrid:Integer;
+  RowInGrid:Integer;
+  ColInExcl:Integer;        //范围导出时发生的列偏移
+  RowInExcl:Integer;        //范围导出时发生的行偏移
 
   CellA:TCxSSCellObject;
   StylA:TCxCellStyl;
@@ -2063,12 +2063,12 @@ begin
     begin
       SetValidArea;
       //
-      ColxA:=1;
-      RowxA:=1;
+      ColInGrid:=1;
+      RowInGrid:=1;
 
       for I:=ColStart to ColEnd do
       begin
-        RowxA:=1;
+        RowInGrid:=1;
 
         if NeglectCrew then
         begin
@@ -2077,9 +2077,9 @@ begin
         
         for M:=RowStart to RowEnd do
         begin
-          ColxB:=GetActualGrp(ColxA,RowxA);
-          RowxB:=GetActualRow(ColxA,RowxA);
-          CellA:=ActiveSheet.GetCellObject(ColxB-1,RowxB-1);
+          ColInExcl:=GetActualGrp(ColInGrid,RowInGrid);
+          RowInExcl:=GetActualRow(ColInGrid,RowInGrid);
+          CellA:=ActiveSheet.GetCellObject(ColInExcl-1,RowInExcl-1);
 
           //YXC_2012_03_14_17_30_57_<
           StylA:=TCxCellStyl.Create(DefaultCellStyl);
@@ -2137,38 +2137,38 @@ begin
           CellA.Free;
           StylA.Free;
 
-          Inc(RowxA);
+          Inc(RowInGrid);
         end;
-        Inc(ColxA);
+        Inc(ColInGrid);
       end;
 
       //YXC_2012_03_19_14_47_45_<
       //at here
-      RowxB:=ActiveSheet.ContentColCount-2;
+      RowInExcl:=ActiveSheet.ContentColCount-2;
       Count:=ColEnd-ColStart+1;
       if NeglectCrew then
       begin
         Dec(Count);
       end;
 
-      for I:=1 to RowxB+1 do
+      for I:=1 to RowInExcl+1 do
       begin
-        ColxA:=I mod Count;
-        if ColxA=0 then ColxA:=Count;
+        ColInGrid:=I mod Count;
+        if ColInGrid=0 then ColInGrid:=Count;
 
         if NeglectCrew then
         begin
-          if ColxA>=2 then Inc(ColxA);
+          if ColInGrid>=2 then Inc(ColInGrid);
         end;  
         
         CellA:=ActiveSheet.GetCellObject(I-1,0);
-        //CellA.Text:=Cells[ColxA,0];//replace the headrow;
+        //CellA.Text:=Cells[ColInGrid,0];//replace the headrow;
 
         StylA:=TCxCellStyl.Create(DefaultCellStyl);
         if StylA.DataType<>cxdtLongText then
         begin
           try
-            CellA.Text:=ActvGrid.Cells[ColxA,HeadRowx];
+            CellA.Text:=ActvGrid.Cells[ColInGrid,HeadRowx];
             if StylA.DataType=cxdtDoub then
             begin
               CellA.Text:=StringReplace(CellA.Text,',','',[rfReplaceAll]);
@@ -2180,7 +2180,7 @@ begin
 
         if Assigned(OnKzExcelGetCellStyl) then
         begin
-          OnKzExcelGetCellStyl(FCxExcel,RowxA,ColxA,StylA);
+          OnKzExcelGetCellStyl(FCxExcel,RowInGrid,ColInGrid,StylA);
         end;
 
         CellA.Style.Font.Name:=StylA.FontName;
@@ -2198,7 +2198,7 @@ begin
         if StylA.DataType=cxdtLongText then
         begin
           try
-            CellA.Text:=ActvGrid.Cells[ColxA,HeadRowx];
+            CellA.Text:=ActvGrid.Cells[ColInGrid,HeadRowx];
           except
           end;
         end;
