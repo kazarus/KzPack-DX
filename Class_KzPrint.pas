@@ -941,6 +941,14 @@ begin
             CellA.ColIndex:=M;
             CellA.RowIndex:=I;
             CellA.PagX    :=-1;
+
+            //if use grid.alignment.
+            {case Alignments[M,I] of
+              taLeftJustify :CellA.Alig:=1;
+              taCenter      :CellA.Alig:=2;
+              taRightJustify:CellA.Alig:=3;
+            end;}
+
             CellA.GapX    :=CellProperties[M,I].CellSpanX;
             CellA.GapY    :=CellProperties[M,I].CellSpanY;
             CellA.TopX    :=GetTopCellRect(M,I);
@@ -962,6 +970,14 @@ begin
             CellA.ColIndex:=M;
             CellA.RowIndex:=I;
             CellA.PagX    :=-1;
+            
+            //if use grid.alignment.
+            {case Alignments[M,I] of
+              taLeftJustify :CellA.Alig:=1;
+              taCenter      :CellA.Alig:=2;
+              taRightJustify:CellA.Alig:=3;
+            end;}
+            
             CellA.GapX    :=CellProperties[M,I].CellSpanX;
             CellA.GapY    :=CellProperties[M,I].CellSpanY;
             CellA.TopX    :=GetTopCellRect(M,I);
@@ -990,6 +1006,14 @@ begin
           CellA.High:=CellSize(M,I).Y;
           CellA.Left:=Y;
           CellA.Alig:=-1;
+          
+          //if use grid.alignment.
+          {case Alignments[M,I] of
+            taLeftJustify :CellA.Alig:=1;
+            taCenter      :CellA.Alig:=2;
+            taRightJustify:CellA.Alig:=3;
+          end;}
+                    
           CellA.ColIndex:=M;
           CellA.RowIndex:=I;
           CellA.PagX    :=-1;
