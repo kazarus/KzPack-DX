@@ -198,7 +198,7 @@ type
     class procedure SetACellStyle(ASheetBook: TcxSpreadSheetBook; ACol, ARow: Integer; bBorder: array of Integer; ASheet: TcxSSBookSheet=nil);
 
     //rename it 
-    class procedure SetCellText(ASheetBook: TcxSpreadSheetBook; ACol, ARow: Integer; AText: string;
+    class procedure SetCellTxt(ASheetBook: TcxSpreadSheetBook; ACol, ARow: Integer; AText: string;
          AFontName: TFontName='ËÎÌו'; AFontSize: Integer=10;AAlign: TcxHorzTextAlign=haCENTER;ADataType:TCxDataType=cxdtText);
     class procedure SetCellStyl(ASheetBook: TcxSpreadSheetBook; ACol, ARow: Integer; bBorder: array of Integer; ASheet: TcxSSBookSheet=nil);    
   end;
@@ -1817,7 +1817,7 @@ begin
   TKzExcel.SetACellStyle(ASheetBook,ACol,ARow,bBorder,ASheet);
 end;
 
-class procedure TKzExcel.SetCellText(ASheetBook: TcxSpreadSheetBook; ACol,
+class procedure TKzExcel.SetCellTxt(ASheetBook: TcxSpreadSheetBook; ACol,
   ARow: Integer; AText: string; AFontName: TFontName; AFontSize: Integer;
   AAlign: TcxHorzTextAlign; ADataType: TCxDataType);
 begin
