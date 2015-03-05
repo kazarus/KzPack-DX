@@ -661,17 +661,17 @@ procedure TKzPrint.OnEndDoc(Sender: TObject);
 var
   I,M,N:Integer;
   NumbA:Integer;
-  StrsA:TStringList;
+  ListA:TStringList;
   NumbB:Integer;
   TempA:string;
 
   PageA:TfrxReportPage;
   PageB:TfrxReportPage;
   StrmA:TMemoryStream;
-  //StrsB:TStringList;
+  //ListB:TStringList;
   IdexA:Integer;
 begin
-  StrsA:=TStringList.Create;
+  ListA:=TStringList.Create;
   
   NumbA:=FfrxReport.Engine.TotalPages div FPageCount;
   for M:=0 to NumbA-1 do
@@ -679,7 +679,7 @@ begin
     for N:=0 to FPageCount-1 do
     begin
       NumbB:=M + N * NumbA +1;
-      StrsA.Add(IntToStr(NumbB));
+      ListA.Add(IntToStr(NumbB));
     end;
   end;
 
@@ -704,17 +704,17 @@ begin
     StrmA.Free;
   end;
 
-  //for I:=StrsA.Count-1 downto 0 do
-  for I:=0 to StrsA.Count-1 do 
+  //for I:=ListA.Count-1 downto 0 do
+  for I:=0 to ListA.Count-1 do 
   begin
-    TempA:=StrsA.Strings[I];
+    TempA:=ListA.Strings[I];
     
     IdexA:=-1;
     IdexA:=FListPage.IndexOf(TempA);
 
     FListPage.Move(IdexA,I);
   end;
-  FreeAndNil(StrsA);
+  FreeAndNil(ListA);
 
 
   for I:=0 to FListPage.Count-1 do
@@ -1039,16 +1039,16 @@ var
   PagNod:TfrxXMLItem;//“≥√Ê–≈œ¢
 
 
-  StrA  :string;
-  StrsA :TStringList;
+  TMPA  :string;
+  ListA :TStringList;
   ViewA :TKzCellView;
 
 
   procedure DoRead(ANode:TfrxXMLItem);
   var
     I    :Integer;
-    StrB :string;
-    StrsB:TStringList;
+    TMPB :string;
+    ListB:TStringList;
   begin
     if (ANode<>nil) and (ANode.Name<>'TfrxReportPage') then
     begin
@@ -1059,89 +1059,91 @@ var
         ViewA.PrevCont:=ANode.Parent.Name;
       end;
 
-      StrB:=ANode.Text;
-      StrB:=StringReplace(StrB,'"','',[rfReplaceAll]);
+      TMPB:=ANode.Text;
+      TMPB:=StringReplace(TMPB,'"','',[rfReplaceAll]);
 
-      StrsB:=TStringList.Create;
-      StrsB.CommaText:=StrB;
-      //WritelnFmt('%S',[StrsB.Text]);
+      ListB:=TStringList.Create;
+      ListB.CommaText:=TMPB;
+      //WritelnFmt('%S',[ListB.Text]);
 
       ViewA.ViewName:=ANode.Name;
 
-      ViewA.ViewText:=Utf8Decode(frxXMLToStr(StrsB.Values['Text']));
+      ViewA.ViewText:=Utf8Decode(frxXMLToStr(ListB.Values['Text']));
       ViewA.ViewText:=StringReplace(ViewA.ViewText,'"','',[rfReplaceAll]);
 
-      if StrsB.Values['Left']<>'' then
+      if ListB.Values['Left']<>'' then
       begin
-        ViewA.ViewLeft:=StrToFloat(StrsB.Values['Left']);
+        ViewA.ViewLeft:=StrToFloat(ListB.Values['Left']);
       end;
-      if StrsB.Values['Width']<>'' then
+      if ListB.Values['Width']<>'' then
       begin
-        ViewA.ViewWidt:=StrToFloat(StrsB.Values['Width']);
+        ViewA.ViewWidt:=StrToFloat(ListB.Values['Width']);
       end;
-      if StrsB.Values['Top']<>'' then
+      if ListB.Values['Top']<>'' then
       begin
-        ViewA.ViewTop :=StrToFloat(StrsB.Values['Top']);
+        ViewA.ViewTop :=StrToFloat(ListB.Values['Top']);
       end;
-      if StrsB.Values['Height']<>'' then
+      if ListB.Values['Height']<>'' then
       begin
-        ViewA.ViewHeig:=StrToFloat(StrsB.Values['Height']);
-      end;
-
-      ViewA.FontName:=StrsB.Values['Font.Name'];
-
-      if StrsB.Values['Font.Height']<>'' then
-      begin
-        ViewA.FontHeig:=StrToInt(StrsB.Values['Font.Height']);
+        ViewA.ViewHeig:=StrToFloat(ListB.Values['Height']);
       end;
 
-      if StrsB.Values['Font.Color']<>'' then
+      ViewA.FontName:=ListB.Values['Font.Name'];
+
+      if ListB.Values['Font.Height']<>'' then
       begin
-        ViewA.FontColr:=StrToIntDef(StrsB.Values['Font.Color'],-1);
+        ViewA.FontHeig:=StrToInt(ListB.Values['Font.Height']);
+      end;
+
+      if ListB.Values['Font.Color']<>'' then
+      begin
+        ViewA.FontColr:=StrToIntDef(ListB.Values['Font.Color'],-1);
       end;  
 
       ViewA.AutoWidt:=False;
-      if StrsB.Values['AutoWidth']<>'' then
+      if ListB.Values['AutoWidth']<>'' then
       begin
-        if StrsB.Values['AutoWidth']='True' then
+        if ListB.Values['AutoWidth']='True' then
         begin
           ViewA.AutoWidt:=True;
         end else
-        if StrsB.Values['AutoWidth']='False' then
+        if ListB.Values['AutoWidth']='False' then
         begin
           ViewA.AutoWidt:=False;
         end;
       end;
 
       ViewA.AutoFontSize:=False;
-      if StrsB.Values['AutoFontSize']<>'' then
+      if ListB.Values['AutoFontSize']<>'' then
       begin
-        if StrsB.Values['AutoFontSize']='True' then
+        if ListB.Values['AutoFontSize']='True' then
         begin
           ViewA.AutoFontSize:=True;
         end else
-        if StrsB.Values['AutoFontSize']='False' then
+        if ListB.Values['AutoFontSize']='False' then
         begin
           ViewA.AutoFontSize:=False;
         end;
       end;
 
       ViewA.CharSpacing:=0;
-      if StrsB.Values['CharSpacing']<>'' then
+      if ListB.Values['CharSpacing']<>'' then
       begin
-        ViewA.CharSpacing:=StrToIntDef(StrsB.Values['CharSpacing'],0);
+        ViewA.CharSpacing:=StrToIntDef(ListB.Values['CharSpacing'],0);
       end;
              
-      ViewA.FontStyl:=StrsB.Values['Font.Style'];
-      ViewA.FramType:=StrsB.Values['Frame.Typ'];
-      ViewA.VAlign  :=StrsB.Values['VAlign'];
-      ViewA.HAlign  :=StrsB.Values['HAlign'];
-      ViewA.FramStyl:=StrsB.Values['Frame.Style'];
-      if StrsB.Values['Align']<>'' then
+      ViewA.FontStyl:=ListB.Values['Font.Style'];
+      ViewA.FramType:=ListB.Values['Frame.Typ'];
+      ViewA.VAlign  :=ListB.Values['VAlign'];
+      if ListB.Values['HAlign']<>'' then
       begin
-        ViewA.Align   :=StrsB.Values['Align'];
+        ViewA.HAlign  :=ListB.Values['HAlign'];
       end;
-      //WritelnFmt('%s',[ViewA.Align]);
+      ViewA.FramStyl:=ListB.Values['Frame.Style'];
+      if ListB.Values['Align']<>'' then
+      begin
+        ViewA.Align   :=ListB.Values['Align'];
+      end;
 
       FListView.AddObject(ViewA.ViewText,ViewA);
 
@@ -1159,7 +1161,7 @@ var
       end;
     end;
 
-    FreeAndNil(StrsB);
+    FreeAndNil(ListB);
 
     if ANode.Count>0 then
     begin
@@ -1185,24 +1187,24 @@ begin
   PagNod:=XmlNod.FindItem('TfrxReportPage');
   if PagNod<>nil then
   begin
-    StrA:=PagNod.Text;
-    StrA:=StringReplace(StrA,'"','',[rfReplaceAll]);
+    TMPA:=PagNod.Text;
+    TMPA:=StringReplace(TMPA,'"','',[rfReplaceAll]);
 
-    StrsA:=TStringList.Create;
-    StrsA.CommaText:=StrA;
+    ListA:=TStringList.Create;
+    ListA.CommaText:=TMPA;
 
-    PaperWidt:=StrToFloat(StrsA.Values['PaperWidth']);
-    PaperSize:=StrToInt(StrsA.Values['PaperSize']);
-    PaperHeig:=StrToFloat(StrsA.Values['PaperHeight']);
+    PaperWidt:=StrToFloat(ListA.Values['PaperWidth']);
+    PaperSize:=StrToInt(ListA.Values['PaperSize']);
+    PaperHeig:=StrToFloat(ListA.Values['PaperHeight']);
 
-    MargLeft :=StrToFloat(StrsA.Values['LeftMargin']);
-    MargRigh :=StrToFloat(StrsA.Values['RightMargin']);
-    MargTop  :=StrToFloat(StrsA.Values['TopMargin']);
-    MargBott :=StrToFloat(StrsA.Values['BottomMargin']);
+    MargLeft :=StrToFloat(ListA.Values['LeftMargin']);
+    MargRigh :=StrToFloat(ListA.Values['RightMargin']);
+    MargTop  :=StrToFloat(ListA.Values['TopMargin']);
+    MargBott :=StrToFloat(ListA.Values['BottomMargin']);
 
-    Orientation:=StrsA.Values['Orientation'];
+    Orientation:=ListA.Values['Orientation'];
     
-    FreeAndNil(StrsA);
+    FreeAndNil(ListA);
 
     try
       DoRead(PagNod);
@@ -1348,6 +1350,7 @@ constructor TKzCellView.Create;
 begin
   VAlign:='-1';
   HAlign:='-1';
+  HAlign:='haLeft';
   Align :='-1';
 
   PrevCont:='-1';
