@@ -101,8 +101,9 @@ type
 
     FontName:string;
     FontHeig:Integer;
-    FontStyl:string;//0:normal|1:fsbold
+    FontStyl:string; //0:normal|1:fsbold
     FontColr:Integer;//Colour
+    FCharset:Integer;
 
     FramType :string;
     FramStyl :string;
@@ -1098,7 +1099,12 @@ var
       if ListB.Values['Font.Color']<>'' then
       begin
         ViewA.FontColr:=StrToIntDef(ListB.Values['Font.Color'],-1);
-      end;  
+      end;
+
+      if ListB.Values['Font.Charset']<>'' then
+      begin
+        ViewA.FCharSet:=StrToIntDef(ListB.Values['Font.Charset'],1);
+      end;
 
       ViewA.AutoWidt:=False;
       if ListB.Values['AutoWidth']<>'' then
@@ -1361,6 +1367,8 @@ begin
 
   FramType:='-1';
   FramStyl:='-1';
+
+  FCharSet:=1;
 end;
 
 { TKzCellText }
@@ -1924,6 +1932,7 @@ begin
           MemoA.Font.Name  :=ViewA.FontName;
           MemoA.Font.Height:=ViewA.FontHeig;
           MemoA.Font.Color :=ViewA.FontColr;
+          MemoA.Font.Charset:=ViewA.FCharSet;
 
           MemoA.Frame.Typ:=GetFrameType(StrToIntDef(ViewA.FramType,0));
 
@@ -2029,6 +2038,8 @@ begin
               MemoA.Font.Name  :=ViewA.FontName;
               MemoA.Font.Height:=ViewA.FontHeig;
               MemoA.Font.Color :=ViewA.FontColr;
+              MemoA.Font.Charset:=ViewA.FCharSet;
+              
               MemoA.Frame.Typ:=GetFrameType(StrToIntDef(ViewA.FramType,0));
 
               MemoA.AutoWidth:=ViewA.AutoWidt;
@@ -2083,6 +2094,7 @@ begin
             MemoB.Font.Name  :=ViewB.FontName;
             MemoB.Font.Height:=ViewB.FontHeig;
             MemoB.Font.Color :=ViewB.FontColr;
+            MemoB.Font.Charset:=ViewB.FCharSet;
 
             //YXC_2010_05_31_17_52_41_<
             if BoolReadFromCnfg then
@@ -2148,6 +2160,8 @@ begin
             MemoA.Font.Name  :=ViewA.FontName;
             MemoA.Font.Height:=ViewA.FontHeig;
             MemoA.Font.Color :=ViewA.FontColr;
+            MemoA.Font.Charset:=ViewA.FCharSet;
+            
             MemoA.Frame.Typ:=GetFrameType(StrToIntDef(ViewA.FramType,0));
 
             MemoA.AutoWidth:=ViewA.AutoWidt;
@@ -2208,6 +2222,7 @@ begin
           MemoB.Font.Name  :=ViewB.FontName;
           MemoB.Font.Height:=ViewB.FontHeig;
           MemoB.Font.Color :=ViewB.FontColr;
+          MemoB.Font.Charset:=ViewB.FCharSet;
         
           //YXC_2010_05_31_17_52_41
           if BoolReadFromCnfg then
@@ -2432,6 +2447,7 @@ begin
           MemoA.Font.Name  :=ViewA.FontName;
           MemoA.Font.Height:=ViewA.FontHeig;
           MemoA.Font.Color :=ViewA.FontColr;
+          MemoA.Font.Charset:=ViewA.FCharSet;
 
           MemoA.Frame.Typ:=GetFrameType(StrToIntDef(ViewA.FramType,0));
 
@@ -2534,6 +2550,7 @@ begin
             MemoA.Font.Name  :=ViewA.FontName;
             MemoA.Font.Height:=ViewA.FontHeig;
             MemoA.Font.Color :=ViewA.FontColr;
+            MemoA.Font.Charset:=ViewA.FCharSet;
 
             //YXC_2010_05_31_17_52_41
             if BoolReadFromCnfg then
@@ -2583,6 +2600,7 @@ begin
             MemoB.Font.Name  :=ViewB.FontName;
             MemoB.Font.Height:=ViewB.FontHeig;
             MemoB.Font.Color :=ViewB.FontColr;
+            MemoB.Font.Charset:=ViewB.FCharSet;
 
             if BoolReadFromCnfg then
             begin
@@ -2637,6 +2655,7 @@ begin
           MemoA.Font.Name  :=ViewA.FontName;
           MemoA.Font.Height:=ViewA.FontHeig;
           MemoA.Font.Color :=ViewA.FontColr;
+          MemoA.Font.Charset:=ViewA.FCharSet;
         
           //YXC_2010_05_31_17_52_41
           if BoolReadFromCnfg then
@@ -2679,6 +2698,7 @@ begin
           MemoB.Font.Name  :=ViewB.FontName;
           MemoB.Font.Height:=ViewB.FontHeig;
           MemoB.Font.Color :=ViewB.FontColr;
+          MemoB.Font.Charset:=ViewB.FCharSet;
 
           //YXC_2010_05_31_17_52_41
           if BoolReadFromCnfg then
@@ -2798,6 +2818,7 @@ begin
           MemoA.Font.Name  :=ViewA.FontName;
           MemoA.Font.Height:=ViewA.FontHeig;
           MemoA.Font.Color :=ViewA.FontColr;
+          MemoA.Font.Charset:=ViewA.FCharSet;
 
           MemoA.Frame.Typ:=GetFrameType(StrToIntDef(ViewA.FramType,0));
           MemoA.AutoWidth:=ViewA.AutoWidt;
@@ -2872,6 +2893,7 @@ begin
         MemoA.Font.Name  :=ViewA.FontName;
         MemoA.Font.Height:=ViewA.FontHeig;
         MemoA.Font.Color :=ViewA.FontColr;
+        MemoA.Font.Charset:=ViewA.FCharSet;
         
         if BoolReadFromCnfg then
         begin
@@ -2909,6 +2931,7 @@ begin
         MemoB.Font.Name  :=ViewB.FontName;
         MemoB.Font.Height:=ViewB.FontHeig;
         MemoB.Font.Color :=ViewB.FontColr;
+        MemoB.Font.Charset:=ViewB.FCharSet;
         
         if BoolReadFromCnfg then
         begin
