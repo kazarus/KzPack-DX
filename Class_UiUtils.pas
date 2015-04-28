@@ -9,9 +9,10 @@ type
   TUiUtils=class(TObject)
   public
     class function  GetMiddLeft(AParentWidth,ASelfWidth:Integer):Integer;
-    class function  GetRuleNumb(ACodeRule:string;ALevl:Integer=-1):Integer;    
-    class function  GetPrevCode(ASelfLevl:Integer;ASelfCode,ACodeRule:string):string;
-    class function  GetRuleLevl(ACodeRule:string;ASelfCode:string):Integer;
+    
+    class function  GetPrevCode(ASelfLevl:Integer;ASelfCode,ACodeRule:string;AWithDash:Boolean=False):string;
+    class function  GetRuleNumb(ACodeRule:string;ALevl:Integer=-1;AWithDash:Boolean=True):Integer;
+    class function  GetRuleLevl(ACodeRule:string;ASelfCode:string;AWithDash:Boolean=True):Integer;
     
     //JYZBGL.SBYOYOO
     class function  SbYoYoGetGetPrevCode(ASelfLevl:Integer;ASelfCode:string;var ALevlCode:string;ATAG:string='.'):string;
@@ -257,26 +258,33 @@ end;
 {procedure SetAdvGridChkBox(AAdvGrid:TAdvStringGrid;ACol:Integer;AValue:Boolean);}
 
 
+
 class function TUiUtils.GetPrevCode(ASelfLevl: Integer; ASelfCode,
-  ACodeRule: string): string;
+  ACodeRule: string; AWithDash: Boolean): string;
 var
   NumbA:Integer;  
 begin
   Result:='';
   NumbA :=StrToInt(ACodeRule[ASelfLevl]);
-  Result:=Copy(ASelfCode,1,Length(ASelfCode)-NumbA-1);
-  //Result:=Copy(ASelfCode,1,Length(ASelfCode)-NumbA);  
+
+  if AWithDash then
+  begin
+    Result:=Copy(ASelfCode,1,Length(ASelfCode)-NumbA-1);  
+  end else
+  begin
+    Result:=Copy(ASelfCode,1,Length(ASelfCode)-NumbA);
+  end;
 end;
 
-
-class function TUiUtils.GetRuleLevl(ACodeRule, ASelfCode: string): Integer;
+class function TUiUtils.GetRuleLevl(ACodeRule, ASelfCode: string;
+  AWithDash: Boolean): Integer;
 var
   I:Integer;
 begin
   Result:=-1;
   for I:=1 to Length(ACodeRule) do
   begin
-    if Length(ASelfCode)=GetRuleNumb(ACodeRule,I) then
+    if Length(ASelfCode)=GetRuleNumb(ACodeRule,I,AWithDash) then
     begin
       Result:=I;
       Break;
@@ -284,8 +292,8 @@ begin
   end;  
 end;
 
-class function TUiUtils.GetRuleNumb(ACodeRule: string;
-  ALevl: Integer): Integer;
+class function TUiUtils.GetRuleNumb(ACodeRule: string; ALevl: Integer;
+  AWithDash: Boolean): Integer;
 var
   I:Integer;
 begin
@@ -295,12 +303,21 @@ begin
   end;
   
   Result:=0;
-  for I:=1 to ALevl do
+  if AWithDash then
   begin
-    Result:=Result+ StrToInt(ACodeRule[I])+1;
+    for I:=1 to ALevl do
+    begin
+      Result:=Result+ StrToInt(ACodeRule[I])+1;
+    end;
+
+    Result:=Result-1;
+  end else
+  begin
+    for I:=1 to ALevl do
+    begin
+      Result:=Result+StrToInt(ACodeRule[I]);
+    end;
   end;
-  
-  //Result:=Result-1;
 end;
 
 class function TUiUtils.GetStrsCellChked(AAdvGrid: TAdvStringGrid;
