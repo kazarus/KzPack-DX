@@ -187,7 +187,10 @@ begin
   try
     Result.Connected :=True;
   except
-    raise Exception.Create('该数据库连接无效.');
+    on E:Exception do
+    begin
+      raise Exception.CreateFmt('该数据库连接无效:%S',[E.Message]);
+    end;
   end;
 end;
 
@@ -297,7 +300,7 @@ begin
   except
     on E:Exception do
     begin
-      raise Exception.Create(E.Message);
+      raise Exception.CreateFmt('该数据库连接无效:%S',[E.Message]);
     end;  
   end;
 
