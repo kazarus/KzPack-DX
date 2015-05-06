@@ -3,7 +3,7 @@ unit Class_UiUtils;
 
 interface
 uses
-  Classes,SysUtils,AdvGrid,frxClass,ElTree,Math,Graphics;
+  Classes,SysUtils,AdvGrid,frxClass,{ElTree,}Math,Graphics;
 
 type
   TUiUtils=class(TObject)
@@ -13,10 +13,6 @@ type
     class function  GetPrevCode(ASelfLevl:Integer;ASelfCode,ACodeRule:string;AWithDash:Boolean=False):string;
     class function  GetRuleNumb(ACodeRule:string;ALevl:Integer=-1;AWithDash:Boolean=True):Integer;
     class function  GetRuleLevl(ACodeRule:string;ASelfCode:string;AWithDash:Boolean=True):Integer;
-    
-    //JYZBGL.SBYOYOO
-    class function  SbYoYoGetGetPrevCode(ASelfLevl:Integer;ASelfCode:string;var ALevlCode:string;ATAG:string='.'):string;
-    class function  SbYoYoGetGetRuleLevl(ASelfCode:string;ATAG:string='.'):Integer;
   public
     class function  StringToColorDef(AValue:string;ADef:string='clWhite'): TColor;
   public
@@ -54,16 +50,16 @@ type
         TAppUtil.SetItemPrevChecked(TElTree(Sender),Item,False);
       end;
     end;}
-    class procedure SetItemNextChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
+    {class procedure SetItemNextChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
     class procedure SetItemPrevChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
     //eltree.common
     class function  GetTreeItemCheckedCount(ATree:TElTree;ACheckChild:Boolean=False):Integer;
     class procedure SetTreeItemCheckedState(AValue,ALastLevl:Boolean;ATree:TElTree);
     class function  GetMaxLevelInTreeView(ATree:TElTree):Integer;
-    class procedure TreeIndex(ATree:TElTree);   
+    class procedure TreeIndex(ATree:TElTree);}
   public
     //frxreport
-    class function  GetFrxPageInfo(Afrxreport:TfrxReport):string;  
+    class function  GetfrxPageInfo(Afrxreport:TfrxReport):string;
 
   end;
 
@@ -183,7 +179,7 @@ begin
   end;  
 end;
 
-class function TUiUtils.GetFrxPageInfo(Afrxreport: TfrxReport): string;
+class function TUiUtils.GetfrxPageInfo(Afrxreport: TfrxReport): string;
 begin
   if not Afrxreport.EngineOptions.DoublePass then
   begin
@@ -214,17 +210,7 @@ begin
   Result:=GetStrsCellChked(AAdvGrid,ACol);
 end;
 
-class function TUiUtils.GetMaxLevelInTreeView(ATree: TElTree): Integer;
-var
-  I:Integer;
-begin
-  Result:=0;
-  for I:=0 to ATree.Items.Count-1 do
-  begin
-    Result:=Max(Result,ATree.Items.Item[I].Level);
-  end;
-  Inc(Result);
-end;
+
 
 class function TUiUtils.GetMiddLeft(AParentWidth,
   ASelfWidth: Integer): Integer;
@@ -343,34 +329,7 @@ begin
   end;
 end;
 
-class function TUiUtils.GetTreeItemCheckedCount(ATree: TElTree;
-  ACheckChild: Boolean): Integer;
-var
-  I:Integer;
-  ItemA:TElTreeItem;
-begin
-  Result:=0;
-  with ATree do
-  begin
-    for I:=0 to ATree.Items.Count-1 do
-    begin
-      ItemA:=ATree.Items.Item[I];
-      if (ItemA.ShowCheckBox) and (ItemA.Checked) then
-      begin
-        if ACheckChild then
-        begin
-          if not ItemA.HasChildren then
-          begin
-            Inc(Result);
-          end;  
-        end else
-        begin
-          Inc(Result);
-        end;
-      end;
-    end;  
-  end;  
-end; 
+
 
 class function TUiUtils.GridCheck(AGrid: TAdvStringGrid; ACol, ARowStart,
   ARowEnd: Integer): TStringList;
@@ -429,48 +388,6 @@ begin
   end;  
 end; 
 
-class function TUiUtils.SbYoYoGetGetPrevCode(ASelfLevl: Integer; ASelfCode:string;var ALevlCode:string;
-  ATAG: string): string;
-var
-  I,M:Integer;
-
-  TempA:string;
-begin
-  ALevlCode:=ASelfCode;
-
-  M:=0;
-  for I:=1 to Length(ASelfCode) do
-  begin
-    if ASelfCode[I]=ATAG then
-    begin
-      Inc(M);
-    end;
-
-    if M=ASelfLevl-1 then 
-    begin
-      Result:=Copy(ASelfCode,1,I);
-
-      Delete(ALevlCode,1,Length(Result));
-      
-      Break;
-    end;  
-  end;  
-end;
-
-class function TUiUtils.SbYoYoGetGetRuleLevl(ASelfCode:string;
-  ATAG: string): Integer;
-var
-  I:Integer;
-begin
-  Result:=0;
-  for I:=1 to Length(ASelfCode) do
-  begin
-    if ASelfCode[I]=ATAG then
-    begin
-      Inc(Result);
-    end;  
-  end;  
-end;
 
 class procedure TUiUtils.SetCellTextAlign(AGrid: TAdvStringGrid; ACol,
   ARow, AAlig: Integer);
@@ -509,6 +426,49 @@ begin
   end;
 end;
 
+
+{
+
+class function TUiUtils.GetTreeItemCheckedCount(ATree: TElTree;
+  ACheckChild: Boolean): Integer;
+var
+  I:Integer;
+  ItemA:TElTreeItem;
+begin
+  Result:=0;
+  with ATree do
+  begin
+    for I:=0 to ATree.Items.Count-1 do
+    begin
+      ItemA:=ATree.Items.Item[I];
+      if (ItemA.ShowCheckBox) and (ItemA.Checked) then
+      begin
+        if ACheckChild then
+        begin
+          if not ItemA.HasChildren then
+          begin
+            Inc(Result);
+          end;
+        end else
+        begin
+          Inc(Result);
+        end;
+      end;
+    end;
+  end;
+end;
+
+class function TUiUtils.GetMaxLevelInTreeView(ATree: TElTree): Integer;
+var
+  I:Integer;
+begin
+  Result:=0;
+  for I:=0 to ATree.Items.Count-1 do
+  begin
+    Result:=Max(Result,ATree.Items.Item[I].Level);
+  end;
+  Inc(Result);
+end;
 
 class procedure TUiUtils.SetItemNextChecked(ATree: TElTree;
   AItem: TElTreeItem; AStat: Boolean);
@@ -560,18 +520,6 @@ begin
   end;  
 end;
 
-class function TUiUtils.StringToColorDef(AValue, ADef: string): TColor;
-begin
-  Result:=clWhite;
-  if Trim(AValue)='' then
-  begin
-    Result:=StringToColor(ADef);
-  end else
-  begin
-    Result:=StringToColor(Trim(AValue));
-  end;
-end;
-
 class procedure TUiUtils.TreeIndex(ATree: TElTree);
 var
   I:Integer;
@@ -586,4 +534,19 @@ begin
     Items.EndUpdate;
   end;
 end;
+}
+
+class function TUiUtils.StringToColorDef(AValue, ADef: string): TColor;
+begin
+  Result:=clWhite;
+  if Trim(AValue)='' then
+  begin
+    Result:=StringToColor(ADef);
+  end else
+  begin
+    Result:=StringToColor(Trim(AValue));
+  end;
+end;
+
+
 end.
