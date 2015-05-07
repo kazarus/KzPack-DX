@@ -182,7 +182,11 @@ begin
   if Result.ProviderName=CONST_PROVIDER_SQLITE then
   begin
     Result.SpecificOptions.Add('SQLite.ForceCreateDatabase=True');
-  end;
+  end;{else
+  if Result.ProviderName=CONST_PROVIDER_SQLSRV then
+  begin
+    Result.SpecificOptions.Add('SQL Server.ConnectionTimeout=0');
+  end;}
 
   try
     Result.Connected :=True;
@@ -293,6 +297,10 @@ begin
   if Result.ProviderName=CONST_PROVIDER_SQLITE then
   begin
     Result.SpecificOptions.Add('SQLite.ForceCreateDatabase=True');
+  end else
+  if Result.ProviderName=CONST_PROVIDER_SQLSRV then
+  begin
+    Result.SpecificOptions.Add('SQL Server.ConnectionTimeout=0');
   end;
   
   try

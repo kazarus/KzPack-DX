@@ -361,13 +361,20 @@ begin
   if UniConnectionA.ProviderName=CONST_PROVIDER_SQLSRV then
   begin
     UniConnectionA.SpecificOptions.Add('SQL Server.ConnectionTimeout=1');
-  end;
+  end;{else
+  if UniConnectionA.ProviderName=CONST_PROVIDER_SQLSRV then
+  begin
+    UniConnectionA.SpecificOptions.Add('SQL Server.ConnectionTimeout=0');
+  end;}
 
   try
     try
       UniConnectionA.PerformConnect();
     except
-      raise Exception.Create('该数据库连接无效.');
+      on E:Exception do
+      begin
+        raise Exception.CreateFmt('该数据库连接无效:%S',[E.Message]);
+      end;
     end;
   finally
     FreeAndNil(UniConnectionA);
