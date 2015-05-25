@@ -1252,8 +1252,7 @@ begin
     
   Delete(TMPA,1,1);
   Result:=Format('{%S}',[TMPA]);
-
-    
+  
   FreeMem(PropList);
 end;
 
