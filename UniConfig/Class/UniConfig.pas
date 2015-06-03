@@ -16,13 +16,13 @@ type
     FUnixYear: Integer;   //配置年度
     FUnixMark: string;    //配置代号
 
-    FUnixType: string;    //驱动类型
-    FUnixPswd: string;    //密码
-    FUnixUser: string;    //用户
-    FUnixServ: string;    //服务器
-    FDataBase: string;    //数据库
-    FUnixPort: string;    //端口号
-    FIsDirect: Integer;   //是否直联
+    FUnixType: string;    //*驱动类型
+    FUnixPswd: string;    //*密码
+    FUnixUser: string;    //*用户
+    FUnixServ: string;    //*服务器
+    FDataBase: string;    //*数据库
+    FUnixPort: string;    //*端口号
+    FIsDirect: Integer;   //*是否直联
     FUnixOrdr: Integer;   //排序
     FUnixMemo: string;    //备注
   public
