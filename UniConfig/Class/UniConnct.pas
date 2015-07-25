@@ -175,18 +175,22 @@ begin
   begin
     if AUniConfig.IsDirect=1 then
     begin
-     //UniConnectionA.SpecificOptions.Clear;
+     //Result.SpecificOptions.Clear;
       Result.SpecificOptions.Add('Oracle.Direct=True');
-    end;  
+    end;
   end else
   if Result.ProviderName=CONST_PROVIDER_SQLITE then
   begin
     Result.SpecificOptions.Add('SQLite.ForceCreateDatabase=True');
-  end;{else
+  end else
   if Result.ProviderName=CONST_PROVIDER_SQLSRV then
   begin
-    Result.SpecificOptions.Add('SQL Server.ConnectionTimeout=0');
-  end;}
+    //Result.SpecificOptions.Add('SQL Server.ConnectionTimeout=0');
+  end else
+  if Result.ProviderName=CONST_PROVIDER_MYSQLX then
+  begin
+    Result.SpecificOptions.Add('MySQL.UseUnicode=True');
+  end;
 
   try
     Result.Connected :=True;
@@ -300,7 +304,11 @@ begin
   end else
   if Result.ProviderName=CONST_PROVIDER_SQLSRV then
   begin
-    Result.SpecificOptions.Add('SQL Server.ConnectionTimeout=0');
+    //Result.SpecificOptions.Add('SQL Server.ConnectionTimeout=0');
+  end else
+  if Result.ProviderName=CONST_PROVIDER_MYSQLX then
+  begin
+    Result.SpecificOptions.Add('MySQL.UseUnicode=True');
   end;
   
   try

@@ -3,7 +3,7 @@ unit Class_UiUtils;
 
 interface
 uses
-  Classes,SysUtils,AdvGrid,frxClass,{ElTree,}Math,Graphics;
+  Classes,SysUtils,AdvGrid,{frxClass,}{ElTree,}Math,Graphics;
 
 type
   TUiUtils=class(TObject)
@@ -59,7 +59,7 @@ type
     class procedure TreeIndex(ATree:TElTree);}
   public
     //frxreport
-    class function  GetfrxPageInfo(Afrxreport:TfrxReport):string;
+    {class function  GetfrxPageInfo(Afrxreport:TfrxReport):string;}
 
   end;
 
@@ -179,14 +179,14 @@ begin
   end;  
 end;
 
-class function TUiUtils.GetfrxPageInfo(Afrxreport: TfrxReport): string;
+{class function TUiUtils.GetfrxPageInfo(Afrxreport: TfrxReport): string;
 begin
   if not Afrxreport.EngineOptions.DoublePass then
   begin
     Afrxreport.EngineOptions.DoublePass:=True;
   end;  
   Result:=Format('µÚ%dÒ³£¨¹²%dÒ³£©',[Afrxreport.PreviewPages.Count,Afrxreport.Engine.TotalPages]);
-end;
+end;}
 
 class function TUiUtils.GetGridAlignment(AAlig: Integer): TAlignment;
 begin
