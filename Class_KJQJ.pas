@@ -28,6 +28,7 @@ type
   public
     constructor Create;overload;
     constructor Create(AKJND,AKJQJ:Integer);overload;
+    constructor Create(AValue:Integer);overload;
     destructor  Destroy; override;
   public
     class function  CopyIt(AKJQJ:TKJQJ):TKJQJ;overload;
@@ -225,6 +226,12 @@ begin
   Result:=TKJQJ.Create;
   Result.KJND:=Trunc(Value / 100);
   Result.KJQJ:=Value mod 100;
+end;
+
+constructor TKJQJ.Create(AValue: Integer);
+begin
+  KJND:=Trunc(AValue / 100);
+  KJQJ:=AValue  mod 100;
 end;
 
 end.
