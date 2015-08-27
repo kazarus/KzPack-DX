@@ -42,6 +42,9 @@ type
     FUniSQL:TUniSQL;
     FOptTyp:TOperateType;
     TablNam:string;
+  public
+    FRESPCODE:string;
+    FRESPNAME:string;
   protected
     function  GetUniSQL:TUniSQL;
   protected
@@ -74,6 +77,9 @@ type
     constructor Create; virtual;  
   public
     property UniSQL:TUniSQL read GetUniSQL;
+  published
+    property RESPCODE:string read FRESPCODE write FRESPCODE;
+    property RESPNAME:string read FRESPNAME write FRESPNAME;
   public
     class function  ReadDS(AUniQuery: TUniQuery): TUniEngine;overload;virtual;abstract;
     class procedure ReadDS(AUniQuery: TUniQuery;var Result:TUniEngine);overload;virtual;abstract;
@@ -133,7 +139,11 @@ type
     class procedure ExecuteSQL(ASQL:string;AUniConnection:TUniConnection);overload;
     class procedure ExecuteSQL(ASQL:string);overload;
   end;
-    
+
+
+const
+  CONST_RESP_TRUE='TRUE';
+  CONST_RESP_FAIL='FAIL';
 
 implementation
 
