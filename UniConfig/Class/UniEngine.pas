@@ -68,8 +68,8 @@ type
 
     function  CheckExist(AUniConnection:TUniConnection):Boolean;overload;virtual;
 
-    function  TOJSON(AOperateType:TOperateType=otNormal):string;overload;
-    procedure INJSON(AValue:string);overload;
+    //#function  TOJSON(AOperateType:TOperateType=otNormal):string;overload;
+    //#procedure INJSON(AValue:string);overload;
   public
     constructor Create; virtual;  
   public
@@ -98,10 +98,10 @@ type
     class procedure ListDB(ASQL:string;AUniConnection:TUniConnection;var Result:TCollection;withSorted:Boolean=False);overload;virtual;
     class procedure ListDB(ASQL:string;Fields:array of string;AUniConnection:TUniConnection;var Result:TStringList;withSorted:Boolean=False);overload;virtual;
 
-    class function  TOJSON(AList:TStringList;AOperateType:TOperateType=otNormal):string;overload;
-    class function  TOJSON(AObjt:TUniEngine;AOperateType:TOperateType=otNormal):string;overload;
-    class procedure INJSON(AValue:string;AClass:TUniEngineClass;var AList:TStringList;ACleanList:Boolean=True);overload;
-    class procedure INJSON(AValue:string;AClass:TUniEngineClass;var AObjt:TUniEngine;ACleanList:Boolean=True);overload;
+    //#class function  TOJSON(AList:TStringList;AOperateType:TOperateType=otNormal):string;overload;
+    //#class function  TOJSON(AObjt:TUniEngine;AOperateType:TOperateType=otNormal):string;overload;
+    //#class procedure INJSON(AValue:string;AClass:TUniEngineClass;var AList:TStringList;ACleanList:Boolean=True);overload;
+    //#class procedure INJSON(AValue:string;AClass:TUniEngineClass;var AObjt:TUniEngine;ACleanList:Boolean=True);overload;
 
     class procedure STRIDX(Args:array of string;AList:TStringList;ASeparator:string;withQuoted:Boolean=False);overload;
     class function  STRDIY(Args:array of string;AList:TStringList;ASeparator:string=',';withQuoted:Boolean=False):string;overload;
@@ -987,144 +987,144 @@ begin
 
 end;
 
-class function TUniEngine.TOJSON(AList: TStringList;AOperateType:TOperateType): string;
-var
-  I,M,N:Integer;
-  Instance:TUniEngine;
+//class function TUniEngine.TOJSON(AList: TStringList;AOperateType:TOperateType): string;
+//var
+//  I,M,N:Integer;
+//  Instance:TUniEngine;
+//
+//  TMPA:string;
+//
+//  NameA:string;
+//  Value:string;
+//
+//  PropList:PPropList;
+//begin
+//  Result:='';
+//
+//  if (AList=nil) or (AList.Count=0) then Exit;
+//
+//  for I:=0 to AList.Count -1 do
+//  begin
+//    Instance:=TUniEngine(AList.Objects[I]);
+//
+//    TMPA:='';
+//    M:=GetPropList(Instance,PropList);
+//    for N:=Low(PropList^) to M-1 do
+//    begin
+//      case AOperateType of
+//        otUpperCase:NameA:=UpperCase(PropList[N]^.Name);
+//        otLowerCase:NameA:=LowerCase(PropList[N]^.Name);
+//      else;
+//        NameA:=PropList[N]^.Name;
+//      end;
+//
+//      Value:=GetPropValue(Instance,PropList[N]^.Name);
+//      Value:=TKzUtils.jsencode(Value);
+//
+//      TMPA:=TMPA+Format(',"%s":"%s"',[NameA,Value]);
+//    end;
+//
+//    Delete(TMPA,1,1);
+//    TMPA :=Format('{%S}',[TMPA]);
+//    Result:=Result+','+TMPA;
+//
+//    FreeMem(PropList);
+//  end;
+//
+//  Delete(Result,1,1);
+//  Result:=Format('[%S]',[Result]);
+//end;
 
-  TMPA:string;
-  
-  NameA:string;
-  Value:string;
-
-  PropList:PPropList;
-begin
-  Result:='';
-
-  if (AList=nil) or (AList.Count=0) then Exit;
-
-  for I:=0 to AList.Count -1 do
-  begin
-    Instance:=TUniEngine(AList.Objects[I]);
-
-    TMPA:='';
-    M:=GetPropList(Instance,PropList);
-    for N:=Low(PropList^) to M-1 do
-    begin
-      case AOperateType of
-        otUpperCase:NameA:=UpperCase(PropList[N]^.Name);
-        otLowerCase:NameA:=LowerCase(PropList[N]^.Name);
-      else;
-        NameA:=PropList[N]^.Name;
-      end;    
-
-      Value:=GetPropValue(Instance,PropList[N]^.Name);
-      Value:=TKzUtils.jsencode(Value);
-
-      TMPA:=TMPA+Format(',"%s":"%s"',[NameA,Value]);
-    end;
-    
-    Delete(TMPA,1,1);
-    TMPA :=Format('{%S}',[TMPA]);
-    Result:=Result+','+TMPA;
-    
-    FreeMem(PropList);
-  end;
-
-  Delete(Result,1,1);
-  Result:=Format('[%S]',[Result]);
-end;
-
-class procedure TUniEngine.INJSON(AValue:string;AClass:TUniEngineClass;var AList: TStringList;ACleanList:Boolean);
-var
-  I,M,N:Integer; //for avlaue
-  X,Y,Z:Integer; //for rtti
-
-  TMPA:string;
-  
-  ListA:TStrings;
-  ListB:TStrings;
-  NameA:string;
-  Value:string;
-
-  PropName:string;
-  PropList:PPropList;
-  Instance:TUniEngine;
-begin
-  if Trim(AValue)='' then Exit;
-  
-  try
-    //if nothing to set propvalue
-    Y:=GetPropList(AClass.ClassInfo,PropList);
-    if Y=0 then Exit;
-
-    //make it clean and sorted is false.
-    if (AList=nil) then Exit;
-    if ACleanList  then
-    begin
-      TKzUtils.JustCleanList(AList);
-    end;
-    //make sure the list.sort = false. otherwise, it will be igonre same strsindex. code as follow.
-    {if not Sorted then
-      Result := FCount
-    else
-      if Find(S, Result) then
-        case Duplicates of
-          dupIgnore: Exit;
-          dupError: Error(@SDuplicateString, 0);
-        end;
-    InsertItem(Result, S, AObject);}
-    AList.Sorted:=False;    
-
-    //delete head and tail
-    if AValue[1]='[' then
-    begin
-      Delete(AValue,1,1);
-    end;
-    if AValue[Length(AValue)]=']' then
-    begin
-      Delete(AValue,Length(AValue),1);
-    end;
-
-
-    ListA:=TKzUtils.StrsStrCutted(AValue,'\{*\}');
-    for I:=0 to ListA.Count-1 do
-    begin
-      TMPA:=Trim(ListA.Strings[I]);
-
-      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\:','=');
-      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\{','');
-      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\"','');
-      
-      if Trim(TMPA)='' then Continue;
-
-      ListB:=TKzUtils.StrsStrCutted(TMPA,'\,');
-
-      Instance:=AClass.Create;
-      for X:=Low(PropList^) to Y-1 do
-      begin
-        PropName:=PropList[X]^.Name;
-
-        for M:=0 to ListB.Count-1 do
-        begin
-          NameA:=UpperCase(ListB.Names[M]);
-          
-          if UpperCase(PropName)=NameA then
-          begin
-            Value:=TKzUtils.jsdecode(ListB.ValueFromIndex[M]);
-            SetPropValue(Instance,PropName,Value);
-          end;
-        end;
-      end;
-
-      AList.AddObject(Instance.GetStrsIndex,Instance);
-      FreeAndNil(ListB);
-    end;
-  finally
-    FreeAndNil(ListA);
-    FreeMem(PropList);
-  end;
-end;
+//class procedure TUniEngine.INJSON(AValue:string;AClass:TUniEngineClass;var AList: TStringList;ACleanList:Boolean);
+//var
+//  I,M,N:Integer; //for avlaue
+//  X,Y,Z:Integer; //for rtti
+//
+//  TMPA:string;
+//
+//  ListA:TStrings;
+//  ListB:TStrings;
+//  NameA:string;
+//  Value:string;
+//
+//  PropName:string;
+//  PropList:PPropList;
+//  Instance:TUniEngine;
+//begin
+//  if Trim(AValue)='' then Exit;
+//
+//  try
+//    //if nothing to set propvalue
+//    Y:=GetPropList(AClass.ClassInfo,PropList);
+//    if Y=0 then Exit;
+//
+//    //make it clean and sorted is false.
+//    if (AList=nil) then Exit;
+//    if ACleanList  then
+//    begin
+//      TKzUtils.JustCleanList(AList);
+//    end;
+//    //make sure the list.sort = false. otherwise, it will be igonre same strsindex. code as follow.
+//    {if not Sorted then
+//      Result := FCount
+//    else
+//      if Find(S, Result) then
+//        case Duplicates of
+//          dupIgnore: Exit;
+//          dupError: Error(@SDuplicateString, 0);
+//        end;
+//    InsertItem(Result, S, AObject);}
+//    AList.Sorted:=False;
+//
+//    //delete head and tail
+//    if AValue[1]='[' then
+//    begin
+//      Delete(AValue,1,1);
+//    end;
+//    if AValue[Length(AValue)]=']' then
+//    begin
+//      Delete(AValue,Length(AValue),1);
+//    end;
+//
+//
+//    ListA:=TKzUtils.StrsStrCutted(AValue,'\{*\}');
+//    for I:=0 to ListA.Count-1 do
+//    begin
+//      TMPA:=Trim(ListA.Strings[I]);
+//
+//      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\:','=');
+//      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\{','');
+//      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\"','');
+//
+//      if Trim(TMPA)='' then Continue;
+//
+//      ListB:=TKzUtils.StrsStrCutted(TMPA,'\,');
+//
+//      Instance:=AClass.Create;
+//      for X:=Low(PropList^) to Y-1 do
+//      begin
+//        PropName:=PropList[X]^.Name;
+//
+//        for M:=0 to ListB.Count-1 do
+//        begin
+//          NameA:=UpperCase(ListB.Names[M]);
+//
+//          if UpperCase(PropName)=NameA then
+//          begin
+//            Value:=TKzUtils.jsdecode(ListB.ValueFromIndex[M]);
+//            SetPropValue(Instance,PropName,Value);
+//          end;
+//        end;
+//      end;
+//
+//      AList.AddObject(Instance.GetStrsIndex,Instance);
+//      FreeAndNil(ListB);
+//    end;
+//  finally
+//    FreeAndNil(ListA);
+//    FreeMem(PropList);
+//  end;
+//end;
 
 class procedure TUniEngine.STRIDX(Args: array of string;
   AList: TStringList; ASeparator: string; withQuoted:Boolean);
@@ -1205,128 +1205,128 @@ begin
   Delete(Result,1,Length(ASeparator));
 end;
 
-class procedure TUniEngine.INJSON(AValue: string; AClass: TUniEngineClass;
-  var AObjt: TUniEngine; ACleanList: Boolean);
-begin
-  raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.INJSON] AT [UniEngine.pas]');
-end;
+//class procedure TUniEngine.INJSON(AValue: string; AClass: TUniEngineClass;
+//  var AObjt: TUniEngine; ACleanList: Boolean);
+//begin
+//  raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.INJSON] AT [UniEngine.pas]');
+//end;
 
-class function TUniEngine.TOJSON(AObjt: TUniEngine;
-  AOperateType: TOperateType): string;
-begin
-  raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.TOJSON] AT [UniEngine.pas]');
-end;
+//class function TUniEngine.TOJSON(AObjt: TUniEngine;
+//  AOperateType: TOperateType): string;
+//begin
+//  raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.TOJSON] AT [UniEngine.pas]');
+//end;
 
-function TUniEngine.TOJSON(AOperateType: TOperateType): string;
-var
-  I,M,N:Integer;
-  Instance:TUniEngine;
+//function TUniEngine.TOJSON(AOperateType: TOperateType): string;
+//var
+//  I,M,N:Integer;
+//  Instance:TUniEngine;
+//
+//  TMPA:string;
+//
+//  NameA:string;
+//  Value:string;
+//
+//  PropList:PPropList;
+//begin
+//  Result:='';
+//
+//  Instance:=Self;
+//
+//  TMPA:='';
+//  M:=GetPropList(Instance,PropList);
+//  for N:=Low(PropList^) to M-1 do
+//  begin
+//    case AOperateType of
+//      otUpperCase:NameA:=UpperCase(PropList[N]^.Name);
+//      otLowerCase:NameA:=LowerCase(PropList[N]^.Name);
+//    else;
+//      NameA:=PropList[N]^.Name;
+//    end;
+//
+//    Value:=GetPropValue(Instance,PropList[N]^.Name);
+//    Value:=TKzUtils.jsencode(Value);
+//
+//    TMPA:=TMPA+Format(',"%s":"%s"',[NameA,Value]);
+//  end;
+//
+//  Delete(TMPA,1,1);
+//  Result:=Format('{%S}',[TMPA]);
+//
+//  FreeMem(PropList);
+//end;
 
-  TMPA:string;
-  
-  NameA:string;
-  Value:string;
-
-  PropList:PPropList;
-begin
-  Result:='';
-
-  Instance:=Self;
-
-  TMPA:='';
-  M:=GetPropList(Instance,PropList);
-  for N:=Low(PropList^) to M-1 do
-  begin
-    case AOperateType of
-      otUpperCase:NameA:=UpperCase(PropList[N]^.Name);
-      otLowerCase:NameA:=LowerCase(PropList[N]^.Name);
-    else;
-      NameA:=PropList[N]^.Name;
-    end;    
-
-    Value:=GetPropValue(Instance,PropList[N]^.Name);
-    Value:=TKzUtils.jsencode(Value);
-
-    TMPA:=TMPA+Format(',"%s":"%s"',[NameA,Value]);
-  end;
-    
-  Delete(TMPA,1,1);
-  Result:=Format('{%S}',[TMPA]);
-  
-  FreeMem(PropList);
-end;
-
-procedure TUniEngine.INJSON(AValue: string);
-var
-  I,M,N:Integer; //for avlaue
-  X,Y,Z:Integer; //for rtti
-
-  TMPA:string;
-  
-  ListA:TStrings;
-  ListB:TStrings;
-  NameA:string;
-  Value:string;
-
-  PropName:string;
-  PropList:PPropList;
-  Instance:TUniEngine;
-begin
-  if Trim(AValue)='' then Exit;
-  
-  try
-    //if nothing to set propvalue
-    Y:=GetPropList(Self.ClassInfo,PropList);
-    if Y=0 then Exit;
-
-    //delete head and tail
-    if AValue[1]='[' then
-    begin
-      Delete(AValue,1,1);
-    end;
-    if AValue[Length(AValue)]=']' then
-    begin
-      Delete(AValue,Length(AValue),1);
-    end;
-
-
-    ListA:=TKzUtils.StrsStrCutted(AValue,'\{*\}');
-    for I:=0 to ListA.Count-1 do
-    begin
-      TMPA:=Trim(ListA.Strings[I]);
-
-      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\:','=');
-      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\{','');
-      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\"','');
-      
-      if Trim(TMPA)='' then Continue;
-
-      ListB:=TKzUtils.StrsStrCutted(TMPA,'\,');
-
-      Instance:=Self;
-      for X:=Low(PropList^) to Y-1 do
-      begin
-        PropName:=PropList[X]^.Name;
-
-        for M:=0 to ListB.Count-1 do
-        begin
-          NameA:=UpperCase(ListB.Names[M]);
-          
-          if UpperCase(PropName)=NameA then
-          begin
-            Value:=TKzUtils.jsdecode(ListB.ValueFromIndex[M]);
-            SetPropValue(Instance,PropName,Value);
-          end;
-        end;
-      end;
-      
-      FreeAndNil(ListB);
-    end;
-  finally
-    FreeAndNil(ListA);
-    FreeMem(PropList);
-  end;
-end;
+//procedure TUniEngine.INJSON(AValue: string);
+//var
+//  I,M,N:Integer; //for avlaue
+//  X,Y,Z:Integer; //for rtti
+//
+//  TMPA:string;
+//
+//  ListA:TStrings;
+//  ListB:TStrings;
+//  NameA:string;
+//  Value:string;
+//
+//  PropName:string;
+//  PropList:PPropList;
+//  Instance:TUniEngine;
+//begin
+//  if Trim(AValue)='' then Exit;
+//
+//  try
+//    //if nothing to set propvalue
+//    Y:=GetPropList(Self.ClassInfo,PropList);
+//    if Y=0 then Exit;
+//
+//    //delete head and tail
+//    if AValue[1]='[' then
+//    begin
+//      Delete(AValue,1,1);
+//    end;
+//    if AValue[Length(AValue)]=']' then
+//    begin
+//      Delete(AValue,Length(AValue),1);
+//    end;
+//
+//
+//    ListA:=TKzUtils.StrsStrCutted(AValue,'\{*\}');
+//    for I:=0 to ListA.Count-1 do
+//    begin
+//      TMPA:=Trim(ListA.Strings[I]);
+//
+//      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\:','=');
+//      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\{','');
+//      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\"','');
+//
+//      if Trim(TMPA)='' then Continue;
+//
+//      ListB:=TKzUtils.StrsStrCutted(TMPA,'\,');
+//
+//      Instance:=Self;
+//      for X:=Low(PropList^) to Y-1 do
+//      begin
+//        PropName:=PropList[X]^.Name;
+//
+//        for M:=0 to ListB.Count-1 do
+//        begin
+//          NameA:=UpperCase(ListB.Names[M]);
+//
+//          if UpperCase(PropName)=NameA then
+//          begin
+//            Value:=TKzUtils.jsdecode(ListB.ValueFromIndex[M]);
+//            SetPropValue(Instance,PropName,Value);
+//          end;
+//        end;
+//      end;
+//
+//      FreeAndNil(ListB);
+//    end;
+//  finally
+//    FreeAndNil(ListA);
+//    FreeMem(PropList);
+//  end;
+//end;
 
 class function TUniEngine.ExistFieldInOracle(ATable, AField: string;
   AUniConnection: TUniConnection): Boolean;
