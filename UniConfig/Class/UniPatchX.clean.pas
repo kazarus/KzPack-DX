@@ -83,21 +83,21 @@ uses
 
 function TUniPatchX.ADD_DICT_VERSION: string;
 begin
-  Result:='INSERT INTO %S (DICT_IDEX,DICT_MODE,DICT_INFO,DICT_CODE,DICT_NAME,DICT_MEMO) VALUES (%D,%S,%S,%S,%S,%S)';
+  Result:='INSERT INTO %S (DICT_INDX,DICT_MODE,DICT_INFO,DICT_CODE,DICT_NAME,DICT_MEMO) VALUES (%D,%S,%S,%S,%S,%S)';
   Result:=Format(Result,[TargetTabl,1,QuotedStr(CONST_DATA_BASE_DICTMOD),QuotedStr('数据库版本号'),QuotedStr('10001'),QuotedStr(''),QuotedStr('')]);
 end;
 
 function TUniPatchX.ADD_PK_TBL_DICT: string;
 begin
-  Result:='ALTER TABLE %S ADD CONSTRAINT PK_GWK_DICT PRIMARY KEY (DICT_IDEX)';
-  Result:=Format(Result,[TargetTabl]);
+  Result:='ALTER TABLE %S ADD CONSTRAINT PK_%S PRIMARY KEY (DICT_INDX)';
+  Result:=Format(Result,[TargetTabl,TargetTabl]);
 end;
 
 function TUniPatchX.ADD_TBL_DICT: string;
 begin
   Result:='CREATE TABLE %S'
          +'('
-         +'    DICT_IDEX INT NOT NULL,'
+         +'    DICT_INDX INT NOT NULL,'
          +'    DICT_MODE VARCHAR(10),'
          +'    DICT_INFO VARCHAR(100),'
          +'    DICT_CODE VARCHAR(200),'
@@ -126,11 +126,11 @@ end;
 
 procedure TUniPatchX.Connect(ATargetMark: string);
 var
-  IdexA:Integer;
+  IDXA:Integer;
   UniConnctA:TUniConnection;
 begin
-  IdexA:=ListConnct.IndexOf(ATargetMark);
-  if IdexA=-1 then
+  IDXA:=ListConnct.IndexOf(ATargetMark);
+  if IDXA=-1 then
   begin
     UniConnctA:=UniConnctEx.GetConnection(ATargetMark);
     UniConnctA.StartTransaction;
@@ -138,7 +138,7 @@ begin
     FUniConnct:=UniConnctA;
   end else
   begin
-    FUniConnct:=TUniConnection(ListConnct.Objects[IdexA]);
+    FUniConnct:=TUniConnection(ListConnct.Objects[IDXA]);
   end;
 end;
 
@@ -180,32 +180,32 @@ procedure TUniPatchX.Execute;
 var
   I:Integer;
   SQLA :string;
-  IdexA:Integer; //数据库里的数据库版本
-  IdexB:Integer; //
+  IDXA:Integer; //数据库里的数据库版本
+  IDXB:Integer; //
   PatchA:TOncePatch;
 begin
-  IdexA:=GetDataBaseVersion;
-  if IdexA=-1 then
+  IDXA:=GetDataBaseVersion;
+  if IDXA=-1 then
   begin
     //改版前操作
     Connect(TargetMark);
     Execute10001;
-    IdexA:=10001;
+    IDXA:=10001;
   end;
 
   //YXC_2012_11_21_10_24_05_不需要升级.
-  if IdexA = CONST_DATA_BASE_VERSION then Exit;
+  if IDXA = CONST_DATA_BASE_VERSION then Exit;
 
   try
     try
-      for I:=IdexA+1  to CONST_DATA_BASE_VERSION do
+      for I:=IDXA+1  to CONST_DATA_BASE_VERSION do
       begin
-        IdexB:=-1;
-        IdexB:=ListPatch.IndexOf(IntToStr(I));
-        if IdexB<>-1 then
+        IDXB:=-1;
+        IDXB:=ListPatch.IndexOf(IntToStr(I));
+        if IDXB<>-1 then
         begin
           PatchA:=nil;
-          PatchA:=TOncePatch(ListPatch.Objects[IdexB]);
+          PatchA:=TOncePatch(ListPatch.Objects[IDXB]);
           if PatchA=nil then Continue;
 
           Connect(PatchA.ConnctMark);
@@ -222,16 +222,16 @@ begin
   finally
     CommitDB;
   end;
-  {if IdexA < CONST_DATA_BASE_VERSION then
+  {if IDXA < CONST_DATA_BASE_VERSION then
   begin
-    for I:=IdexA+1  to CONST_DATA_BASE_VERSION do
+    for I:=IDXA+1  to CONST_DATA_BASE_VERSION do
     begin
-      IdexB:=-1;
-      IdexB:=ListPatch.IndexOf(IntToStr(I));
-      if IdexB<>-1 then
+      IDXB:=-1;
+      IDXB:=ListPatch.IndexOf(IntToStr(I));
+      if IDXB<>-1 then
       begin
         PatchA:=nil;
-        PatchA:=TOncePatch(ListPatch.Objects[IdexB]);
+        PatchA:=TOncePatch(ListPatch.Objects[IDXB]);
         if PatchA=nil then Continue;
 
         try
@@ -257,6 +257,7 @@ end;
 
 procedure TUniPatchX.Execute10001;
 begin
+
 end;
 
 procedure TUniPatchX.Execute10002;
