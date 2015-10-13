@@ -186,6 +186,7 @@ begin
   if Result.ProviderName=CONST_PROVIDER_SQLSRV then
   begin
     //Result.SpecificOptions.Add('SQL Server.ConnectionTimeout=0');
+    Result.SpecificOptions.Add('SQL Server.OLEDBProvider=prSQL');
   end else
   if Result.ProviderName=CONST_PROVIDER_MYSQLX then
   begin
@@ -305,6 +306,7 @@ begin
   if Result.ProviderName=CONST_PROVIDER_SQLSRV then
   begin
     //Result.SpecificOptions.Add('SQL Server.ConnectionTimeout=0');
+    Result.SpecificOptions.Add('SQL Server.OLEDBProvider=prSQL');
   end else
   if Result.ProviderName=CONST_PROVIDER_MYSQLX then
   begin
@@ -350,6 +352,7 @@ begin
   if UniConnectionA.ProviderName=CONST_PROVIDER_SQLSRV then 
   begin
     UniConnectionA.SpecificOptions.Add('SQL Server.ConnectionTimeout=1');
+    UniConnectionA.SpecificOptions.Add('SQL Server.OLEDBProvider=prSQL');
   end;
 
   try

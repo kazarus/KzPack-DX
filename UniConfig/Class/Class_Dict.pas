@@ -31,7 +31,7 @@ type
 
     class procedure SetDefault(AUniConnection:TUniConnection);
     class procedure SetUpgrade(AUniConnection:TUniConnection);
-    class procedure SetUpdatxd(ADictMode,ADictCode:string;AUniConnection:TUniConnection);        
+    class procedure UpdateDict(ADictMode,ADictCode:string;AUniConnection:TUniConnection);        
   end;
 
 implementation
@@ -185,7 +185,7 @@ begin
   end;
 end;
 
-class procedure TDict.SetUpdatxd(ADictMode, ADictCode: string;
+class procedure TDict.UpdateDict(ADictMode, ADictCode: string;
   AUniConnection: TUniConnection);
 var
   SqlA:string;  
