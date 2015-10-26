@@ -461,6 +461,7 @@ begin
     UniConnct.Port        :=StrToIntDef(Trim(Edit_UnixPort.Text),0);
     
     UniConnct.SpecificOptions.Add('SQL Server.ConnectionTimeout=3');
+    UniConnct.SpecificOptions.Add('SQL Server.OLEDBProvider=prSQL');
 
     try
       UniConnct.Connected:=True;
