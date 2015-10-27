@@ -1402,7 +1402,7 @@ end;
 
 constructor TUniEngine.Create;
 begin
-  
+  RESPCODE:=CONST_RESP_TRUE;
 end;
 
 class procedure TUniEngine.ListDB(ASQL: string;
