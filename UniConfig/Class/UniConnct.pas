@@ -144,14 +144,14 @@ begin
   if AUniConfig.UnixType=CONST_PROVIDER_ORACLE then
   begin
     if AUniConfig.UnixUser='' then raise Exception.CreateFmt('AUniConfig.UnixUser=nil',[]);
-    if AUniConfig.UnixPswd='' then raise Exception.CreateFmt('AUniConfig.UnixPswd=nil',[]);
+    //#if AUniConfig.UnixPswd='' then raise Exception.CreateFmt('AUniConfig.UnixPswd=nil',[]);
     if AUniConfig.UnixServ='' then raise Exception.CreateFmt('AUniConfig.UnixServ=nil',[]);
-  end else  
+  end else
   if AUniConfig.UnixType=CONST_PROVIDER_SQLSRV then
   begin
     if AUniConfig.DataBase='' then raise Exception.CreateFmt('AUniConfig.DataBase=nil',[]);
     if AUniConfig.UnixUser='' then raise Exception.CreateFmt('AUniConfig.UnixUser=nil',[]);
-    if AUniConfig.UnixPswd='' then raise Exception.CreateFmt('AUniConfig.UnixPswd=nil',[]);
+    //#if AUniConfig.UnixPswd='' then raise Exception.CreateFmt('AUniConfig.UnixPswd=nil',[]);
     if AUniConfig.UnixServ='' then raise Exception.CreateFmt('AUniConfig.UnixServ=nil',[]);
   end else
   if AUniConfig.UnixType=CONST_PROVIDER_ACCESS then 
