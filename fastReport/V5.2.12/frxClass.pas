@@ -1010,7 +1010,9 @@ type
     procedure Loaded; override;
     function CalcAndFormat(const Expr: WideString; Format: TfrxFormat): WideString;
     procedure BeginDraw(Canvas: TCanvas; ScaleX, ScaleY, OffsetX, OffsetY: Extended); override;
+  public
     procedure SetDrawParams(Canvas: TCanvas; ScaleX, ScaleY, OffsetX, OffsetY: Extended);
+  protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure DefineProperties(Filer: TFiler); override;
   public

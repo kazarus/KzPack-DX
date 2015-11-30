@@ -16,10 +16,11 @@ unit Class_KzUtils;
 //YXC_2014_03_27_11_20_54_add_inttodatex
 //YXC_2014_05_09_22_56_08_add_jsencode%jsdecode.must be thanks:wr960204:http://www.raysoftware.cn
 //YXC_2014_05_29_14_06_22_add_getguid
+//YXC_2015_11_30_10_00_41_add_stringtocolordef
 
 interface
 uses
-  Classes,SysUtils,Windows,Forms,PerlRegEx,Variants,StrUtils,TLHelp32;
+  Classes,SysUtils,Windows,Forms,PerlRegEx,Variants,StrUtils,TLHelp32,Graphics;
 
 type
   TKzUtils=class(TObject)
@@ -62,6 +63,7 @@ type
     class function  NumbInRect(ANumb:Integer;ABunchOfInteger:string):Boolean;overload;
     class function  InputQueryEx(const ACaption, APrompt: string;var Value: string;IsPassWord:Boolean=True): Boolean;
     class function  CompareTextLike(APart,ALong:string):Boolean;
+    class function  StringToColorDef(const AValue:string;const ADef:string='clWhite'):TColor;
   public
     class function  FloatToText(AValue: Extended; Zero:Boolean=False; Digits: Integer=2;AFormat: TFloatFormat=ffNumber):string;
     class function  TextToFloat(AFloatStr:string):Extended;
@@ -87,7 +89,7 @@ type
 implementation
 
 uses
-  Dialogs,StdCtrls,Graphics,Consts,Controls;
+  Dialogs,StdCtrls,Consts,Controls;
 
 { TKzUtils }
 
@@ -629,7 +631,7 @@ begin
   TempB:=Format('%s-%s-%s',[Copy(TempA,1,4),Copy(TempA,5,2),Copy(TempA,7,2)]);
 
   try
-    FormatSettings.DateSeparator:='-';
+    DateSeparator:='-';
     Result:=StrToDate(TempB);
   except
     on E:Exception do
@@ -853,6 +855,21 @@ end;
 class function TKzUtils.DateToInt(Value: TDateTime): Integer;
 begin
   Result:=StrToIntDef(FormatDateTime('YYYYMMDD',Value),18991230);
+end;
+
+
+
+class function TKzUtils.StringToColorDef(const AValue,
+  ADef: string): TColor;
+begin
+  Result:=clWhite;
+  if Trim(AValue)='' then
+  begin
+    Result:=StringToColor(ADef);
+  end else
+  begin
+    Result:=StringToColor(Trim(AValue));
+  end;
 end;
 
 end.
