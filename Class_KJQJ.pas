@@ -24,7 +24,8 @@ type
     function  GetPrevKJND:Integer;   //上一个会计年度
     function  GetPrevKJQJ:Integer;   //上一个会计期间
 
-    function  GetKJNDKJQJ:Integer;overload;   //取得整型期间  
+    function  GetKJNDKJQJ:Integer;overload;                 //取得整型期间
+    function  GetKJNDKJQJ(AValue:Integer):Integer;overload; //取得整型期间
   public
     constructor Create;overload;
     constructor Create(AKJND,AKJQJ:Integer);overload;
@@ -232,6 +233,46 @@ constructor TKJQJ.Create(AValue: Integer);
 begin
   KJND:=Trunc(AValue / 100);
   KJQJ:=AValue  mod 100;
+end;
+
+function TKJQJ.GetKJNDKJQJ(AValue: Integer): Integer;
+var
+  I,M:Integer;
+  NDT:Integer;
+  QJT:Integer;
+begin
+  I  :=Abs(AValue);
+  NDT:=KJND;
+  QJT:=KJQJ;
+
+  if AValue > 0 then
+  begin
+    while I > 0 do
+    begin
+      QJT:=QJT + 1;
+      if QJT=13 then
+      begin
+        QJT :=1;
+        Inc(NDT);
+      end;
+      Dec(I);
+    end;
+  end else
+  if AValue < 0 then  
+  begin
+    while I > 0 do
+    begin
+      QJT:=QJT  - 1;
+      if QJT =0 then
+      begin
+        QJT:=12;
+        Dec(NDT);
+      end;
+      Dec(I);
+    end;
+  end;
+
+  Result:=NDT * 100 + QJT;
 end;
 
 end.
