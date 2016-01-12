@@ -20,7 +20,7 @@ unit Class_KzUtils;
 
 interface
 uses
-  Classes,SysUtils,Windows,Forms,PerlRegEx,Variants,StrUtils,TLHelp32,Graphics;
+  Classes,SysUtils,Windows,Forms,PerlRegEx,Variants,StrUtils,TLHelp32,Graphics,System.DateUtils;
 
 type
   TKzUtils=class(TObject)
@@ -630,8 +630,9 @@ begin
   if Length(TempA)<>8 then Exit;
   TempB:=Format('%s-%s-%s',[Copy(TempA,1,4),Copy(TempA,5,2),Copy(TempA,7,2)]);
 
+
   try
-    DateSeparator:='-';
+    //#DateSeparator:='-';
     Result:=StrToDate(TempB);
   except
     on E:Exception do

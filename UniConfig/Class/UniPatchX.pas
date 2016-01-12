@@ -438,10 +438,7 @@ end;
 
 finalization
 begin
-  if UniPatchxEx<>nil then
-  begin
-    FreeAndNil(UniPatchxEx);
-  end;
+  if UniPatchxEx<>nil then FreeAndNil(UniPatchxEx);
 end;
 
 end.
