@@ -10,12 +10,14 @@ type
   public
     function  ToJSON:string;overload;
     procedure InJSON(AValue:string);overload;
+    procedure InJSON(AValue:string;AField:string;AIndex:Integer=0);overload;
 
     procedure ToFILE(AFileName:string);overload;
     procedure InFILE(AFileName:string);overload;
   public
     class function  ToJSON(AList:TCollection):string;overload;
     class procedure InJSON(AValue:string;var AList:TCollection);overload;
+    class procedure InJSON(AValue:string;AField:string;var AList:TCollection;AIndex:Integer=0);overload;
 
     class procedure ToFILE(AFileName:string;AList:TCollection);overload;
     class procedure InFILE(AFileName:string;var AList:TCollection);overload;
@@ -133,4 +135,30 @@ begin
   end;
 end;
 
+procedure THelprUniEngine.InJSON(AValue, AField: string;AIndex:Integer);
+var
+  JSON:TQJson;
+begin
+  try
+    JSON:=TQJson.Create;
+    JSON.Parse(AValue);
+    JSON.ItemByName(AField).Items[AIndex].ToRtti(Self);
+  finally
+    FreeAndNil(JSON);
+  end;
+end;
+
+class procedure THelprUniEngine.InJSON(AValue, AField: string;
+  var AList: TCollection; AIndex: Integer);
+var
+  JSON:TQJson;
+begin
+  try
+    JSON:=TQJson.Create;
+    JSON.Parse(AValue);
+    JSON.ItemByName(AField).ToRtti(AList);
+  finally
+    FreeAndNil(JSON);
+  end;
+end;
 end.

@@ -134,11 +134,6 @@ type
     class procedure ExecuteSQL(ASQL:string);overload;
   end;
 
-
-const
-  CONST_RESP_TRUE='TRUE';
-  CONST_RESP_FAIL='FAIL';
-
 implementation
 
 uses
