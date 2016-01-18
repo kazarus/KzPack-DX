@@ -9,7 +9,7 @@ uses
 type
   TDialogViewMemo = class(TDialogView)
     Panl_1: TPanel;
-    Memo_1: TRzMemo;
+    Memo_Main: TRzMemo;
     Btnx_Mrok: TButton;
     Btnx_Quit: TButton;
     Btnx_Expt: TButton;
@@ -35,6 +35,7 @@ var
   DialogViewMemo: TDialogViewMemo;
 
 function ViewMemo(ATitl:string;AMemo:string;AMrokLabl:string='';AQuitLabl:string=''):Integer;
+function EditMemo(ATitl:string;AMemo:string;var AText:string;AMrokLabl:string='';AQuitLabl:string=''):Integer;
 
 implementation
 
@@ -51,7 +52,25 @@ begin
   finally
     FreeAndNil(DialogViewMemo);
   end;
-end;                    
+end;      
+
+function EditMemo(ATitl:string;AMemo:string;var AText:string;AMrokLabl:string='';AQuitLabl:string=''):Integer;
+begin
+  try
+    DialogViewMemo:=TDialogViewMemo.Create(nil);
+    DialogViewMemo.FTitl:=ATitl;
+    DialogViewMemo.FMemo:=AMemo;
+    DialogViewMemo.FMrokLabl:=AMrokLabl;
+    DialogViewMemo.FQuitLabl:=AQuitLabl;
+    Result:=DialogViewMemo.ShowModal;
+    if Result=Mrok then
+    begin
+      AText:=Trim(DialogViewMemo.Memo_Main.Lines.Text);
+    end;
+  finally
+    FreeAndNil(DialogViewMemo);
+  end;
+end;              
 
 procedure TDialogViewMemo.Btnx_QuitClick(Sender: TObject);
 begin
@@ -98,8 +117,8 @@ begin
   inherited;
 
   Caption:=FTitl;
-  Memo_1.Lines.Clear;
-  Memo_1.Lines.Add(FMemo);
+  Memo_Main.Lines.Clear;
+  Memo_Main.Lines.Add(FMemo);
 end;
 
 procedure TDialogViewMemo.TryFreeAndNil;
@@ -123,7 +142,7 @@ begin
       begin
         FN:=Format('%S.txt',[FN]);
       end;
-      Memo_1.Lines.SaveToFile(FN);    
+      Memo_Main.Lines.SaveToFile(FN);    
     end;
   finally
     FreeAndNil(SD);

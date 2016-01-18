@@ -49,7 +49,7 @@ object DialogViewMemo: TDialogViewMemo
       OnClick = Btnx_ExptClick
     end
   end
-  object Memo_1: TRzMemo
+  object Memo_Main: TRzMemo
     Left = 0
     Top = 0
     Width = 643

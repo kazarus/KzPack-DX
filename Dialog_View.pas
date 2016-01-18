@@ -9,6 +9,8 @@ uses
   Dialogs;
 
 type
+  TDialogViewEditMode  = (dvemNULL,dvemADDX,dvemEDIT);
+
   TDialogView = class(TForm)
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
