@@ -434,7 +434,7 @@ end;
 
 procedure TDialogEditUniConfig.ViewDataBase(AUnixType:string);
 var
-  StrsA:TStringList;
+  ListA:TStringList;
   UniConnct:TUniConnection;
 begin
   inherited;
@@ -442,7 +442,7 @@ begin
   
   Comb_DataBase.Items.Clear;
   try
-    StrsA:=TStringList.Create;
+    ListA:=TStringList.Create;
 
     UniConnct:=TUniConnection.Create(nil);
     UniConnct.LoginPrompt :=False;
@@ -465,9 +465,9 @@ begin
 
     try
       UniConnct.Connected:=True;
-      UniConnct.GetDatabaseNames(StrsA);
+      UniConnct.GetDatabaseNames(ListA);
 
-      Comb_DataBase.Items.AddStrings(StrsA);
+      Comb_DataBase.Items.AddStrings(ListA);
     except
       on E:Exception do
       begin
@@ -475,7 +475,7 @@ begin
       end;
     end;
   finally
-    FreeAndNil(StrsA);
+    FreeAndNil(ListA);
     FreeAndNil(UniConnct);
     
     Screen.Cursor:=crDefault;
@@ -627,7 +627,7 @@ begin
     Caption:='数据连接';
       
     Edit_UnixUser.Text:='root';
-    Edit_UnixPswd.Text:='';
+    Edit_UnixPswd.Text:='root';
     Edit_UnixServ.Text:='localhost';
     Edit_UnixPort.Text:='0';
 

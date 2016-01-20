@@ -1,9 +1,9 @@
 object DialogEditUniConfig: TDialogEditUniConfig
   Left = 361
   Top = 275
-  Width = 276
-  Height = 280
   Caption = 'DialogEditUniConfig'
+  ClientHeight = 242
+  ClientWidth = 260
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
   Font.Color = clWindowText
@@ -127,7 +127,6 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Ctl3D = False
     FrameVisible = True
     FramingPreference = fpCustomFraming
-    ItemHeight = 13
     ParentCtl3D = False
     TabOrder = 12
   end
@@ -163,6 +162,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Top = 37
     Width = 180
     Height = 21
+    Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
     TabOrder = 3
@@ -172,6 +172,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Top = 62
     Width = 180
     Height = 21
+    Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
     TabOrder = 4
@@ -182,6 +183,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Top = 87
     Width = 180
     Height = 21
+    Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
     TabOrder = 5
@@ -192,6 +194,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Top = 137
     Width = 180
     Height = 21
+    Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
     TabOrder = 6
@@ -201,6 +204,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Top = 187
     Width = 180
     Height = 21
+    Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
     TabOrder = 7
@@ -213,7 +217,6 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Ctl3D = False
     FrameVisible = True
     FramingPreference = fpCustomFraming
-    ItemHeight = 13
     ParentCtl3D = False
     TabOrder = 8
     OnCloseUp = Comb_TypeCloseUp
@@ -223,6 +226,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Top = 112
     Width = 180
     Height = 21
+    Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
     ImeName = #20013#25991'('#31616#20307') - '#26497#28857#20116#31508
@@ -230,6 +234,8 @@ object DialogEditUniConfig: TDialogEditUniConfig
     OnDblClick = Edit_DataBaseDblClick
     AltBtnKind = bkFolder
     AltBtnVisible = True
+    AltBtnWidth = 15
+    ButtonWidth = 15
     OnAltBtnClick = Edit_DataBaseAltBtnClick
     OnButtonClick = Edit_DataBaseButtonClick
   end
@@ -241,7 +247,6 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Ctl3D = False
     FrameVisible = True
     FramingPreference = fpCustomFraming
-    ItemHeight = 13
     ParentCtl3D = False
     TabOrder = 10
   end
