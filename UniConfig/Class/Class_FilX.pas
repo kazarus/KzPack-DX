@@ -29,7 +29,7 @@ var
   FilePath :string;
   ResStream:TResourceStream;
 begin
-  FilePath:='C:\WINDOWS\system32\sqlite3.dll';
+  {#FilePath:='C:\WINDOWS\system32\sqlite3.dll';
   if not FileExists(FilePath) then
   begin
     try
@@ -41,7 +41,7 @@ begin
       ResStream.SaveToFile(TKzUtils.ExePath+'sqlite3.dll');
       FreeAndNil(ResStream);
     end;
-  end;
+  end;}
 end;
 
 { TBuildMdb }
