@@ -3,7 +3,7 @@ unit Class_UiUtils;
 
 interface
 uses
-  Classes,SysUtils,AdvGrid,{frxClass,}{ElTree,}Math,Graphics;
+  Classes,SysUtils,AdvGrid,frxClass,ElTree,Math,Graphics;
 
 type
   TUiUtils=class(TObject)
@@ -50,17 +50,16 @@ type
         TAppUtil.SetItemPrevChecked(TElTree(Sender),Item,False);
       end;
     end;}
-    {class procedure SetItemNextChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
+    class procedure SetItemNextChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
     class procedure SetItemPrevChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
     //eltree.common
     class function  GetTreeItemCheckedCount(ATree:TElTree;ACheckChild:Boolean=False):Integer;
     class procedure SetTreeItemCheckedState(AValue,ALastLevl:Boolean;ATree:TElTree);
     class function  GetMaxLevelInTreeView(ATree:TElTree):Integer;
-    class procedure TreeIndex(ATree:TElTree);}
+    class procedure TreeIndex(ATree:TElTree);
   public
     //frxreport
-    {class function  GetfrxPageInfo(Afrxreport:TfrxReport):string;}
-
+    class function  GetfrxReportPage(Afrxreport:TfrxReport):string;
   end;
 
 const
@@ -179,14 +178,14 @@ begin
   end;  
 end;
 
-{class function TUiUtils.GetfrxPageInfo(Afrxreport: TfrxReport): string;
+class function TUiUtils.GetfrxReportPage(Afrxreport: TfrxReport): string;
 begin
   if not Afrxreport.EngineOptions.DoublePass then
   begin
     Afrxreport.EngineOptions.DoublePass:=True;
   end;  
   Result:=Format('µÚ%dÒ³£¨¹²%dÒ³£©',[Afrxreport.PreviewPages.Count,Afrxreport.Engine.TotalPages]);
-end;}
+end;
 
 class function TUiUtils.GetGridAlignment(AAlig: Integer): TAlignment;
 begin
@@ -240,10 +239,6 @@ begin
     EndUpdate;
   end;
 end;
-
-{procedure SetAdvGridChkBox(AAdvGrid:TAdvStringGrid;ACol:Integer;AValue:Boolean);}
-
-
 
 class function TUiUtils.GetPrevCode(ASelfLevl: Integer; ASelfCode,
   ACodeRule: string; AWithDash: Boolean): string;
@@ -426,9 +421,6 @@ begin
   end;
 end;
 
-
-{
-
 class function TUiUtils.GetTreeItemCheckedCount(ATree: TElTree;
   ACheckChild: Boolean): Integer;
 var
@@ -534,7 +526,7 @@ begin
     Items.EndUpdate;
   end;
 end;
-}
+
 
 class function TUiUtils.StringToColorDef(AValue, ADef: string): TColor;
 begin
