@@ -13,14 +13,14 @@ uses
 
 type
   TProcPatch=procedure();
-  
+
   TOncePatch=class(TObject)
   public
     VersionMod:string;
     ConnctMark:string;
     ProcPatchA:TProcPatch;
   end;
-  
+
   TListPatch=class(TStringList)
   public
     procedure AddPatch(AVersion,AConnctMark:string;AObject:TProcPatch);
@@ -42,36 +42,25 @@ type
 
     procedure Connect(ATargetMark:string);
     procedure Rollback;
-    procedure CommitDB;    
+    procedure CommitDB;
+  protected
+    procedure Execute10001;
   public
     function  Initialize(ATargetMark,ATargetTabl:string):Boolean;
-    procedure Execute;
+    procedure Execute(AVersion:Integer);
   public
-    procedure Execute10001();
-    procedure Execute10002();
-    procedure Execute10003();
-    procedure Execute10004();
-    procedure Execute10005();
-    procedure Execute10006();
-    procedure Execute10007();
-    procedure Execute10008();
-    procedure Execute10009();
-    procedure Execute10010();
-    procedure Execute10011();
+    procedure AddPatch(AVersion,AConnctMark:string;AObject:TProcPatch);
   public
     destructor Destroy; override;
     constructor Create;
   end;
 
-//当前程序使用到的数据版本号,每次数据升级需要手工更改这个常量.
-//并且需要将方法手工添加进[ListPatch].
 const
   CONST_DATA_BASE_DICTMOD:string ='00001';
-  CONST_DATA_BASE_VERSION:Integer= 10001;  
 
 var
   UniPatchxEx:TUniPatchX;
-  FUniConnct :TUniConnection;   
+  FUniConnct :TUniConnection;
 
 implementation
 
@@ -79,7 +68,11 @@ uses
   Class_KzUtils,Class_Dict,Class_SQLX;
 
 
-{ TUniPatchX }
+procedure TUniPatchX.AddPatch(AVersion, AConnctMark: string;
+  AObject: TProcPatch);
+begin
+  ListPatch.AddPatch(AVersion,AConnctMark,AObject);
+end;
 
 function TUniPatchX.ADD_DICT_VERSION: string;
 begin
@@ -163,7 +156,7 @@ begin
   for I:=0 to ListConnct.Count-1 do
   begin
     //YXC_2013_02_25_15_18_40_keep a version
-    {UniConnctA:=TUniConnection(ListConnct.Objects[I]);
+    {#UniConnctA:=TUniConnection(ListConnct.Objects[I]);
     if UniConnctA<>nil then
     begin
       if UniConnctA.Connected then UniConnctA.Connected:=False;
@@ -176,29 +169,28 @@ begin
   inherited;
 end;
 
-procedure TUniPatchX.Execute;
+procedure TUniPatchX.Execute(AVersion:Integer);
 var
   I:Integer;
   SQLA :string;
-  IDXA:Integer; //数据库里的数据库版本
+  IDXA:Integer; //databaseversion=tbl_dict.code
   IDXB:Integer; //
   PatchA:TOncePatch;
 begin
   IDXA:=GetDataBaseVersion;
   if IDXA=-1 then
   begin
-    //改版前操作
     Connect(TargetMark);
     Execute10001;
     IDXA:=10001;
   end;
 
   //YXC_2012_11_21_10_24_05_不需要升级.
-  if IDXA = CONST_DATA_BASE_VERSION then Exit;
+  if IDXA = AVersion then Exit;
 
   try
     try
-      for I:=IDXA+1  to CONST_DATA_BASE_VERSION do
+      for I:=IDXA+1  to AVersion do
       begin
         IDXB:=-1;
         IDXB:=ListPatch.IndexOf(IntToStr(I));
@@ -222,83 +214,14 @@ begin
   finally
     CommitDB;
   end;
-  {if IDXA < CONST_DATA_BASE_VERSION then
-  begin
-    for I:=IDXA+1  to CONST_DATA_BASE_VERSION do
-    begin
-      IDXB:=-1;
-      IDXB:=ListPatch.IndexOf(IntToStr(I));
-      if IDXB<>-1 then
-      begin
-        PatchA:=nil;
-        PatchA:=TOncePatch(ListPatch.Objects[IDXB]);
-        if PatchA=nil then Continue;
-
-        try
-          Connect(PatchA.ConnctMark);
-          PatchA.ProcPatchA();
-          if FUniConnct.Connected then
-          begin
-            FUniConnct.Connected:=False;
-          end;          
-        except
-          raise Exception.CreateFmt('UPGRADE ERROR:%S:%S',[PatchA.VersionMod,PatchA.ConnctMark]);
-        end;
-      end;
-    end;}
-    //更新数据库版本号
-    SetDataBaseVersion(CONST_DATA_BASE_VERSION);
-    {if FUniConnct.Connected then
-    begin
-      FUniConnct.Connected:=False;
-    end;}
-  //end;
+  SetDataBaseVersion(AVersion);
 end;
 
 procedure TUniPatchX.Execute10001;
 begin
-
+  //nothing to do;the helper start at execute10002;
 end;
 
-procedure TUniPatchX.Execute10002;
-begin
-end;
-
-procedure TUniPatchX.Execute10003;
-begin
-end;
-
-procedure TUniPatchX.Execute10004;
-begin
-end;
-
-procedure TUniPatchX.Execute10005;
-begin
-end;
-
-procedure TUniPatchX.Execute10006;
-begin
-end;
-
-procedure TUniPatchX.Execute10007;
-begin
-end;
-
-procedure TUniPatchX.Execute10008;
-begin
-end;
-
-procedure TUniPatchX.Execute10009;
-begin
-end;
-
-procedure TUniPatchX.Execute10010;
-begin
-end;
-
-procedure TUniPatchX.Execute10011;
-begin
-end;
 
 function TUniPatchX.GetDataBaseVersion: Integer;
 var
@@ -322,10 +245,7 @@ begin
     //-<
   finally
     FreeAndNil(UniConnct);
-    if UniQueryA<>nil then
-    begin
-      FreeAndNil(UniQueryA);
-    end;  
+    if UniQueryA<>nil then  FreeAndNil(UniQueryA);
   end;
 end;
 
@@ -418,22 +338,9 @@ begin
   AddObject(OncePatchA.VersionMod,OncePatchA);
 end;
 
-{ TOncePatch }
-
 initialization
 begin
   UniPatchxEx:=TUniPatchX.Create;
-  UniPatchxEx.ListPatch.AddPatch('10001','-1',@TUniPatchX.Execute10001);
-  UniPatchxEx.ListPatch.AddPatch('10002','-1',@TUniPatchX.Execute10002);
-  UniPatchxEx.ListPatch.AddPatch('10003','-1',@TUniPatchX.Execute10003);
-  UniPatchxEx.ListPatch.AddPatch('10004','-1',@TUniPatchX.Execute10004);
-  UniPatchxEx.ListPatch.AddPatch('10005','-1',@TUniPatchX.Execute10005);
-  UniPatchxEx.ListPatch.AddPatch('10006','-1',@TUniPatchX.Execute10006);
-  UniPatchxEx.ListPatch.AddPatch('10007','-1',@TUniPatchX.Execute10007);
-  UniPatchxEx.ListPatch.AddPatch('10008','-1',@TUniPatchX.Execute10008);
-  UniPatchxEx.ListPatch.AddPatch('10009','-1',@TUniPatchX.Execute10009);
-  UniPatchxEx.ListPatch.AddPatch('10010','-1',@TUniPatchX.Execute10010);
-  UniPatchxEx.ListPatch.AddPatch('10011','-1',@TUniPatchX.Execute10011);
 end;
 
 finalization
