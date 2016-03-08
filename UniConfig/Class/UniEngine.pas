@@ -521,20 +521,22 @@ begin
   Result:=False;
   if AUniConnection=nil then Exit;
 
-  ListA:=TStringList.Create;
-  AUniConnection.GetTableNames(ListA);
-  if (ListA<>nil) and (ListA.Count>0) then
-  begin
-    ListA.Sorted:=True;
-    Result:=ListA.IndexOf(ATable)<>-1;
-    {IdexA:=-1;
-    if ListA.Find(ATable,IdexA) then
+  try
+    ListA:=TStringList.Create;
+    AUniConnection.GetTableNames(ListA);
+    if (ListA<>nil) and (ListA.Count>0) then
     begin
-      Result:=IdexA<>-1;
-    end;}
+      ListA.Sorted:=True;
+      Result:=ListA.IndexOf(ATable)<>-1;
+      {IdexA:=-1;
+      if ListA.Find(ATable,IdexA) then
+      begin
+        Result:=IdexA<>-1;
+      end;}
+    end;
+  finally
+    FreeAndNil(ListA);
   end;
-
-  FreeAndNil(ListA);
 end;
 
 class function TUniEngine.CheckExist(ATable: string;

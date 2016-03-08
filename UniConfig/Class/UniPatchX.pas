@@ -185,6 +185,8 @@ begin
     IDXA:=10001;
   end;
 
+
+
   //YXC_2012_11_21_10_24_05_不需要升级.
   if IDXA = AVersion then Exit;
 
@@ -255,7 +257,8 @@ var
   UniConnct:TUniConnection;
 begin
   Result:=False;
-  
+
+  UniConnct :=nil;
   TargetMark:=ATargetMark;
   TargetTabl:=ATargetTabl;
   
@@ -269,7 +272,7 @@ begin
       //YXC_2013_02_06_14_39_33_sqllite不支持该语法.
       ExecuteSQL(ADD_PK_TBL_DICT,UniConnct);
       ExecuteSQL(ADD_DICT_VERSION,UniConnct);      
-    end;   
+    end;
     //-<
 
     if ListConnct<>nil then
@@ -283,7 +286,7 @@ begin
     end;
     ListConnct:=TStringList.Create;
   finally
-    FreeAndNil(UniConnct);
+    if UniConnct<>nil then FreeAndNil(UniConnct);
   end;
 
   Result:=True;         
