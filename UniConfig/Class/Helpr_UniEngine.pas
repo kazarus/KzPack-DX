@@ -8,14 +8,14 @@ uses
 type
   THelprUniEngine=class helper for TUniEngine
   public
-    function  ToJSON:string;overload;
+    function  ToJSON(doFormat:Boolean=False):string;overload;
     procedure InJSON(AValue:string);overload;
     procedure InJSON(AValue:string;AField:string;AIndex:Integer=0);overload;
 
     procedure ToFILE(AFileName:string);overload;
     procedure InFILE(AFileName:string);overload;
   public
-    class function  ToJSON(AList:TCollection):string;overload;
+    class function  ToJSON(AList:TCollection;doFormat:Boolean=False):string;overload;
     class procedure InJSON(AValue:string;var AList:TCollection);overload;
     class procedure InJSON(AValue:string;AField:string;var AList:TCollection;AIndex:Integer=0);overload;
 
@@ -27,7 +27,7 @@ implementation
 
 { TUniEngineExRtti }
 
-function THelprUniEngine.ToJson: string;
+function THelprUniEngine.ToJson(doFormat:Boolean): string;
 var
   JSON:TQJson;
 begin
@@ -35,7 +35,7 @@ begin
   try
     JSON:=TQJson.Create;
     JSON.FromRtti(Self);
-    Result:=JSON.Encode(True,True);
+    Result:=JSON.Encode(doFormat,True);
   finally
     FreeAndNil(JSON);
   end;
@@ -80,7 +80,7 @@ begin
   end;
 end;
 
-class function THelprUniEngine.ToJson(AList: TCollection): string;
+class function THelprUniEngine.ToJson(AList: TCollection;doFormat:Boolean): string;
 var
   JSON:TQJson;
 begin
@@ -88,7 +88,7 @@ begin
   try
     JSON:=TQJson.Create;
     JSON.FromRtti(AList);
-    Result:=JSON.Encode(True,True);
+    Result:=JSON.Encode(doFormat,True);
   finally
     FreeAndNil(JSON);
   end;
