@@ -48,6 +48,7 @@ type
 
     class function  jsencode(const value: Widestring): Widestring;
     class function  jsdecode(const value: Widestring): Widestring;
+    class function  HashCode(const value: string):Integer;
 
     class procedure TryFreeAndNil(var AObject);
     class procedure JustCleanList(var AObject);
@@ -598,6 +599,39 @@ end;
 class function TKzUtils.GetOrd(AChar: Char): Integer;
 begin
   Result:=Ord(UpCase(AChar))-64;
+end;
+
+class function TKzUtils.HashCode(const value: string): Integer;
+var
+  I:Integer;
+begin
+//  public String()
+//  {
+//    this.offset = 0;
+//    this.count = 0;
+//    this.value = new char[0];
+//  }
+
+//  public int hashCode()
+//  {
+//    int i = this.hash;
+//    if (i == 0)
+//    {
+//      int j = this.offset;
+//      char[] arrayOfChar = this.value;
+//      int k = this.count;
+//      for (int m = 0; m < k; m++)
+//        i = 31 * i + arrayOfChar[(j++)];
+//      this.hash = i;
+//    }
+//    return i;
+//  }
+
+  Result:=0;
+  for I:=1 to Length(value) do
+  begin
+    Result:=Result * 31 + Ord(value[I]);
+  end;
 end;
 
 class function TKzUtils.IfThen(ABool: Boolean; ATrue,
