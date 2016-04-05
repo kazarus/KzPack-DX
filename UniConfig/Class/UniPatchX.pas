@@ -28,10 +28,10 @@ type
 
   TUniPatchX=class(TUniEngine)
   private
-    TargetMark:string;
-    TargetTabl:string;    
-    ListPatch :TListPatch;
-    ListConnct:TStringList;
+    FTargetMark:string;
+    FTargetTabl:string;
+    FListPatch :TListPatch;
+    FListConnct:TStringList;
   protected
     function  GetDataBaseVersion:Integer;
     procedure SetDataBaseVersion(AValue:Integer);
@@ -53,6 +53,9 @@ type
   public
     destructor Destroy; override;
     constructor Create;
+  published
+    property TargetMark:string  read FTargetMark write FTargetMark;
+    property TargetTabl:string  read FTargetTabl write FTargetTabl;
   end;
 
 const
@@ -71,7 +74,7 @@ uses
 procedure TUniPatchX.AddPatch(AVersion, AConnctMark: string;
   AObject: TProcPatch);
 begin
-  ListPatch.AddPatch(AVersion,AConnctMark,AObject);
+  FListPatch.AddPatch(AVersion,AConnctMark,AObject);
 end;
 
 function TUniPatchX.ADD_DICT_VERSION: string;
@@ -106,9 +109,9 @@ var
   I:Integer;
   UniConnct:TUniConnection;
 begin
-  for I:=0 to ListConnct.Count-1 do
+  for I:=0 to FListConnct.Count-1 do
   begin
-    UniConnct:=TUniConnection(ListConnct.Objects[I]);
+    UniConnct:=TUniConnection(FListConnct.Objects[I]);
     if UniConnct<>nil then
     begin
       UniConnct.Commit;
@@ -122,23 +125,23 @@ var
   IDXA:Integer;
   UniConnctA:TUniConnection;
 begin
-  IDXA:=ListConnct.IndexOf(ATargetMark);
+  IDXA:=FListConnct.IndexOf(ATargetMark);
   if IDXA=-1 then
   begin
     UniConnctA:=UniConnctEx.GetConnection(ATargetMark);
     UniConnctA.StartTransaction;
-    ListConnct.AddObject(ATargetMark,UniConnctA);
+    FListConnct.AddObject(ATargetMark,UniConnctA);
     FUniConnct:=UniConnctA;
   end else
   begin
-    FUniConnct:=TUniConnection(ListConnct.Objects[IDXA]);
+    FUniConnct:=TUniConnection(FListConnct.Objects[IDXA]);
   end;
 end;
 
 constructor TUniPatchX.Create;
 begin
-  ListPatch :=TListPatch.Create;
-  ListConnct:=TStringList.Create;
+  FListPatch :=TListPatch.Create;
+  FListConnct:=TStringList.Create;
 end;
 
 destructor TUniPatchX.Destroy;
@@ -146,14 +149,14 @@ var
   I:Integer;
   UniConnctA:TUniConnection;
 begin
-  for I:=0 to ListPatch.Count-1 do
+  for I:=0 to FListPatch.Count-1 do
   begin
-    ListPatch.Objects[I].Free;
-    ListPatch.Objects[I]:=nil;
+    FListPatch.Objects[I].Free;
+    FListPatch.Objects[I]:=nil;
   end;
-  FreeAndNil(ListPatch);
+  FreeAndNil(FListPatch);
 
-  for I:=0 to ListConnct.Count-1 do
+  for I:=0 to FListConnct.Count-1 do
   begin
     //YXC_2013_02_25_15_18_40_keep a version
     {#UniConnctA:=TUniConnection(ListConnct.Objects[I]);
@@ -161,10 +164,10 @@ begin
     begin
       if UniConnctA.Connected then UniConnctA.Connected:=False;
     end;}
-    ListConnct.Objects[I].Free;
-    ListConnct.Objects[I]:=nil;
+    FListConnct.Objects[I].Free;
+    FListConnct.Objects[I]:=nil;
   end;
-  FreeAndNil(ListConnct);
+  FreeAndNil(FListConnct);
   
   inherited;
 end;
@@ -195,11 +198,11 @@ begin
       for I:=IDXA+1  to AVersion do
       begin
         IDXB:=-1;
-        IDXB:=ListPatch.IndexOf(IntToStr(I));
+        IDXB:=FListPatch.IndexOf(IntToStr(I));
         if IDXB<>-1 then
         begin
           PatchA:=nil;
-          PatchA:=TOncePatch(ListPatch.Objects[IDXB]);
+          PatchA:=TOncePatch(FListPatch.Objects[IDXB]);
           if PatchA=nil then Continue;
 
           Connect(PatchA.ConnctMark);
@@ -275,16 +278,16 @@ begin
     end;
     //-<
 
-    if ListConnct<>nil then
+    if FListConnct<>nil then
     begin
-      for I:=0 to ListConnct.Count-1 do
+      for I:=0 to FListConnct.Count-1 do
       begin
-        ListConnct.Objects[I].Free;
-        ListConnct.Objects[I]:=nil;
+        FListConnct.Objects[I].Free;
+        FListConnct.Objects[I]:=nil;
       end;
-      FreeAndNil(ListConnct);
+      FreeAndNil(FListConnct);
     end;
-    ListConnct:=TStringList.Create;
+    FListConnct:=TStringList.Create;
   finally
     if UniConnct<>nil then FreeAndNil(UniConnct);
   end;
@@ -297,9 +300,9 @@ var
   I:Integer;
   UniConnct:TUniConnection;
 begin
-  for I:=0 to ListConnct.Count-1 do
+  for I:=0 to FListConnct.Count-1 do
   begin
-    UniConnct:=TUniConnection(ListConnct.Objects[I]);
+    UniConnct:=TUniConnection(FListConnct.Objects[I]);
     if UniConnct<>nil then
     begin
       UniConnct.Rollback;
