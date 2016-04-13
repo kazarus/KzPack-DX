@@ -105,7 +105,7 @@ var
 implementation
 
 uses
-  Class_KzUtils,Helpr_UniEngine,Class_KzDebug,Httpr_Memb,Class_EROR;
+  Class_KzUtils,Helpr_UniEngine,Class_KzDebug,Class_EROR;
 
 
 { TNetEngine }

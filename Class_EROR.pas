@@ -26,6 +26,11 @@ type
     property ERORMEMO :string read FERORMEMO write FERORMEMO;
     property LISTDATA :TCollection read FListData write FListData;
   end;
+
+const
+  CONST_MARK_TRUE='TRUE';
+  CONST_MARK_EROR='EROR';
+
 implementation
 
 uses
