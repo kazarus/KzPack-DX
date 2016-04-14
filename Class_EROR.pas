@@ -9,6 +9,7 @@ type
   private
     FERORCODE:string;
     FERORMEMO:string;
+    FLASTDATE:Integer;
     FLISTDATA:TCollection;
   public
     function  IsTRUE:Boolean;overload;
@@ -22,8 +23,9 @@ type
     class procedure InData(AValue:string;var AList:TCollection);overload;deprecated;
     class procedure InData(AValue:string;var AObjt:TCollectionItem;AField:string='LISTDATA');overload;deprecated;
   published
-    property ERORCODE :string read FERORCODE write FERORCODE;
-    property ERORMEMO :string read FERORMEMO write FERORMEMO;
+    property ERORCODE :string  read FERORCODE write FERORCODE;
+    property ERORMEMO :string  read FERORMEMO write FERORMEMO;
+    property LASTDATE :Integer read FLASTDATE write FLASTDATE;
     property LISTDATA :TCollection read FListData write FListData;
   end;
 
