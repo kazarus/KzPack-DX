@@ -10,6 +10,7 @@ type
     FERORCODE:string;
     FERORMEMO:string;
     FLASTDATE:Integer;
+    FLASTTIME:Integer;
     FLISTDATA:TCollection;
   public
     function  IsTRUE:Boolean;overload;
@@ -22,10 +23,13 @@ type
   public
     class procedure InData(AValue:string;var AList:TCollection);overload;deprecated;
     class procedure InData(AValue:string;var AObjt:TCollectionItem;AField:string='LISTDATA');overload;deprecated;
+  public
+    constructor Create;
   published
-    property ERORCODE :string  read FERORCODE write FERORCODE;
-    property ERORMEMO :string  read FERORMEMO write FERORMEMO;
-    property LASTDATE :Integer read FLASTDATE write FLASTDATE;
+    property ERORCODE :string      read FERORCODE write FERORCODE;
+    property ERORMEMO :string      read FERORMEMO write FERORMEMO;
+    property LASTDATE :Integer     read FLASTDATE write FLASTDATE;
+    property LASTTIME :Integer     read FLASTTIME write FLASTTIME;
     property LISTDATA :TCollection read FListData write FListData;
   end;
 
@@ -55,6 +59,12 @@ begin
   finally
     FreeAndNil(JSON);
   end;
+end;
+
+constructor TEROR.Create;
+begin
+  LASTDATE:=StrToIntDef(FormatDateTime('YYYYMMDD',Now),0);
+  LASTTIME:=StrToIntDef(FormatDateTime('HHMMSS',Now),0);
 end;
 
 class procedure TEROR.InData(AValue: string; var AObjt: TCollectionItem; AField:string);
