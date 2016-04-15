@@ -97,6 +97,8 @@ type
   public
     constructor Create;
     destructor Destroy; override;
+  public
+    class procedure InRead(Origin:string;var AList:TStrings);
   end;
 
 var
@@ -261,6 +263,15 @@ begin
   Result:=True;
 end;
 
+
+class procedure TNetEngine.InRead(Origin: string; var AList: TStrings);
+begin
+  if AList=nil then Exit;
+  AList.Clear;
+
+  TKzUtils.ListStrCutted(Origin,'\&',AList);
+  KzDebug.FileFmt('%S:%S',[Self.ClassName,AList.Text]);
+end;
 
 {procedure TNetEngine.Post(AFileName: string;
   trueBlock: TNetEngineDataRequestTrueBlock;
