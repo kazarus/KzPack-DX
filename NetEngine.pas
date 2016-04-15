@@ -83,7 +83,7 @@ type
   public
     function  HaveUrls(AUrls:string):Integer;
     procedure PushUrls(AObject:TObject)overload;
-    function  CallUrls(FileName:string;Params:string):string;
+    function  CallUrls(FileName:string;Params:string;Origin:string):string;
   public
     function  PullMark(AMark:string):TUniConnection;
   public
@@ -110,7 +110,7 @@ uses
 
 { TNetEngine }
 
-function TNetEngine.CallUrls(FileName, Params: string): string;
+function TNetEngine.CallUrls(FileName, Params: string;Origin:string): string;
 var
   IDXA:Integer;
   SVAL:string;
@@ -147,9 +147,12 @@ begin
   M:=T.GetMethod(Handle.InMethod);
 
   //#KzDebug.FileLog(m.Name);
-
+  KzDebug.FileFmt('%S:%S:%D:%S',[Self.ClassName,m.Name,Length(m.GetParameters),Origin]);
   try
-    Result:=M.Invoke(Instance.ClassType,[Params]).AsString;
+    case Length(m.GetParameters) of
+      1:Result:=M.Invoke(Instance.ClassType,[Params]).AsString;
+      2:Result:=M.Invoke(Instance.ClassType,[Params,Origin]).AsString;
+    end;
   except
     on E:Exception do
     begin
