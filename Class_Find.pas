@@ -11,6 +11,8 @@ type
     FFINDCODE : string;
     FOPERAVAL : string;
     FRIGHTVAL : string;
+  private
+    FListFind : TStringList;  //*list of *tfind
   protected
     procedure SetParameters;override;
     function  GetStrInsert:string;override;
@@ -30,6 +32,7 @@ type
     property FINDCODE : string read FFINDCODE  write FFINDCODE;
     property OPERAVAL : string read FOPERAVAL  write FOPERAVAL;
     property RIGHTVAL : string read FRIGHTVAL  write FRIGHTVAL;
+    property ListFind : TStringList read FListFind write FListFind;
   public
     class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
     class procedure ReadDS(AUniQuery:TUniQuery;var Result:TUniEngine);override;
@@ -38,6 +41,9 @@ type
   end;
 
 implementation
+
+uses
+  Class_KzUtils;
 
 { TFind }
 procedure TFind.SetParameters;
@@ -110,12 +116,12 @@ end;
 
 constructor TFind.Create;
 begin
-
+  FListFind:=nil;
 end;
 
 destructor TFind.Destroy;
 begin
-
+  if FListFind<>nil then TKzUtils.TryFreeAndNil(FListFind);
   inherited;
 end;
 
