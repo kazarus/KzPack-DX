@@ -35,7 +35,11 @@ type
   end;
 
 const
+  CONST_MARK_NULL='NULL';
+
+const
   CONST_CONFIG_JSON='config.json';
+
 
 var
   DialogSrvrCnfg: TDialogSrvrCnfg;
