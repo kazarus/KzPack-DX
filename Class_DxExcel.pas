@@ -58,7 +58,7 @@ type
   public
     procedure Initialize;
     function  Execute(ATabIndex:Integer;ATabSheet:string=''):Boolean;
-    function  SaveXLS:Boolean;
+    function  SaveXLS(AFileName:string=''):Boolean;
   public
     constructor Create;
     destructor Destroy; override;
@@ -241,16 +241,24 @@ begin
   FDxCount:=0;
 end;
 
-function TDxExcel.SaveXLS: Boolean;
+function TDxExcel.SaveXLS(AFileName:string): Boolean;
 var
   SD:TSaveDialog;
+  FileName:string;
 begin
   try
     SD:=TSaveDialog.Create(nil);
     SD.Filter:='*.xls|*.xls|*.xlsx|*.xlsx';
+    SD.FileName:=AFileName;
     if SD.Execute then
     begin
-      FDxExcel.ActiveSheet.SpreadSheet.SaveToFile(SD.FileName);
+      FileName:=SD.FileName;
+      if ExtractFileExt(FileName)='' then
+      begin
+        FileName:=Format('%S.xlsx',[FileName]);
+      end;
+
+      FDxExcel.ActiveSheet.SpreadSheet.SaveToFile(FileName);
     end;
   finally
     FreeAndNil(SD);
