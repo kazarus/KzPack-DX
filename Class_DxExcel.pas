@@ -1,5 +1,7 @@
 unit Class_DxExcel;
 
+
+//uses:Class_DxExcel,dxSpreadSheetTypes,dxSpreadSheetGraphics;
 interface
 uses
   System.Classes,System.SysUtils,Vcl.Graphics,Vcl.Dialogs,
