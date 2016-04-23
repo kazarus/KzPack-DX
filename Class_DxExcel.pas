@@ -248,7 +248,7 @@ var
 begin
   try
     SD:=TSaveDialog.Create(nil);
-    SD.Filter:='*.xls|*.xls|*.xlsx|*.xlsx';
+    SD.Filter:='*.xlsx|*.xlsx|*.xls|*.xls';
     SD.FileName:=AFileName;
     if SD.Execute then
     begin
