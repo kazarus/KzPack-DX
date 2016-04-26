@@ -576,7 +576,7 @@ begin
   Edit_DataBase.Visible:=False;
   Comb_DataBase.Visible:=False;
 
-  if (Trim(Comb_Type.Text)=CONST_PROVIDER_ACCESS) OR (Trim(Comb_Type.Text)=CONST_PROVIDER_MYSQLX) then
+  if (Trim(Comb_Type.Text)=CONST_PROVIDER_ACCESS) OR (Trim(Comb_Type.Text)=CONST_PROVIDER_SQLITE) then
   begin
     Caption:='数据连接';
       
