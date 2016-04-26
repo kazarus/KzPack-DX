@@ -86,6 +86,9 @@ const
   CONST_PROVIDER_ACCESS='Access';
   CONST_PROVIDER_SQLITE='SQLite';
   CONST_PROVIDER_MYSQLX='MySQL';
+  CONST_PROVIDER_POSTGR='PostgreSQL';
+
+
 
 
 implementation

@@ -1,9 +1,9 @@
 object DialogListUniConfig: TDialogListUniConfig
   Left = 285
   Top = 75
-  Width = 1024
-  Height = 632
   Caption = 'DialogListUniConfig'
+  ClientHeight = 594
+  ClientWidth = 1008
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object DialogListUniConfig: TDialogListUniConfig
   TextHeight = 13
   object Panl_1: TPanel
     Left = 0
-    Top = 549
-    Width = 1016
+    Top = 545
+    Width = 1008
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
@@ -128,7 +128,6 @@ object DialogListUniConfig: TDialogListUniConfig
       Ctl3D = False
       FrameVisible = True
       FramingPreference = fpCustomFraming
-      ItemHeight = 13
       ParentCtl3D = False
       TabOrder = 10
     end
@@ -140,7 +139,6 @@ object DialogListUniConfig: TDialogListUniConfig
       Ctl3D = False
       FrameVisible = True
       FramingPreference = fpCustomFraming
-      ItemHeight = 13
       ParentCtl3D = False
       TabOrder = 11
       OnCloseUp = Comb_UnixTypeCloseUp
@@ -148,8 +146,8 @@ object DialogListUniConfig: TDialogListUniConfig
   end
   object RzStatusBar1: TRzStatusBar
     Left = 0
-    Top = 579
-    Width = 1016
+    Top = 575
+    Width = 1008
     Height = 19
     BorderInner = fsNone
     BorderOuter = fsNone
@@ -158,27 +156,32 @@ object DialogListUniConfig: TDialogListUniConfig
     TabOrder = 1
     VisualStyle = vsClassic
     object Panl_UnixMemo: TRzStatusPane
-      Left = 687
+      Left = 679
       Top = 0
       Width = 329
       Height = 19
       Align = alRight
+      Caption = ''
+      ExplicitLeft = 687
     end
     object Panl_DataBase: TRzStatusPane
       Left = 0
       Top = 0
-      Width = 687
+      Width = 679
       Height = 19
       Align = alClient
+      Caption = ''
+      ExplicitWidth = 687
     end
   end
   object Grid_Cnfg: TAdvStringGrid
     Left = 0
     Top = 0
-    Width = 1016
-    Height = 549
+    Width = 1008
+    Height = 545
     Cursor = crDefault
     Align = alClient
+    DrawingStyle = gdsClassic
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -190,6 +193,7 @@ object DialogListUniConfig: TDialogListUniConfig
     OnDblClick = Grid_CnfgDblClick
     OnRowMoved = Grid_CnfgRowMoved
     OnSelectCell = Grid_CnfgSelectCell
+    HoverRowCells = [hcNormal, hcSelected]
     OnGetAlignment = Grid_CnfgGetAlignment
     OnClickCell = Grid_CnfgClickCell
     OnCanEditCell = Grid_CnfgCanEditCell
@@ -223,6 +227,16 @@ object DialogListUniConfig: TDialogListUniConfig
     FilterDropDown.Font.Name = 'MS Sans Serif'
     FilterDropDown.Font.Style = []
     FilterDropDownClear = '(All)'
+    FilterEdit.TypeNames.Strings = (
+      'Starts with'
+      'Ends with'
+      'Contains'
+      'Not contains'
+      'Equal'
+      'Not equal'
+      'Larger than'
+      'Smaller than'
+      'Clear')
     FixedRowHeight = 22
     FixedFont.Charset = DEFAULT_CHARSET
     FixedFont.Color = clWindowText
@@ -230,6 +244,10 @@ object DialogListUniConfig: TDialogListUniConfig
     FixedFont.Name = 'Tahoma'
     FixedFont.Style = [fsBold]
     FloatFormat = '%.2f'
+    HoverButtons.Buttons = <>
+    HoverButtons.Position = hbLeftFromColumnLeft
+    HTMLSettings.ImageFolder = 'images'
+    HTMLSettings.ImageBaseName = 'img'
     Look = glSoft
     PrintSettings.DateFormat = 'dd/mm/yyyy'
     PrintSettings.Font.Charset = DEFAULT_CHARSET
@@ -269,6 +287,13 @@ object DialogListUniConfig: TDialogListUniConfig
     SearchFooter.MatchCaseCaption = 'Match case'
     SelectionColor = clHighlight
     SelectionTextColor = clHighlightText
-    Version = '6.1.3.1'
+    SortSettings.DefaultFormat = ssAutomatic
+    Version = '7.8.4.0'
+    ColWidths = (
+      64
+      64
+      64
+      64
+      64)
   end
 end

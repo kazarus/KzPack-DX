@@ -8,10 +8,10 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls,Dialog_View, RzCmboBx, Mask, RzEdit,Uni,UniConfig,UniConnct,
-  RzBtnEdt, RzButton, RzRadChk,DateUtils,StrUtils,Class_FilX;
+  RzBtnEdt, RzButton, RzRadChk,DateUtils,StrUtils,Class_FilX, Data.DB, DBAccess;
 
 type
-  TDialogEditUniConfigEditMode=(deuemAddx,deuemEdit,deuemCnfg);
+  TDialogEditUniConfigEditMode=(deuemAddv,deuemEdit,deuemCnfg);
 
   TDialogEditUniConfig = class(TDialogView)
     Btnx_Mrok: TButton;
@@ -35,6 +35,7 @@ type
     Comb_Mark: TRzComboBox;
     ChkBox_Direct: TRzCheckBox;
     Comb_DataBase: TRzComboBox;
+    con1: TUniConnection;
     procedure Btnx_QuitClick(Sender: TObject);
     procedure Btnx_MrokClick(Sender: TObject);
     procedure Edit_DataBaseDblClick(Sender: TObject);
@@ -124,7 +125,7 @@ begin
   if not CheckLicit then Exit;
   
   case FEditMode of
-    deuemAddx:
+    deuemAddv:
     begin
       InsertDB;
     end;
@@ -160,7 +161,7 @@ begin
     FRealCnfg.UnixServ:=Edit_UnixServ.Text;
 
     //YXC_2012_12_04_09_36_39_<
-    if (FRealCnfg.UnixType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnixType=CONST_PROVIDER_MYSQLX) then
+    if (FRealCnfg.UnixType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnixType=CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnixType=CONST_PROVIDER_POSTGR) then
     begin
       FRealCnfg.DataBase:=Comb_DataBase.Text;
     end else
@@ -238,7 +239,7 @@ begin
     FRealCnfg.UnixServ:=Edit_UnixServ.Text;
 
     //YXC_2012_12_04_09_36_39_<
-    if (FRealCnfg.UnixType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnixType=CONST_PROVIDER_MYSQLX) then
+    if (FRealCnfg.UnixType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnixType=CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnixType=CONST_PROVIDER_POSTGR) then
     begin
       FRealCnfg.DataBase:=Comb_DataBase.Text;
     end else
@@ -281,7 +282,8 @@ begin
   Comb_Type.Add(CONST_PROVIDER_ACCESS);
   Comb_Type.Add(CONST_PROVIDER_SQLSRV);    
   Comb_Type.Add(CONST_PROVIDER_ORACLE);
-  Comb_Type.Add(CONST_PROVIDER_MYSQLX);  
+  Comb_Type.Add(CONST_PROVIDER_MYSQLX);
+  Comb_Type.Add(CONST_PROVIDER_POSTGR);
   Comb_Type.Style:=csDropDownList;
   Comb_Type.ItemIndex:=0;
   Comb_TypeCloseUp(Comb_Type);
@@ -319,7 +321,7 @@ begin
       UniConnctEx.OnUniConfigCustomDecryptEvent(FRealCnfg,FRealCnfg);
     end;
     FRealPswd:=FRealCnfg.UnixPswd;
-    Edit_UnixPswd.Text:='helloworld';
+    Edit_UnixPswd.Text:=FRealPswd;
 
     Edit_UnixServ.Text:=FRealCnfg.UnixServ;
 
@@ -405,7 +407,7 @@ begin
     CnfgA.UnixServ:=Edit_UnixServ.Text;
 
     //YXC_2012_12_04_09_36_39_<
-    if (CnfgA.UnixType=CONST_PROVIDER_SQLSRV) or (CnfgA.UnixType=CONST_PROVIDER_MYSQLX) then
+    if (CnfgA.UnixType=CONST_PROVIDER_SQLSRV) or (CnfgA.UnixType=CONST_PROVIDER_MYSQLX) or (CnfgA.UnixType=CONST_PROVIDER_POSTGR) then
     begin
       CnfgA.DataBase:=Comb_DataBase.Text;
     end else
@@ -523,7 +525,7 @@ begin
   FRealCnfg.UnixServ:=Edit_UnixServ.Text;
 
   //YXC_2012_12_04_09_36_39_<
-  if (FRealCnfg.UnixType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnixType=CONST_PROVIDER_MYSQLX) then
+  if (FRealCnfg.UnixType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnixType=CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnixType=CONST_PROVIDER_POSTGR) then
   begin
     FRealCnfg.DataBase:=Comb_DataBase.Text;
   end else
@@ -574,7 +576,7 @@ begin
   Edit_DataBase.Visible:=False;
   Comb_DataBase.Visible:=False;
 
-  if (Trim(Comb_Type.Text)=CONST_PROVIDER_ACCESS) OR (Trim(Comb_Type.Text)=CONST_PROVIDER_SQLITE) then
+  if (Trim(Comb_Type.Text)=CONST_PROVIDER_ACCESS) OR (Trim(Comb_Type.Text)=CONST_PROVIDER_MYSQLX) then
   begin
     Caption:='数据连接';
       
@@ -606,6 +608,17 @@ begin
       ViewDataBase;
     end;}
   end else
+  if Trim(Comb_Type.Text)=CONST_PROVIDER_POSTGR then
+  begin
+    Caption:='提示:双击服务器框,加载服务器.';
+
+    Edit_UnixUser.Text:='postgres';
+    Edit_UnixPswd.Text:='root';
+    Edit_UnixServ.Text:='localhost';
+    Edit_UnixPort.Text:='5432';
+
+    Comb_DataBase.Visible:=True;
+  end else
   if Trim(Comb_Type.Text)=CONST_PROVIDER_ORACLE then
   begin
     Caption:='直联示例:IP地址:端口:实例名';
@@ -633,7 +646,7 @@ begin
 
     Comb_DataBase.Visible:=True;
 
-    if FEditMode=deuemAddx then
+    if FEditMode=deuemAddv then
     begin
       ViewDataBase(CONST_PROVIDER_MYSQLX);
     end;  

@@ -67,7 +67,7 @@ type
     procedure SetGridParams;override;
   public
     procedure InitCnfg;
-    procedure AddxCnfg;
+    procedure AddvCnfg;
     procedure EditCnfg;
     procedure CopyCnfg;
     procedure ActvCnfg(IsFill:Boolean=True);
@@ -322,7 +322,7 @@ end;
 procedure TDialogListUniConfig.Btnx_AddxClick(Sender: TObject);
 begin
   inherited;
-  AddxCnfg;
+  AddvCnfg;
 end;
 
 procedure TDialogListUniConfig.Grid_CnfgDblClick(Sender: TObject);
@@ -338,9 +338,9 @@ begin
   end;
 end;
 
-procedure TDialogListUniConfig.AddxCnfg;
+procedure TDialogListUniConfig.AddvCnfg;
 begin
-  if ViewEditCnfg(deuemAddx,nil,FConnectionMark)=Mrok then
+  if ViewEditCnfg(deuemAddv,nil,FConnectionMark)=Mrok then
   begin
     InitCnfg;
   end;

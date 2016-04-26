@@ -131,8 +131,8 @@ object DialogEditUniConfig: TDialogEditUniConfig
     TabOrder = 12
   end
   object Btnx_Mrok: TButton
-    Left = 125
-    Top = 215
+    Left = 119
+    Top = 214
     Width = 60
     Height = 25
     Caption = #30830#23450
@@ -258,5 +258,9 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Caption = #30452#32852
     State = cbUnchecked
     TabOrder = 11
+  end
+  object con1: TUniConnection
+    Left = 160
+    Top = 128
   end
 end
