@@ -131,8 +131,8 @@ object DialogEditUniConfig: TDialogEditUniConfig
     TabOrder = 12
   end
   object Btnx_Mrok: TButton
-    Left = 119
-    Top = 214
+    Left = 126
+    Top = 215
     Width = 60
     Height = 25
     Caption = #30830#23450
@@ -140,7 +140,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     OnClick = Btnx_MrokClick
   end
   object Btnx_Quit: TButton
-    Left = 185
+    Left = 186
     Top = 215
     Width = 60
     Height = 25
