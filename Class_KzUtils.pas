@@ -55,6 +55,7 @@ type
 
     class function  StrToDateX(Value:string):Integer;
     class function  IntToDateX(Value:Integer):TDateTime;
+    class function  FloatToDate(Value:Extended):TDateTime;
     class function  DateToInt(Value:TDateTime):Integer;
     
     class function  DateIsNull(ADate:TDateTime):Boolean;
@@ -120,6 +121,28 @@ end;
 class function TKzUtils.ErorBox(AValue: string): Integer;
 begin
   Result:=Application.MessageBox(Pchar(AValue),'¾¯¸æ',MB_OKCANCEL+MB_ICONERROR);
+end;
+
+class function TKzUtils.FloatToDate(Value: Extended): TDateTime;
+var
+  TMPA:string;
+  TMPB:string;
+begin
+  Result:=Unassigned;
+  if Value=0 then Exit;
+  TMPA:=FloatToStr(Value);
+  TMPB:=Format('%s-%s-%s',[Copy(TMPA,1,4),Copy(TMPA,5,2),Copy(TMPA,7,2)]);
+
+
+  try
+    //#DateSeparator:='-';
+    Result:=StrToDate(TMPB);
+  except
+    on E:Exception do
+    begin
+      raise Exception.Create(E.Message);
+    end;
+  end;
 end;
 
 class function TKzUtils.FloatToText(AValue: Extended; Zero: Boolean;
@@ -235,14 +258,14 @@ end;
 class function  TKzUtils.CompareTextLike(APart,ALong:string):Boolean;
 var
   NumbA:Integer;
-  TempA:string;
+  TMPA:string;
 begin
   Result:=False;
   Result:=Pos(APart,ALong)=1;
   {Result:=False;
   NumbA:=Length(APart);
-  TempA:=Copy(ALong,1,NumbA);
-  if TempA=APart then
+  TMPA:=Copy(ALong,1,NumbA);
+  if TMPA=APart then
   begin
     Result:=True;
   end;}
@@ -655,19 +678,19 @@ end;
 
 class function TKzUtils.IntToDateX(Value:Integer):TDateTime;
 var
-  TempA:string;
-  TempB:string;
+  TMPA:string;
+  TMPB:string;
 begin
   Result:=Unassigned;
   if Value=0 then Exit;
-  TempA:=IntToStr(Value);
-  if Length(TempA)<>8 then Exit;
-  TempB:=Format('%s-%s-%s',[Copy(TempA,1,4),Copy(TempA,5,2),Copy(TempA,7,2)]);
+  TMPA:=IntToStr(Value);
+  if Length(TMPA)<>8 then Exit;
+  TMPB:=Format('%s-%s-%s',[Copy(TMPA,1,4),Copy(TMPA,5,2),Copy(TMPA,7,2)]);
 
 
   try
     //#DateSeparator:='-';
-    Result:=StrToDate(TempB);
+    Result:=StrToDate(TMPB);
   except
     on E:Exception do
     begin
