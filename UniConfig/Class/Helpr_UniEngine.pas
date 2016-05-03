@@ -3,7 +3,7 @@ unit Helpr_UniEngine;
 
 interface
 uses
-  System.Classes,System.SysUtils,UniEngine,QJSON;
+  System.Classes,System.SysUtils,UniEngine,QJSON,QString;
 
 type
   THelprUniEngine=class helper for TUniEngine
@@ -19,7 +19,7 @@ type
     class procedure InJSON(AValue:string;var AList:TCollection);overload;
     class procedure InJSON(AValue:string;AField:string;var AList:TCollection;AIndex:Integer=0);overload;
 
-    class procedure ToFILE(AFileName:string;AList:TCollection);overload;
+    class procedure ToFILE(AFileName:string;AList:TCollection;doFormat:Boolean=False);overload;
     class procedure InFILE(AFileName:string;var AList:TCollection);overload;
   end;
 
@@ -67,14 +67,14 @@ begin
   end;
 end;
 
-class procedure THelprUniEngine.ToFILE(AFileName: string; AList: TCollection);
+class procedure THelprUniEngine.ToFILE(AFileName: string; AList: TCollection;doFormat:Boolean);
 var
   JSON:TQJson;
 begin
   try
     JSON:=TQJson.Create;
     JSON.FromRtti(AList);
-    JSON.SaveToFile(AFileName);
+    JSON.SaveToFile(AFileName,teUTF8,True,False);
   finally
     FreeAndNil(JSON);
   end;
