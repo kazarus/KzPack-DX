@@ -12,7 +12,7 @@ type
     procedure InJSON(AValue:string);overload;
     procedure InJSON(AValue:string;AField:string;AIndex:Integer=0);overload;
 
-    procedure ToFILE(AFileName:string);overload;
+    procedure ToFILE(AFileName:string;doFormat:Boolean=False);overload;
     procedure InFILE(AFileName:string);overload;
   public
     class function  ToJSON(AList:TCollection;doFormat:Boolean=False):string;overload;
@@ -54,14 +54,14 @@ begin
   end;
 end;
 
-procedure THelprUniEngine.ToFILE(AFileName: string);
+procedure THelprUniEngine.ToFILE(AFileName: string;doFormat:Boolean=False);
 var
   JSON:TQJson;
 begin
   try
     JSON:=TQJson.Create;
     JSON.FromRtti(Self);
-    JSON.SaveToFile(AFileName);
+    JSON.SaveToFile(AFileName,teUTF8,True,False);
   finally
     FreeAndNil(JSON);
   end;
