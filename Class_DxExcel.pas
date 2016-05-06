@@ -4,7 +4,7 @@ unit Class_DxExcel;
 //uses:Class_DxExcel,dxSpreadSheetTypes,dxSpreadSheetGraphics;
 interface
 uses
-  System.Classes,System.SysUtils,Vcl.Graphics,Vcl.Dialogs,
+  System.Classes,System.SysUtils,Vcl.Graphics,Vcl.Dialogs,cxGraphics,
   dxSpreadSheet,dxSpreadSheetCore,dxSpreadSheetGraphics,dxSpreadSheetTypes;
 
 type
@@ -167,6 +167,11 @@ begin
         Cell.Style.Font.Name :=Styl.FontName;
         Cell.Style.Font.Size :=Styl.FontSize;
         Cell.Style.Font.Color:=Styl.FontColor;
+
+        {#Cell.Style.Borders[bLeft].Color:=clRed;
+        Cell.Style.Borders[bTop].Color:=clRed;
+        Cell.Style.Borders[bRight].Color:=clRed;
+        Cell.Style.Borders[bBottom].Color:=clRed;}
 
         //Cell.AsString := Styl.CellText;
 

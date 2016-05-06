@@ -20,7 +20,7 @@ unit Class_KzPrint;
 interface
 uses
   SysUtils,AdvGrid,frxClass,frxDesgn,Classes,XMLDoc,XMLIntf,Dialogs,frxXML,
-  frxXMLSerializer,Graphics,Variants;
+  frxXMLSerializer,Graphics,Variants,frxExportPDF;
 
 type
   TPrintOrder = (poColFirst,poRowFirst);  //(Default) poColFirst,poRowFirst
@@ -177,6 +177,7 @@ type
   public
     SourceGrid  :TAdvStringGrid;
     FFilePath   :string;
+    FBackMark   :string;
     LockCount   :Integer;//Ëø¶¨ÁÐÊý
 
     //YXC_2011_09_19_15_41_00
@@ -2360,6 +2361,8 @@ begin
   SetfrxVariabl;
 
   FfrxReport.DataSets.Add(FUseDataSet);
+  FfrxReport.PreviewOptions.Buttons := FfrxReport.PreviewOptions.Buttons - [pbEdit];
+  FfrxReport.PreviewOptions.Buttons := FfrxReport.PreviewOptions.Buttons + [pbExport];
 
   if FBreakModel=bmPagBreak then
   begin
@@ -2369,6 +2372,11 @@ begin
     begin
       PageA:=TfrxReportPage.Create(FfrxReport);
       PageA.CreateUniqueName;
+
+      if (Trim(FBackMark)<>'') and (FileExists(FBackMark)) then
+      begin
+        PageA.BackPicture.LoadFromFile(FBackMark);
+      end;
 
       if Orientation='poLandscape' then
       begin
