@@ -565,7 +565,7 @@ begin
 
         FListCutX.AddObject(IntToStr(CutxA.PageIdex),CutxA);
 
-        KzDebug.FileLog(CutxA.GetStrIndex);
+        KzDebug.FileFmt('%S:%S',[Self.ClassName,CutxA.GetStrIndex]);
         //YXC_2013_11_04_17_13_35_>
 
         Inc(Result);
@@ -584,7 +584,7 @@ begin
   CutxA.PagePrev:=TotlA;
   CutxA.PageNext:=TotlA+DoubA;
   FListCutX.AddObject(IntToStr(CutxA.PageIdex),CutxA);
-  KzDebug.FileLog(CutxA.GetStrIndex);  
+  KzDebug.FileFmt('%S:%S',[Self.ClassName,CutxA.GetStrIndex]);
   //YXC_2013_11_07_09_25_28_>
 
   FPageCount:=Result;
