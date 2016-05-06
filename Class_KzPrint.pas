@@ -1067,11 +1067,18 @@ var
       ListB:=TStringList.Create;
       ListB.CommaText:=TMPB;
       //WritelnFmt('%S',[ListB.Text]);
+      KzDebug.FileFmt('%S:%S',[Self.ClassName,ListB.Text]);
 
       ViewA.ViewName:=ANode.Name;
 
-      ViewA.ViewText:=Utf8Decode(frxXMLToStr(ListB.Values['Text']));
+      //YXC_2016_05_06_16_39_17_<_for_d7
+      //ViewA.ViewText:=Utf8Decode(frxXMLToStr(ListB.Values['Text']));
+      //ViewA.ViewText:=StringReplace(ViewA.ViewText,'"','',[rfReplaceAll]);
+      //YXC_2016_05_06_16_39_17_>
+
+      ViewA.ViewText:=Trim(ListB.Values['Text']);
       ViewA.ViewText:=StringReplace(ViewA.ViewText,'"','',[rfReplaceAll]);
+
 
       if ListB.Values['Left']<>'' then
       begin
