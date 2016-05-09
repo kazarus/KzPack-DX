@@ -185,11 +185,11 @@ type
     FRowTitle   :Integer;//标题行
     
     FRowBodyStart      :Integer;//the start line of body.
-    FRowBodyEnd        :Integer;//the end   line of body.
+    FRowBodyEnded      :Integer;//the ended line of body.
 
     FTheRowMostDetailed:Integer;//*new:like his name.
     FRowHeadStart      :Integer;//*new:the start line of head
-    FRowHeadEnd        :Integer;//*new:the end   line of head
+    FRowHeadEnded      :Integer;//*new:the end   line of head
 
     FTotlCount  :Integer;      //表格列数.SourceGrid.TotalColCount
     FPrintOrder :TPrintOrder;  //打印顺序
@@ -295,10 +295,10 @@ begin
 
   FTotlCount   :=-1;
   FRowBodyStart:=1;
-  FRowBodyEnd  :=-1;
+  FRowBodyEnded  :=-1;
   
   FRowHeadStart:=-1;
-  FRowHeadEnd  :=-1;
+  FRowHeadEnded:=-1;
 
   CharLinkPrevPage:='<-';
 end;
@@ -914,7 +914,7 @@ begin
   FTreeCellWhenMultiHead:=TKzTreeList.Create;
 
   if FRowHeadStart=-1 then raise Exception.Create('NOT SUPPORT THIS METHOD:[TKzPrint.SetCellTextParamsWhenMultiHead] AT [Class_KzPrint.pas]');
-  if FRowHeadEnd  =-1 then raise Exception.Create('NOT SUPPORT THIS METHOD:[TKzPrint.SetCellTextParamsWhenMultiHead] AT [Class_KzPrint.pas]');
+  if FRowHeadEnded  =-1 then raise Exception.Create('NOT SUPPORT THIS METHOD:[TKzPrint.SetCellTextParamsWhenMultiHead] AT [Class_KzPrint.pas]');
 
   if FTotlCount=-1 then
   begin
@@ -923,7 +923,7 @@ begin
     
   with SourceGrid do
   begin
-    for I:=FRowHeadStart to FRowHeadEnd  do
+    for I:=FRowHeadStart to FRowHeadEnded  do
     begin
       Y:=0;
       for M:=FColStart to FTotlCount-1 do 
@@ -1335,14 +1335,14 @@ begin
     FListRows.Clear;
   end;    
 
-  if FRowBodyEnd = -1 then
+  if FRowBodyEnded = -1 then
   begin
-    FRowBodyEnd := SourceGrid.RowCount-1;
+    FRowBodyEnded := SourceGrid.RowCount-1;
   end;
     
   with SourceGrid  do
   begin
-    for I := FRowBodyStart to FRowBodyEnd do
+    for I := FRowBodyStart to FRowBodyEnded do
     begin
       Valid:=True;
       if Assigned(OnKzPrintGridValidRows) then
@@ -2001,11 +2001,11 @@ begin
         ViewB:=TKzCellView(FListView.Objects[IdexB]);
       end;
 
-      if FRowHeadEnd  - FRowHeadStart >0 then
+      if FRowHeadEnded  - FRowHeadStart >0 then
       begin
         if not HeadHeightAdded then
         begin
-          FindComponent(ViewA.PrevCont).Height:=FindComponent(ViewA.PrevCont).Height+ (FRowHeadEnd  - FRowHeadStart) * ViewA.ViewHeig;
+          FindComponent(ViewA.PrevCont).Height:=FindComponent(ViewA.PrevCont).Height+ (FRowHeadEnded  - FRowHeadStart) * ViewA.ViewHeig;
         end;
       end;      
 
@@ -3100,11 +3100,11 @@ end.
         CellA.PagX := FListCutX.Count+1;
       end;
 
-       if FRowHeadEnd  - FRowHeadStart >0 then
+       if FRowHeadEnded  - FRowHeadStart >0 then
         begin
           if not HeadHeightAdded then
           begin
-            FindComponent(ViewA.PrevCont).Height:=FindComponent(ViewA.PrevCont).Height+(FRowHeadEnd  - FRowHeadStart)*ViewA.ViewHeig;
+            FindComponent(ViewA.PrevCont).Height:=FindComponent(ViewA.PrevCont).Height+(FRowHeadEnded  - FRowHeadStart)*ViewA.ViewHeig;
             HeadHeightAdded:=True;
           end;
         end;      
