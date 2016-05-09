@@ -2025,8 +2025,13 @@ begin
               TextA:=TKzCellText(ItemA.Objects[N]);
               if TextA=nil then Continue;
 
+              if TextA.TestHide then
+              begin
+                Inc(NumbA);
+                Continue;
+              end;
               if NumbA=LockCount then Break;
-              if TextA.TestHide then Continue;
+
 
               MemoA:=TfrxMemoView.Create(FindComponent(ViewA.PrevCont));
               MemoA.CreateUniqueName;
