@@ -107,7 +107,7 @@ var
 implementation
 
 uses
-  Class_KzUtils,Helpr_UniEngine,Class_KzDebug,Class_EROR;
+  Class_KzUtils,Helpr_UniEngine,Class_KzDebug,Class_EROR,Class_KzToZip;
 
 
 { TNetEngine }
@@ -344,7 +344,7 @@ begin
     begin
       if Assigned(OnNetEngineDataRequestTrueBlock) then
       begin
-        OnNetEngineDataRequestTrueBlock(DataClient,DataClient.Read);
+        OnNetEngineDataRequestTrueBlock(DataClient,DataClient.Read.UnUseZip);
         FCallBack:=necbEvent;
       end;
     end;
@@ -429,7 +429,8 @@ begin
       FListClas.AddObject(ClasName,AObject);
     end;
   end;
-  if ClasName.IsEmpty then
+  //#if ClasName.IsEmpty then
+  if Trim(ClasName)='' then
   begin
     raise Exception.CreateFmt('%s:the root url is not pointed.',[AObject.ClassName]);
   end;
