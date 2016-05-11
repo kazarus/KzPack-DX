@@ -27,8 +27,7 @@ var
   BT:TBytes;
 begin
   try
-    SS:=TStringStream.Create;
-    SS.WriteString(Self);
+    SS:=TStringStream.Create(Self);
 
     SS.Position:=0;
     SetLength(BT,SS.Size);
@@ -48,8 +47,7 @@ var
   TS:TStringStream;//target stream
 begin
   try
-    SS:=TStringStream.Create;
-    SS.WriteString(Self);
+    SS:=TStringStream.Create(Self);
 
     CT:=SS.Size;
 
@@ -62,7 +60,6 @@ begin
 
     Result:=TS.DataString;
   finally
-    //#FreeAndNil(CS);
     FreeAndNil(SS);
     FreeAndNil(TS);
   end;
@@ -70,6 +67,7 @@ end;
 
 function THelprString.UnBase64: string;
 var
+  V:string;
   BT:TBytes;
   TS:TStringStream;//target stream
 begin
@@ -86,8 +84,31 @@ begin
 end;
 
 function THelprString.UnUseZip: string;
+var
+  CT: Integer;
+  DS: TDecompressionStream;
+  SS: TStringStream;
+  TS: TStringStream;
 begin
+  try
+    SS := TStringStream.Create(Self);
 
+    SS.Position := 0;
+    SS.ReadBuffer(CT,SizeOf(CT));
+
+    TS := TStringStream.Create;
+    TS.SetSize(CT);
+
+    DS := TDecompressionStream.Create(SS);
+    DS.Read(TS.Memory^, CT);
+    //#DS.Free;
+
+    Result:=TS.DataString;
+  finally
+    //FreeAndNil(DS);
+    //FreeAndNil(TS);
+    //FreeAndNil(SS);
+  end;
 end;
 
 end.
