@@ -9,9 +9,17 @@ type
   public
     function  ToUseZip:string;
     function  UnUseZip:string;
+    function  FileDisk(fileName:string):Boolean;
   public
     function  ToBase64:string;
     function  UnBase64:string;
+  public
+  end;
+
+  TKzUnZip=class(TObject)
+  public
+    class function ToUseZip(aSource:string):string;
+    class function UnUseZip(aBase64:string):string;
   end;
 
 implementation
@@ -21,93 +29,179 @@ uses
 
 { THelprString }
 
-function THelprString.ToBase64: string;
+function THelprString.FileDisk(fileName: string): Boolean;
 var
-  SS:TStringStream;
-  BT:TBytes;
+  IntStream:TStringStream;
 begin
   try
-    SS:=TStringStream.Create(Self);
-
-    SS.Position:=0;
-    SetLength(BT,SS.Size);
-    SS.Read(BT[0],SS.Size);
-    Result:=TNetEncoding.Base64.EncodeBytesToString(BT);
-    //#KzDebug.FileFmt('%S',[TNetEncoding.Base64.EncodeBytesToString(Bytes)]);
+    IntStream:=TStringStream.Create(Self);
+    IntStream.SaveToFile(fileName);
+    Self:=IntStream.DataString;
   finally
-    FreeAndNil(SS);
+    FreeAndNil(IntStream);
+  end;
+end;
+
+
+
+
+function THelprString.ToBase64: string;
+var
+  intStream:TStringStream;
+  mBYT:TBytes;
+begin
+  try
+    intStream:=TStringStream.Create(Self);
+
+    intStream.Position:=0;
+    SetLength(mBYT,intStream.Size);
+    intStream.Read(mBYT[0],intStream.Size);
+    Result:=TNetEncoding.Base64.EncodeBytesToString(mBYT);
+  finally
+    FreeAndNil(intStream);
   end;
 end;
 
 function THelprString.ToUseZip: string;
 var
-  CT:Integer;
-  CS:TCompressionStream;
-  SS:TStringStream;//source stream
-  TS:TStringStream;//target stream
+  nVAL:Integer;
+  nBYT:TBytes;
+  mBYT:TBytes;
+  intStream:TMemoryStream;
+  outStream:TMemoryStream;
+  cCompress:TZCompressionStream;
 begin
   try
-    SS:=TStringStream.Create(Self);
+    nBYT:=TEncoding.ANSI.GetBytes(Self);
+    intStream:=TMemoryStream.Create;
+    intStream.WriteData(nBYT,Length(nBYT));
+    nVAL:=intStream.Size;
 
-    CT:=SS.Size;
+    outStream := TMemoryStream.Create;
+    outStream.Write(nVAL, SizeOf(nVAL));
 
-    TS := TStringStream.Create;
-    TS.Write(CT, SizeOf(CT));
+    cCompress := TCompressionStream.Create(clMax, outStream);
+    intStream.SaveToStream(cCompress);
+    cCompress.Free;
 
-    CS := TCompressionStream.Create(clMax, TS);
-    SS.SaveToStream(CS);
-    CS.Free;
-
-    Result:=TS.DataString;
+    outStream.Position:=0;
+    SetLength(mBYT,outStream.Size);
+    outStream.Read(mBYT[0],outStream.Size);
+    Result:=TNetEncoding.Base64.EncodeBytesToString(mBYT);
   finally
-    FreeAndNil(SS);
-    FreeAndNil(TS);
+    FreeAndNil(intStream);
+    FreeAndNil(outStream);
   end;
 end;
 
 function THelprString.UnBase64: string;
 var
-  V:string;
-  BT:TBytes;
-  TS:TStringStream;//target stream
+  bytStream:TBytesStream;
+  outStream:TStringStream;
 begin
-  BT:=TNetEncoding.Base64.DecodeStringToBytes(Self);
   try
-    TS:=TStringStream.Create;
-    TS.Position:=0;
-    TS.SetSize(Length(BT));
-    TS.Write(BT[0],Length(BT));
-    Result:=TS.DataString;
+    bytStream:=TBytesStream.Create(TNetEncoding.Base64.DecodeStringToBytes(Self));
+    bytStream.Position:=0;
+
+    outStream:=TStringStream.Create;
+    outStream.CopyFrom(bytStream,bytStream.Size);
+
+    Result:=outStream.DataString;
+
   finally
-    FreeAndNil(TS);
+    FreeAndNil(bytStream);
+    FreeAndNil(outStream);
   end;
 end;
 
 function THelprString.UnUseZip: string;
 var
-  CT: Integer;
-  DS: TDecompressionStream;
-  SS: TStringStream;
-  TS: TStringStream;
+  nVAL:Integer;
+  bytStream:TBytesStream;
+  dCompress:TZDecompressionStream;
+  outStream:TStringStream;
 begin
   try
-    SS := TStringStream.Create(Self);
+    bytStream:=TBytesStream.Create(TNetEncoding.Base64.DecodeStringToBytes(Self));
+    //#5
+    bytStream.Position := 0;
+    bytStream.ReadBuffer(nVAL,SizeOf(nVAL));
 
-    SS.Position := 0;
-    SS.ReadBuffer(CT,SizeOf(CT));
+    dCompress:=TZDecompressionStream.Create(bytStream);
 
-    TS := TStringStream.Create;
-    TS.SetSize(CT);
+    outStream:=TStringStream.Create;
+    outStream.SetSize(nVAL);
 
-    DS := TDecompressionStream.Create(SS);
-    DS.Read(TS.Memory^, CT);
-    //#DS.Free;
+    dCompress.Read(outStream.Memory^, nVAL);
 
-    Result:=TS.DataString;
+    Result:=outStream.DataString;
   finally
-    //FreeAndNil(DS);
-    //FreeAndNil(TS);
-    //FreeAndNil(SS);
+    FreeAndNil(bytStream);
+    FreeAndNil(dCompress);
+    FreeAndNil(outStream);
+  end;
+end;
+
+{ TKzUseZip }
+
+
+class function TKzUnZip.ToUseZip(aSource: string): string;
+var
+  nVAL:Integer;
+  nBYT:TBytes;
+  mBYT:TBytes;
+  intStream:TMemoryStream;
+  outStream:TMemoryStream;
+  cCompress:TZCompressionStream;
+begin
+  try
+    nBYT:=TEncoding.ANSI.GetBytes(aSource);
+    intStream:=TMemoryStream.Create;
+    intStream.WriteData(nBYT,Length(nBYT));
+    nVAL:=intStream.Size;
+
+    outStream := TMemoryStream.Create;
+    outStream.Write(nVAL, SizeOf(nVAL));
+
+    cCompress := TCompressionStream.Create(clMax, outStream);
+    intStream.SaveToStream(cCompress);
+    cCompress.Free;
+
+    outStream.Position:=0;
+    SetLength(mBYT,outStream.Size);
+    outStream.Read(mBYT[0],outStream.Size);
+    Result:=TNetEncoding.Base64.EncodeBytesToString(mBYT);
+  finally
+    FreeAndNil(intStream);
+    FreeAndNil(outStream);
+  end;
+end;
+
+class function TKzUnZip.UnUseZip(aBase64: string): string;
+var
+  nVAL:Integer;
+  bytStream:TBytesStream;
+  dCompress:TZDecompressionStream;
+  outStream:TStringStream;
+begin
+  try
+    bytStream:=TBytesStream.Create(TNetEncoding.Base64.DecodeStringToBytes(aBase64));
+    //#5
+    bytStream.Position := 0;
+    bytStream.ReadBuffer(nVAL,SizeOf(nVAL));
+
+    dCompress:=TZDecompressionStream.Create(bytStream);
+
+    outStream:=TStringStream.Create;
+    outStream.SetSize(nVAL);
+
+    dCompress.Read(outStream.Memory^, nVAL);
+
+    Result:=outStream.DataString;
+  finally
+    FreeAndNil(bytStream);
+    FreeAndNil(dCompress);
+    FreeAndNil(outStream);
   end;
 end;
 
