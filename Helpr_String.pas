@@ -7,11 +7,12 @@ uses
 type
   THelprString = record helper for String
   public
+    function  kzUseZip:string;
     function  ToUseZip:string;
     function  UnUseZip:string;
     function  FileDisk(fileName:string):Boolean;
   public
-    function  ToBase64:string;
+    function  ToBase64:string;deprecated;
     function  UnBase64:string;
   public
   end;
@@ -45,13 +46,51 @@ end;
 
 
 
-function THelprString.ToBase64: string;
+function THelprString.kzUseZip: string;
 var
-  intStream:TStringStream;
+  nVAL:Integer;
+  nBYT:TBytes;
   mBYT:TBytes;
+  intStream:TMemoryStream;
+  outStream:TStringStream;
+  cCompress:TZCompressionStream;
 begin
   try
-    intStream:=TStringStream.Create(Self);
+    nBYT:=TEncoding.ANSI.GetBytes(Self);
+    intStream:=TMemoryStream.Create;
+    intStream.WriteData(nBYT,Length(nBYT));
+    nVAL:=intStream.Size;
+
+    outStream := TStringStream.Create;
+    outStream.Write(nVAL, SizeOf(nVAL));
+
+    cCompress := TCompressionStream.Create(clMax, outStream);
+    intStream.SaveToStream(cCompress);
+    cCompress.Free;
+
+    Result:=outStream.DataString;
+    {outStream.Position:=0;
+    SetLength(mBYT,outStream.Size);
+    outStream.Read(mBYT[0],outStream.Size);
+    Result:=TNetEncoding.Base64.EncodeBytesToString(mBYT);}
+  finally
+    FreeAndNil(intStream);
+    FreeAndNil(outStream);
+  end;
+end;
+
+function THelprString.ToBase64: string;
+var
+  intStream:TMemoryStream;
+  mBYT:TBytes;
+  nBYT:TBytes;
+begin
+  //#raise Exception.Create('ERROR:Helpr_String.pas.THelprString.ToBase64.LINE:246.INFO:some thing promiss me.');
+  try
+    nBYT:=TEncoding.ANSI.GetBytes(Self);
+
+    intStream:=TMemoryStream.Create;
+    intStream.WriteData(nBYT,Length(nBYT));
 
     intStream.Position:=0;
     SetLength(mBYT,intStream.Size);
@@ -107,7 +146,6 @@ begin
     outStream.CopyFrom(bytStream,bytStream.Size);
 
     Result:=outStream.DataString;
-
   finally
     FreeAndNil(bytStream);
     FreeAndNil(outStream);
