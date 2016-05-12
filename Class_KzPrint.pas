@@ -176,9 +176,10 @@ type
     FListVariabl:TStringList; //变量列表
   public
     SourceGrid  :TAdvStringGrid;
-    FFilePath   :string;
-    FBackMark   :string;
-    LockCount   :Integer;//锁定列数
+    FFilePath   :string;      //模板路径
+    FfnBase64   :string;      //模板BASE64
+    FBackMark   :string;      //水印
+    LockCount   :Integer;     //锁定列数
 
     //YXC_2011_09_19_15_41_00
     FColStart   :Integer;//起始列
@@ -271,7 +272,7 @@ const
 implementation
 
 uses
-  Printers,Class_KzUtils,Forms,Class_KzDebug;
+  Printers,Class_KzUtils,Forms,Class_KzDebug,Class_KzToZip;
 
 
 constructor TKzPrint.Create;
@@ -304,14 +305,28 @@ begin
 end;
 
 function TKzPrint.DesignX: Boolean;
+var
+  msStream:TMemoryStream;
 begin
-  if not FileExists(FFilePath) then
+  if (not FileExists(Trim(FFilePath))) and (Trim(FfnBase64)='') then
   begin
     ShowMessage('模板文件不存在');
     Exit;
   end;
 
-  FfrxReport.LoadFromFile(FFilePath);
+  if Trim(FfnBase64)<>'' then
+  begin
+    msStream:=TMemoryStream.Create;
+    TKzToZip.Base64toFile(FfnBase64,msStream);
+    msStream.SaveToFile(TKzUtils.ExePath+'test.fr3');
+    msStream.Position:=0;
+    FfrxReport.LoadFromStream(msStream);
+    msStream.Free;
+  end else
+  begin
+    FfrxReport.LoadFromFile(FFilePath);
+  end;
+
   SetfrxVariabl;
   FfrxReport.DesignReport();
 end;
@@ -1039,6 +1054,7 @@ var
   frxXML:TfrxXMLDocument;
   XmlNod:TfrxXMLItem;//主节点
   PagNod:TfrxXMLItem;//页面信息
+  msStream:TMemoryStream;
 
 
   TMPA  :string;
@@ -1195,7 +1211,19 @@ begin
 
   frxXML:=TfrxXMLDocument.Create;
   frxXML.Clear;
-  frxXML.LoadFromFile(FFilePath); //FFilePath:fr3文档路径
+  if Trim(FfnBase64)<>'' then
+  begin
+    msStream:=TMemoryStream.Create;
+    TKzToZip.Base64toFile(FfnBase64,msStream);
+    msStream.Position:=0;
+    frxXML.LoadFromStream(msStream);
+    msStream.Free;
+  end else
+  begin
+    frxXML.LoadFromFile(FFilePath);
+  end;
+  //#frxXML.LoadFromFile(FFilePath); //FFilePath:fr3文档路径
+
   XmlNod:=FrxXml.Root;
 
   PagNod:=XmlNod.FindItem('TfrxReportPage');
@@ -1806,7 +1834,7 @@ var
   end;
 begin
   Result:=False;
-  if not FileExists(FFilePath) then
+  if (not FileExists(Trim(FFilePath))) and (Trim(FfnBase64)='') then
   begin
     ShowMessage('模板文件不存在');
     Exit;
@@ -2351,7 +2379,7 @@ var
   end;
 begin
   Result:=False;
-  if not FileExists(FFilePath) then
+  if (not FileExists(Trim(FFilePath))) and (Trim(FfnBase64)='')then
   begin
     ShowMessage('模板文件不存在');
     Exit;

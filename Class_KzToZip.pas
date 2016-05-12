@@ -12,12 +12,12 @@ type
     function  UnUseZip:string;
     function  FileDisk(fileName:string):Boolean;
   public
-    function  ToBase64:string;deprecated;
+    function  ToBase64:string;
     function  UnBase64:string;
   public
   end;
 
-  TKzUnZip=class(TObject)
+  TKzToZip=class(TObject)
   public
     class function ToUseZip(aSource:string):string;
     class function UnUseZip(aBase64:string):string;
@@ -186,7 +186,7 @@ end;
 { TKzUseZip }
 
 
-class procedure TKzUnZip.Base64toFile(aFnBase64: string;
+class procedure TKzToZip.Base64toFile(aFnBase64: string;
   var msStream: TMemoryStream);
 var
   bytStream:TBytesStream;
@@ -203,7 +203,7 @@ begin
   end;
 end;
 
-class function TKzUnZip.FileToBase64(aFileName: string): string;
+class function TKzToZip.FileToBase64(aFileName: string): string;
 var
   mBYT:TBytes;
   intStream:TMemoryStream;
@@ -224,7 +224,7 @@ begin
   end;
 end;
 
-class function TKzUnZip.ToUseZip(aSource: string): string;
+class function TKzToZip.ToUseZip(aSource: string): string;
 var
   nVAL:Integer;
   nBYT:TBytes;
@@ -256,7 +256,7 @@ begin
   end;
 end;
 
-class function TKzUnZip.UnUseZip(aBase64: string): string;
+class function TKzToZip.UnUseZip(aBase64: string): string;
 var
   nVAL:Integer;
   bytStream:TBytesStream;
