@@ -5,7 +5,7 @@ uses
   System.Classes,System.SysUtils,System.NetEncoding,System.ZLib;
 
 type
-  THelprString = record helper for String
+  THelprString = record helper for string
   public
     function  kzUseZip:string;
     function  ToUseZip:string;
@@ -21,6 +21,9 @@ type
   public
     class function ToUseZip(aSource:string):string;
     class function UnUseZip(aBase64:string):string;
+
+    class function  FileToBase64(aFileName:string):string;
+    class procedure Base64toFile(aFnBase64:string;var msStream:TMemoryStream);
   end;
 
 implementation
@@ -182,6 +185,44 @@ end;
 
 { TKzUseZip }
 
+
+class procedure TKzUnZip.Base64toFile(aFnBase64: string;
+  var msStream: TMemoryStream);
+var
+  bytStream:TBytesStream;
+begin
+  if msStream=nil then Exit;
+
+  try
+    bytStream:=TBytesStream.Create(TNetEncoding.Base64.DecodeStringToBytes(aFnBase64));
+    //#bytStream.SaveToFile(TKzUtils.ExePath+'2.fr3');
+    bytStream.Position:=0;
+    msStream.CopyFrom(bytStream,bytStream.Size);
+  finally
+    FreeAndNil(bytStream);
+  end;
+end;
+
+class function TKzUnZip.FileToBase64(aFileName: string): string;
+var
+  mBYT:TBytes;
+  intStream:TMemoryStream;
+begin
+  Result:='';
+  if not FileExists(aFileName) then Exit;
+  
+  try
+    intStream:=TMemoryStream.Create;
+    intStream.LoadFromFile(aFileName);
+
+    intStream.Position:=0;
+    SetLength(mBYT,intStream.Size);
+    intStream.Read(mBYT[0],intStream.Size);
+    Result:=TNetEncoding.Base64.EncodeBytesToString(mBYT);
+  finally
+    FreeAndNil(intStream);
+  end;
+end;
 
 class function TKzUnZip.ToUseZip(aSource: string): string;
 var
