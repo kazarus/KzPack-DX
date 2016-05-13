@@ -22,7 +22,8 @@ type
     class function ToUseZip(aSource:string):string;
     class function UnUseZip(aBase64:string):string;
 
-    class function  FileToBase64(aFileName:string):string;
+    class function  FileToBase64(aFileName:string):string;overload;
+    class function  FileToBase64(intStream:TMemoryStream):string;overload;
     class procedure Base64toFile(aFnBase64:string;var msStream:TMemoryStream);
   end;
 
@@ -215,6 +216,23 @@ begin
     intStream:=TMemoryStream.Create;
     intStream.LoadFromFile(aFileName);
 
+    intStream.Position:=0;
+    SetLength(mBYT,intStream.Size);
+    intStream.Read(mBYT[0],intStream.Size);
+    Result:=TNetEncoding.Base64.EncodeBytesToString(mBYT);
+  finally
+    FreeAndNil(intStream);
+  end;
+end;
+
+class function TKzToZip.FileToBase64(intStream: TMemoryStream): string;
+var
+  mBYT:TBytes;
+begin
+  Result:='';
+  if intStream=nil then Exit;
+
+  try
     intStream.Position:=0;
     SetLength(mBYT,intStream.Size);
     intStream.Read(mBYT[0],intStream.Size);
