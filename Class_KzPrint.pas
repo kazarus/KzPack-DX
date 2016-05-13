@@ -142,6 +142,9 @@ type
     FListCutX :TStringList;    //list of tkzpagecutx.
 
     FfrxReport :TfrxReport;
+  public
+    FfrxDesign :TfrxDesigner;
+  private
     FPageCount :Integer;
     FUseDataSet:TfrxUserDataSet;
 
@@ -229,6 +232,7 @@ type
     procedure SetValidCols;
     
     procedure OnUseDataSetGetValue(const VarName: String;var Value: Variant);
+    //#procedure OnfrxDesigner1SaveReport(Report: TfrxReport;SaveAs: Boolean): Boolean;
     
     procedure SetfrxVariabl;
     procedure OnGetValue(const VarName: String;var Value: Variant);
@@ -278,6 +282,7 @@ uses
 constructor TKzPrint.Create;
 begin
   FfrxReport :=TfrxReport.Create(nil);
+  FfrxDesign :=TfrxDesigner.Create(nil);
   FUseDataSet:=TfrxUserDataSet.Create(nil);
 
   FPrintOrder:=poColFirst;//Default
@@ -334,37 +339,19 @@ end;
 destructor TKzPrint.Destroy;
 begin
   FreeAndNil(FfrxReport);
-  if FUseDataSet<>nil then
-  begin
-    FreeAndNil(FUseDataSet);
-  end;
-  if FListRows<>nil then
-  begin
-    FreeAndNil(FListRows);
-  end;  
-  if FListVariabl<>nil then
-  begin
-    FreeAndNil(FListVariabl);
-  end;
-  if FListPage<>nil then
-  begin
-    TKzUtils.TryFreeAndNil(FListPage);
-  end;
-  if FListCell<>nil then
-  begin
-    TKzUtils.TryFreeAndNil(FListCell);
-  end;
-  if FListView<>nil then
-  begin
-    TKzUtils.TryFreeAndNil(FListView);
-  end;
+  FreeAndNil(FfrxDesign);
+  if FUseDataSet<>nil then FreeAndNil(FUseDataSet);
 
-  if FTreeCellWhenMultiHead<>nil then
-  begin
-    FreeAndNil(FTreeCellWhenMultiHead);
-  end;
-
+  if FListRows   <>nil then FreeAndNil(FListRows);
+  if FListVariabl<>nil then FreeAndNil(FListVariabl);
+  if FListPage<>nil then  TKzUtils.TryFreeAndNil(FListPage);
+  if FListCell<>nil then TKzUtils.TryFreeAndNil(FListCell);
+  if FListView<>nil then TKzUtils.TryFreeAndNil(FListView);
   if FListCutX<>nil then TKzUtils.TryFreeAndNil(FListCutX);
+
+  if FTreeCellWhenMultiHead<>nil then FreeAndNil(FTreeCellWhenMultiHead);
+
+
 
   inherited;
 end;
