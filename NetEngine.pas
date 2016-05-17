@@ -83,7 +83,7 @@ type
   public
     function  HaveUrls(AUrls:string):Integer;
     procedure PushUrls(AObject:TObject)overload;
-    function  CallUrls(FileName:string;Params:string;InRead:TStrings;InPost:TStrings):string;
+    function  CallUrls(FileName:string;Params:string;InRead:TStrings;InPost:TStrings;useZip:Integer=0):string;
   public
     function  PullMark(AMark:string):TUniConnection;
   public
@@ -112,7 +112,7 @@ uses
 
 { TNetEngine }
 
-function TNetEngine.CallUrls(FileName, Params: string;InRead:TStrings;InPost:TStrings): string;
+function TNetEngine.CallUrls(FileName, Params: string;InRead:TStrings;InPost:TStrings;useZip:Integer): string;
 var
   IDXA:Integer;
   SVAL:string;
@@ -155,6 +155,11 @@ begin
       1:Result:=M.Invoke(Instance.ClassType,[Params]).AsString;
       2:Result:=M.Invoke(Instance.ClassType,[Params,InRead]).AsString;
       3:Result:=M.Invoke(Instance.ClassType,[Params,InRead,InPost]).AsString;
+    end;
+
+    if useZip = 1 then
+    begin
+      Result:=Result.ToUseZip;
     end;
   except
     on E:Exception do
@@ -297,7 +302,15 @@ begin
   Len:=Length(AParams) div 2;
 
   FRtcHttpClient.Connect();
-  FRtcDataRequest.Request.FileName:=AFileName;
+  if Pos('?',AFileName)>0 then
+  begin
+    FRtcDataRequest.Request.FileName:=Format('%s&usezip=1',[AFileName]);
+  end else
+  begin
+    FRtcDataRequest.Request.FileName:=Format('%s?usezip=1',[AFileName]);
+  end;
+
+  FRtcDataRequest.Request.Info['usezip']:=1;
 
   for I := 1 to Len do
   begin
@@ -329,6 +342,7 @@ end;
 
 procedure TNetEngine.RtcDataRequestDataReceived(Sender: TRtcConnection);
 var
+  useZip:Integer;
   DataClient:TRtcDataClient absolute Sender;
 begin
   if DataClient.Response.Done then
@@ -337,14 +351,28 @@ begin
     begin
       if Assigned(OnNetEngineDataRequestTrueEvent) then
       begin
-        OnNetEngineDataRequestTrueEvent(DataClient,DataClient.Read);
+        useZip:=DataClient.Request.Info['usezip'];
+        if useZip=1 then
+        begin
+          OnNetEngineDataRequestTrueEvent(DataClient,DataClient.Read.UnUseZip);
+        end else
+        begin
+          OnNetEngineDataRequestTrueEvent(DataClient,DataClient.Read);
+        end;
       end;
     end else
-    if FCallBack=necbBlock then    
+    if FCallBack=necbBlock then
     begin
       if Assigned(OnNetEngineDataRequestTrueBlock) then
       begin
-        OnNetEngineDataRequestTrueBlock(DataClient,DataClient.Read.UnUseZip);
+        useZip:=DataClient.Request.Info['usezip'];
+        if useZip=1 then
+        begin
+          OnNetEngineDataRequestTrueBlock(DataClient,DataClient.Read.UnUseZip);
+        end else
+        begin
+          OnNetEngineDataRequestTrueBlock(DataClient,DataClient.Read);
+        end;
         FCallBack:=necbEvent;
       end;
     end;
