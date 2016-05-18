@@ -1,13 +1,14 @@
 unit Class_KzToZip;
+//GZIP
 
 interface
 uses
-  System.Classes,System.SysUtils,System.NetEncoding,System.ZLib;
+  System.Classes,System.SysUtils,System.NetEncoding,IdZLib;
 
 type
   THelprString = record helper for string
   public
-    function  kzUseZip:string;
+    function  kzUseZip:string;deprecated;
     function  ToUseZip:string;
     function  UnUseZip:string;
     function  FileDisk(fileName:string):Boolean;
@@ -30,7 +31,7 @@ type
 implementation
 
 uses
-  Class_KzUtils;
+  Class_KzUtils,Vcl.Dialogs;
 
 { THelprString }
 
@@ -57,10 +58,10 @@ var
   mBYT:TBytes;
   intStream:TMemoryStream;
   outStream:TStringStream;
-  cCompress:TZCompressionStream;
+  cCompress:TCompressionStream;
 begin
   try
-    nBYT:=TEncoding.ANSI.GetBytes(Self);
+    nBYT:=TEncoding.UTF8.GetBytes(Self);
     intStream:=TMemoryStream.Create;
     intStream.WriteData(nBYT,Length(nBYT));
     nVAL:=intStream.Size;
@@ -91,7 +92,7 @@ var
 begin
   //#raise Exception.Create('ERROR:Helpr_String.pas.THelprString.ToBase64.LINE:246.INFO:some thing promiss me.');
   try
-    nBYT:=TEncoding.ANSI.GetBytes(Self);
+    nBYT:=TEncoding.UTF8.GetBytes(Self);
 
     intStream:=TMemoryStream.Create;
     intStream.WriteData(nBYT,Length(nBYT));
@@ -112,18 +113,19 @@ var
   mBYT:TBytes;
   intStream:TMemoryStream;
   outStream:TMemoryStream;
-  cCompress:TZCompressionStream;
+  cCompress:TCompressionStream;
 begin
   try
-    nBYT:=TEncoding.ANSI.GetBytes(Self);
+    nBYT:=TEncoding.UTF8.GetBytes(Self);
     intStream:=TMemoryStream.Create;
     intStream.WriteData(nBYT,Length(nBYT));
     nVAL:=intStream.Size;
 
     outStream := TMemoryStream.Create;
     outStream.Write(nVAL, SizeOf(nVAL));
+    outStream.Position:=0;
 
-    cCompress := TCompressionStream.Create(clMax, outStream);
+    cCompress := TCompressionStream.CreateGZ(clDefault, outStream);
     intStream.SaveToStream(cCompress);
     cCompress.Free;
 
@@ -158,23 +160,22 @@ end;
 
 function THelprString.UnUseZip: string;
 var
-  nVAL:Integer;
+  nRead:Integer;
+  Buffer:array[0..1023] of Char;
   bytStream:TBytesStream;
-  dCompress:TZDecompressionStream;
+  dCompress:TDecompressionStream;
   outStream:TStringStream;
 begin
   try
     bytStream:=TBytesStream.Create(TNetEncoding.Base64.DecodeStringToBytes(Self));
-    //#5
     bytStream.Position := 0;
-    bytStream.ReadBuffer(nVAL,SizeOf(nVAL));
 
-    dCompress:=TZDecompressionStream.Create(bytStream);
-
+    dCompress:=TDecompressionStream.Create(bytStream);
     outStream:=TStringStream.Create;
-    outStream.SetSize(nVAL);
-
-    dCompress.Read(outStream.Memory^, nVAL);
+    repeat
+      nRead := dCompress.Read(Buffer,1024);
+      outStream.Write(Buffer,nRead);
+    until nRead = 0;
 
     Result:=outStream.DataString;
   finally
@@ -249,18 +250,19 @@ var
   mBYT:TBytes;
   intStream:TMemoryStream;
   outStream:TMemoryStream;
-  cCompress:TZCompressionStream;
+  cCompress:TCompressionStream;
 begin
   try
-    nBYT:=TEncoding.ANSI.GetBytes(aSource);
+    nBYT:=TEncoding.UTF8.GetBytes(aSource);
     intStream:=TMemoryStream.Create;
     intStream.WriteData(nBYT,Length(nBYT));
     nVAL:=intStream.Size;
 
     outStream := TMemoryStream.Create;
     outStream.Write(nVAL, SizeOf(nVAL));
+    outStream.Position:=0;
 
-    cCompress := TCompressionStream.Create(clMax, outStream);
+    cCompress := TCompressionStream.CreateGZ(clDefault, outStream);
     intStream.SaveToStream(cCompress);
     cCompress.Free;
 
@@ -276,23 +278,22 @@ end;
 
 class function TKzToZip.UnUseZip(aBase64: string): string;
 var
-  nVAL:Integer;
+  nRead:Integer;
+  Buffer:array[0..1023] of Char;
   bytStream:TBytesStream;
-  dCompress:TZDecompressionStream;
+  dCompress:TDecompressionStream;
   outStream:TStringStream;
 begin
   try
     bytStream:=TBytesStream.Create(TNetEncoding.Base64.DecodeStringToBytes(aBase64));
-    //#5
     bytStream.Position := 0;
-    bytStream.ReadBuffer(nVAL,SizeOf(nVAL));
 
-    dCompress:=TZDecompressionStream.Create(bytStream);
-
+    dCompress:=TDecompressionStream.Create(bytStream);
     outStream:=TStringStream.Create;
-    outStream.SetSize(nVAL);
-
-    dCompress.Read(outStream.Memory^, nVAL);
+    repeat
+      nRead := dCompress.Read(Buffer,1024);
+      outStream.Write(Buffer,nRead);
+    until nRead = 0;
 
     Result:=outStream.DataString;
   finally
