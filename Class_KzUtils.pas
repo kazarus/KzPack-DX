@@ -20,7 +20,12 @@ unit Class_KzUtils;
 
 interface
 uses
-  Classes,SysUtils,Windows,Forms,PerlRegEx,Variants,StrUtils,TLHelp32,Graphics,System.DateUtils;
+  Classes,SysUtils,Windows,Forms,Variants,StrUtils,TLHelp32,Graphics,System.DateUtils,
+  {$IFDEF ENABLE_REGEX}
+       PerlRegEx, pcre
+  {$ELSE}
+       RegularExpressionsCore
+  {$IFEND};
 
 type
   TKzUtils=class(TObject)
