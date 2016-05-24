@@ -22,7 +22,8 @@ type
     procedure WritFmt(const Msg: string; Params: array of const;IsEnter:Boolean=True);overload;
 
     procedure FileLog(AValue:Variant);overload;
-    procedure FileFmt(const Msg: string; Params: array of const);
+    procedure FileFmt(const Msg: string; Params: array of const);overload;
+    procedure FileFmt(Params: array of const);overload;
 
     procedure Started;
     procedure TickLog(AValue:Variant);overload;
@@ -60,6 +61,21 @@ end;
 
 procedure TKzDebug.FileFmt(const Msg: string; Params: array of const);
 begin
+  Log(Format(Msg,Params),GetFileName);
+end;
+
+procedure TKzDebug.FileFmt(Params: array of const);
+var
+  I: Integer;
+  Msg:string;
+begin
+  Msg:='';
+  for I := 1 to Length(Params) do
+  begin
+    Msg:=Msg+':%S';
+  end;
+  Delete(Msg,1,1);
+
   Log(Format(Msg,Params),GetFileName);
 end;
 
