@@ -896,7 +896,36 @@ begin
   Result:=18991230;
   if Trim(Value)='' then Exit;
 
+  if Pos('/',Value)>0 then
+  begin
+    Value:=StringReplace(Value,'/','-',[rfReplaceAll]);
+  end;
+  if Pos('.',Value)>0 then
+  begin
+    Value:=StringReplace(Value,'.','-',[rfReplaceAll]);
+  end;
+
   try
+    try
+      Format.LongDateFormat :='yyyy-mm-dd';
+      Format.ShortDateFormat:='yy-mm-dd';
+      Format.LongTimeFormat :='hh:mm:ss.zzz';
+      Format.DateSeparator  :='-';
+      Format.TimeSeparator  :=':';
+      Result:=StrToIntDef(FormatDateTime('YYYYMMDD',StrToDateTime(Value)),18991230);
+    except
+      Format.LongDateFormat :='yyyy.mm.dd';
+      Format.ShortDateFormat:='yy.mm.dd';
+      Format.LongTimeFormat :='hh:mm:ss.zzz';
+      Format.DateSeparator  :='.';
+      Format.TimeSeparator  :=':';
+      Result:=StrToIntDef(FormatDateTime('YYYYMMDD',StrToDateTime(Value)),18991230);
+    end;
+  finally
+  end;
+
+  {#try
+    DateSeparator:='-';
     Format.LongDateFormat :='yyyy-mm-dd';
     Format.ShortDateFormat:='yy-mm-dd';
     Format.LongTimeFormat :='hh:mm:ss.zzz';
@@ -904,7 +933,21 @@ begin
     Format.TimeSeparator  :=':';
     Result:=StrToIntDef(FormatDateTime('YYYYMMDD',StrToDateTime(Value)),18991230);
   except
-  end;
+    on E:Exception do
+    begin
+      raise Exception.Create(E.Message);
+    end;
+  end;}
+
+  {#try
+    Format.LongDateFormat :='yyyy-mm-dd';
+    Format.ShortDateFormat:='yy-mm-dd';
+    Format.LongTimeFormat :='hh:mm:ss.zzz';
+    Format.DateSeparator  :='-';
+    Format.TimeSeparator  :=':';
+    Result:=StrToIntDef(FormatDateTime('YYYYMMDD',StrToDateTime(Value)),18991230);
+  except
+  end;}
 end;
 
 class function TKzUtils.GetGUID: string;
