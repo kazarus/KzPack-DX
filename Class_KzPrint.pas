@@ -17,6 +17,8 @@ unit Class_KzPrint;
 //frxreport1.previewpages.deletepage(0);
 //frxreport1.showpreparedreport;
 
+//the page is
+
 interface
 uses
   SysUtils,AdvGrid,frxClass,frxDesgn,Classes,XMLDoc,XMLIntf,Dialogs,frxXML,
@@ -673,7 +675,7 @@ var
   PageB:TfrxReportPage;
   StrmA:TMemoryStream;
   //ListB:TStringList;
-  IdexA:Integer;
+  cIndx:Integer;
 begin
   ListA:=TStringList.Create;
   
@@ -713,10 +715,10 @@ begin
   begin
     TempA:=ListA.Strings[I];
     
-    IdexA:=-1;
-    IdexA:=FListPage.IndexOf(TempA);
+    cIndx:=-1;
+    cIndx:=FListPage.IndexOf(TempA);
 
-    FListPage.Move(IdexA,I);
+    FListPage.Move(cIndx,I);
   end;
   FreeAndNil(ListA);
 
@@ -1599,7 +1601,7 @@ begin
 
       PostX:=PostX+CellA.Widt;
       CellA.PagX:=GetPageIdex(PostX,CellA.Widt);
-      KzDebug.FileFmt('the page is %D,%F,%F,%S',[CellA.PagX,PostX,PostX-cella.Widt,CellA.Text]);
+      KzDebug.FileFmt('the page is %D,%F,%F,%S,%S',[CellA.PagX,PostX,PostX-cella.Widt,CellA.Text,TKzUtils.IfThen(CellA.TestHide,'是','否')]);
     end;
   end;
 
@@ -1616,11 +1618,11 @@ end;
 
 procedure TKzTreeList.AddObject(ARowIndex: Integer; AObject: TObject);
 var
-  IdexA:Integer;
+  cIndx:Integer;
   ItemA:TKzTreeItem;
 begin
-  IdexA:=ListItem.IndexOf(IntToStr(ARowIndex));
-  if IdexA=-1 then 
+  cIndx:=ListItem.IndexOf(IntToStr(ARowIndex));
+  if cIndx=-1 then
   begin
     ItemA:=TKzTreeItem.Create;
     ItemA.RowIndex:=ARowIndex;
@@ -1629,7 +1631,7 @@ begin
     ListItem.AddObject(IntToStr(ARowIndex),ItemA);
   end else  
   begin
-    ItemA:=TKzTreeItem(ListItem.Objects[IdexA]);
+    ItemA:=TKzTreeItem(ListItem.Objects[cIndx]);
     ItemA.AddObject('',AObject);
   end;  
 end;
@@ -1675,11 +1677,11 @@ end;
 
 procedure TKzTreeList.InsertObj(ARowIndex: Integer; AObject: TObject;ALockCount:Integer);
 var
-  IdexA:Integer;
+  cIndx:Integer;
   ItemA:TKzTreeItem;
 begin
-  IdexA:=ListItem.IndexOf(IntToStr(ARowIndex));
-  if IdexA=-1 then 
+  cIndx:=ListItem.IndexOf(IntToStr(ARowIndex));
+  if cIndx=-1 then
   begin
     ItemA:=TKzTreeItem.Create;
     ItemA.RowIndex:=ARowIndex;
@@ -1696,7 +1698,7 @@ begin
     ListItem.AddObject(IntToStr(ARowIndex),ItemA);
   end else  
   begin
-    ItemA:=TKzTreeItem(ListItem.Objects[IdexA]);
+    ItemA:=TKzTreeItem(ListItem.Objects[cIndx]);
     
     if ALockCount=0 then
     begin
@@ -1744,8 +1746,8 @@ end;
 function TKzPrint.PrepareMultiHead: Boolean;
 var
   I,M,N:Integer;
-  IdexA:Integer;
-  IdexB:Integer;
+  cIndx:Integer;
+  dIndx:Integer;
 
   PageCount:Integer;
 
@@ -2004,16 +2006,16 @@ begin
       end;
 
       ViewA:=nil;
-      IdexA:=FListView.IndexOf('[表头内容]');
+      cIndx:=FListView.IndexOf('[表头内容]');
       ViewB:=nil;
-      IdexB:=FListView.IndexOf('[表体内容]');
-      if IdexA<>-1 then
+      dIndx:=FListView.IndexOf('[表体内容]');
+      if cIndx<>-1 then
       begin
-        ViewA:=TKzCellView(FListView.Objects[IdexA]);
+        ViewA:=TKzCellView(FListView.Objects[cIndx]);
       end;
-      if IdexB<>-1 then
+      if dIndx<>-1 then
       begin
-        ViewB:=TKzCellView(FListView.Objects[IdexB]);
+        ViewB:=TKzCellView(FListView.Objects[dIndx]);
       end;
 
       if FRowHeadEnded  - FRowHeadStart >0 then
@@ -2045,7 +2047,7 @@ begin
                 Inc(NumbA);
                 Continue;
               end;
-              if NumbA=LockCount then Break;
+              if NumbA>=LockCount then Break;
 
 
               MemoA:=TfrxMemoView.Create(FindComponent(ViewA.PrevCont));
@@ -2293,8 +2295,8 @@ end;
 function TKzPrint.PreparX: Boolean;
 var
   I,M,N:Integer;
-  IdexA:Integer;
-  IdexB:Integer;
+  cIndx:Integer;
+  dIndx:Integer;
 
   PageCount:Integer;
 
@@ -2543,16 +2545,16 @@ begin
       end;
 
       ViewA:=nil;
-      IdexA:=FListView.IndexOf('[表头内容]');
+      cIndx:=FListView.IndexOf('[表头内容]');
       ViewB:=nil;
-      IdexB:=FListView.IndexOf('[表体内容]');
-      if IdexA<>-1 then
+      dIndx:=FListView.IndexOf('[表体内容]');
+      if cIndx<>-1 then
       begin
-        ViewA:=TKzCellView(FListView.Objects[IdexA]);
+        ViewA:=TKzCellView(FListView.Objects[cIndx]);
       end;
-      if IdexB<>-1 then
+      if dIndx<>-1 then
       begin
-        ViewB:=TKzCellView(FListView.Objects[IdexB]);
+        ViewB:=TKzCellView(FListView.Objects[dIndx]);
       end;
 
       PostX:=0;
