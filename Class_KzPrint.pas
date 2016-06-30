@@ -817,7 +817,7 @@ begin
       end;
 
       if VarName=CellA.Text then Value:=TempA;
-    end;    
+    end;
   end;
 end;
 
@@ -851,7 +851,7 @@ begin
       CellA.Idex:=I;
 
       CellA.Titl:=Cells[I,FRowTitle];
-      
+
       if BoolUseFieldCell then
       begin
         CellA.Text:=Format('FIELD%D',[I]);    //YXC_2014_07_08_11_38_31_ERROR

@@ -73,7 +73,7 @@ type
     class function  StringToColorDef(const AValue:string;const ADef:string='clWhite'):TColor;
   public
     class function  FloatToText(AValue: Extended; Zero:Boolean=False; Digits: Integer=2;AFormat: TFloatFormat=ffNumber):string;
-    class function  TextToFloat(AFloatStr:string):Extended;
+    class function  TextToFloat(aValue:string):Extended;
 
     class function  StrxCutZero(Source:string):string;
     class function  StrxCutMark(Source:string):string;
@@ -422,76 +422,16 @@ begin
   Result:=Source;
 end;
 
-class function TKzUtils.TextToFloat(AFloatStr: string): Extended;
-var
-  I : integer;
-  tempstr : string;
-  dots :integer;
-  chr  : string;
-
-  function IsEmpty(AStr: string): Boolean;
-  var
-    len: Integer;
-  begin
-    len := Length(Trim(AStr));
-    if (len > 0) then
-      Result := false
-    else
-      Result := true;
-  end;
-
-  function GetNegJE(AStr: string):string;
-  var
-    j  : integer;
-    len: integer;
-    chr: string;
-  begin
-    Result := '';
-    len := Length(AStr);
-    for j := 1 to len do
-    begin
-      chr :=  Copy(AStr,j,1);
-      if (('0' <= chr ) and (chr <= '9')) or
-         (chr = ',') or (chr = '.') then
-        Result := result + chr;
-    end;
-  end;
+class function TKzUtils.TextToFloat(aValue: string): Extended;
 begin
-  AFloatStr := Trim(AFloatStr);
-  if (AFloatStr='') or (Trim(AFloatStr)='-') then
-  begin
-    Result:=0;//2008-04-11-yxc
-    Exit;
-  end;
+  Result:=0;
+  if Trim(aValue)='' then Exit;
 
-  chr :=  Copy(AFloatStr,1,1);
-
-  if (not (( chr >= '0') and (chr <= '9'))) then
-    if (not IsEmpty(AFloatStr)) then
-      AFloatStr := '-' + GetNegJE(AFloatStr);
-
-  tempstr :='';
-  for I := 1 to Length(AFloatStr) do
-  begin
-    if AFloatStr[i] <> ',' then
-      tempstr := tempstr + AFloatStr[i];
+  try
+    Result:=StrToFloatDef(aValue,0);
+  except
+    raise Exception.CreateFmt('%s:is not valid float string.',[aValue]);
   end;
-  dots := 0;
-  for I := 1 to Length(tempstr) do
-  begin
-    if (tempstr[i] = '.') then
-      inc(dots);
-    if dots > 1 then
-    begin
-      tempstr := Copy(tempstr,1,i - 1);
-      Break;
-    end;
-  end;
-  
-  if Length(Trim(tempstr)) >0 then
-    Result := StrToFloatDef(Trim(tempstr),0)
-  else
-    Result :=0;
 end;    
 
 class function TKzUtils.TryFormatCode(ALength, ABoolBack: Integer;
