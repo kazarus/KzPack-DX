@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, RzLabel, Vcl.Mask, RzEdit,
-  RzBtnEdt, RzButton, Dialog_View,Class_AppCnfg,Helpr_UniEngine;
+  RzBtnEdt, RzButton, Dialog_View,Class_AppCnfg,Helpr_UniEngine, RzRadChk;
 
 type
   TDialogSrvrCnfg = class(TDialogView)
@@ -17,6 +17,7 @@ type
     Btnx_Quit: TRzButton;
     Labl_3: TRzLabel;
     Edit_SrvrMemo: TRzButtonEdit;
+    Chkb_InUseZIP: TRzCheckBox;
     procedure Btnx_MrokClick(Sender: TObject);
     procedure Btnx_QuitClick(Sender: TObject);
   private
@@ -104,6 +105,7 @@ begin
   ACnfg.SrvrAddr:=Trim(Edit_SrvrAddr.Text);
   ACnfg.SrvrPort:=Trim(Edit_SrvrPort.Text);
   ACnfg.SrvrMemo:=Trim(Edit_SrvrMemo.Text);
+  ACnfg.InUseZIP:=TKzUtils.IfThen(Chkb_InUseZIP.Checked,1,0);
   ACnfg.ToFILE(TKzUtils.ExePath+'config.json');
 end;
 
@@ -120,6 +122,7 @@ begin
   Edit_SrvrAddr.Text:=FRealCnfg.SrvrAddr;
   Edit_SrvrPort.Text:=FRealCnfg.SrvrPort;
   Edit_SrvrMemo.Text:=FRealCnfg.SrvrMemo;
+  Chkb_InUseZIP.Checked:=FRealCnfg.InUseZIP=1;
 end;
 
 procedure TDialogSrvrCnfg.SetComboItems;

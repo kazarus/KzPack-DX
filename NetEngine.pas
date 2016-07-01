@@ -60,6 +60,7 @@ type
     FListUrls      :THashedStringList;//*
     FListClas      :THashedStringList;//*
     FListMark      :THashedStringList;//*
+    FInUseZIP      :Integer;
   protected
     procedure RtcDataRequestBeginRequest(Sender: TRtcConnection);
     procedure RtcDataRequestDataReceived(Sender: TRtcConnection);
@@ -73,7 +74,7 @@ type
     OnNetEngineDataRequestTrueBlock:TNetEngineDataRequestTrueBlock;
     OnNetEngineDataRequestFailBlock:TNetEngineDataRequestFailBlock;
   public
-    function  Initialize(ASrvrAddr,ASrvrPort:string):Boolean;overload;
+    function  Initialize(ASrvrAddr,ASrvrPort:string;inUseZIP:Integer):Boolean;overload;
   protected
     //@procedure PushUrls(AUrls:string;AHandle:TNetEngineUrlsHandleEvent);overload;
     procedure PushUrls(AClas,AUrls,ACall:string;AMethod:TRttiMethod);overload;
@@ -171,6 +172,8 @@ end;
 
 constructor TNetEngine.Create;
 begin
+  FInUseZIP:=0;
+
   FRtcHttpClient :=TRtcHttpClient.Create(nil);
   FRtcHttpClient.ServerAddr:='192.168.0.51';
   FRtcHttpClient.ServerPort:='8186';
@@ -259,12 +262,15 @@ begin
   end;
 end;
 
-function  TNetEngine.Initialize(ASrvrAddr, ASrvrPort:string):Boolean;
+function  TNetEngine.Initialize(ASrvrAddr, ASrvrPort:string;inUseZIP:Integer):Boolean;
 begin
   Result:=False;
 
+  FInUseZIP := inUseZIP;
+
   FRtcHttpClient.ServerAddr:=ASrvrAddr;
   FRtcHttpClient.ServerPort:=ASrvrPort;
+
 
   Result:=True;
 end;
@@ -309,13 +315,17 @@ begin
   begin
     FRtcDataRequest.Request.FileName:=Format('%s?usezip=1',[AFileName]);
   end;
+  FRtcDataRequest.Request.Host  :=FRtcHttpClient.ServerAddr;
+  FRtcDataRequest.Request.Method:='POST';
+  FRtcDataRequest.Request['Content-Type']:='application/x-www-form-urlencoded';
 
-  FRtcDataRequest.Request.Info['usezip']:=1;
+  FRtcDataRequest.Request.Info['usezip']:=FInUseZIP;
 
   for I := 1 to Len do
   begin
     FRtcDataRequest.Request.Params[AParams[I*2-2]]:=AParams[I*2-1];
   end;
+  //#FRtcDataRequest.Request.Params['Host']:='192.168.0.51:9002';
   FRtcDataRequest.Post();
 end;
 

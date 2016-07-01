@@ -85,4 +85,14 @@ object DialogSrvrCnfg: TDialogSrvrCnfg
     AltBtnWidth = 15
     ButtonWidth = 15
   end
+  object Chkb_InUseZIP: TRzCheckBox
+    Left = 20
+    Top = 184
+    Width = 75
+    Height = 15
+    AlignmentVertical = avCenter
+    Caption = 'inUseZIP'
+    State = cbUnchecked
+    TabOrder = 5
+  end
 end
