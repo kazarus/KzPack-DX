@@ -423,9 +423,20 @@ begin
 end;
 
 class function TKzUtils.TextToFloat(aValue: string): Extended;
+var
+  I:Integer;
 begin
   Result:=0;
   if Trim(aValue)='' then Exit;
+
+  for I := Length(aValue) downto 1 do
+  begin
+    if aValue[I]=',' then
+    begin
+      Delete(aValue,I,1);
+    end;
+  end;
+
 
   try
     Result:=StrToFloatDef(aValue,0);

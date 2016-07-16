@@ -158,10 +158,14 @@ begin
       3:Result:=M.Invoke(Instance.ClassType,[Params,InRead,InPost]).AsString;
     end;
 
-    if useZip = 1 then
+    if FInUseZIP=1 then
     begin
       Result:=Result.ToUseZip;
     end;
+    {#if useZip = 1 then
+    begin
+      Result:=Result.ToUseZip;
+    end;}
   except
     on E:Exception do
     begin
