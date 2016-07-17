@@ -9,9 +9,9 @@ type
   
   TUniFieldX=class(TUniEngine)
   public
-    FildIdex: Integer;
-    FildName: string; //etc:UNIT_LINK
-    FildType: Integer;//etc:167
+    ColIndex: Integer;
+    ColvName: string; //etc:UNIT_LINK
+    ColvType: Integer;//etc:167
     TypeName: string; //etc:varchar
     DataSize: Integer;//etc:18
 
@@ -39,15 +39,16 @@ type
   public
     class function ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
 
-    class function ListDB(ATabl:string;AUniConnection:TUniConnection):TStringList;
-    class function ExpSqlInSQLSRV(ATabl:string):string;
-    class function ExpSqlInORACLE(ATabl:string):string;
+    class function GetListCols(aTabl:string;AUniConnection:TUniConnection):TStringList;
+    class function ExpSqlInSQLSRV(aTabl:string):string;
+    class function ExpSqlInORACLE(aTabl:string):string;
+    class function ExpSQLInPOSTGR(aTabl:string):string;
   public
-    class function GetKeyInACCESS(ATabl,ADataBase:string):TStringList;overload;
-    class function GetKeyInACCESS(ATabl:string;AUniConfig:TUniConfig):TStringList;overload;
+    class function GetKeyInACCESS(aTabl,ADataBase:string):TStringList;overload;
+    class function GetKeyInACCESS(aTabl:string;AUniConfig:TUniConfig):TStringList;overload;
 
-    class function CheckExistKeyInACCESS(AConstraintType,AConstraintName,ATabl:string;ADataBase:string):Boolean;overload;
-    class function CheckExistKeyInACCESS(AConstraintType,AConstraintName,ATabl:string;AADOConnection:TADOConnection):Boolean;overload;
+    class function CheckExistKeyInACCESS(AConstraintType,AConstraintName,aTabl:string;ADataBase:string):Boolean;overload;
+    class function CheckExistKeyInACCESS(AConstraintType,AConstraintName,aTabl:string;AADOConnection:TADOConnection):Boolean;overload;
   end;
 
   TIdentity=class(TUniEngine)
@@ -78,9 +79,9 @@ begin
 end;
 
 
-class function TUniFieldX.ExpSqlInSQLSRV(ATabl: string): string;
+class function TUniFieldX.ExpSqlInSQLSRV(aTabl: string): string;
 begin
-  Result:='SELECT SYSCOLUMNS.COLID AS FILDIDEX,SYSCOLUMNS.NAME AS FILDNAME,SYSCOLUMNS.XTYPE AS FILDTYPE,SYSTYPES.NAME AS TYPENAME,SYSCOLUMNS.LENGTH AS DATASIZE,'
+  Result:='SELECT SYSCOLUMNS.COLID AS COLINDEX,SYSCOLUMNS.NAME AS ColvName,SYSCOLUMNS.XTYPE AS ColvType,SYSTYPES.NAME AS TYPENAME,SYSCOLUMNS.LENGTH AS DATASIZE,'
          +'    CASE WHEN EXISTS(SELECT 1 FROM SYSINDEXKEYS WHERE ID =OBJECT_ID($TABL) AND COLID=SYSCOLUMNS.COLID'
          +'        AND INDID = (SELECT INDID FROM SYSINDEXES WHERE NAME =(SELECT NAME FROM SYSOBJECTS WHERE XTYPE=$PK AND PARENT_OBJ=OBJECT_ID($TABL)))) '
          +'    THEN 1 ELSE 0 END AS ISKEY'
@@ -91,7 +92,7 @@ begin
          +'    ORDER BY SYSOBJECTS.ID,SYSCOLUMNS.COLID';
   Result:=StringReplace(Result,'$PK',QuotedStr('PK'),[rfReplaceAll]);
   Result:=StringReplace(Result,'$U',QuotedStr('U'),[rfReplaceAll]);
-  Result:=StringReplace(Result,'$TABL',QuotedStr(ATabl),[rfReplaceAll]);    
+  Result:=StringReplace(Result,'$TABL',QuotedStr(aTabl),[rfReplaceAll]);
 end;
 
 function TUniFieldX.GetNextIdex(AUniConnection: TUniConnection): Integer;
@@ -111,7 +112,7 @@ end;
 
 function TUniFieldX.GetStrsIndex: string;
 begin
-  Result:=FildName;
+  Result:=ColvName;
 end;
 
 function TUniFieldX.GetStrUpdate: string;
@@ -124,17 +125,17 @@ begin
   Result:=TUniFieldX.Create;
   with TUniFieldX(Result) do
   begin
-    FildIdex:=AUniQuery.FieldByName('FILDIDEX').AsInteger;
-    FildName:=AUniQuery.FieldByName('FILDNAME').AsString;
-    FildType:=AUniQuery.FieldByName('FILDTYPE').AsInteger;
+    ColIndex:=AUniQuery.FieldByName('COLINDEX').AsInteger;
+    ColvName:=AUniQuery.FieldByName('ColvName').AsString;
+    ColvType:=AUniQuery.FieldByName('ColvType').AsInteger;
     TypeName:=UpperCase(Trim(AUniQuery.FieldByName('TYPENAME').AsString));
     DataSize:=AUniQuery.FieldByName('DATASIZE').AsInteger;
     
     IsKey   :=AUniQuery.FieldByName('ISKEY').AsInteger=1;
     IsInc   :=False;
     DataType:=GetDataType(TypeName);
-    ObjtName:=GetObjtName(FildName);
-    PropName:=GetObjtName(FildName);
+    ObjtName:=GetObjtName(ColvName);
+    PropName:=GetObjtName(ColvName);
   end;  
 end;
 
@@ -144,35 +145,39 @@ begin
 
 end;
 
-class function TUniFieldX.ListDB(ATabl: string;
+class function TUniFieldX.GetListCols(aTabl: string;
   AUniConnection: TUniConnection): TStringList;
 var
   SQLA:string;  
 begin
-  if Pos('[',ATabl)>0 then
+  if Pos('[',aTabl)>0 then
   begin
-    ATabl:=StringReplace(ATabl,'[','',[rfReplaceAll]);
+    aTabl:=StringReplace(aTabl,'[','',[rfReplaceAll]);
   end;
 
-  if Pos(']',ATabl)>0 then
+  if Pos(']',aTabl)>0 then
   begin
-    ATabl:=StringReplace(ATabl,']','',[rfReplaceAll]);
+    aTabl:=StringReplace(aTabl,']','',[rfReplaceAll]);
   end;  
 
   if AUniConnection.ProviderName=CONST_PROVIDER_ACCESS then
   begin
-    raise Exception.Create('ERROR:UniFieldx.pas.TUniFieldX.ListDB.LINE:131.INFO:No Support');
+    raise Exception.Create('ERROR:UniFieldx.pas.TUniFieldX.GetListCols.LINE:131.INFO:No Support');
   end else
   if AUniConnection.ProviderName=CONST_PROVIDER_SQLSRV then
   begin
-    SQLA:=ExpSqlInSQLSRV(ATabl);
+    SQLA:=ExpSqlInSQLSRV(aTabl);
   end else
   if AUniConnection.ProviderName=CONST_PROVIDER_ORACLE then
   begin
-    SQLA:=ExpSqlInORACLE(ATabl);
-  end;  
+    SQLA:=ExpSqlInORACLE(aTabl);
+  end else
+  if AUniConnection.ProviderName=CONST_PROVIDER_POSTGR then
+  begin
+    SQLA:=ExpSQLInPOSTGR(LowerCase(aTabl));
+  end;
 
-  Result:=StrsDB(SQLA,AUniConnection,False);
+  Result:=ListDB(SQLA,AUniConnection,False);
 end;
 
 function TUniFieldX.GetAsValue: string;
@@ -254,6 +259,10 @@ begin
   begin
     Result:='TMemoryStream';
   end else
+  if AValue='INT4' then
+  begin
+    Result:='Integer';
+  end else
   if AValue='INT' then
   begin
     Result:='Integer';
@@ -263,6 +272,10 @@ begin
     Result:='string';
   end else
   if AValue='MONEY' then
+  begin
+    Result:='Extended';
+  end else
+  if AValue='FLOAT8' then
   begin
     Result:='Extended';
   end else
@@ -343,7 +356,7 @@ begin
   end;
 end;
 
-class function TUniFieldX.GetKeyInACCESS(ATabl: string;
+class function TUniFieldX.GetKeyInACCESS(aTabl: string;
   AUniConfig: TUniConfig): TStringList;
 var
   I:Integer;
@@ -355,10 +368,10 @@ begin
   if AUniConfig=nil then Exit;
   if AUniConfig.UnixType<>CONST_PROVIDER_ACCESS then Exit;
 
-  Result:=GetKeyInACCESS(ATabl,AUniConfig.DataBase);  
+  Result:=GetKeyInACCESS(aTabl,AUniConfig.DataBase);
 end;
 
-class function TUniFieldX.GetKeyInACCESS(ATabl,
+class function TUniFieldX.GetKeyInACCESS(aTabl,
   ADataBase: string): TStringList;
 var
   I:Integer;
@@ -367,10 +380,10 @@ var
   AADOConnection:TADOConnection;
 begin
   Result:=nil;
-  ATabl:=StringReplace(ATabl,'[','',[rfReplaceAll]);
-  ATabl:=StringReplace(ATabl,']','',[rfReplaceAll]);
+  aTabl:=StringReplace(aTabl,'[','',[rfReplaceAll]);
+  aTabl:=StringReplace(aTabl,']','',[rfReplaceAll]);
     
-  if Trim(ATabl)=''     then Exit;
+  if Trim(aTabl)=''     then Exit;
   if Trim(ADataBase)='' then Exit;
 
   PrimaryKey:='';
@@ -382,7 +395,7 @@ begin
 
     AADOTable     :=TADOTable.Create(nil);
     AADOTable.Connection:=AADOConnection;
-    AADOTable.TableName :=ATabl;
+    AADOTable.TableName :=aTabl;
     AADOTable.Active    :=False;
     AADOTable.IndexDefs.Update;
 
@@ -408,7 +421,7 @@ end;
 
 
 class function TUniFieldX.CheckExistKeyInACCESS(AConstraintType,
-  AConstraintName, ATabl: string; AADOConnection: TADOConnection): Boolean;
+  AConstraintName, aTabl: string; AADOConnection: TADOConnection): Boolean;
 var
   ADataSet:TADODataSet;
   ConstraintName:string;
@@ -420,7 +433,7 @@ begin
 
     if AConstraintType='PK' then
     begin
-      AADOConnection.OpenSchema(siPrimaryKeys,VarArrayOf([Unassigned, Unassigned, ATabl]),EmptyParam,ADataSet);
+      AADOConnection.OpenSchema(siPrimaryKeys,VarArrayOf([Unassigned, Unassigned, aTabl]),EmptyParam,ADataSet);
       if ADataSet.RecordCount=0 then Exit;
 
       ADataSet.First;
@@ -437,7 +450,7 @@ begin
     end else
     if AConstraintType='FK' then
     begin
-      AADOConnection.OpenSchema(siForeignKeys,VarArrayOf([Unassigned, Unassigned, ATabl]),EmptyParam,ADataSet);
+      AADOConnection.OpenSchema(siForeignKeys,VarArrayOf([Unassigned, Unassigned, aTabl]),EmptyParam,ADataSet);
       if ADataSet.RecordCount=0 then Exit;
 
       ADataSet.First;
@@ -458,7 +471,7 @@ begin
 end;
 
 class function TUniFieldX.CheckExistKeyInACCESS(AConstraintType,
-  AConstraintName, ATabl, ADataBase: string): Boolean;
+  AConstraintName, aTabl, ADataBase: string): Boolean;
 var
   ADOConnection:TADOConnection;
 begin
@@ -469,19 +482,30 @@ begin
     ADOConnection.LoginPrompt:=False;
     ADOConnection.Connected:=True;
 
-    Result:=CheckExistKeyInACCESS(AConstraintType,AConstraintName,ATabl,ADOConnection);
+    Result:=CheckExistKeyInACCESS(AConstraintType,AConstraintName,aTabl,ADOConnection);
   finally
     FreeAndNil(ADOConnection);
   end;
 end;
 
-class function TUniFieldX.ExpSqlInORACLE(ATabl: string): string;
+class function TUniFieldX.ExpSqlInORACLE(aTabl: string): string;
 begin
-  Result:='SELECT COLUMN_ID AS FILDIDEX,COLUMN_NAME AS FILDNAME,1 AS FILDTYPE,DATA_TYPE AS TYPENAME,DATA_LENGTH AS DATASIZE,'   
+  Result:='SELECT COLUMN_ID AS COLINDEX,COLUMN_NAME AS COLVNAME,1 AS COLVTYPE,DATA_TYPE AS TYPENAME,DATA_LENGTH AS DATASIZE,'
          +'    CASE WHEN EXISTS (SELECT 1 FROM USER_CONS_COLUMNS WHERE TABLE_NAME=$TABL AND POSITION >0 AND USER_CONS_COLUMNS.COLUMN_NAME=USER_TAB_COLUMNS.COLUMN_NAME) THEN 1 ELSE 0 END AS ISKEY'
          +'    FROM USER_TAB_COLUMNS'
          +'    WHERE  TABLE_NAME=$TABL ORDER BY COLUMN_ID';
-  Result:=StringReplace(Result,'$TABL',QuotedStr(ATabl),[rfReplaceAll]);
+  Result:=StringReplace(Result,'$TABL',QuotedStr(aTabl),[rfReplaceAll]);
+end;
+
+class function TUniFieldX.ExpSQLInPOSTGR(aTabl: string): string;
+begin
+  Result:='SELECT ATTNUM AS COLINDEX,ATTNAME AS COLVNAME,1 AS COLVTYPE,PG_TYPE.TYPNAME AS TYPENAME,PG_TYPE.TYPLEN AS DATASIZE ,'
+         +'    CASE WHEN EXISTS (SELECT 1 FROM PG_CONSTRAINT WHERE PG_CONSTRAINT.CONRELID = PG_CLASS.OID  AND PG_CONSTRAINT.CONTYPE=%S AND ATTNUM = ANY(CONKEY) ) THEN 1 ELSE 0 END AS ISKEY'
+         +'    FROM PG_ATTRIBUTE'
+         +'    LEFT JOIN PG_TYPE ON PG_TYPE.OID = PG_ATTRIBUTE.ATTTYPID'
+         +'    LEFT JOIN PG_CLASS ON  PG_ATTRIBUTE.ATTRELID = PG_CLASS.OID'
+         +'    WHERE PG_CLASS.RELNAME = %S  AND ATTNUM>0';
+  Result:=Format(Result,[QuotedStr('p'),QuotedStr(aTabl)]);
 end;
 
 { TIdentity }
