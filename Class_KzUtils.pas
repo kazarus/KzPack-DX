@@ -40,6 +40,7 @@ type
        
     //Forms
     class function  ExePath:string;
+    class function  Explore:string;
     class function  ShowBox(AValue:string):Integer;
     class function  ShowFmt(const Msg: string; Params: array of const):Integer;
     class function  WarnBox(AValue:string):Integer;
@@ -96,7 +97,7 @@ type
 implementation
 
 uses
-  Dialogs,StdCtrls,Consts,Controls;
+  Dialogs,StdCtrls,Consts,Controls,Winapi.ShellAPI;
 
 { TKzUtils }
 
@@ -325,6 +326,11 @@ end;
 class function TKzUtils.ExePath: string;
 begin
   Result:=ExtractFilePath(ParamStr(0));
+end;
+
+class function TKzUtils.Explore: string;
+begin
+  ShellExecute(Application.Handle,'open','explorer.exe',PChar(TKzUtils.ExePath),'',SW_MAXIMIZE);
 end;
 
 class function TKzUtils.ShowBox(AValue: string): Integer;
