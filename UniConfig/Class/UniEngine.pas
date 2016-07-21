@@ -29,7 +29,7 @@ unit UniEngine;
 
 interface
 uses
-  Classes,SysUtils,Variants,Uni,Types,TypInfo;
+  Classes,SysUtils,Variants,Uni,Types,TypInfo,Xml.XMLDoc,Xml.XMLIntf;
 
 type
   TUniEngine     =class;
@@ -70,6 +70,7 @@ type
 
     //#function  TOJSON(AOperateType:TOperateType=otNormal):string;overload;
     //#procedure INJSON(AValue:string);overload;
+    procedure TONODE(aNode:IXMLNode);overload;
   public
     constructor Create; virtual;  
   public
@@ -402,6 +403,40 @@ class function TUniEngine.StrsDB(ASQL: string;
   Fields: array of string;withSorted:Boolean): TStringList;
 begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.StrsDB] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
+end;
+
+procedure TUniEngine.TONODE(aNode: IXMLNode);
+var
+  I:Integer;
+  Count:Integer;
+  PropInfo: PPropInfo;
+  PropType: PTypeInfo;
+  PropList: PPropList;
+begin
+  Count := GetTypeData(self.ClassInfo)^.PropCount;
+  if Count > 0 then
+  begin
+    GetMem(PropList, Count * SizeOf(Pointer));
+    try
+      GetPropInfos(self.ClassInfo, PropList);
+      for I := 0 to Count - 1 do
+      begin
+        PropInfo := PropList^[i];
+        if PropInfo = nil then Continue;
+
+        PropType := PPropInfo(PropInfo)^.PropType^;
+
+        case PropType^.Kind of
+          tkFloat:aNode.AddChild(PropInfo.Name).Text             :=FloatToStr(GetFloatProp(self,PropInfo));
+          tkString, tkLString:aNode.AddChild(PropInfo.Name).Text :=GetStrProp(self, PropInfo);
+        else ;
+          raise Exception.CreateFmt('NO MATCH PROPTYPE',[]);
+        end;
+      end;
+    finally
+      FreeMem(PropList, Count * SizeOf(Pointer));
+    end;
+  end;
 end;
 
 class function TUniEngine.StrsDB(ASQL: string;
