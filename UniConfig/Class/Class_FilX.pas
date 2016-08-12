@@ -27,8 +27,14 @@ uses
 class procedure TBuildFil.BuildLit;
 var
   FilePath :string;
-  ResStream:TResourceStream;
+  rsStream :TResourceStream;
 begin
+  try
+    rsStream:=TResourceStream.Create(HInstance,'lit001','dll');
+    rsStream.SaveToFile(TKzUtils.ExePath+'sqlite3.dll');
+  finally
+    FreeAndNil(rsStream);
+  end;
   {#FilePath:='C:\WINDOWS\system32\sqlite3.dll';
   if not FileExists(FilePath) then
   begin

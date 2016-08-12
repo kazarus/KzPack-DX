@@ -364,10 +364,6 @@ begin
   if UniConnectionA.ProviderName=CONST_PROVIDER_SQLSRV then
   begin
     UniConnectionA.SpecificOptions.Add('SQL Server.ConnectionTimeout=1');
-  end else
-  if UniConnectionA.ProviderName=CONST_PROVIDER_SQLSRV then
-  begin
-    UniConnectionA.SpecificOptions.Add('SQL Server.ConnectionTimeout=1');
     UniConnectionA.SpecificOptions.Add('SQL Server.OLEDBProvider=prSQL');    
   end;
 
