@@ -10,7 +10,7 @@ uses
 
 type
   TDialogViewEditMode  = (dvemNULL,dvemADDX,dvemEDIT);
-  TDialogViewViewMode  = (dvvMutli,dvvSingl);
+  TDialogViewViewMode  = (dvvmMulti,dvvmSingl);
 
   TDialogView = class(TForm)
     procedure FormShow(Sender: TObject);
