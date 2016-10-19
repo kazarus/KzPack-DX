@@ -120,7 +120,7 @@ begin
     M:=1;
     for I:=ARowStart to ARowEnd do
     begin
-      Ints[ACol,M]:=M;
+      Ints[ACol,I]:=M;
 
       Inc(M);
     end;
