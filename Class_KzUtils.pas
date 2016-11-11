@@ -142,6 +142,7 @@ begin
 
   try
     //#DateSeparator:='-';
+    FormatSettings.DateSeparator:='-';
     Result:=StrToDate(TMPB);
   except
     on E:Exception do
