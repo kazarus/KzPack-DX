@@ -504,7 +504,7 @@ begin
          +'    FROM PG_ATTRIBUTE'
          +'    LEFT JOIN PG_TYPE ON PG_TYPE.OID = PG_ATTRIBUTE.ATTTYPID'
          +'    LEFT JOIN PG_CLASS ON  PG_ATTRIBUTE.ATTRELID = PG_CLASS.OID'
-         +'    WHERE PG_CLASS.RELNAME = %S  AND ATTNUM>0';
+         +'    WHERE PG_CLASS.RELNAME = %S AND ATTSTATTARGET=-1';
   Result:=Format(Result,[QuotedStr('p'),QuotedStr(aTabl)]);
 end;
 
