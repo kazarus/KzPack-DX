@@ -18,6 +18,7 @@ type
     Labl_3: TRzLabel;
     Edit_SrvrMemo: TRzButtonEdit;
     Chkb_InUseZIP: TRzCheckBox;
+    Chkb_InUseTLS: TRzCheckBox;
     procedure Btnx_MrokClick(Sender: TObject);
     procedure Btnx_QuitClick(Sender: TObject);
   private

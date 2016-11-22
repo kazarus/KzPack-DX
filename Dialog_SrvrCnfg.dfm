@@ -2,7 +2,7 @@ object DialogSrvrCnfg: TDialogSrvrCnfg
   Left = 0
   Top = 0
   Caption = 'DialogSrvrCnfg'
-  ClientHeight = 282
+  ClientHeight = 181
   ClientWidth = 384
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
@@ -60,15 +60,15 @@ object DialogSrvrCnfg: TDialogSrvrCnfg
     ButtonWidth = 15
   end
   object Btnx_Mrok: TRzButton
-    Left = 218
-    Top = 249
+    Left = 215
+    Top = 152
     Caption = 'Btnx_Mrok'
     TabOrder = 2
     OnClick = Btnx_MrokClick
   end
   object Btnx_Quit: TRzButton
     Left = 290
-    Top = 249
+    Top = 152
     Caption = 'Btnx_1'
     TabOrder = 3
     OnClick = Btnx_QuitClick
@@ -87,12 +87,22 @@ object DialogSrvrCnfg: TDialogSrvrCnfg
   end
   object Chkb_InUseZIP: TRzCheckBox
     Left = 20
-    Top = 184
+    Top = 136
     Width = 75
     Height = 15
     AlignmentVertical = avCenter
     Caption = 'inUseZIP'
     State = cbUnchecked
     TabOrder = 5
+  end
+  object Chkb_InUseTLS: TRzCheckBox
+    Left = 20
+    Top = 157
+    Width = 75
+    Height = 15
+    AlignmentVertical = avCenter
+    Caption = 'inUseTLS'
+    State = cbUnchecked
+    TabOrder = 6
   end
 end

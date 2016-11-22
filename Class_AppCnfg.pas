@@ -11,11 +11,13 @@ type
     FSrvrPort:string;
     FSrvrMemo:string;
     FInUseZIP:Integer;
+    FInUseTLS:Integer;
   published
     property SrvrAddr:string  read FSrvrAddr write FSrvrAddr;
     property SrvrPort:string  read FSrvrPort write FSrvrPort;
     property SrvrMemo:string  read FSrvrMemo write FSrvrMemo;
     property InUseZIP:Integer read FInUseZIP write FInUseZIP;
+    property InUseTLS:Integer read FInUseTLS write FInUseTLS;
   public
     constructor Create;
   end;
