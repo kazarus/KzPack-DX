@@ -6,7 +6,7 @@ uses
   System.Net.URLClient,Class_EROR;
 
 type
-  TNetClientResult=(ncrNull,ncrEror,ncrFailure,ncrSuccess);
+  TNetClientResult=(ncrErrorEd,ncrFailure,ncrSuccess);
 
   TNetClientDataRequestTrueBlock=reference to procedure (Sender:TObject;Value:string);
   TNetClientDataRequestFailBlock=reference to procedure (Sender:TObject;Value:string);
@@ -94,7 +94,7 @@ var
 
   Return:IHTTPResponse;
 begin
-  Result:=ncrNull;
+  Result:=ncrErrorEd;
 
   self.OnNetClientDataRequestTrueBlock:=trueBlock;
   self.OnNetClientDataRequestFailBlock:=failBlock;
@@ -123,7 +123,7 @@ begin
     end;
 
 
-    Result:=ncrEror;
+    Result:=ncrErrorEd;
     Return:=self.FNhClient.Post(ToUrls,Params);
     if Return<>nil then
     begin
