@@ -107,6 +107,7 @@ begin
   ACnfg.SrvrPort:=Trim(Edit_SrvrPort.Text);
   ACnfg.SrvrMemo:=Trim(Edit_SrvrMemo.Text);
   ACnfg.InUseZIP:=TKzUtils.IfThen(Chkb_InUseZIP.Checked,1,0);
+  ACnfg.InUseTLS:=TKzUtils.IfThen(Chkb_InUseTLS.Checked,1,0);
   ACnfg.ToFILE(TKzUtils.ExePath+'config.json');
 end;
 
@@ -124,6 +125,7 @@ begin
   Edit_SrvrPort.Text:=FRealCnfg.SrvrPort;
   Edit_SrvrMemo.Text:=FRealCnfg.SrvrMemo;
   Chkb_InUseZIP.Checked:=FRealCnfg.InUseZIP=1;
+  Chkb_InUseTLS.Checked:=FRealCnfg.InUseTLS=1;
 end;
 
 procedure TDialogSrvrCnfg.SetComboItems;

@@ -32,7 +32,7 @@ type
     procedure SetValue(aValue:string);
     procedure SetError(aValue:string);
   public
-    procedure Initialize(aSrvrAddr,aSrvrPort:string;InUseZIP:Boolean=False;InUseTLS:Boolean=False);
+    function  Initialize(aSrvrAddr,aSrvrPort:string;InUseZIP:Boolean=False;InUseTLS:Boolean=False):Boolean;
     procedure setTimeOut(aConnTimeOut:Integer=60000;aRespTimeOut:Integer=60000);
 
     function  Post(aFileName:string;aUrlParam:array of string):TNetClientResult;overload;
@@ -70,13 +70,17 @@ begin
   inherited;
 end;
 
-procedure TNetClient.Initialize(aSrvrAddr, aSrvrPort: string; InUseZIP,
-  InUseTLS: Boolean);
+function  TNetClient.Initialize(aSrvrAddr, aSrvrPort: string; InUseZIP,
+  InUseTLS: Boolean):Boolean;
 begin
+  Result:=False;
+
   self.FSrvrAddr:=aSrvrAddr;
   self.FSrvrPort:=aSrvrPort;
   self.FInUseTLS:=InUseTLS;
   self.FInUseZIP:=InUseZIP;
+
+  Result:=True;
 end;
 
 function TNetClient.Post(aFileName: string; aUrlParam: array of string;
