@@ -9,7 +9,7 @@ uses
   Dialogs;
 
 type
-  TDialogViewEditMode  = (dvemNULL,dvemADDX,dvemEDIT);
+  TDialogViewEditMode  = (dvemNULL,dvemADDV,dvemEDIT);
   TDialogViewViewMode  = (dvvmMulti,dvvmSingl);
 
   TDialogView = class(TForm)

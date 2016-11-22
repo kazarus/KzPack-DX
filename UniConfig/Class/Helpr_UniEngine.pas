@@ -142,7 +142,13 @@ begin
   try
     JSON:=TQJson.Create;
     JSON.Parse(AValue);
-    JSON.ItemByName(AField).Items[AIndex].ToRtti(Self);
+    if JSON.ItemByName(AField)<>nil then
+    begin
+      if JSON.ItemByName(AField).Count>0 then
+      begin
+        JSON.ItemByName(AField).Items[AIndex].ToRtti(Self);
+      end;
+    end;
   finally
     FreeAndNil(JSON);
   end;
