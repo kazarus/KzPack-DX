@@ -20,6 +20,8 @@ type
 
     class function  ToData(ACode,AMemo:string;AValue:TCollection):string;overload;
     class function  IsTRUE(AValue:string):Boolean;overload;
+    class function  erCode(aValue:string):string;
+    class function  erMemo(aValue:string):string;
   public
     class procedure InData(AValue:string;var AList:TCollection);overload;deprecated;
     class procedure InData(AValue:string;var AObjt:TCollectionItem;AField:string='LISTDATA');overload;deprecated;
@@ -67,6 +69,39 @@ begin
   LASTTIME:=StrToIntDef(FormatDateTime('HHMMSS',Now),0);
 end;
 
+class function TEROR.erCode(aValue: string): string;
+var
+  JSON:TQJSON;
+begin
+  try
+    JSON:=TQJson.Create;
+    JSON.Parse(AValue);
+    if JSON.ItemByName('ERORCODE')<>nil then
+    begin
+      Result:=JSON.ItemByName('ERORCODE').Value;
+    end;
+  finally
+    FreeAndNil(JSON);
+  end;
+end;
+
+
+class function TEROR.erMemo(aValue: string): string;
+var
+  JSON:TQJSON;
+begin
+  try
+    JSON:=TQJson.Create;
+    JSON.Parse(AValue);
+    if JSON.ItemByName('ERORMEMO')<>nil then
+    begin
+      Result:=JSON.ItemByName('ERORMEMO').Value;
+    end;
+  finally
+    FreeAndNil(JSON);
+  end;
+end;
+
 class procedure TEROR.InData(AValue: string; var AObjt: TCollectionItem; AField:string);
 var
   JSON:TQJSON;
@@ -87,7 +122,10 @@ begin
   try
     JSON:=TQJson.Create;
     JSON.Parse(AValue);
-    Result:=JSON.ItemByName('ERORCODE').Value=CONST_MARK_TRUE;
+    if JSON.ItemByName('ERORCODE')<>nil then
+    begin
+      Result:=JSON.ItemByName('ERORCODE').Value=CONST_MARK_TRUE;
+    end;
   finally
     FreeAndNil(JSON);
   end;
