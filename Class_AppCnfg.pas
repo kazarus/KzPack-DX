@@ -24,7 +24,7 @@ type
 
 implementation
 
-{ TAppCnfg }
+
 
 constructor TAppCnfg.Create;
 begin
