@@ -113,28 +113,32 @@ begin
     ToUrls:=Format('http://%S:%S%S',[FSrvrAddr,FSrvrPort,aFileName]);
   end;
 
-  Params:=TStringList.Create;
+  try
+    Params:=TStringList.Create;
 
-  cCount:=Length(aUrlParam) div 2;
-  for I := 1 to cCount do
-  begin
-    Params.Add(Format('%S=%S',[aUrlParam[I*2-2],aUrlParam[I*2-1]]));
-  end;
-
-
-  Result:=ncrEror;
-  Return:=self.FNhClient.Post(ToUrls,Params);
-  if Return<>nil then
-  begin
-    FValue:=Return.ContentAsString;
-    if TEROR.IsTRUE(FValue) then
+    cCount:=Length(aUrlParam) div 2;
+    for I := 1 to cCount do
     begin
-      Result:=ncrSuccess;
-    end else
-    begin
-      FError:=TEROR.erMemo(FValue);
-      Result:=ncrFailure;
+      Params.Add(Format('%S=%S',[aUrlParam[I*2-2],aUrlParam[I*2-1]]));
     end;
+
+
+    Result:=ncrEror;
+    Return:=self.FNhClient.Post(ToUrls,Params);
+    if Return<>nil then
+    begin
+      FValue:=Return.ContentAsString;
+      if TEROR.IsTRUE(FValue) then
+      begin
+        Result:=ncrSuccess;
+      end else
+      begin
+        FError:=TEROR.erMemo(FValue);
+        Result:=ncrFailure;
+      end;
+    end;
+  finally
+    FreeAndNil(Params);
   end;
 end;
 
