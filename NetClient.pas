@@ -57,7 +57,7 @@ uses
 constructor TNetClient.Create;
 begin
   FNhClient:=TNetHTTPClient.Create(nil);
-  FNhClient.ConnectionTimeout:=1000;
+  //#FNhClient.ConnectionTimeout:=1000;
 
   FNhClient.OnRequestError             :=self.OnRequestError;
   FNhClient.OnValidateServerCertificate:=self.OnValidateServerCertificate;
@@ -166,8 +166,8 @@ end;
 
 procedure TNetClient.setTimeOut(aConnTimeOut, aRespTimeOut: Integer);
 begin
-  FNhClient.ConnectionTimeout:=aConnTimeOut;
-  FNhClient.ResponseTimeout  :=aRespTimeOut;
+  //#FNhClient.ConnectionTimeout:=aConnTimeOut;
+  //#FNhClient.ResponseTimeout  :=aRespTimeOut;
 end;
 
 function TNetClient.Post(aFileName: string;
