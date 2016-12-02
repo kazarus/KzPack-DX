@@ -2,8 +2,8 @@ object DialogEditUniConfig: TDialogEditUniConfig
   Left = 361
   Top = 275
   Caption = 'DialogEditUniConfig'
-  ClientHeight = 251
-  ClientWidth = 260
+  ClientHeight = 253
+  ClientWidth = 404
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
   Font.Color = clWindowText
@@ -122,7 +122,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   object Comb_DataBase: TRzComboBox
     Left = 64
     Top = 112
-    Width = 180
+    Width = 320
     Height = 21
     Ctl3D = False
     FrameVisible = True
@@ -131,27 +131,27 @@ object DialogEditUniConfig: TDialogEditUniConfig
     TabOrder = 12
   end
   object Btnx_Mrok: TButton
-    Left = 126
+    Left = 234
     Top = 215
-    Width = 60
+    Width = 75
     Height = 25
     Caption = #30830#23450
     TabOrder = 0
     OnClick = Btnx_MrokClick
   end
   object Btnx_Quit: TButton
-    Left = 186
+    Left = 309
     Top = 215
-    Width = 60
+    Width = 75
     Height = 25
     Caption = #21462#28040
     TabOrder = 1
     OnClick = Btnx_QuitClick
   end
   object Btnx_Test: TButton
-    Left = 66
+    Left = 159
     Top = 215
-    Width = 60
+    Width = 75
     Height = 25
     Caption = #27979#35797
     TabOrder = 2
@@ -160,7 +160,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   object Edit_UnixUser: TRzEdit
     Left = 64
     Top = 37
-    Width = 180
+    Width = 320
     Height = 21
     Text = ''
     FrameVisible = True
@@ -170,7 +170,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   object Edit_UnixPswd: TRzEdit
     Left = 64
     Top = 62
-    Width = 180
+    Width = 320
     Height = 21
     Text = ''
     FrameVisible = True
@@ -181,7 +181,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   object Edit_UnixServ: TRzEdit
     Left = 64
     Top = 87
-    Width = 180
+    Width = 320
     Height = 21
     Text = ''
     FrameVisible = True
@@ -192,7 +192,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   object Edit_UnixPort: TRzEdit
     Left = 64
     Top = 137
-    Width = 180
+    Width = 320
     Height = 21
     Text = ''
     FrameVisible = True
@@ -202,7 +202,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   object Edit_UnixYear: TRzEdit
     Left = 64
     Top = 187
-    Width = 180
+    Width = 320
     Height = 21
     Text = ''
     FrameVisible = True
@@ -212,7 +212,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   object Comb_Type: TRzComboBox
     Left = 64
     Top = 12
-    Width = 180
+    Width = 320
     Height = 21
     Ctl3D = False
     FrameVisible = True
@@ -224,7 +224,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   object Edit_DataBase: TRzButtonEdit
     Left = 64
     Top = 112
-    Width = 180
+    Width = 320
     Height = 21
     Text = ''
     FrameVisible = True
@@ -242,7 +242,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   object Comb_Mark: TRzComboBox
     Left = 64
     Top = 162
-    Width = 180
+    Width = 320
     Height = 21
     Ctl3D = False
     FrameVisible = True
@@ -251,7 +251,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     TabOrder = 10
   end
   object ChkBox_Direct: TRzCheckBox
-    Left = 8
+    Left = 15
     Top = 220
     Width = 45
     Height = 15
