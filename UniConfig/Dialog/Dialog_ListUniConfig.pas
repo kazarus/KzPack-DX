@@ -787,6 +787,8 @@ begin
     Add(CONST_PROVIDER_ACCESS);
     Add(CONST_PROVIDER_SQLSRV);
     Add(CONST_PROVIDER_ORACLE);
+    Add(CONST_PROVIDER_MYSQLX);
+    Add(CONST_PROVIDER_POSTGR);
     ItemIndex:=0;
     Style:=csDropDownList;
 

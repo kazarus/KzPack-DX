@@ -288,12 +288,23 @@ object DialogListUniConfig: TDialogListUniConfig
     SelectionColor = clHighlight
     SelectionTextColor = clHighlightText
     SortSettings.DefaultFormat = ssAutomatic
-    Version = '7.8.4.0'
+    Version = '8.1.3.0'
     ColWidths = (
       64
       64
       64
       64
       64)
+    RowHeights = (
+      22
+      22
+      22
+      22
+      22
+      22
+      22
+      22
+      22
+      22)
   end
 end
