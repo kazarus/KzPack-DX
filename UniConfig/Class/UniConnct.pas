@@ -68,7 +68,7 @@ var
     
 implementation
 uses
-  Dialogs;
+  Vcl.Dialogs;
 
 
 { TUniConnct }

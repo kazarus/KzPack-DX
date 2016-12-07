@@ -20,7 +20,7 @@ unit Class_KzUtils;
 
 interface
 uses
-  Classes,SysUtils,Windows,Forms,Variants,StrUtils,TLHelp32,Graphics,System.DateUtils,
+  Classes,SysUtils,Windows,Vcl.Forms,Variants,StrUtils,TLHelp32,Vcl.Graphics,System.DateUtils,
   {$IFDEF ENABLE_REGEX}
        PerlRegEx, pcre
   {$ELSE}
@@ -97,7 +97,7 @@ type
 implementation
 
 uses
-  Dialogs,StdCtrls,Consts,Controls,Winapi.ShellAPI;
+  Vcl.Dialogs,Vcl.StdCtrls,Vcl.Consts,Vcl.Controls,Winapi.ShellAPI;
 
 { TKzUtils }
 

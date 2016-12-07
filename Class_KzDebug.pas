@@ -39,7 +39,7 @@ var
 implementation
 
 uses
-  Forms;
+  Vcl.Forms;
 
 { TKzDebug }
 
