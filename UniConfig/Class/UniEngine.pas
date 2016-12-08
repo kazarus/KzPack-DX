@@ -138,7 +138,7 @@ type
 implementation
 
 uses
-  UniConfig,Class_KzUtils,Class_KzDebug;
+  UniConfig;
 
 
 { TUniEngine }

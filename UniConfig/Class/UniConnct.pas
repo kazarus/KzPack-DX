@@ -67,8 +67,8 @@ var
   UniConnctEx:TUniConnct;
     
 implementation
-uses
-  Vcl.Dialogs;
+
+
 
 
 { TUniConnct }
@@ -269,7 +269,7 @@ begin
 
   if UniConfig=nil then
   begin
-    ShowMessageFmt('未发现:%S的配置值',[AConnectionMark]);
+    raise Exception.CreateFmt('未发现:%S的配置值',[AConnectionMark]);
     Exit;
   end;
   //if UniConfig=nil then raise Exception.CreateFmt('未发现:%S的配置值',[AConnectionMark]);

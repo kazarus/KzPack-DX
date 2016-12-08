@@ -2,7 +2,7 @@ unit Class_KzDebug;
 
 interface
 uses
-  Classes,SysUtils,Variants,rtcTcpCli,rtcLog,Windows,StrUtils;
+  Classes,SysUtils,Variants,rtcLog,Windows,StrUtils;
 
 type
   TKzDebug=class(TObject)
@@ -11,7 +11,7 @@ type
     LastTick :Integer;
     TotlTick :Integer;
     
-    TcpClient:TRtcTcpClient;
+    //@TcpClient:TRtcTcpClient;
   protected
     function  GetFileName:string;  
   public
@@ -47,15 +47,13 @@ constructor TKzDebug.Create;
 begin
   LastTick :=0;
   ThisTick :=0;
-  TcpClient:=TRtcTcpClient.Create(nil);
+  //@TcpClient:=TRtcTcpClient.Create(nil);
 end;
 
 destructor TKzDebug.Destroy;
 begin
-  if TcpClient<>nil then
-  begin
-    FreeAndNil(TcpClient);
-  end;  
+  //@if TcpClient<>nil then FreeAndNil(TcpClient);
+
   inherited;
 end;
 
@@ -148,7 +146,7 @@ end;
 procedure TKzDebug.WritFmt(const Msg: string; Params: array of const;IsEnter:Boolean);
 begin
   if DebugHook=0 then Exit;
-  TcpClient.ServerAddr:=ServAddr;
+  {@TcpClient.ServerAddr:=ServAddr;
   TcpClient.ServerPort:=ServPort;
   TcpClient.Connect();
 
@@ -158,13 +156,13 @@ begin
   end else
   begin
     TcpClient.Write(Format(Msg,Params));
-  end;  
+  end;}
 end;
 
 procedure TKzDebug.WritLog(AValue: Variant; IsEnter: Boolean);
 begin
   if DebugHook=0 then Exit;
-  TcpClient.ServerAddr:=ServAddr;
+  {@TcpClient.ServerAddr:=ServAddr;
   TcpClient.ServerPort:=ServPort;
   TcpClient.Connect();
 
@@ -174,7 +172,7 @@ begin
   end else
   begin
     TcpClient.Write(VarToStr(AValue));
-  end;
+  end;}
 end;
 
 initialization

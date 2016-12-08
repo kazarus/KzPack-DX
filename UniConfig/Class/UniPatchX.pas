@@ -68,7 +68,7 @@ var
 implementation
 
 uses
-  Class_KzUtils,Class_Dict,Class_SQLX;
+  Class_Dict,Class_SQLX;
 
 
 procedure TUniPatchX.AddPatch(AVersion, AConnctMark: string;
