@@ -41,10 +41,17 @@ type
     //Forms
     class function  ExePath:string;
     class function  Explore:string;
+
     class function  ShowBox(AValue:string):Integer;
     class function  ShowFmt(const Msg: string; Params: array of const):Integer;
+
+    class function  WarnMsg(AValue:string):Integer;overload;
+    class function  WarnMsg(const Msg: string; Params: array of const):Integer;overload;
     class function  WarnBox(AValue:string):Integer;
     class function  WarnFmt(const Msg: string; Params: array of const):Integer;
+
+    class function  ErorMsg(AValue:string):Integer;overload;
+    class function  ErorMsg(const Msg: string; Params: array of const):Integer;overload;
     class function  ErorBox(AValue:string):Integer;
     class function  ErorFmt(const Msg: string; Params: array of const):Integer;
 
@@ -697,6 +704,17 @@ begin
   Result:=Application.MessageBox(Pchar(Format(Msg,Params)),'警告',MB_OKCANCEL+MB_ICONERROR);
 end;
 
+class function TKzUtils.ErorMsg(AValue: string): Integer;
+begin
+  Result:=Application.MessageBox(Pchar(AValue),'错误',MB_OK+MB_ICONERROR);
+end;
+
+class function TKzUtils.ErorMsg(const Msg: string;
+  Params: array of const): Integer;
+begin
+  Result:=Application.MessageBox(Pchar(Format(Msg,Params)),'错误',MB_OK+MB_ICONERROR);
+end;
+
 class function TKzUtils.ShowFmt(const Msg: string;
   Params: array of const): Integer;
 begin
@@ -707,6 +725,17 @@ class function TKzUtils.WarnFmt(const Msg: string;
   Params: array of const): Integer;
 begin
   Result:=Application.MessageBox(Pchar(Format(Msg,Params)),'警告',MB_OKCANCEL+MB_ICONWARNING);
+end;
+
+class function TKzUtils.WarnMsg(AValue: string): Integer;
+begin
+  Result:=Application.MessageBox(Pchar(AValue),'提示',MB_OK+MB_ICONWARNING);
+end;
+
+class function TKzUtils.WarnMsg(const Msg: string;
+  Params: array of const): Integer;
+begin
+  Result:=Application.MessageBox(Pchar(Format(Msg,Params)),'提示',MB_OK+MB_ICONWARNING);
 end;
 
 class function TKzUtils.jsdecode(const value: Widestring): Widestring;
