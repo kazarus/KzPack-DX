@@ -8,18 +8,18 @@ type
   TSqlExecuteMode=(semUpdate,semInsert);
   
   TUniFieldX=class(TUniEngine)
-  public
-    ColIndex: Integer;
-    ColvName: string; //etc:UNIT_LINK
-    ColvType: Integer;//etc:167
-    TypeName: string; //etc:varchar
-    DataSize: Integer;//etc:18
+  private
+    FColIndex: Integer;
+    FColvName: string; //etc:UNIT_LINK
+    FColvType: Integer;//etc:167
+    FTypeName: string; //etc:varchar
+    FDataSize: Integer;//etc:18
 
-    IsKey   : Boolean;
-    IsInc   : Boolean;
-    DataType: string; //etc:integer,string
-    ObjtName: string; //etc:UNITLINK
-    PropName: string; //etc:UnitLink
+    FIsKey   : Boolean;
+    FIsInc   : Boolean;
+    FDataType: string; //etc:integer,string
+    FObjtName: string; //etc:UNITLINK
+    FPropName: string; //etc:UnitLink
   protected
     procedure SetParameters;override;
     function  GetStrInsert:string;override;
@@ -35,9 +35,23 @@ type
     function  GetAsValue:string;
     function  GetPropName(AValue:string):string;//以'_'为间隔
     function  GetObjtName(AValue:string):string;//没有'_'间隔
-    function  GetDataType(AValue:string):string;    
+    function  GetDataType(AValue:string):string;
+  published
+    property  ColIndex:Integer read FColIndex write FColIndex;
+    property  ColvName:string  read FColvName write FColvName;
+    property  ColvType:Integer read FColvType write FColvType;
+    property  TypeName:string  read FTypeName write FTypeName;
+    property  DataSize:Integer read FDataSize write FDataSize;
+    property  IsKey   :Boolean read FIsKey    write FIsKey;
+    property  IsInc   :Boolean read FIsInc    write FIsInc;
+    property  DataType:string  read FDataType write FDataType;
+    property  ObjtName:string  read FObjtName write FObjtName;
+    property  PropName:string  read FPropName write FPropName;
   public
-    class function ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
+    class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
+
+    class function  CopyIt(aUniFieldX:TUniFieldX):TUniFieldX;overload;
+    class procedure CopyIt(aUniFieldX:TUniFieldX;var Result:TUniFieldX);overload;
 
     class function GetListCols(aTabl:string;AUniConnection:TUniConnection):TStringList;
     class function ExpSqlInSQLSRV(aTabl:string):string;
@@ -468,6 +482,31 @@ begin
   finally
     FreeAndNil(ADataSet);
   end;
+end;
+
+class function TUniFieldX.CopyIt(aUniFieldX: TUniFieldX): TUniFieldX;
+begin
+  Result:=TUniFieldX.Create;
+  TUniFieldX.CopyIt(aUniFieldX,Result);
+end;
+
+class procedure TUniFieldX.CopyIt(aUniFieldX: TUniFieldX;
+  var Result: TUniFieldX);
+begin
+  if Result=nil then  Exit;
+  if aUniFieldX=nil then Exit;
+
+  Result.ColIndex:=aUniFieldX.ColIndex;
+  Result.ColvName:=aUniFieldX.ColvName;
+  Result.ColvType:=aUniFieldX.ColvType;
+  Result.TypeName:=aUniFieldX.TypeName;
+  Result.DataSize:=aUniFieldX.DataSize;
+  Result.IsKey   :=aUniFieldX.IsKey;
+  Result.IsInc   :=aUniFieldX.IsInc;
+  Result.DataType:=aUniFieldX.DataType;
+  Result.ObjtName:=aUniFieldX.ObjtName;
+  Result.PropName:=aUniFieldX.PropName;
+
 end;
 
 class function TUniFieldX.CheckExistKeyInACCESS(AConstraintType,
