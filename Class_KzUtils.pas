@@ -42,22 +42,27 @@ type
     class function  ExePath:string;
     class function  Explore:string;
 
-    class function  ShowBox(AValue:string):Integer;
+    class procedure ShowMsg(aValue:string);overload;
+    class procedure ShowMsg(const Msg: string; Params: array of const);overload;
+
+    class function  ShowBox(aValue:string):Integer;
     class function  ShowFmt(const Msg: string; Params: array of const):Integer;
 
-    class function  WarnMsg(AValue:string):Integer;overload;
-    class function  WarnMsg(const Msg: string; Params: array of const):Integer;overload;
-    class function  WarnBox(AValue:string):Integer;
+    class procedure WarnMsg(aValue:string);overload;
+    class procedure WarnMsg(const Msg: string; Params: array of const);overload;
+
+    class function  WarnBox(aValue:string):Integer;
     class function  WarnFmt(const Msg: string; Params: array of const):Integer;
 
-    class function  ErorMsg(AValue:string):Integer;overload;
-    class function  ErorMsg(const Msg: string; Params: array of const):Integer;overload;
-    class function  ErorBox(AValue:string):Integer;
+    class procedure ErorMsg(aValue:string);overload;
+    class procedure ErorMsg(const Msg: string; Params: array of const);overload;
+
+    class function  ErorBox(aValue:string):Integer;
     class function  ErorFmt(const Msg: string; Params: array of const):Integer;
 
-    class procedure WritLog(AValue:Variant);
+    class procedure WritLog(aValue:Variant);
     class procedure WritFmt(const Msg: string; Params: array of const);
-    class procedure ShowMsg(AValue:Variant);
+
 
     class function  jsencode(const value: Widestring): Widestring;
     class function  jsdecode(const value: Widestring): Widestring;
@@ -78,25 +83,25 @@ type
     class function  NumbInRect(ANumb:Integer;ABunchOfInteger:string):Boolean;overload;
     class function  InputQueryEx(const ACaption, APrompt: string;var Value: string;IsPassWord:Boolean=True): Boolean;
     class function  CompareTextLike(APart,ALong:string):Boolean;
-    class function  StringToColorDef(const AValue:string;const ADef:string='clWhite'):TColor;
+    class function  StringToColorDef(const aValue:string;const ADef:string='clWhite'):TColor;
   public
-    class function  FloatToText(AValue: Extended; Zero:Boolean=False; Digits: Integer=2;AFormat: TFloatFormat=ffNumber):string;
+    class function  FloatToText(aValue: Extended; Zero:Boolean=False; Digits: Integer=2;AFormat: TFloatFormat=ffNumber):string;
     class function  TextToFloat(aValue:string):Extended;
 
     class function  StrxCutZero(Source:string):string;
     class function  StrxCutMark(Source:string):string;
 
-    class function  TryFormatCode(AValue,ALength:Integer;const AText:string):string;overload;
-    class function  FormatCode(AValue,ALength:Integer):string;overload;
+    class function  TryFormatCode(aValue,ALength:Integer;const AText:string):string;overload;
+    class function  FormatCode(aValue,ALength:Integer):string;overload;
 
     class function  TryFormatCode(ALength,ABoolBack:Integer;const AStrSub,ASource:string):string;overload;
-    class function  FormatCode(AValue:string;ALength:Integer;AStrSub:string):string;overload;
+    class function  FormatCode(aValue:string;ALength:Integer;AStrSub:string):string;overload;
   public
     //PerlRegEx
     class function  StrsStrCutted(const Source:string;ATag:string):TStrings;
     class procedure ListStrCutted(const Source:string;ATag:string;var Result:TStrings);
     class function  StrsStrMatchx(const Source:string;ATag:string):TStrings;
-    class function  BoolStrMatchx(const Source:string;ATag:string;var AValue:string):Boolean;
+    class function  BoolStrMatchx(const Source:string;ATag:string;var aValue:string):Boolean;
     class function  RegReplaceAll(const Source:string;ATag:string;AReplacement:string):string;
   end;
 
@@ -109,12 +114,12 @@ uses
 { TKzUtils }
 
 class function TKzUtils.BoolStrMatchx(const Source: string;
-  ATag: string;var AValue:string): Boolean;
+  ATag: string;var aValue:string): Boolean;
 var
   PerlA:TPerlRegEx;  
 begin
   Result:=False;
-  AValue:='';
+  aValue:='';
   try
     //PerlA:=TPerlRegEx.Create;
     PerlA:=TPerlRegEx.Create;
@@ -123,17 +128,17 @@ begin
     Result:=PerlA.Match;
     if Result then
     begin
-      AValue:=PerlA.MatchedText;
-      //AValue:=PerlA.MatchedText;
+      aValue:=PerlA.MatchedText;
+      //aValue:=PerlA.MatchedText;
     end;
   finally
     FreeAndNil(PerlA);
   end;
 end;
 
-class function TKzUtils.ErorBox(AValue: string): Integer;
+class function TKzUtils.ErorBox(aValue: string): Integer;
 begin
-  Result:=Application.MessageBox(Pchar(AValue),'警告',MB_OKCANCEL+MB_ICONERROR);
+  Result:=Application.MessageBox(Pchar(aValue),'警告',MB_OKCANCEL+MB_ICONERROR);
 end;
 
 class function TKzUtils.FloatToDate(Value: Extended): TDateTime;
@@ -159,24 +164,24 @@ begin
   end;
 end;
 
-class function TKzUtils.FloatToText(AValue: Extended; Zero: Boolean;
+class function TKzUtils.FloatToText(aValue: Extended; Zero: Boolean;
   Digits: Integer;AFormat:TFloatFormat): string;
 begin
-  if (AValue <>0) or Zero then
-    Result:= FloatToStrF(AValue, AFormat, 18, Digits)
+  if (aValue <>0) or Zero then
+    Result:= FloatToStrF(aValue, AFormat, 18, Digits)
   else
     Result:= '';
 end;
 
-class function TKzUtils.FormatCode(AValue: string; ALength: Integer;
+class function TKzUtils.FormatCode(aValue: string; ALength: Integer;
   AStrSub: string): string;
 begin
-  Result:=TryFormatCode(ALength,1,AStrSub,AValue);
+  Result:=TryFormatCode(ALength,1,AStrSub,aValue);
 end;
 
-class function TKzUtils.FormatCode(AValue, ALength: Integer): string;
+class function TKzUtils.FormatCode(aValue, ALength: Integer): string;
 begin
-  Result:=TryFormatCode(AValue,ALength,'0');
+  Result:=TryFormatCode(aValue,ALength,'0');
 end;
 
 class function TKzUtils.InputQueryEx(const ACaption, APrompt: string;
@@ -341,14 +346,14 @@ begin
   ShellExecute(Application.Handle,'open','explorer.exe',PChar(TKzUtils.ExePath),'',SW_MAXIMIZE);
 end;
 
-class function TKzUtils.ShowBox(AValue: string): Integer;
+class function TKzUtils.ShowBox(aValue: string): Integer;
 begin
-  Result:=Application.MessageBox(Pchar(AValue),'提示',MB_OKCANCEL +MB_ICONQUESTION);
+  Result:=Application.MessageBox(Pchar(aValue),'提示',MB_OKCANCEL +MB_ICONQUESTION);
 end;
 
-class procedure TKzUtils.ShowMsg(AValue: Variant);
+class procedure TKzUtils.ShowMsg(aValue: string);
 begin
-  ShowMessage(AValue);
+  Application.MessageBox(Pchar(aValue),'提示',MB_OK+MB_ICONINFORMATION);
 end;
 
 class function TKzUtils.StrsStrCutted(const Source: string;
@@ -483,10 +488,10 @@ begin
 end;
 
 
-class function TKzUtils.TryFormatCode(AValue, ALength: Integer;
+class function TKzUtils.TryFormatCode(aValue, ALength: Integer;
   const AText: string): string;
 begin
-  Result:=DupeString(AText,ALength-(Length(IntToStr(AValue))))+IntToStr(AValue);
+  Result:=DupeString(AText,ALength-(Length(IntToStr(aValue))))+IntToStr(aValue);
 end;
 
 class procedure TKzUtils.TryFreeAndNil(var AObject);
@@ -526,9 +531,9 @@ begin
   end;  
 end;
 
-class function TKzUtils.WarnBox(AValue: string): Integer;
+class function TKzUtils.WarnBox(aValue: string): Integer;
 begin
-  Result:=Application.MessageBox(Pchar(AValue),'警告',MB_OKCANCEL+MB_ICONWARNING);
+  Result:=Application.MessageBox(Pchar(aValue),'警告',MB_OKCANCEL+MB_ICONWARNING);
 end;
 
 class procedure TKzUtils.WritFmt(const Msg: string;
@@ -537,9 +542,9 @@ begin
   Writeln(Format(Msg,Params));
 end;
 
-class procedure TKzUtils.WritLog(AValue: Variant);
+class procedure TKzUtils.WritLog(aValue: Variant);
 begin
-  Writeln(VarToStr(AValue));
+  Writeln(VarToStr(aValue));
 end;
 
 
@@ -704,15 +709,15 @@ begin
   Result:=Application.MessageBox(Pchar(Format(Msg,Params)),'警告',MB_OKCANCEL+MB_ICONERROR);
 end;
 
-class function TKzUtils.ErorMsg(AValue: string): Integer;
+class procedure TKzUtils.ErorMsg(aValue: string);
 begin
-  Result:=Application.MessageBox(Pchar(AValue),'错误',MB_OK+MB_ICONERROR);
+  Application.MessageBox(Pchar(aValue),'错误',MB_OK+MB_ICONERROR);
 end;
 
-class function TKzUtils.ErorMsg(const Msg: string;
-  Params: array of const): Integer;
+class procedure TKzUtils.ErorMsg(const Msg: string;
+  Params: array of const);
 begin
-  Result:=Application.MessageBox(Pchar(Format(Msg,Params)),'错误',MB_OK+MB_ICONERROR);
+  Application.MessageBox(Pchar(Format(Msg,Params)),'错误',MB_OK+MB_ICONERROR);
 end;
 
 class function TKzUtils.ShowFmt(const Msg: string;
@@ -721,21 +726,26 @@ begin
   Result:=Application.MessageBox(PChar(Format(Msg,Params)),'提示',MB_OKCANCEL +MB_ICONQUESTION);
 end;
 
+class procedure TKzUtils.ShowMsg(const Msg: string; Params: array of const);
+begin
+  Application.MessageBox(Pchar(Format(Msg,Params)),'提示',MB_OK+MB_ICONINFORMATION);
+end;
+
 class function TKzUtils.WarnFmt(const Msg: string;
   Params: array of const): Integer;
 begin
   Result:=Application.MessageBox(Pchar(Format(Msg,Params)),'警告',MB_OKCANCEL+MB_ICONWARNING);
 end;
 
-class function TKzUtils.WarnMsg(AValue: string): Integer;
+class procedure TKzUtils.WarnMsg(aValue: string);
 begin
-  Result:=Application.MessageBox(Pchar(AValue),'提示',MB_OK+MB_ICONWARNING);
+  Application.MessageBox(Pchar(aValue),'提示',MB_OK+MB_ICONWARNING);
 end;
 
-class function TKzUtils.WarnMsg(const Msg: string;
-  Params: array of const): Integer;
+class procedure TKzUtils.WarnMsg(const Msg: string;
+  Params: array of const);
 begin
-  Result:=Application.MessageBox(Pchar(Format(Msg,Params)),'提示',MB_OK+MB_ICONWARNING);
+  Application.MessageBox(Pchar(Format(Msg,Params)),'提示',MB_OK+MB_ICONWARNING);
 end;
 
 class function TKzUtils.jsdecode(const value: Widestring): Widestring;
@@ -954,16 +964,16 @@ end;
 
 
 
-class function TKzUtils.StringToColorDef(const AValue,
+class function TKzUtils.StringToColorDef(const aValue,
   ADef: string): TColor;
 begin
   Result:=clWhite;
-  if Trim(AValue)='' then
+  if Trim(aValue)='' then
   begin
     Result:=StringToColor(ADef);
   end else
   begin
-    Result:=StringToColor(Trim(AValue));
+    Result:=StringToColor(Trim(aValue));
   end;
 end;
 
