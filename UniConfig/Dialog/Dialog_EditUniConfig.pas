@@ -25,11 +25,11 @@ type
     lbl6: TLabel;
     lbl7: TLabel;
     lbl8: TLabel;
-    Edit_UnixUser: TRzEdit;
-    Edit_UnixPswd: TRzEdit;
-    Edit_UnixServ: TRzEdit;
-    Edit_UnixPort: TRzEdit;
-    Edit_UnixYear: TRzEdit;
+    Edit_UnicUser: TRzEdit;
+    Edit_UnicPswd: TRzEdit;
+    Edit_UnicSrvr: TRzEdit;
+    Edit_UnicPort: TRzEdit;
+    Edit_UnicYear: TRzEdit;
     Comb_Type: TRzComboBox;
     Edit_DataBase: TRzButtonEdit;
     Comb_Mark: TRzComboBox;
@@ -41,10 +41,10 @@ type
     procedure Edit_DataBaseDblClick(Sender: TObject);
     procedure Edit_DataBaseButtonClick(Sender: TObject);
     procedure Btnx_TestClick(Sender: TObject);
-    procedure Edit_UnixServDblClick(Sender: TObject);
+    procedure Edit_UnicSrvrDblClick(Sender: TObject);
     procedure Comb_TypeCloseUp(Sender: TObject);
     procedure Edit_DataBaseAltBtnClick(Sender: TObject);
-    procedure Edit_UnixPswdExit(Sender: TObject);
+    procedure Edit_UnicPswdExit(Sender: TObject);
   private
     FRealCnfg:TUniConfig;
     FRealPswd:string;
@@ -154,14 +154,14 @@ begin
       FRealCnfg:=TUniConfig.Create;
     end;
 
-    FRealCnfg.UnixIdex:=FRealCnfg.GetNextIdex(UniConnct);
-    FRealCnfg.UnixType:=Comb_Type.Text;
-    FRealCnfg.UnixUser:=Edit_UnixUser.Text;
-    FRealCnfg.UnixPswd:=Edit_UnixPswd.Text;
-    FRealCnfg.UnixServ:=Edit_UnixServ.Text;
+    FRealCnfg.UnicIndx:=FRealCnfg.GetNextIdex(UniConnct);
+    FRealCnfg.UnicType:=Comb_Type.Text;
+    FRealCnfg.UnicUser:=Edit_UnicUser.Text;
+    FRealCnfg.UnicPswd:=Edit_UnicPswd.Text;
+    FRealCnfg.UnicSrvr:=Edit_UnicSrvr.Text;
 
     //YXC_2012_12_04_09_36_39_<
-    if (FRealCnfg.UnixType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnixType=CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnixType=CONST_PROVIDER_POSTGR) then
+    if (FRealCnfg.UnicType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnicType=CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnicType=CONST_PROVIDER_POSTGR) then
     begin
       FRealCnfg.DataBase:=Comb_DataBase.Text;
     end else
@@ -170,20 +170,20 @@ begin
     end;
     //YXC_2012_12_04_09_36_46_>
 
-    FRealCnfg.UnixPort:=Edit_UnixPort.Text;
-    FRealCnfg.UnixYear:=StrToIntDef(Edit_UnixYear.Text,0);
-    FRealCnfg.UnixMark:=Comb_Mark.Text;
+    FRealCnfg.UnicPort:=Edit_UnicPort.Text;
+    FRealCnfg.UnicYear:=StrToIntDef(Edit_UnicYear.Text,0);
+    FRealCnfg.UnicMark:=Comb_Mark.Text;
     FRealCnfg.IsDirect:=0;
     if ChkBox_Direct.Checked then
     begin
       FRealCnfg.IsDirect:=1;
     end;
-    FRealCnfg.UnixOrdr:=FRealCnfg.UnixIdex;
+    FRealCnfg.UnicOrdr:=FRealCnfg.UnicIndx;
 
 
     if Assigned(UniConnctEx.OnUniConfigCustomGetUnixMemo) then
     begin
-      UniConnctEx.OnUniConfigCustomGetUnixMemo(FRealCnfg,FRealCnfg.FUnixMemo);
+      UniConnctEx.OnUniConfigCustomGetUnixMemo(FRealCnfg,FRealCnfg.FUnicMemo);
     end;
 
     if Assigned(UniConnctEx.OnUniConfigCustomEncryptEvent) then
@@ -202,13 +202,13 @@ procedure TDialogEditUniConfig.SetCommParams;
 begin
   inherited;
   Caption:='数据连接';
-  Edit_UnixPswd.PasswordChar:='*';
-  Edit_UnixYear.Text:=IntToStr(YearOf(Now));
+  Edit_UnicPswd.PasswordChar:='*';
+  Edit_UnicYear.Text:=IntToStr(YearOf(Now));
 
   if FEditMode=deuemCnfg then
   begin
-    Edit_UnixYear.Clear;
-    Edit_UnixYear.Enabled:=False;
+    Edit_UnicYear.Clear;
+    Edit_UnicYear.Enabled:=False;
     Comb_Mark.Enabled:=False;
   end;  
 end;
@@ -233,13 +233,13 @@ begin
   try
     UniConnct:=UniConnctEx.GetConnection(FConnectionMark);
 
-    FRealCnfg.UnixType:=Comb_Type.Text;
-    FRealCnfg.UnixUser:=Edit_UnixUser.Text;
-    FRealCnfg.UnixPswd:=Edit_UnixPswd.Text;
-    FRealCnfg.UnixServ:=Edit_UnixServ.Text;
+    FRealCnfg.UnicType:=Comb_Type.Text;
+    FRealCnfg.UnicUser:=Edit_UnicUser.Text;
+    FRealCnfg.UnicPswd:=Edit_UnicPswd.Text;
+    FRealCnfg.UnicSrvr:=Edit_UnicSrvr.Text;
 
     //YXC_2012_12_04_09_36_39_<
-    if (FRealCnfg.UnixType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnixType=CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnixType=CONST_PROVIDER_POSTGR) then
+    if (FRealCnfg.UnicType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnicType=CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnicType=CONST_PROVIDER_POSTGR) then
     begin
       FRealCnfg.DataBase:=Comb_DataBase.Text;
     end else
@@ -248,9 +248,9 @@ begin
     end;
     //YXC_2012_12_04_09_36_46_>
 
-    FRealCnfg.UnixPort:=Edit_UnixPort.Text;
-    FRealCnfg.UnixYear:=StrToIntDef(Edit_UnixYear.Text,0);
-    FRealCnfg.UnixMark:=Comb_Mark.Text;
+    FRealCnfg.UnicPort:=Edit_UnicPort.Text;
+    FRealCnfg.UnicYear:=StrToIntDef(Edit_UnicYear.Text,0);
+    FRealCnfg.UnicMark:=Comb_Mark.Text;
     FRealCnfg.IsDirect:=0;
     if ChkBox_Direct.Checked then
     begin
@@ -259,10 +259,10 @@ begin
 
     if Assigned(UniConnctEx.OnUniConfigCustomGetUnixMemo) then
     begin
-      UniConnctEx.OnUniConfigCustomGetUnixMemo(FRealCnfg,FRealCnfg.FUnixMemo);
+      UniConnctEx.OnUniConfigCustomGetUnixMemo(FRealCnfg,FRealCnfg.FUnicMemo);
     end;
 
-    FRealCnfg.UnixPswd:=FRealPswd;
+    FRealCnfg.UnicPswd:=FRealPswd;
     if Assigned(UniConnctEx.OnUniConfigCustomEncryptEvent) then
     begin
       UniConnctEx.OnUniConfigCustomEncryptEvent(FRealCnfg,FRealCnfg);
@@ -297,9 +297,9 @@ begin
     Comb_Mark.Items.Delimiter:=',';
     Comb_Mark.Items.DelimitedText:=UniConnctEx.ConnctMark;
   end;  
-  {if Assigned(FOnUnixMarkEvent) then
+  {if Assigned(FOnUnicMarkEvent) then
   begin
-    FOnUnixMarkEvent(Comb_Mark);
+    FOnUnicMarkEvent(Comb_Mark);
   end;}
   //YXC_2012_07_10_20_33_15_>
   
@@ -310,23 +310,23 @@ procedure TDialogEditUniConfig.InitCnfg;
 begin
   if FRealCnfg<>nil then
   begin
-    Comb_Type.ItemIndex:=Comb_Type.Items.IndexOf(FRealCnfg.UnixType);
+    Comb_Type.ItemIndex:=Comb_Type.Items.IndexOf(FRealCnfg.UnicType);
     Comb_TypeCloseUp(Comb_Type);
 
-    Edit_UnixYear.Text:=IntToStr(FRealCnfg.UnixYear);
-    Edit_UnixUser.Text:=FRealCnfg.UnixUser;
+    Edit_UnicYear.Text:=IntToStr(FRealCnfg.UnicYear);
+    Edit_UnicUser.Text:=FRealCnfg.UnicUser;
 
     if Assigned(UniConnctEx.OnUniConfigCustomDecryptEvent) then
     begin
       UniConnctEx.OnUniConfigCustomDecryptEvent(FRealCnfg,FRealCnfg);
     end;
-    FRealPswd:=FRealCnfg.UnixPswd;
-    Edit_UnixPswd.Text:=FRealPswd;
+    FRealPswd:=FRealCnfg.UnicPswd;
+    Edit_UnicPswd.Text:=FRealPswd;
 
-    Edit_UnixServ.Text:=FRealCnfg.UnixServ;
+    Edit_UnicSrvr.Text:=FRealCnfg.UnicSrvr;
 
     //YXC_2012_12_04_09_39_28_<
-    if FRealCnfg.UnixType=UniConfig.CONST_PROVIDER_SQLSRV then
+    if FRealCnfg.UnicType=UniConfig.CONST_PROVIDER_SQLSRV then
     begin
       Comb_DataBase.Text:=FRealCnfg.DataBase;
     end else
@@ -335,9 +335,9 @@ begin
     end;    
     //YXC_2012_12_04_09_39_28_>
 
-    Edit_UnixPort.Text:=FRealCnfg.UnixPort;
+    Edit_UnicPort.Text:=FRealCnfg.UnicPort;
     
-    Comb_Mark.ItemIndex:=Comb_Mark.Items.IndexOf(FRealCnfg.UnixMark);
+    Comb_Mark.ItemIndex:=Comb_Mark.Items.IndexOf(FRealCnfg.UnicMark);
 
     ChkBox_Direct.Checked:=False;
     if FRealCnfg.IsDirect=1 then
@@ -393,21 +393,21 @@ begin
     
   try
     CnfgA:=TUniConfig.Create;
-    CnfgA.UnixType:=Comb_Type.Text;
-    CnfgA.UnixUser:=Edit_UnixUser.Text;
+    CnfgA.UnicType:=Comb_Type.Text;
+    CnfgA.UnicUser:=Edit_UnicUser.Text;
 
     if FEditMode = deuemEdit then
     begin
-      CnfgA.UnixPswd:=FRealPswd;
+      CnfgA.UnicPswd:=FRealPswd;
     end else
     begin
-      CnfgA.UnixPswd:=Edit_UnixPswd.Text;
+      CnfgA.UnicPswd:=Edit_UnicPswd.Text;
     end;
 
-    CnfgA.UnixServ:=Edit_UnixServ.Text;
+    CnfgA.UnicSrvr:=Edit_UnicSrvr.Text;
 
     //YXC_2012_12_04_09_36_39_<
-    if (CnfgA.UnixType=CONST_PROVIDER_SQLSRV) or (CnfgA.UnixType=CONST_PROVIDER_MYSQLX) or (CnfgA.UnixType=CONST_PROVIDER_POSTGR) then
+    if (CnfgA.UnicType=CONST_PROVIDER_SQLSRV) or (CnfgA.UnicType=CONST_PROVIDER_MYSQLX) or (CnfgA.UnicType=CONST_PROVIDER_POSTGR) then
     begin
       CnfgA.DataBase:=Comb_DataBase.Text;
     end else
@@ -416,9 +416,9 @@ begin
     end;
     //YXC_2012_12_04_09_36_46_>
     
-    CnfgA.UnixPort:=Edit_UnixPort.Text;
-    CnfgA.UnixYear:=StrToIntDef(Edit_UnixYear.Text,0);
-    CnfgA.UnixMark:=Comb_Mark.Text;
+    CnfgA.UnicPort:=Edit_UnicPort.Text;
+    CnfgA.UnicYear:=StrToIntDef(Edit_UnicYear.Text,0);
+    CnfgA.UnicMark:=Comb_Mark.Text;
     
     CnfgA.IsDirect:=0;
     if ChkBox_Direct.Checked then
@@ -457,10 +457,10 @@ begin
       UniConnct.ProviderName:=AUnixType;
     end;
 
-    UniConnct.Username    :=Trim(Edit_UnixUser.Text);
-    UniConnct.Password    :=Trim(Edit_UnixPswd.Text);
-    UniConnct.Server      :=Trim(Edit_UnixServ.Text);
-    UniConnct.Port        :=StrToIntDef(Trim(Edit_UnixPort.Text),0);
+    UniConnct.Username    :=Trim(Edit_UnicUser.Text);
+    UniConnct.Password    :=Trim(Edit_UnicPswd.Text);
+    UniConnct.Server      :=Trim(Edit_UnicSrvr.Text);
+    UniConnct.Port        :=StrToIntDef(Trim(Edit_UnicPort.Text),0);
     
     UniConnct.SpecificOptions.Add('SQL Server.ConnectionTimeout=3');
     UniConnct.SpecificOptions.Add('SQL Server.OLEDBProvider=prSQL');
@@ -484,7 +484,7 @@ begin
   end;
 end;
 
-procedure TDialogEditUniConfig.Edit_UnixServDblClick(Sender: TObject);
+procedure TDialogEditUniConfig.Edit_UnicSrvrDblClick(Sender: TObject);
 begin
   inherited;
   ViewDataBase(Comb_Type.Text);
@@ -517,15 +517,15 @@ begin
   begin
     FRealCnfg:=TUniConfig.Create;
   end;
-  FRealCnfg.UnixIdex:=0;
+  FRealCnfg.UnicIndx:=0;
   
-  FRealCnfg.UnixType:=Comb_Type.Text;
-  FRealCnfg.UnixUser:=Edit_UnixUser.Text;
-  FRealCnfg.UnixPswd:=Edit_UnixPswd.Text;
-  FRealCnfg.UnixServ:=Edit_UnixServ.Text;
+  FRealCnfg.UnicType:=Comb_Type.Text;
+  FRealCnfg.UnicUser:=Edit_UnicUser.Text;
+  FRealCnfg.UnicPswd:=Edit_UnicPswd.Text;
+  FRealCnfg.UnicSrvr:=Edit_UnicSrvr.Text;
 
   //YXC_2012_12_04_09_36_39_<
-  if (FRealCnfg.UnixType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnixType=CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnixType=CONST_PROVIDER_POSTGR) then
+  if (FRealCnfg.UnicType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnicType=CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnicType=CONST_PROVIDER_POSTGR) then
   begin
     FRealCnfg.DataBase:=Comb_DataBase.Text;
   end else
@@ -534,15 +534,15 @@ begin
   end;
   //YXC_2012_12_04_09_36_46_>
 
-  FRealCnfg.UnixPort:=Edit_UnixPort.Text;
-  FRealCnfg.UnixYear:=StrToIntDef(Edit_UnixYear.Text,0);
-  FRealCnfg.UnixMark:=Comb_Mark.Text;
+  FRealCnfg.UnicPort:=Edit_UnicPort.Text;
+  FRealCnfg.UnicYear:=StrToIntDef(Edit_UnicYear.Text,0);
+  FRealCnfg.UnicMark:=Comb_Mark.Text;
   FRealCnfg.IsDirect:=0;
   if ChkBox_Direct.Checked then
   begin
     FRealCnfg.IsDirect:=1;
   end;
-  FRealCnfg.UnixOrdr:=FRealCnfg.UnixIdex; 
+  FRealCnfg.UnicOrdr:=FRealCnfg.UnicIndx;
 end;
 
 function TDialogEditUniConfig.CheckLicit: Boolean;
@@ -562,12 +562,12 @@ end;
 procedure TDialogEditUniConfig.Comb_TypeCloseUp(Sender: TObject);
 begin
   inherited;
-  Edit_UnixYear.Enabled:=True;
-  Edit_UnixUser.Enabled:=True;
-  Edit_UnixPswd.Enabled:=True;
-  Edit_UnixServ.Enabled:=True;
-  Edit_UnixPort.Enabled:=True;
-  Edit_UnixPort.Enabled:=True;
+  Edit_UnicYear.Enabled:=True;
+  Edit_UnicUser.Enabled:=True;
+  Edit_UnicPswd.Enabled:=True;
+  Edit_UnicSrvr.Enabled:=True;
+  Edit_UnicPort.Enabled:=True;
+  Edit_UnicPort.Enabled:=True;
   Edit_DataBase.Enabled:=True;
 
   ChkBox_Direct.Checked:=False;
@@ -580,14 +580,14 @@ begin
   begin
     Caption:='数据连接';
       
-    Edit_UnixUser.Enabled:=False;
-    Edit_UnixUser.Clear;
-    Edit_UnixPswd.Enabled:=False;
-    Edit_UnixPswd.Clear;
-    Edit_UnixServ.Enabled:=False;
-    Edit_UnixServ.Clear;
-    Edit_UnixPort.Enabled:=False;
-    Edit_UnixPort.Clear;
+    Edit_UnicUser.Enabled:=False;
+    Edit_UnicUser.Clear;
+    Edit_UnicPswd.Enabled:=False;
+    Edit_UnicPswd.Clear;
+    Edit_UnicSrvr.Enabled:=False;
+    Edit_UnicSrvr.Clear;
+    Edit_UnicPort.Enabled:=False;
+    Edit_UnicPort.Clear;
 
     Edit_DataBase.Visible:=True;
     Edit_DataBase.AltBtnVisible:=True;
@@ -596,10 +596,10 @@ begin
   begin
     Caption:='提示:双击服务器框,加载服务器.';
       
-    Edit_UnixUser.Text:='sa';
-    Edit_UnixPswd.Text:='sa';
-    Edit_UnixServ.Text:='.';
-    Edit_UnixPort.Text:='1433';
+    Edit_UnicUser.Text:='sa';
+    Edit_UnicPswd.Text:='sa';
+    Edit_UnicSrvr.Text:='.';
+    Edit_UnicPort.Text:='1433';
 
     Comb_DataBase.Visible:=True;
 
@@ -612,10 +612,10 @@ begin
   begin
     Caption:='提示:双击服务器框,加载服务器.';
 
-    Edit_UnixUser.Text:='postgres';
-    Edit_UnixPswd.Text:='root';
-    Edit_UnixServ.Text:='localhost';
-    Edit_UnixPort.Text:='5432';
+    Edit_UnicUser.Text:='postgres';
+    Edit_UnicPswd.Text:='root';
+    Edit_UnicSrvr.Text:='localhost';
+    Edit_UnicPort.Text:='5432';
 
     Comb_DataBase.Visible:=True;
   end else
@@ -626,23 +626,23 @@ begin
     Edit_DataBase.Visible:=True;
     Edit_DataBase.Enabled:=False;
     
-    Edit_UnixPort.Text   :='1521';
+    Edit_UnicPort.Text   :='1521';
     ChkBox_Direct.Visible:=True;
     ChkBox_Direct.Checked:=True;
 
     Edit_DataBase.Clear;
-    Edit_UnixUser.Clear;
-    Edit_UnixPswd.Clear;    
-    Edit_UnixServ.Clear;    
+    Edit_UnicUser.Clear;
+    Edit_UnicPswd.Clear;
+    Edit_UnicSrvr.Clear;
   end else
   if Trim(Comb_Type.Text)=CONST_PROVIDER_MYSQLX then
   begin
     Caption:='数据连接';
       
-    Edit_UnixUser.Text:='root';
-    Edit_UnixPswd.Text:='root';
-    Edit_UnixServ.Text:='localhost';
-    Edit_UnixPort.Text:='0';
+    Edit_UnicUser.Text:='root';
+    Edit_UnicPswd.Text:='root';
+    Edit_UnicSrvr.Text:='localhost';
+    Edit_UnicPort.Text:='0';
 
     Comb_DataBase.Visible:=True;
 
@@ -674,7 +674,7 @@ begin
   end;
 end;
 
-procedure TDialogEditUniConfig.Edit_UnixPswdExit(Sender: TObject);
+procedure TDialogEditUniConfig.Edit_UnicPswdExit(Sender: TObject);
 begin
   inherited;
   if FEditMode=deuemEdit then

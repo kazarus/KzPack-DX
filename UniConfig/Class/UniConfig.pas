@@ -11,20 +11,20 @@ uses
 type
   TUniConfig=class(TUniEngine)
   public
-    FUnixIdex: Integer;   //配置序列
-    FUnixStat: Integer;   //配置状态
-    FUnixYear: Integer;   //配置年度
-    FUnixMark: string;    //配置代号
+    FUnicIndx: Integer;   //配置序列
+    FUnicStat: Integer;   //配置状态
+    FUnicYear: Integer;   //配置年度
+    FUnicMark: string;    //配置代号
 
-    FUnixType: string;    //*驱动类型
-    FUnixPswd: string;    //*密码
-    FUnixUser: string;    //*用户
-    FUnixServ: string;    //*服务器
+    FUnicType: string;    //*驱动类型
+    FUnicPswd: string;    //*密码
+    FUnicUser: string;    //*用户
+    FUnicSrvr: string;    //*服务器
     FDataBase: string;    //*数据库
-    FUnixPort: string;    //*端口号
+    FUnicPort: string;    //*端口号
     FIsDirect: Integer;   //*是否直联
-    FUnixOrdr: Integer;   //排序
-    FUnixMemo: string;    //备注
+    FUnicOrdr: Integer;   //排序
+    FUnicMemo: string;    //备注
   public
     IsDecrypt:Boolean;   //
     IsEncrypt:Boolean;   //
@@ -38,7 +38,7 @@ type
     function  GetNextIdex:Integer;overload;
     function  GetNextIdex(AUniConnection:TUniConnection):Integer;overload;
     function  GetIsDirect:string;
-    function  GetUnixStat:string;
+    function  GetUNICSTAT:string;
     function  GetActvStat:string;overload;
     function  GetActvStat(AValue:string):string;overload;
   public
@@ -49,19 +49,19 @@ type
     constructor Create;
     destructor Destroy; override;
   published
-    property UnixIdex : Integer read FUnixIdex  write FUnixIdex;
-    property UnixStat : Integer read FUnixStat  write FUnixStat;
-    property UnixYear : Integer read FUnixYear  write FUnixYear;
-    property UnixMark : string read FUnixMark  write FUnixMark;
-    property UnixType : string read FUnixType  write FUnixType;
-    property UnixPswd : string read FUnixPswd  write FUnixPswd;
-    property UnixUser : string read FUnixUser  write FUnixUser;
-    property UnixServ : string read FUnixServ  write FUnixServ;
+    property UnicIndx : Integer read FUnicIndx  write FUnicIndx;
+    property UnicStat : Integer read FUnicStat  write FUnicStat;
+    property UnicYear : Integer read FUnicYear  write FUnicYear;
+    property UnicMark : string read FUnicMark  write FUnicMark;
+    property UnicType : string read FUnicType  write FUnicType;
+    property UnicPswd : string read FUnicPswd  write FUnicPswd;
+    property UnicUser : string read FUnicUser  write FUnicUser;
+    property UnicSrvr : string read FUnicSrvr  write FUnicSrvr;
     property DataBase : string read FDataBase  write FDataBase;
-    property UnixPort : string read FUnixPort  write FUnixPort;
+    property UnicPort : string read FUnicPort  write FUnicPort;
     property IsDirect : Integer read FIsDirect  write FIsDirect;
-    property UnixOrdr : Integer read FUnixOrdr  write FUnixOrdr;
-    property UnixMemo : string read FUnixMemo  write FUnixMemo;  
+    property UnicOrdr : Integer read FUnicOrdr  write FUnicOrdr;
+    property UnicMemo : string read FUnicMemo  write FUnicMemo;
   public
     class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
     class procedure ReadDS(AUniQuery: TUniQuery;var Result:TUniEngine);override;
@@ -92,11 +92,6 @@ const
 
 
 implementation
-
-
-
-
-{ TUniConfig }
 
 function TUniConfig.CheckExist(AUniConnection: TUniConnection): Boolean;
 begin
@@ -217,22 +212,22 @@ begin
   Result:=TUniConfig.Create;
   with TUniConfig(Result) do
   begin
-    UNIXIDEX := AUniQuery.FieldByName('UNIX_IDEX').AsInteger;
-    UNIXSTAT := AUniQuery.FieldByName('UNIX_STAT').AsInteger;
-    UNIXYEAR := AUniQuery.FieldByName('UNIX_YEAR').AsInteger;
-    UNIXMARK := Trim(AUniQuery.FieldByName('UNIX_MARK').AsString);
-    UNIXTYPE := Trim(AUniQuery.FieldByName('UNIX_TYPE').AsString);
-    UNIXPSWD := Trim(AUniQuery.FieldByName('UNIX_PSWD').AsString);
-    UNIXUSER := Trim(AUniQuery.FieldByName('UNIX_USER').AsString);
-    UNIXSERV := Trim(AUniQuery.FieldByName('UNIX_SERV').AsString);
+    UNICINDX := AUniQuery.FieldByName('UNIX_IDEX').AsInteger;
+    UNICSTAT := AUniQuery.FieldByName('UNIX_STAT').AsInteger;
+    UNICYEAR := AUniQuery.FieldByName('UNIX_YEAR').AsInteger;
+    UNICMARK := Trim(AUniQuery.FieldByName('UNIX_MARK').AsString);
+    UNICTYPE := Trim(AUniQuery.FieldByName('UNIX_TYPE').AsString);
+    UNICPSWD := Trim(AUniQuery.FieldByName('UNIX_PSWD').AsString);
+    UNICUSER := Trim(AUniQuery.FieldByName('UNIX_USER').AsString);
+    UNICSRVR := Trim(AUniQuery.FieldByName('UNIX_SERV').AsString);
     DATABASE := Trim(AUniQuery.FieldByName('DATA_BASE').AsString);
-    UNIXPORT := Trim(AUniQuery.FieldByName('UNIX_PORT').AsString);
+    UNICPORT := Trim(AUniQuery.FieldByName('UNIX_PORT').AsString);
     ISDIRECT := AUniQuery.FieldByName('IS_DIRECT').AsInteger;
-    UnixOrdr := AUniQuery.FieldByName('UNIX_ORDR').AsInteger;
+    UNICORDR := AUniQuery.FieldByName('UNIX_ORDR').AsInteger;
     
     if AUniQuery.FindField('UNIX_MEMO')<>nil then
     begin
-      UnixMemo := AUniQuery.FieldByName('UNIX_MEMO').AsString;
+      UNICMEMO := AUniQuery.FieldByName('UNIX_MEMO').AsString;
     end;
   end;
 end;
@@ -247,39 +242,39 @@ begin
     case FOptTyp of
       otAddx:
       begin
-        ParamByName('UNIX_IDEX').Value := UNIXIDEX;
-        ParamByName('UNIX_STAT').Value := UNIXSTAT;
-        ParamByName('UNIX_YEAR').Value := UNIXYEAR;
-        ParamByName('UNIX_MARK').Value := UNIXMARK;
-        ParamByName('UNIX_TYPE').Value := UNIXTYPE;
-        ParamByName('UNIX_PSWD').Value := UNIXPSWD;
-        ParamByName('UNIX_USER').Value := UNIXUSER;
-        ParamByName('UNIX_SERV').Value := UNIXSERV;
+        ParamByName('UNIX_IDEX').Value := UNICINDX;
+        ParamByName('UNIX_STAT').Value := UNICSTAT;
+        ParamByName('UNIX_YEAR').Value := UNICYEAR;
+        ParamByName('UNIX_MARK').Value := UNICMARK;
+        ParamByName('UNIX_TYPE').Value := UNICTYPE;
+        ParamByName('UNIX_PSWD').Value := UNICPSWD;
+        ParamByName('UNIX_USER').Value := UNICUSER;
+        ParamByName('UNIX_SERV').Value := UNICSRVR;
         ParamByName('DATA_BASE').Value := DATABASE;
-        ParamByName('UNIX_PORT').Value := UNIXPORT;
+        ParamByName('UNIX_PORT').Value := UNICPORT;
         ParamByName('IS_DIRECT').Value := ISDIRECT;
-        ParamByName('UNIX_ORDR').Value := UnixOrdr;
-        ParamByName('UNIX_MEMO').Value := UnixMemo;                     
+        ParamByName('UNIX_ORDR').Value := UNICORDR;
+        ParamByName('UNIX_MEMO').Value := UNICMEMO;
       end;
       otEdit:
       begin
-        ParamByName('UNIX_IDEX').Value := UNIXIDEX;
-        ParamByName('UNIX_STAT').Value := UNIXSTAT;
-        ParamByName('UNIX_YEAR').Value := UNIXYEAR;
-        ParamByName('UNIX_MARK').Value := UNIXMARK;
-        ParamByName('UNIX_TYPE').Value := UNIXTYPE;
-        ParamByName('UNIX_PSWD').Value := UNIXPSWD;
-        ParamByName('UNIX_USER').Value := UNIXUSER;
-        ParamByName('UNIX_SERV').Value := UNIXSERV;
+        ParamByName('UNIX_IDEX').Value := UNICINDX;
+        ParamByName('UNIX_STAT').Value := UNICSTAT;
+        ParamByName('UNIX_YEAR').Value := UNICYEAR;
+        ParamByName('UNIX_MARK').Value := UNICMARK;
+        ParamByName('UNIX_TYPE').Value := UNICTYPE;
+        ParamByName('UNIX_PSWD').Value := UNICPSWD;
+        ParamByName('UNIX_USER').Value := UNICUSER;
+        ParamByName('UNIX_SERV').Value := UNICSRVR;
         ParamByName('DATA_BASE').Value := DATABASE;
-        ParamByName('UNIX_PORT').Value := UNIXPORT;
+        ParamByName('UNIX_PORT').Value := UNICPORT;
         ParamByName('IS_DIRECT').Value := ISDIRECT;        
-        ParamByName('UNIX_ORDR').Value := UnixOrdr;
-        ParamByName('UNIX_MEMO').Value := UnixMemo;        
+        ParamByName('UNIX_ORDR').Value := UNICORDR;
+        ParamByName('UNIX_MEMO').Value := UNICMEMO;
       end;  
       otDelt:
       begin
-        ParamByName('UNIX_IDEX').Value := UNIXIDEX;
+        ParamByName('UNIX_IDEX').Value := UNICINDX;
       end;  
     end;
 
@@ -346,12 +341,12 @@ begin
 
   UniConnectionA:=TUniConnection.Create(nil);
   UniConnectionA.LoginPrompt:=False;
-  UniConnectionA.ProviderName:=AUniConfig.UnixType;
-  UniConnectionA.Username    :=AUniConfig.UnixUser;
-  UniConnectionA.Password    :=AUniConfig.UnixPswd;
+  UniConnectionA.ProviderName:=AUniConfig.UNICTYPE;
+  UniConnectionA.Username    :=AUniConfig.UNICUSER;
+  UniConnectionA.Password    :=AUniConfig.UNICPSWD;
   UniConnectionA.Database    :=AUniConfig.DataBase;
-  UniConnectionA.Server      :=AUniConfig.UnixServ;
-  UniConnectionA.Port        :=StrToIntDef(AUniConfig.UnixPort,0);
+  UniConnectionA.Server      :=AUniConfig.UNICSRVR;
+  UniConnectionA.Port        :=StrToIntDef(AUniConfig.UNICPORT,0);
 
   if UniConnectionA.ProviderName=CONST_PROVIDER_ORACLE then
   begin
@@ -390,30 +385,30 @@ begin
 
   with Result do
   begin
-    UnixIdex:=AUniConfig.UnixIdex;
-    UnixStat:=AUniConfig.UnixStat;
-    UnixYear:=AUniConfig.UnixYear;
-    UNIXMARK:=AUniConfig.UNIXMARK;
+    UNICINDX:=AUniConfig.UNICINDX;
+    UNICSTAT:=AUniConfig.UNICSTAT;
+    UNICYEAR:=AUniConfig.UNICYEAR;
+    UNICMARK:=AUniConfig.UNICMARK;
 
-    UnixType:=AUniConfig.UnixType;
-    UnixPswd:=AUniConfig.UnixPswd;
-    UnixUser:=AUniConfig.UnixUser;
-    UnixServ:=AUniConfig.UnixServ;
+    UNICTYPE:=AUniConfig.UNICTYPE;
+    UNICPSWD:=AUniConfig.UNICPSWD;
+    UNICUSER:=AUniConfig.UNICUSER;
+    UNICSRVR:=AUniConfig.UNICSRVR;
     DataBase:=AUniConfig.DataBase;
-    UnixPort:=AUniConfig.UnixPort;
+    UNICPORT:=AUniConfig.UNICPORT;
     IsDirect:=AUniConfig.IsDirect;
-    UnixOrdr:=AUniConfig.UnixOrdr;
-    UnixMemo:=AUniConfig.UnixMemo;
+    UNICORDR:=AUniConfig.UNICORDR;
+    UNICMEMO:=AUniConfig.UNICMEMO;
 
     IsDecrypt:=AUniConfig.IsDecrypt;
     IsEncrypt:=AUniConfig.IsEncrypt;        
   end;  
 end;
 
-function TUniConfig.GetUnixStat: string;
+function TUniConfig.GetUNICSTAT: string;
 begin
   Result:='挂起';
-  if UnixStat=1 then
+  if UNICSTAT=1 then
   begin
     Result:='活动';
   end;  
@@ -421,39 +416,39 @@ end;
 
 function TUniConfig.GetActvStat: string;
 begin
-  if UnixType=CONST_PROVIDER_ACCESS then
+  if UNICTYPE=CONST_PROVIDER_ACCESS then
   begin
     Result:=Format('当前连接:%S',[UpperCase(DataBase)]);
   end else
-  if UnixType=CONST_PROVIDER_SQLSRV then 
+  if UNICTYPE=CONST_PROVIDER_SQLSRV then
   begin
-    Result:=Format('当前连接:%S.%S',[UpperCase(UnixServ),UpperCase(DataBase)]);
+    Result:=Format('当前连接:%S.%S',[UpperCase(UNICSRVR),UpperCase(DataBase)]);
   end else
-  if UnixType=CONST_PROVIDER_ORACLE then 
+  if UNICTYPE=CONST_PROVIDER_ORACLE then
   begin
-    Result:=Format('当前连接:%S',[UpperCase(UnixServ)]);
+    Result:=Format('当前连接:%S',[UpperCase(UNICSRVR)]);
   end;    
 end;
 
 function TUniConfig.GetActvStat(AValue: string): string;
 begin
-  if UnixType=CONST_PROVIDER_ACCESS then
+  if UNICTYPE=CONST_PROVIDER_ACCESS then
   begin
     Result:=Format('%S:%S',[AValue,UpperCase(DataBase)]);
   end else
-  if UnixType=CONST_PROVIDER_SQLSRV then 
+  if UNICTYPE=CONST_PROVIDER_SQLSRV then
   begin
-    Result:=Format('%S:%S.%S',[AValue,UpperCase(UnixServ),UpperCase(DataBase)]);
+    Result:=Format('%S:%S.%S',[AValue,UpperCase(UNICSRVR),UpperCase(DataBase)]);
   end else
-  if UnixType=CONST_PROVIDER_ORACLE then 
+  if UNICTYPE=CONST_PROVIDER_ORACLE then
   begin
-    Result:=Format('%S:%S',[AValue,UpperCase(UnixServ)]);
+    Result:=Format('%S:%S',[AValue,UpperCase(UNICSRVR)]);
   end;    
 end;
 
 constructor TUniConfig.Create;
 begin
-  UnixIdex :=-1;
+  UNICINDX :=-1;
   IsDecrypt:=False;
   IsEncrypt:=False;
 end;
@@ -472,22 +467,22 @@ begin
 
   with TUniConfig(Result) do
   begin
-    UNIXIDEX := AUniQuery.FieldByName('UNIX_IDEX').AsInteger;
-    UNIXSTAT := AUniQuery.FieldByName('UNIX_STAT').AsInteger;
-    UNIXYEAR := AUniQuery.FieldByName('UNIX_YEAR').AsInteger;
-    UNIXMARK := Trim(AUniQuery.FieldByName('UNIX_MARK').AsString);
-    UNIXTYPE := Trim(AUniQuery.FieldByName('UNIX_TYPE').AsString);
-    UNIXPSWD := Trim(AUniQuery.FieldByName('UNIX_PSWD').AsString);
-    UNIXUSER := Trim(AUniQuery.FieldByName('UNIX_USER').AsString);
-    UNIXSERV := Trim(AUniQuery.FieldByName('UNIX_SERV').AsString);
+    UNICINDX := AUniQuery.FieldByName('UNIX_IDEX').AsInteger;
+    UNICSTAT := AUniQuery.FieldByName('UNIX_STAT').AsInteger;
+    UNICYEAR := AUniQuery.FieldByName('UNIX_YEAR').AsInteger;
+    UNICMARK := Trim(AUniQuery.FieldByName('UNIX_MARK').AsString);
+    UNICTYPE := Trim(AUniQuery.FieldByName('UNIX_TYPE').AsString);
+    UNICPSWD := Trim(AUniQuery.FieldByName('UNIX_PSWD').AsString);
+    UNICUSER := Trim(AUniQuery.FieldByName('UNIX_USER').AsString);
+    UNICSRVR := Trim(AUniQuery.FieldByName('UNIX_SERV').AsString);
     DATABASE := Trim(AUniQuery.FieldByName('DATA_BASE').AsString);
-    UNIXPORT := Trim(AUniQuery.FieldByName('UNIX_PORT').AsString);
+    UNICPORT := Trim(AUniQuery.FieldByName('UNIX_PORT').AsString);
     ISDIRECT := AUniQuery.FieldByName('IS_DIRECT').AsInteger;
-    UnixOrdr := AUniQuery.FieldByName('UNIX_ORDR').AsInteger;
+    UNICORDR := AUniQuery.FieldByName('UNIX_ORDR').AsInteger;
     
     if AUniQuery.FindField('UNIX_MEMO')<>nil then
     begin
-      UnixMemo := AUniQuery.FieldByName('UNIX_MEMO').AsString;
+      UNICMEMO := AUniQuery.FieldByName('UNIX_MEMO').AsString;
     end;
   end;
 end;

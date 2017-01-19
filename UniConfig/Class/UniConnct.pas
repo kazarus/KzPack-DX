@@ -139,22 +139,22 @@ begin
   Result:=nil;
   if AUniConfig=nil then raise Exception.CreateFmt('连接配置对象为空!',[]);
 
-  if AUniConfig.UnixType='' then raise Exception.CreateFmt('AUniConfig.UnixType=nil',[]);
+  if AUniConfig.UnicType='' then raise Exception.CreateFmt('AUniConfig.UnicType=nil',[]);
 
-  if AUniConfig.UnixType=CONST_PROVIDER_ORACLE then
+  if AUniConfig.UnicType=CONST_PROVIDER_ORACLE then
   begin
-    if AUniConfig.UnixUser='' then raise Exception.CreateFmt('AUniConfig.UnixUser=nil',[]);
-    //#if AUniConfig.UnixPswd='' then raise Exception.CreateFmt('AUniConfig.UnixPswd=nil',[]);
-    if AUniConfig.UnixServ='' then raise Exception.CreateFmt('AUniConfig.UnixServ=nil',[]);
+    if AUniConfig.UnicUser='' then raise Exception.CreateFmt('AUniConfig.UnicUser=nil',[]);
+    //#if AUniConfig.UNICPSWD='' then raise Exception.CreateFmt('AUniConfig.UNICPSWD=nil',[]);
+    if AUniConfig.UnicSrvr='' then raise Exception.CreateFmt('AUniConfig.UnicSrvr=nil',[]);
   end else
-  if AUniConfig.UnixType=CONST_PROVIDER_SQLSRV then
+  if AUniConfig.UnicType=CONST_PROVIDER_SQLSRV then
   begin
     if AUniConfig.DataBase='' then raise Exception.CreateFmt('AUniConfig.DataBase=nil',[]);
-    if AUniConfig.UnixUser='' then raise Exception.CreateFmt('AUniConfig.UnixUser=nil',[]);
-    //#if AUniConfig.UnixPswd='' then raise Exception.CreateFmt('AUniConfig.UnixPswd=nil',[]);
-    if AUniConfig.UnixServ='' then raise Exception.CreateFmt('AUniConfig.UnixServ=nil',[]);
+    if AUniConfig.UnicUser='' then raise Exception.CreateFmt('AUniConfig.UnicUser=nil',[]);
+    //#if AUniConfig.UNICPSWD='' then raise Exception.CreateFmt('AUniConfig.UNICPSWD=nil',[]);
+    if AUniConfig.UnicSrvr='' then raise Exception.CreateFmt('AUniConfig.UnicSrvr=nil',[]);
   end else
-  if AUniConfig.UnixType=CONST_PROVIDER_ACCESS then 
+  if AUniConfig.UnicType=CONST_PROVIDER_ACCESS then
   begin
     if AUniConfig.DataBase='' then raise Exception.CreateFmt('AUniConfig.DataBase=nil',[]);
   end;  
@@ -164,12 +164,12 @@ begin
 
   Result:=TUniConnection.Create(nil);
   Result.LoginPrompt:=False;
-  Result.ProviderName:=AUniConfig.UnixType;
-  Result.Username    :=AUniConfig.UnixUser;
-  Result.Password    :=AUniConfig.UnixPswd;
+  Result.ProviderName:=AUniConfig.UnicType;
+  Result.Username    :=AUniConfig.UnicUser;
+  Result.Password    :=AUniConfig.UNICPSWD;
   Result.Database    :=AUniConfig.DataBase;
-  Result.Server      :=AUniConfig.UnixServ;
-  Result.Port        :=StrToIntDef(AUniConfig.UnixPort,0);
+  Result.Server      :=AUniConfig.UnicSrvr;
+  Result.Port        :=StrToIntDef(AUniConfig.UNICPORT,0);
 
   if Result.ProviderName=CONST_PROVIDER_ORACLE then
   begin
@@ -284,12 +284,12 @@ begin
 
   Result:=TUniConnection.Create(nil);
   Result.LoginPrompt:=False;
-  Result.ProviderName:=UniConfig.UnixType;
-  Result.Username    :=UniConfig.UnixUser;
-  Result.Password    :=UniConfig.UnixPswd;
+  Result.ProviderName:=UniConfig.UnicType;
+  Result.Username    :=UniConfig.UnicUser;
+  Result.Password    :=UniConfig.UNICPSWD;
   Result.Database    :=UniConfig.DataBase;
-  Result.Server      :=UniConfig.UnixServ;
-  Result.Port        :=StrToIntDef(UniConfig.UnixPort,0);
+  Result.Server      :=UniConfig.UnicSrvr;
+  Result.Port        :=StrToIntDef(UniConfig.UNICPORT,0);
 
   if Result.ProviderName=CONST_PROVIDER_ORACLE then
   begin
@@ -334,12 +334,12 @@ begin
 
   UniConnectionA:=TUniConnection.Create(nil);
   UniConnectionA.LoginPrompt:=False;
-  UniConnectionA.ProviderName:=AUniConfig.UnixType;
-  UniConnectionA.Username    :=AUniConfig.UnixUser;
-  UniConnectionA.Password    :=AUniConfig.UnixPswd;
+  UniConnectionA.ProviderName:=AUniConfig.UnicType;
+  UniConnectionA.Username    :=AUniConfig.UnicUser;
+  UniConnectionA.Password    :=AUniConfig.UNICPSWD;
   UniConnectionA.Database    :=AUniConfig.DataBase;
-  UniConnectionA.Server      :=AUniConfig.UnixServ;
-  UniConnectionA.Port        :=StrToIntDef(AUniConfig.UnixPort,0);
+  UniConnectionA.Server      :=AUniConfig.UnicSrvr;
+  UniConnectionA.Port        :=StrToIntDef(AUniConfig.UNICPORT,0);
 
   if UniConnectionA.ProviderName=CONST_PROVIDER_ORACLE then
   begin
@@ -412,12 +412,12 @@ begin
 
   Result:=TUniConnection.Create(nil);
   Result.LoginPrompt:=False;
-  Result.ProviderName:=UniConfig.UnixType;
-  Result.Username    :=UniConfig.UnixUser;
-  Result.Password    :=UniConfig.UnixPswd;
+  Result.ProviderName:=UniConfig.UnicType;
+  Result.Username    :=UniConfig.UnicUser;
+  Result.Password    :=UniConfig.UNICPSWD;
   Result.Database    :=UniConfig.DataBase;
-  Result.Server      :=UniConfig.UnixServ;
-  Result.Port        :=StrToIntDef(UniConfig.UnixPort,0);
+  Result.Server      :=UniConfig.UnicSrvr;
+  Result.Port        :=StrToIntDef(UniConfig.UNICPORT,0);
 
   if Result.ProviderName=CONST_PROVIDER_ORACLE then
   begin

@@ -157,7 +157,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     TabOrder = 2
     OnClick = Btnx_TestClick
   end
-  object Edit_UnixUser: TRzEdit
+  object Edit_UnicUser: TRzEdit
     Left = 64
     Top = 37
     Width = 320
@@ -167,7 +167,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     FramingPreference = fpCustomFraming
     TabOrder = 3
   end
-  object Edit_UnixPswd: TRzEdit
+  object Edit_UnicPswd: TRzEdit
     Left = 64
     Top = 62
     Width = 320
@@ -176,9 +176,9 @@ object DialogEditUniConfig: TDialogEditUniConfig
     FrameVisible = True
     FramingPreference = fpCustomFraming
     TabOrder = 4
-    OnExit = Edit_UnixPswdExit
+    OnExit = Edit_UnicPswdExit
   end
-  object Edit_UnixServ: TRzEdit
+  object Edit_UnicSrvr: TRzEdit
     Left = 64
     Top = 87
     Width = 320
@@ -187,9 +187,9 @@ object DialogEditUniConfig: TDialogEditUniConfig
     FrameVisible = True
     FramingPreference = fpCustomFraming
     TabOrder = 5
-    OnDblClick = Edit_UnixServDblClick
+    OnDblClick = Edit_UnicSrvrDblClick
   end
-  object Edit_UnixPort: TRzEdit
+  object Edit_UnicPort: TRzEdit
     Left = 64
     Top = 137
     Width = 320
@@ -199,7 +199,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     FramingPreference = fpCustomFraming
     TabOrder = 6
   end
-  object Edit_UnixYear: TRzEdit
+  object Edit_UnicYear: TRzEdit
     Left = 64
     Top = 187
     Width = 320

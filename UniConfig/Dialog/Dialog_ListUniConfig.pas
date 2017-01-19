@@ -241,23 +241,23 @@ begin
 
       AddCheckBox(1,IdexA,False,False);
 
-      Cells[2,IdexA] :=IntToStr(UniConfig.UnixYear);
-      Cells[3,IdexA] :=UniConfig.UnixMark;
+      Cells[2,IdexA] :=IntToStr(UniConfig.UnicYear);
+      Cells[3,IdexA] :=UniConfig.UnicMark;
       Alignments[2,IdexA]:=taCenter;
       Alignments[3,IdexA]:=taCenter;
-      Cells[4,IdexA] :=UniConfig.UnixType;
+      Cells[4,IdexA] :=UniConfig.UnicType;
       Alignments[4,IdexA]:=taCenter;
-      Cells[5,IdexA] :=UniConfig.UnixUser;
-      Alignments[5,IdexA]:=taCenter;      
+      Cells[5,IdexA] :=UniConfig.UnicUser;
+      Alignments[5,IdexA]:=taCenter;
       Cells[6,IdexA] :='**';
-      Alignments[6,IdexA]:=taCenter;      
-      Cells[7,IdexA] :=UniConfig.UnixServ;
+      Alignments[6,IdexA]:=taCenter;
+      Cells[7,IdexA] :=UniConfig.UnicSrvr;
       Cells[8,IdexA] :=UniConfig.DataBase;
-      Cells[9,IdexA] :=UniConfig.UnixPort;
+      Cells[9,IdexA] :=UniConfig.UnicPort;
       Alignments[9,IdexA]:=taCenter;
       Cells[10,IdexA]:=UniConfig.GetIsDirect;
-      Cells[11,IdexA]:=UniConfig.GetUnixStat;
-      if UniConfig.UnixStat=1 then
+      Cells[11,IdexA]:=UniConfig.GetUnicStat;
+      if UniConfig.UnicStat=1 then
       begin
         FontColors[11,IdexA]:=clGreen;
       end;        
@@ -447,7 +447,7 @@ begin
 
     if UniConnctEx.ActiveHint then
     begin
-      if UniConfig.UnixStat<>1 then
+      if UniConfig.UnicStat<>1 then
       begin
         if MessageBox(Handle,'是否将该连接设为活动?','提示',MB_OKCANCEL+MB_ICONQUESTION)=Mrok then
         begin
@@ -588,11 +588,11 @@ begin
         UniConnct.StartTransaction;
 
         SQLA:='UPDATE TBL_UNICONFIG SET UNIX_STAT=0 WHERE UNIX_IDEX<>%D  AND UNIX_MARK=%S';
-        SQLA:=Format(SQLA,[UniConfig.UnixIdex,QuotedStr(UniConfig.UnixMark)]);
+        SQLA:=Format(SQLA,[UniConfig.UnicIndx,QuotedStr(UniConfig.UnicMark)]);
         UniConfig.ExecuteSQL(SQLA,UniConnct);
 
         SQLA:='UPDATE TBL_UNICONFIG SET UNIX_STAT=1 WHERE UNIX_IDEX=%D   AND UNIX_MARK=%S';
-        SQLA:=Format(SQLA,[UniConfig.UnixIdex,QuotedStr(UniConfig.UnixMark)]);
+        SQLA:=Format(SQLA,[UniConfig.UnicIndx,QuotedStr(UniConfig.UnicMark)]);
         UniConfig.ExecuteSQL(SQLA,UniConnct);        
 
         UniConnct.Commit;
@@ -646,7 +646,7 @@ begin
           UniConfig:=nil;
           UniConfig:=TUniConfig(Objects[0,I]);
           if UniConfig=nil then Continue;
-          UniConfig.UnixOrdr:=I;
+          UniConfig.UnicOrdr:=I;
           UniConfig.UpdateDB(UniConnct);
         end;
 
@@ -734,8 +734,8 @@ begin
 
       UniConnct :=UniConnctEx.GetConnection(FConnectionMark);
       //->
-      UniConfiH.UnixIdex:=UniConfiH.GetNextIdex(UniConnct);
-      UniConfiH.UnixStat:=0;
+      UniConfiH.UnicIndx:=UniConfiH.GetNextIdex(UniConnct);
+      UniConfiH.UnicStat:=0;
 
       if Assigned(UniConnctEx.OnUniConfigCustomEncryptEvent) then
       begin
@@ -766,7 +766,7 @@ begin
     if UniConfig<>nil then
     begin
       Panl_DataBase.Caption:=UniConfig.DataBase;
-      Panl_UnixMemo.Caption:=UniConfig.UnixMemo;
+      Panl_UnixMemo.Caption:=UniConfig.UnicMemo;
     end;
   end;
 end;

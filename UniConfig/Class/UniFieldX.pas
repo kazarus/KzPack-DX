@@ -380,7 +380,7 @@ var
 begin
   Result:=nil;
   if AUniConfig=nil then Exit;
-  if AUniConfig.UnixType<>CONST_PROVIDER_ACCESS then Exit;
+  if AUniConfig.UnicType<>CONST_PROVIDER_ACCESS then Exit;
 
   Result:=GetKeyInACCESS(aTabl,AUniConfig.DataBase);
 end;
