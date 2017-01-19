@@ -61,7 +61,7 @@ begin
   try
     JSON:=TQJson.Create;
     JSON.FromRtti(Self);
-    JSON.SaveToFile(AFileName,teUTF8,True,doFormat);
+    JSON.SaveToFile(AFileName,teUTF8,False,doFormat);
   finally
     FreeAndNil(JSON);
   end;
@@ -74,7 +74,7 @@ begin
   try
     JSON:=TQJson.Create;
     JSON.FromRtti(AList);
-    JSON.SaveToFile(AFileName,teUTF8,True,doFormat);
+    JSON.SaveToFile(AFileName,teUTF8,False,doFormat);
   finally
     FreeAndNil(JSON);
   end;
