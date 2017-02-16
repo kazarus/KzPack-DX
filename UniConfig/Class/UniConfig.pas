@@ -452,6 +452,7 @@ end;
 constructor TUniConfig.Create;
 begin
   UNICINDX :=-1;
+  WHOBUILD := 1;
   IsDecrypt:=False;
   IsEncrypt:=False;
 end;
