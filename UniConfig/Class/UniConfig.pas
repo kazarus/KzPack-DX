@@ -25,6 +25,7 @@ type
     FIsDirect: Integer;   //*是否直联
     FUnicOrdr: Integer;   //排序
     FUnicMemo: string;    //备注
+    FWhoBuild: Integer;   //机器码
   public
     IsDecrypt:Boolean;   //
     IsEncrypt:Boolean;   //
@@ -44,7 +45,7 @@ type
   public
     function  CheckExist(AUniConnection:TUniConnection):Boolean;override;
   public
-    function  TstConnection(AUniConfig:TUniConfig):Boolean;
+    function  TstConnection(uCnfg:TUniConfig):Boolean;
   public
     constructor Create;
     destructor Destroy; override;
@@ -62,12 +63,13 @@ type
     property IsDirect : Integer read FIsDirect  write FIsDirect;
     property UnicOrdr : Integer read FUnicOrdr  write FUnicOrdr;
     property UnicMemo : string read FUnicMemo  write FUnicMemo;
+    property WhoBuild : Integer read FWhoBuild write FWhoBuild;
   public
     class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
     class procedure ReadDS(AUniQuery: TUniQuery;var Result:TUniEngine);override;
     
-    class function  CopyIt(AUniConfig:TUniConfig):TUniConfig;overload;
-    class procedure CopyIt(AUniConfig:TUniConfig;var Result:TUniConfig);overload;
+    class function  CopyIt(uCnfg:TUniConfig):TUniConfig;overload;
+    class procedure CopyIt(uCnfg:TUniConfig;var Result:TUniConfig);overload;
   public
     class procedure Initialize(ADataBase:string='-1');
     class function  ADD_TBL_UNICNFG:string;
@@ -290,11 +292,11 @@ begin
   end;  
 end;
 
-class function TUniConfig.CopyIt(AUniConfig: TUniConfig): TUniConfig;
+class function TUniConfig.CopyIt(uCnfg: TUniConfig): TUniConfig;
 begin
   Result:=TUniConfig.Create;
 
-  TUniConfig.CopyIt(AUniConfig,Result);
+  TUniConfig.CopyIt(uCnfg,Result);
 end;
 
 class function TUniConfig.ADD_TBL_UNICNFG: string;
@@ -332,25 +334,25 @@ end;
 
 
 
-function TUniConfig.TstConnection(AUniConfig: TUniConfig): Boolean;
+function TUniConfig.TstConnection(uCnfg: TUniConfig): Boolean;
 var
   UniConnectionA:TUniConnection;
 begin
   Result:=False;
-  if AUniConfig=nil then raise Exception.CreateFmt('连接配置对象为空!',[]);
+  if uCnfg=nil then raise Exception.CreateFmt('连接配置对象为空!',[]);
 
   UniConnectionA:=TUniConnection.Create(nil);
   UniConnectionA.LoginPrompt:=False;
-  UniConnectionA.ProviderName:=AUniConfig.UNICTYPE;
-  UniConnectionA.Username    :=AUniConfig.UNICUSER;
-  UniConnectionA.Password    :=AUniConfig.UNICPSWD;
-  UniConnectionA.Database    :=AUniConfig.DataBase;
-  UniConnectionA.Server      :=AUniConfig.UNICSRVR;
-  UniConnectionA.Port        :=StrToIntDef(AUniConfig.UNICPORT,0);
+  UniConnectionA.ProviderName:=uCnfg.UNICTYPE;
+  UniConnectionA.Username    :=uCnfg.UNICUSER;
+  UniConnectionA.Password    :=uCnfg.UNICPSWD;
+  UniConnectionA.Database    :=uCnfg.DataBase;
+  UniConnectionA.Server      :=uCnfg.UNICSRVR;
+  UniConnectionA.Port        :=StrToIntDef(uCnfg.UNICPORT,0);
 
   if UniConnectionA.ProviderName=CONST_PROVIDER_ORACLE then
   begin
-    if AUniConfig.IsDirect=1 then
+    if uCnfg.IsDirect=1 then
     begin
      //UniConnectionA.SpecificOptions.Clear;
       UniConnectionA.SpecificOptions.Add('Oracle.Direct=True');
@@ -378,30 +380,31 @@ begin
   Result:=True;
 end;
 
-class procedure TUniConfig.CopyIt(AUniConfig: TUniConfig;
+class procedure TUniConfig.CopyIt(uCnfg: TUniConfig;
   var Result: TUniConfig);
 begin
   if Result=nil then Exit;
 
   with Result do
   begin
-    UNICINDX:=AUniConfig.UNICINDX;
-    UNICSTAT:=AUniConfig.UNICSTAT;
-    UNICYEAR:=AUniConfig.UNICYEAR;
-    UNICMARK:=AUniConfig.UNICMARK;
+    UNICINDX := uCnfg.UNICINDX;
+    UNICSTAT := uCnfg.UNICSTAT;
+    UNICYEAR := uCnfg.UNICYEAR;
+    UNICMARK := uCnfg.UNICMARK;
 
-    UNICTYPE:=AUniConfig.UNICTYPE;
-    UNICPSWD:=AUniConfig.UNICPSWD;
-    UNICUSER:=AUniConfig.UNICUSER;
-    UNICSRVR:=AUniConfig.UNICSRVR;
-    DataBase:=AUniConfig.DataBase;
-    UNICPORT:=AUniConfig.UNICPORT;
-    IsDirect:=AUniConfig.IsDirect;
-    UNICORDR:=AUniConfig.UNICORDR;
-    UNICMEMO:=AUniConfig.UNICMEMO;
+    UNICTYPE := uCnfg.UNICTYPE;
+    UNICPSWD := uCnfg.UNICPSWD;
+    UNICUSER := uCnfg.UNICUSER;
+    UNICSRVR := uCnfg.UNICSRVR;
+    DataBase := uCnfg.DataBase;
+    UNICPORT := uCnfg.UNICPORT;
+    IsDirect := uCnfg.IsDirect;
+    UNICORDR := uCnfg.UNICORDR;
+    UNICMEMO := uCnfg.UNICMEMO;
+    WhoBuild := uCnfg.WhoBuild;
 
-    IsDecrypt:=AUniConfig.IsDecrypt;
-    IsEncrypt:=AUniConfig.IsEncrypt;        
+    IsDecrypt:=uCnfg.IsDecrypt;
+    IsEncrypt:=uCnfg.IsEncrypt;
   end;  
 end;
 
