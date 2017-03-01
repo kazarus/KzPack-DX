@@ -29,7 +29,7 @@ type
 
     class function  GetStrsCellChked(AAdvGrid:TAdvStringGrid;ACol:Integer):TStringList;deprecated;
     class function  GetListCellChked(AAdvGrid:TAdvStringGrid;ACol:Integer):TStringList;
-    class function  GetNumbCellChked(AAdvGrid:TAdvStringGrid;ACol:Integer):Integer;
+    class function  GetSizeCellChked(AAdvGrid:TAdvStringGrid;ACol:Integer):Integer;
     class procedure SetGridCellChked(AAdvGrid:TAdvStringGrid;ACol:Integer;AValue:Boolean);
 
     class procedure ClearGrid(AGrid:TAdvStringGrid;ARowCount:Integer;ADefaultRowCount:Integer=2);
@@ -217,7 +217,7 @@ begin
   Result:=(AParentWidth - ASelfWidth) div 2;
 end;
 
-class function TUiUtils.GetNumbCellChked(AAdvGrid: TAdvStringGrid;
+class function TUiUtils.GetSizeCellChked(AAdvGrid: TAdvStringGrid;
   ACol: Integer): Integer;
 var
   I:Integer;
