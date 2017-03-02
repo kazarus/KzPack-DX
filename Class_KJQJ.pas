@@ -5,7 +5,7 @@ unit Class_KJQJ;
 
 interface
 uses
-  Classes,SysUtils,Uni,UniEngine;
+  Classes,SysUtils,DB,Uni,UniEngine;
 
 type
   TKJQJ=class(TUniEngine)
@@ -40,6 +40,8 @@ type
   public
     class function  ExpListKJQJ(AStaKJQJ,AEndKJQJ:TKJQJ):TStringList;
     class function  GetKJNDKJQJ(AKJND,AKJQJ:Integer):Integer;overload;
+
+    class function  GetNameKJQJ(aValue:Integer):string;
   end;
 
 implementation
@@ -86,7 +88,6 @@ var
   NumbA:Integer;
   KJQJA:TKJQJ;
   KJQJB:TKJQJ;
-  TempA:string;
 begin
   Result:=nil;
 
@@ -129,7 +130,8 @@ end;
 
 function TKJQJ.GetKJNDKJQJ: Integer;
 begin
-  Result:=KJND * 100 + KJQJ;
+  Result := KJND * 100 + KJQJ;
+  Result := Abs(Result);
 end;
 
 class function TKJQJ.GetKJNDKJQJ(AKJND, AKJQJ: Integer): Integer;
@@ -186,12 +188,32 @@ begin
 end;
 
 class function TKJQJ.ReadDS(AUniQuery: TUniQuery): TUniEngine;
+var
+  I:Integer;
+  Field:TField;
+  Value:Integer;
 begin
   Result:=TKJQJ.Create;
   with TKJQJ(Result) do
   begin
-    KJND:=AUniQuery.FieldByName('KJND').AsInteger;
-    KJQJ:=AUniQuery.FieldByName('KJQJ').AsInteger;    
+    for I:=0 to AUniQuery.Fields.Count-1 do
+    begin
+      Field:=AUniQuery.Fields.Fields[I];
+      if Field.FieldName = 'KJND' then
+      begin
+        KJND := Field.AsInteger;
+      end else
+      if Field.FieldName = 'KJQJ' then 
+      begin
+        KJQJ := Field.AsInteger;
+      end else
+      if Field.FieldName = 'KJND_KJQJ' then 
+      begin
+        Value := Field.AsInteger;
+        KJND  := Trunc(Value / 100);
+        KJQJ  := Value  mod 100;
+      end;
+    end;
   end;
 end;
 
@@ -231,8 +253,8 @@ end;
 
 constructor TKJQJ.Create(AValue: Integer);
 begin
-  KJND:=Trunc(AValue / 100);
-  KJQJ:=AValue  mod 100;
+  KJND := Trunc(AValue / 100);
+  KJQJ := AValue  mod 100;
 end;
 
 function TKJQJ.GetKJNDKJQJ(AValue: Integer): Integer;
@@ -273,6 +295,20 @@ begin
   end;
 
   Result:=NDT * 100 + QJT;
+end;
+
+class function TKJQJ.GetNameKJQJ(aValue: Integer): string;
+var
+  cKJQJ:TKJQJ;
+begin
+  Result := '';
+  try
+    cKJQJ := TKJQJ.Create(aValue);
+
+    Result:= Format('%DÄê%DÔÂ',[cKJQJ.KJND,cKJQJ.KJQJ]);
+  finally
+    FreeAndNil(cKJQJ);
+  end;
 end;
 
 end.
