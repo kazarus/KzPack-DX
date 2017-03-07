@@ -3,7 +3,7 @@ unit Class_UiUtils;
 
 interface
 uses
-  Classes,SysUtils,AdvGrid,frxClass,ElTree,Math,Graphics;
+  Classes,SysUtils,AdvGrid,frxClass,ElTree,Math,Graphics,RzBtnEdt;
 
 type
   TUiUtils=class(TObject)
@@ -15,6 +15,9 @@ type
     class function  GetRuleLevl(ACodeRule:string;ASelfCode:string;AWithDash:Boolean=True):Integer;
   public
     class function  StringToColorDef(AValue:string;ADef:string='clWhite'): TColor;
+  public
+    //rz
+    class procedure WhenEditExit(Sender:TObject);
   public
     //grid
     class function  GetCheckBoxState(AGrid:TAdvStringGrid;ACol,ARow:Integer):Integer;
@@ -85,6 +88,9 @@ const
   CONST_DICT_MODE_LXGXCX='00011';//类型关系查询  
 
 implementation
+
+uses
+  Class_KzUtils;
 
 
 { TUiUtils }
@@ -527,6 +533,11 @@ begin
   end;
 end;
 
+
+class procedure TUiUtils.WhenEditExit(Sender: TObject);
+begin
+  TRzButtonEdit(Sender).Text := TKzUtils.FloatToText(TKzUtils.TextToFloat(TRzButtonEdit(Sender).Text));
+end;
 
 class function TUiUtils.StringToColorDef(AValue, ADef: string): TColor;
 begin
