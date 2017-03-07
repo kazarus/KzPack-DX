@@ -71,10 +71,12 @@ type
     class procedure TryFreeAndNil(var AObject);
     class procedure JustCleanList(var AObject);
 
+    class function  DateToInt(Value:TDateTime):Integer;
     class function  StrToDateX(Value:string):Integer;
     class function  IntToDateX(Value:Integer):TDateTime;
     class function  FloatToDate(Value:Extended):TDateTime;
-    class function  DateToInt(Value:TDateTime):Integer;
+    class function  FloatToTime(Value:Extended):TDateTime;
+
     
     class function  DateIsNull(ADate:TDateTime):Boolean;
     class function  NumbInRect(ANumb:Integer;APrev,ANext:Integer):Boolean;overload;
@@ -171,6 +173,33 @@ begin
     Result:= FloatToStrF(aValue, AFormat, 18, Digits)
   else
     Result:= '';
+end;
+
+class function TKzUtils.FloatToTime(Value: Extended): TDateTime;
+var
+  cTMP:string;
+  dTMP:string;
+begin
+  Result:=Unassigned;
+  if Value=0 then Exit;
+  cTMP:=FloatToStr(Value);
+  //20170303213256->2017-03-07 21:32:56
+  dTMP:=Format('%s-%s-%s %s:%s:%s',[Copy(cTMP,1,4),Copy(cTMP,5,2),Copy(cTMP,7,2),Copy(cTMP,9,2),Copy(cTMP,11,2),Copy(cTMP,13,2)]);
+
+
+  try
+    //#DateSeparator:='-';
+    FormatSettings.DateSeparator:='-';
+    FormatSettings.TimeSeparator:=':';
+    FormatSettings.LongDateFormat:='yyyy-MM-dd';
+    FormatSettings.LongTimeFormat:='hh:mm:ss';
+    Result:=StrToDateTime(dTMP);
+  except
+    on E:Exception do
+    begin
+      raise Exception.Create(E.Message);
+    end;
+  end;
 end;
 
 class function TKzUtils.FormatCode(aValue: string; ALength: Integer;
