@@ -760,8 +760,8 @@ begin
   if Trim(ASQL)='' then Exit;
 
   Result:=TUniQuery.Create(nil);
-  Result.Connection:=AUniConnection;
-  Result.SQL.Text  :=ASQL;
+  Result.Connection := AUniConnection;
+  Result.SQL.Text   := ASQL;
   Result.Open;
 end;
 
