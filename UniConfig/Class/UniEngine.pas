@@ -76,6 +76,9 @@ type
   public
     property UniSQL:TUniSQL read GetUniSQL;
   public
+    class function  CopyIt(aUniEngine:TUniEngine):TUniEngine;overload;virtual;abstract;
+    class procedure CopyIt(aUniEngine:TUniEngine;var Result:TUniEngine);overload;virtual;abstract;
+
     class function  ReadDS(AUniQuery: TUniQuery): TUniEngine;overload;virtual;abstract;
     class procedure ReadDS(AUniQuery: TUniQuery;var Result:TUniEngine);overload;virtual;abstract;
 
@@ -107,6 +110,8 @@ type
     class procedure STRIDX(Args:array of string;AList:TStringList;ASeparator:string;withQuoted:Boolean=False);overload;
     class function  STRDIY(Args:array of string;AList:TStringList;ASeparator:string=',';withQuoted:Boolean=False):string;overload;
     class function  STRDIY(Args:array of string;AList:TCollection;ASeparator:string=',';BSeparator:string='-';withQuoted:Boolean=False):string;overload;
+
+    class procedure ToHash(aList:TCollection;var bList:TStringList);
 
     class function  GetUniQuery(ASQL:string;AUniConnection:TUniConnection):TUniQuery;overload;
     class function  GetUniQuery(ASQL:string):TUniQuery;overload;
@@ -403,6 +408,11 @@ class function TUniEngine.StrsDB(ASQL: string;
   Fields: array of string;withSorted:Boolean): TStringList;
 begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.StrsDB] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
+end;
+
+class procedure TUniEngine.ToHash(aList: TCollection; var bList: TStringList);
+begin
+  //#
 end;
 
 procedure TUniEngine.TONODE(aNode: IXMLNode);
