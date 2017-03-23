@@ -20,7 +20,8 @@ unit Class_KzUtils;
 
 interface
 uses
-  Classes,SysUtils,Windows,Vcl.Forms,Variants,StrUtils,TLHelp32,Vcl.Graphics,System.DateUtils,
+  Classes,SysUtils,Variants,StrUtils,System.DateUtils,
+  {$IFDEF MSWINDOWS} Windows,Vcl.Forms,TLHelp32,Vcl.Graphics,{$ENDIF}
   {$IFDEF ENABLE_REGEX}
        PerlRegEx, pcre
   {$ELSE}
@@ -31,7 +32,9 @@ type
   TKzUtils=class(TObject)
   public
     //TLHelp32
+    {$IFDEF MSWINDOWS}
     class function  EndTask(AExeName:string):Integer;
+    {$ENDIF}
     //System
     class function  GetOrd(AChar:Char):Integer;
     class function  GetChr(AIdex:Integer):string;
@@ -83,9 +86,13 @@ type
     class function  NumbInRect(ANumb:Extended;APrev,ANext:Extended):Boolean;overload;
     class function  NumbInRect(ANumb:Integer;AArrayOfChar:array of Char):Boolean;overload;
     class function  NumbInRect(ANumb:Integer;ABunchOfInteger:string):Boolean;overload;
+    {$IFDEF MSWINDOWS}
     class function  InputQueryEx(const ACaption, APrompt: string;var Value: string;IsPassWord:Boolean=True): Boolean;
+    {$ENDIF}
     class function  CompareTextLike(APart,ALong:string):Boolean;
+    {$IFDEF MSWINDOWS}
     class function  StringToColorDef(const aValue:string;const ADef:string='clWhite'):TColor;
+    {$ENDIF}
   public
     class function  FloatToText(aValue: Extended; Zero:Boolean=False; Digits: Integer=2;AFormat: TFloatFormat=ffNumber):string;
     class function  TextToFloat(aValue:string):Extended;
@@ -110,8 +117,10 @@ type
 
 implementation
 
+{$IFDEF MSWINDOWS}
 uses
   Vcl.Dialogs,Vcl.StdCtrls,Vcl.Consts,Vcl.Controls,Winapi.ShellAPI;
+{$ENDIF}
 
 { TKzUtils }
 
@@ -140,7 +149,9 @@ end;
 
 class function TKzUtils.ErorBox(aValue: string): Integer;
 begin
+  {$IFDEF MSWINDOWS}
   Result:=Application.MessageBox(Pchar(aValue),'警告',MB_OKCANCEL+MB_ICONERROR);
+  {$ENDIF}
 end;
 
 class function TKzUtils.FloatToDate(Value: Extended): TDateTime;
@@ -213,6 +224,7 @@ begin
   Result:=TryFormatCode(aValue,ALength,'0');
 end;
 
+{$IFDEF MSWINDOWS}
 class function TKzUtils.InputQueryEx(const ACaption, APrompt: string;
   var Value: string;IsPassWord:Boolean): Boolean;
 var
@@ -302,6 +314,7 @@ begin
     Form.Free;
   end;
 end;
+{$ENDIF}
 
 class function  TKzUtils.CompareTextLike(APart,ALong:string):Boolean;
 var
@@ -318,6 +331,7 @@ begin
     Result:=True;
   end;}
 end;
+
 
 class procedure TKzUtils.JustCleanList(var AObject);
 var
@@ -372,17 +386,23 @@ end;
 
 class function TKzUtils.Explore: string;
 begin
+  {$IFDEF MSWINDOWS}
   ShellExecute(Application.Handle,'open','explorer.exe',PChar(TKzUtils.ExePath),'',SW_MAXIMIZE);
+  {$ENDIF}
 end;
 
 class function TKzUtils.ShowBox(aValue: string): Integer;
 begin
+  {$IFDEF MSWINDOWS}
   Result:=Application.MessageBox(Pchar(aValue),'提示',MB_OKCANCEL +MB_ICONQUESTION);
+  {$ENDIF}
 end;
 
 class procedure TKzUtils.ShowMsg(aValue: string);
 begin
+  {$IFDEF MSWINDOWS}
   Application.MessageBox(Pchar(aValue),'提示',MB_OK+MB_ICONINFORMATION);
+  {$ENDIF}
 end;
 
 class function TKzUtils.StrsStrCutted(const Source: string;
@@ -562,7 +582,9 @@ end;
 
 class function TKzUtils.WarnBox(aValue: string): Integer;
 begin
+  {$IFDEF MSWINDOWS}
   Result:=Application.MessageBox(Pchar(aValue),'警告',MB_OKCANCEL+MB_ICONWARNING);
+  {$ENDIF}
 end;
 
 class procedure TKzUtils.WritFmt(const Msg: string;
@@ -576,7 +598,7 @@ begin
   Writeln(VarToStr(aValue));
 end;
 
-
+{$IFDEF MSWINDOWS}
 class function TKzUtils.EndTask(AExeName: string): Integer;
 const
   PROCESS_TERMINATE = $0001;
@@ -604,6 +626,7 @@ begin
   end;
   CloseHandle(FSnapshotHandle);
 end;
+{$ENDIF}
 
 class function TKzUtils.NumbInRect(ANumb: Integer;
   AArrayOfChar: array of Char): Boolean;
@@ -735,46 +758,62 @@ end;
 class function TKzUtils.ErorFmt(const Msg: string;
   Params: array of const): Integer;
 begin
+  {$IFDEF MSWINDOWS}
   Result:=Application.MessageBox(Pchar(Format(Msg,Params)),'警告',MB_OKCANCEL+MB_ICONERROR);
+  {$ENDIF}
 end;
 
 class procedure TKzUtils.ErorMsg(aValue: string);
 begin
+  {$IFDEF MSWINDOWS}
   Application.MessageBox(Pchar(aValue),'错误',MB_OK+MB_ICONERROR);
+  {$ENDIF}
 end;
 
 class procedure TKzUtils.ErorMsg(const Msg: string;
   Params: array of const);
 begin
+  {$IFDEF MSWINDOWS}
   Application.MessageBox(Pchar(Format(Msg,Params)),'错误',MB_OK+MB_ICONERROR);
+  {$ENDIF}
 end;
 
 class function TKzUtils.ShowFmt(const Msg: string;
   Params: array of const): Integer;
 begin
+  {$IFDEF MSWINDOWS}
   Result:=Application.MessageBox(PChar(Format(Msg,Params)),'提示',MB_OKCANCEL +MB_ICONQUESTION);
+  {$ENDIF}
 end;
 
 class procedure TKzUtils.ShowMsg(const Msg: string; Params: array of const);
 begin
+  {$IFDEF MSWINDOWS}
   Application.MessageBox(Pchar(Format(Msg,Params)),'提示',MB_OK+MB_ICONINFORMATION);
+  {$ENDIF}
 end;
 
 class function TKzUtils.WarnFmt(const Msg: string;
   Params: array of const): Integer;
 begin
+  {$IFDEF MSWINDOWS}
   Result:=Application.MessageBox(Pchar(Format(Msg,Params)),'警告',MB_OKCANCEL+MB_ICONWARNING);
+  {$ENDIF}
 end;
 
 class procedure TKzUtils.WarnMsg(aValue: string);
 begin
+  {$IFDEF MSWINDOWS}
   Application.MessageBox(Pchar(aValue),'提示',MB_OK+MB_ICONWARNING);
+  {$ENDIF}
 end;
 
 class procedure TKzUtils.WarnMsg(const Msg: string;
   Params: array of const);
 begin
+  {$IFDEF MSWINDOWS}
   Application.MessageBox(Pchar(Format(Msg,Params)),'提示',MB_OK+MB_ICONWARNING);
+  {$ENDIF}
 end;
 
 class function TKzUtils.jsdecode(const value: Widestring): Widestring;
@@ -992,7 +1031,7 @@ begin
 end;
 
 
-
+{$IFDEF MSWINDOWS}
 class function TKzUtils.StringToColorDef(const aValue,
   ADef: string): TColor;
 begin
@@ -1005,5 +1044,6 @@ begin
     Result:=StringToColor(Trim(aValue));
   end;
 end;
+{$ENDIF}
 
 end.
