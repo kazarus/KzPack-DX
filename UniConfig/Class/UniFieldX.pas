@@ -2,7 +2,7 @@ unit UniFieldX;
 
 interface
 uses
-  Classes,SysUtils,Uni,UniEngine,UniConfig,StrUtils,ADODB,DB;
+  Classes,SysUtils,Uni,UniEngine,UniConfig,StrUtils{$IFDEF MSWINDOWS},ADODB,DB{$IFEND};
 
 type
   TSqlExecuteMode=(semUpdate,semInsert);
@@ -58,11 +58,13 @@ type
     class function ExpSqlInORACLE(aTabl:string):string;
     class function ExpSQLInPOSTGR(aTabl:string):string;
   public
+    {$IFDEF MSWINDOWS}
     class function GetKeyInACCESS(aTabl,ADataBase:string):TStringList;overload;
     class function GetKeyInACCESS(aTabl:string;AUniConfig:TUniConfig):TStringList;overload;
 
     class function CheckExistKeyInACCESS(AConstraintType,AConstraintName,aTabl:string;ADataBase:string):Boolean;overload;
     class function CheckExistKeyInACCESS(AConstraintType,AConstraintName,aTabl:string;AADOConnection:TADOConnection):Boolean;overload;
+    {$IFEND}
   end;
 
   TIdentity=class(TUniEngine)
@@ -370,6 +372,7 @@ begin
   end;
 end;
 
+{$IFDEF MSWINDOWS}
 class function TUniFieldX.GetKeyInACCESS(aTabl: string;
   AUniConfig: TUniConfig): TStringList;
 var
@@ -434,6 +437,7 @@ begin
 end;
 
 
+
 class function TUniFieldX.CheckExistKeyInACCESS(AConstraintType,
   AConstraintName, aTabl: string; AADOConnection: TADOConnection): Boolean;
 var
@@ -483,6 +487,7 @@ begin
     FreeAndNil(ADataSet);
   end;
 end;
+{$IFEND}
 
 class function TUniFieldX.CopyIt(aUniFieldX: TUniFieldX): TUniFieldX;
 begin
@@ -509,6 +514,7 @@ begin
 
 end;
 
+{$IFDEF MSWINDOWS}
 class function TUniFieldX.CheckExistKeyInACCESS(AConstraintType,
   AConstraintName, aTabl, ADataBase: string): Boolean;
 var
@@ -526,6 +532,7 @@ begin
     FreeAndNil(ADOConnection);
   end;
 end;
+{$IFEND}
 
 class function TUniFieldX.ExpSqlInORACLE(aTabl: string): string;
 begin
