@@ -67,25 +67,26 @@ type
     class procedure WritFmt(const Msg: string; Params: array of const);
 
 
-    class function  jsencode(const value: Widestring): Widestring;
-    class function  jsdecode(const value: Widestring): Widestring;
-    class function  HashCode(const value: string):Integer;
+    class function  jsencode(const aValue: Widestring): Widestring;
+    class function  jsdecode(const aValue: Widestring): Widestring;
+    class function  HashCode(const aValue: string):Integer;
 
     class procedure TryFreeAndNil(var AObject);
     class procedure JustCleanList(var AObject);
 
-    class function  DateToInt(Value:TDateTime):Integer;
-    class function  StrToDateX(Value:string):Integer;
-    class function  IntToDateX(Value:Integer):TDateTime;
-    class function  FloatToDate(Value:Extended):TDateTime;
-    class function  FloatToTime(Value:Extended):TDateTime;
+    class function  DateToInt(aValue:TDateTime):Integer;
+    class function  StrToDateX(aValue:string):Integer;
+    class function  IntToDateX(aValue:Integer):TDateTime;
+    class function  FloatToDate(aValue:Extended):TDateTime;
+    class function  FloatToTime(aValue:Extended):TDateTime;
 
-    
     class function  DateIsNull(ADate:TDateTime):Boolean;
-    class function  NumbInRect(ANumb:Integer;APrev,ANext:Integer):Boolean;overload;
-    class function  NumbInRect(ANumb:Extended;APrev,ANext:Extended):Boolean;overload;
-    class function  NumbInRect(ANumb:Integer;AArrayOfChar:array of Char):Boolean;overload;
-    class function  NumbInRect(ANumb:Integer;ABunchOfInteger:string):Boolean;overload;
+
+    class function  NumbInRect(aValue:Integer;aHead,ANext:Integer):Boolean;overload;
+    class function  NumbInRect(aValue:Integer;aArrayOfInteger:array of Integer):Boolean;overload;
+    class function  NumbInRect(aValue:Extended;aHead,ANext:Extended):Boolean;overload;
+    class function  NumbInRect(aValue:Integer;aArrayOfChar:array of Char):Boolean;overload;
+    class function  NumbInRect(aValue:Integer;aBunchOfInteger:string):Boolean;overload;
     {$IFDEF MSWINDOWS}
     class function  InputQueryEx(const ACaption, APrompt: string;var Value: string;IsPassWord:Boolean=True): Boolean;
     {$ENDIF}
@@ -154,14 +155,14 @@ begin
   {$ENDIF}
 end;
 
-class function TKzUtils.FloatToDate(Value: Extended): TDateTime;
+class function TKzUtils.FloatToDate(aValue: Extended): TDateTime;
 var
   TMPA:string;
   TMPB:string;
 begin
   Result:=Unassigned;
-  if Value=0 then Exit;
-  TMPA:=FloatToStr(Value);
+  if aValue=0 then Exit;
+  TMPA:=FloatToStr(aValue);
   TMPB:=Format('%s-%s-%s',[Copy(TMPA,1,4),Copy(TMPA,5,2),Copy(TMPA,7,2)]);
 
 
@@ -186,14 +187,14 @@ begin
     Result:= '';
 end;
 
-class function TKzUtils.FloatToTime(Value: Extended): TDateTime;
+class function TKzUtils.FloatToTime(aValue: Extended): TDateTime;
 var
   cTMP:string;
   dTMP:string;
 begin
   Result:=Unassigned;
-  if Value=0 then Exit;
-  cTMP:=FloatToStr(Value);
+  if aValue=0 then Exit;
+  cTMP:=FloatToStr(aValue);
   //20170303213256->2017-03-07 21:32:56
   dTMP:=Format('%s-%s-%s %s:%s:%s',[Copy(cTMP,1,4),Copy(cTMP,5,2),Copy(cTMP,7,2),Copy(cTMP,9,2),Copy(cTMP,11,2),Copy(cTMP,13,2)]);
 
@@ -370,10 +371,10 @@ begin
   end;
 end;
 
-class function TKzUtils.NumbInRect(ANumb, APrev, ANext: Integer): Boolean;
+class function TKzUtils.NumbInRect(aValue, aHead, ANext: Integer): Boolean;
 begin
   Result:=False;
-  if (ANumb>=APrev) and (ANumb<=ANext) then
+  if (aValue>=aHead) and (aValue<=ANext) then
   begin
     Result:=True;
   end;
@@ -628,17 +629,17 @@ begin
 end;
 {$ENDIF}
 
-class function TKzUtils.NumbInRect(ANumb: Integer;
-  AArrayOfChar: array of Char): Boolean;
+class function TKzUtils.NumbInRect(aValue: Integer;
+  aArrayOfChar: array of Char): Boolean;
 var
   I:Integer;
   CharA:Char;
 begin
   Result:=False;
-  for I:= Low(AArrayOfChar) to High(AArrayOfChar) do
+  for I:= Low(aArrayOfChar) to High(aArrayOfChar) do
   begin
-    CharA:=AArrayOfChar[I];
-    if ANumb = GetOrd(CharA) then
+    CharA:=aArrayOfChar[I];
+    if aValue = GetOrd(CharA) then
     begin
       Result:=True;
       Break;
@@ -651,7 +652,7 @@ begin
   Result:=Ord(UpCase(AChar))-64;
 end;
 
-class function TKzUtils.HashCode(const value: string): Integer;
+class function TKzUtils.HashCode(const aValue: string): Integer;
 var
   I:Integer;
 begin
@@ -678,9 +679,9 @@ begin
 //  }
 
   Result:=0;
-  for I:=1 to Length(value) do
+  for I:=1 to Length(aValue) do
   begin
-    Result:=Result * 31 + Ord(value[I]);
+    Result:=Result * 31 + Ord(aValue[I]);
   end;
 end;
 
@@ -703,14 +704,14 @@ begin
   end;  
 end;
 
-class function TKzUtils.IntToDateX(Value:Integer):TDateTime;
+class function TKzUtils.IntToDateX(aValue:Integer):TDateTime;
 var
   TMPA:string;
   TMPB:string;
 begin
   Result:=Unassigned;
-  if Value=0 then Exit;
-  TMPA:=IntToStr(Value);
+  if aValue=0 then Exit;
+  TMPA:=IntToStr(aValue);
   if Length(TMPA)<>8 then Exit;
   TMPB:=Format('%s-%s-%s',[Copy(TMPA,1,4),Copy(TMPA,5,2),Copy(TMPA,7,2)]);
 
@@ -728,28 +729,48 @@ begin
   end;
 end;
 
-class function TKzUtils.NumbInRect(ANumb: Integer;
-  ABunchOfInteger: string): Boolean;
+class function TKzUtils.NumbInRect(aValue: Integer;
+  aBunchOfInteger: string): Boolean;
 var
   ListA:TStringList;
 begin
   Result:=False;
-  if Trim(ABunchOfInteger)='' then Exit;
+  if Trim(aBunchOfInteger)='' then Exit;
 
   try
     ListA:=TStringList.Create;
-    ListA.CommaText:=ABunchOfInteger;
+    ListA.CommaText:=aBunchOfInteger;
 
-    Result:=ListA.IndexOf(IntToStr(ANumb))<>-1;
+    Result:=ListA.IndexOf(IntToStr(aValue))<>-1;
   finally
     FreeAndNil(ListA);
   end;
 end;
 
-class function TKzUtils.NumbInRect(ANumb, APrev, ANext: Extended): Boolean;
+class function TKzUtils.NumbInRect(aValue: Integer;
+  aArrayOfInteger: array of Integer): Boolean;
+var
+  I:Integer;
+  cValue:Integer;
+begin
+  Result := False;
+
+  for I:= Low(aArrayOfInteger) to High(aArrayOfInteger) do
+  begin
+    cValue:=aArrayOfInteger[I];
+
+    if aValue = cValue then
+    begin
+      Result := True;
+      Break;
+    end;
+  end;
+end;
+
+class function TKzUtils.NumbInRect(aValue, aHead, ANext: Extended): Boolean;
 begin
   Result:=False;
-  if (ANumb>=APrev) and (ANumb<=ANext) then
+  if (aValue>=aHead) and (aValue<=ANext) then
   begin
     Result:=True;
   end;
@@ -816,14 +837,14 @@ begin
   {$ENDIF}
 end;
 
-class function TKzUtils.jsdecode(const value: Widestring): Widestring;
+class function TKzUtils.jsdecode(const aValue: Widestring): Widestring;
 var
   P: PWideChar;
   v: WideChar;
   tmp: Widestring;
 begin
   Result := '';
-  P := PWideChar(value);
+  P := PWideChar(aValue);
   while P^ <> #0 do
   begin
     v := #0;
@@ -860,12 +881,12 @@ begin
   end;
 end;
 
-class function TKzUtils.jsencode(const value: Widestring): Widestring;
+class function TKzUtils.jsencode(const aValue: Widestring): Widestring;
 var
   P: PWideChar;
 begin
   Result := '';
-  P := PWideChar(value);
+  P := PWideChar(aValue);
   while P^ <> #0 do
   begin
     case P^ of
@@ -956,20 +977,20 @@ begin
   end;
 end;
 
-class function TKzUtils.StrToDateX(Value: string): Integer;
+class function TKzUtils.StrToDateX(aValue: string): Integer;
 var
   Format:TFormatSettings;
 begin
   Result:=18991230;
-  if Trim(Value)='' then Exit;
+  if Trim(aValue)='' then Exit;
 
-  if Pos('/',Value)>0 then
+  if Pos('/',aValue)>0 then
   begin
-    Value:=StringReplace(Value,'/','-',[rfReplaceAll]);
+    aValue:=StringReplace(aValue,'/','-',[rfReplaceAll]);
   end;
-  if Pos('.',Value)>0 then
+  if Pos('.',aValue)>0 then
   begin
-    Value:=StringReplace(Value,'.','-',[rfReplaceAll]);
+    aValue:=StringReplace(aValue,'.','-',[rfReplaceAll]);
   end;
 
   try
@@ -979,14 +1000,14 @@ begin
       Format.LongTimeFormat :='hh:mm:ss.zzz';
       Format.DateSeparator  :='-';
       Format.TimeSeparator  :=':';
-      Result:=StrToIntDef(FormatDateTime('YYYYMMDD',StrToDateTime(Value)),18991230);
+      Result:=StrToIntDef(FormatDateTime('YYYYMMDD',StrToDateTime(aValue)),18991230);
     except
       Format.LongDateFormat :='yyyy.mm.dd';
       Format.ShortDateFormat:='yy.mm.dd';
       Format.LongTimeFormat :='hh:mm:ss.zzz';
       Format.DateSeparator  :='.';
       Format.TimeSeparator  :=':';
-      Result:=StrToIntDef(FormatDateTime('YYYYMMDD',StrToDateTime(Value)),18991230);
+      Result:=StrToIntDef(FormatDateTime('YYYYMMDD',StrToDateTime(aValue)),18991230);
     end;
   finally
   end;
@@ -998,7 +1019,7 @@ begin
     Format.LongTimeFormat :='hh:mm:ss.zzz';
     Format.DateSeparator  :='-';
     Format.TimeSeparator  :=':';
-    Result:=StrToIntDef(FormatDateTime('YYYYMMDD',StrToDateTime(Value)),18991230);
+    Result:=StrToIntDef(FormatDateTime('YYYYMMDD',StrToDateTime(aValue)),18991230);
   except
     on E:Exception do
     begin
@@ -1012,7 +1033,7 @@ begin
     Format.LongTimeFormat :='hh:mm:ss.zzz';
     Format.DateSeparator  :='-';
     Format.TimeSeparator  :=':';
-    Result:=StrToIntDef(FormatDateTime('YYYYMMDD',StrToDateTime(Value)),18991230);
+    Result:=StrToIntDef(FormatDateTime('YYYYMMDD',StrToDateTime(aValue)),18991230);
   except
   end;}
 end;
@@ -1025,9 +1046,9 @@ begin
   Result:=GUIDToString(GUID);
 end;
 
-class function TKzUtils.DateToInt(Value: TDateTime): Integer;
+class function TKzUtils.DateToInt(aValue: TDateTime): Integer;
 begin
-  Result:=StrToIntDef(FormatDateTime('YYYYMMDD',Value),18991230);
+  Result:=StrToIntDef(FormatDateTime('YYYYMMDD',aValue),18991230);
 end;
 
 
