@@ -25,7 +25,6 @@ type
 
 implementation
 
-{ TUniEngineExRtti }
 
 function THelprUniEngine.ToJson(doFormat:Boolean): string;
 var
