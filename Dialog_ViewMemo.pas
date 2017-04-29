@@ -4,18 +4,23 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, RzEdit, ExtCtrls,Dialog_View;
+  Dialogs, StdCtrls, RzEdit, ExtCtrls,Dialog_View, RzButton, RzStatus, RzPanel,
+  System.ImageList, Vcl.ImgList;
 
 type
   TDialogViewMemo = class(TDialogView)
-    Panl_1: TPanel;
     Memo_Main: TRzMemo;
-    Btnx_Mrok: TButton;
-    Btnx_Quit: TButton;
-    Btnx_Expt: TButton;
-    procedure Btnx_QuitClick(Sender: TObject);
-    procedure Btnx_MrokClick(Sender: TObject);
+    Tool_Main: TRzToolbar;
+    RzStatusBar1: TRzStatusBar;
+    Panl_Text: TRzStatusPane;
+    Btnv_Mrok: TRzToolButton;
+    Btnv_Quit: TRzToolButton;
+    Btnv_Expt: TRzToolButton;
+    ImageList1: TImageList;
     procedure Btnx_ExptClick(Sender: TObject);
+    procedure Btnv_MrokClick(Sender: TObject);
+    procedure Btnv_ExptClick(Sender: TObject);
+    procedure Btnv_QuitClick(Sender: TObject);
   private
     FTitl:string;
     FMemo:string;
@@ -72,16 +77,6 @@ begin
   end;
 end;              
 
-procedure TDialogViewMemo.Btnx_QuitClick(Sender: TObject);
-begin
-  ModalResult:=mrCancel;
-end;
-
-procedure TDialogViewMemo.Btnx_MrokClick(Sender: TObject);
-begin
-  ModalResult:=mrOk;
-end;
-
 procedure TDialogViewMemo.SetComboItems;
 begin
   inherited;
@@ -92,18 +87,18 @@ procedure TDialogViewMemo.SetCommParams;
 begin
   inherited;
 
-  Btnx_Mrok.Caption:='确定';
-  Btnx_Quit.Caption:='取消';
-  Btnx_Expt.Caption:='导出';
+  Btnv_Mrok.Caption := '确定';
+  Btnv_Quit.Caption := '取消';
+  Btnv_Expt.Caption := '导出';
 
   if Trim(FMrokLabl)<>'' then
   begin
-    Btnx_Mrok.Caption:=FMrokLabl;
+    Btnv_Mrok.Caption := FMrokLabl;
   end;
   if Trim(FQuitLabl)<>'' then
   begin
-    Btnx_Quit.Caption:=FQuitLabl;
-  end;  
+    Btnv_Quit.Caption := FQuitLabl;
+  end;
 end;
 
 procedure TDialogViewMemo.SetGridParams;
@@ -147,6 +142,21 @@ begin
   finally
     FreeAndNil(SD);
   end;
+end;
+
+procedure TDialogViewMemo.Btnv_ExptClick(Sender: TObject);
+begin
+  ExptText;
+end;
+
+procedure TDialogViewMemo.Btnv_MrokClick(Sender: TObject);
+begin
+  ModalResult := mrOk;
+end;
+
+procedure TDialogViewMemo.Btnv_QuitClick(Sender: TObject);
+begin
+  ModalResult := mrCancel;
 end;
 
 procedure TDialogViewMemo.Btnx_ExptClick(Sender: TObject);
