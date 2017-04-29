@@ -3,7 +3,7 @@ unit NetClient;
 interface
 uses
   System.Classes,System.SysUtils,System.Net.HttpClient,System.Net.HttpClientComponent,
-  System.Net.URLClient,Class_EROR;
+  System.Net.URLClient,Class_EROR,System.NetEncoding;
 
 type
   TNetClientResult=(ncrErrorEd,ncrFailure,ncrSuccess);
@@ -119,7 +119,8 @@ begin
     cCount:=Length(aUrlParam) div 2;
     for I := 1 to cCount do
     begin
-      Params.Add(Format('%S=%S',[aUrlParam[I*2-2],aUrlParam[I*2-1]]));
+      //#Params.Add(Format('%S=%S',[aUrlParam[I*2-2],aUrlParam[I*2-1]]));
+      Params.Add(Format('%S=%S',[aUrlParam[I*2-2],System.NetEncoding.TNetEncoding.URL.Encode(aUrlParam[I*2-1])]));
     end;
 
 
