@@ -124,7 +124,14 @@ begin
 
 
     Result:=ncrErrorEd;
-    Return:=self.FNhClient.Post(ToUrls,Params);
+    try
+      Return:=self.FNhClient.Post(ToUrls,Params);
+    except
+      on E:Exception do
+      begin
+        Error := E.Message;
+      end;
+    end;
     if Return<>nil then
     begin
       FValue:=Return.ContentAsString;
