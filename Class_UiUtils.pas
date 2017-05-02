@@ -56,10 +56,11 @@ type
     class procedure SetItemNextChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
     class procedure SetItemPrevChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
     //eltree.common
-    class function  GetTreeItemCheckedCount(ATree:TElTree;ACheckChild:Boolean=False):Integer;
+    class function  GetSizeItemChked(ATree:TElTree;ACheckChild:Boolean=False):Integer;
     class procedure SetTreeItemCheckedState(AValue,ALastLevl:Boolean;ATree:TElTree);
     class function  GetMaxLevelInTreeView(ATree:TElTree):Integer;
     class procedure TreeIndex(ATree:TElTree);
+    class procedure TreeInit(aTree:TElTree);
   public
     //frxreport
     class function  GetfrxReportPage(Afrxreport:TfrxReport):string;
@@ -427,7 +428,7 @@ begin
   end;
 end;
 
-class function TUiUtils.GetTreeItemCheckedCount(ATree: TElTree;
+class function TUiUtils.GetSizeItemChked(ATree: TElTree;
   ACheckChild: Boolean): Integer;
 var
   I:Integer;
@@ -533,6 +534,20 @@ begin
   end;
 end;
 
+
+class procedure TUiUtils.TreeInit(aTree: TElTree);
+begin
+  with aTree do
+  begin
+    Items.Clear;
+    ShowColumns := True;
+    LockHeaderHeight := True;
+    AutoLineHeight   := False;
+    LineHeight       := 22;
+    HeaderHeight     := 22;
+    HeaderSections.Item[0].Width := aTree.Width - 40;
+  end;
+end;
 
 class procedure TUiUtils.WhenEditExit(Sender: TObject);
 begin

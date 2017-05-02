@@ -124,6 +124,7 @@ begin
     end;
 
 
+    KzDebug.FileFmt('%S:%S',[self.ClassName,params.Text]);
     Result:=ncrErrorEd;
     try
       Return:=self.FNhClient.Post(ToUrls,Params);
