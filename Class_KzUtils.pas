@@ -75,6 +75,7 @@ type
     class procedure JustCleanList(var AObject);
 
     class function  DateToInt(aValue:TDateTime):Integer;
+    class function  DateToFloat(aValue:TDateTime):Extended;
     class function  StrToDateX(aValue:string):Integer;
     class function  IntToDateX(aValue:Integer):TDateTime;
     class function  FloatToDate(aValue:Extended):TDateTime;
@@ -693,6 +694,11 @@ begin
   begin
     Result:=ATrue;
   end;
+end;
+
+class function TKzUtils.DateToFloat(aValue: TDateTime): Extended;
+begin
+  Result:=StrToFloatDef(FormatDateTime('YYYYMMDDHHMMSS',aValue),0);
 end;
 
 class function TKzUtils.DateIsNull(ADate: TDateTime): Boolean;
