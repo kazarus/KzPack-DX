@@ -207,7 +207,7 @@ begin
       if ViewCellHead(FCellHead,cHead)=Mrok then
       begin
         Objects[ACol,1] := cHead;
-        Cells [ACol, 1] := cHead.HeadName;
+        Cells  [ACol,1] := cHead.HeadName;
         Alignments[ACol,1] := taCenter;
       end;
     end;
