@@ -11,6 +11,7 @@ object FormListLoad: TFormListLoad
   Font.Name = #23435#20307
   Font.Style = []
   OldCreateOrder = False
+  OnActivate = FormActivate
   PixelsPerInch = 96
   TextHeight = 13
   object Grid_Data: TAdvStringGrid
@@ -126,13 +127,24 @@ object FormListLoad: TFormListLoad
     SelectionColor = clHighlight
     SelectionTextColor = clHighlightText
     SortSettings.DefaultFormat = ssAutomatic
-    Version = '7.8.4.0'
+    Version = '8.1.3.0'
     ColWidths = (
       64
       64
       64
       64
       64)
+    RowHeights = (
+      22
+      22
+      22
+      22
+      22
+      22
+      22
+      22
+      22
+      22)
   end
   object Panl_1: TRzStatusBar
     Left = 0
@@ -228,7 +240,7 @@ object FormListLoad: TFormListLoad
     Left = 184
     Top = 157
     Bitmap = {
-      494C010103000800300010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800340010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -368,7 +380,7 @@ object FormListLoad: TFormListLoad
       000000000000}
   end
   object XLSReadWriteII51: TXLSReadWriteII5
-    ComponentVersion = '5.20.46'
+    ComponentVersion = '5.20.62'
     Version = xvExcel2007
     DirectRead = False
     DirectWrite = False

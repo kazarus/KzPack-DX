@@ -31,6 +31,7 @@ type
     procedure Grid_DataCanEditCell(Sender: TObject; ARow, ACol: Integer;
       var CanEdit: Boolean);
     procedure Grid_DataDblClickCell(Sender: TObject; ARow, ACol: Integer);
+    procedure FormActivate(Sender: TObject);
   private
     FClasName:string;
     FLoadCnfg:TLoadCnfg;//*
@@ -185,6 +186,11 @@ begin
 
     FCellHead.AddObject(xHead.HeadName,xHead);
   end;
+end;
+
+procedure TFormListLoad.FormActivate(Sender: TObject);
+begin
+  Btnv_CnfgClick(Btnv_Cnfg);
 end;
 
 procedure TFormListLoad.Grid_DataCanEditCell(Sender: TObject; ARow,
