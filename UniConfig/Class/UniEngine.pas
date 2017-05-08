@@ -24,7 +24,10 @@ unit UniEngine;
   public
     function  CheckExist(AUniConnection:TUniConnection):Boolean;override;       
   public
-    class function ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
+    class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
+  public
+    class function  CopyIt(aUniEngine:TUniEngine):TUniEngine;overload;override;
+    class procedure CopyIt(aUniEngine:TUniEngine;var Result:TUniEngine)overload;override;
 }
 
 interface
@@ -68,6 +71,7 @@ type
 
     function  CheckExist(AUniConnection:TUniConnection):Boolean;overload;virtual;
 
+    //@replace with qjson
     //#function  TOJSON(AOperateType:TOperateType=otNormal):string;overload;
     //#procedure INJSON(AValue:string);overload;
     procedure TONODE(aNode:IXMLNode);overload;
@@ -102,16 +106,27 @@ type
     class procedure ListDB(ASQL:string;AUniConnection:TUniConnection;var Result:TCollection;withSorted:Boolean=False);overload;virtual;
     class procedure ListDB(ASQL:string;Fields:array of string;AUniConnection:TUniConnection;var Result:TStringList;withSorted:Boolean=False);overload;virtual;
 
-    //#class function  TOJSON(AList:TStringList;AOperateType:TOperateType=otNormal):string;overload;
+
+    //@replace with qjson
+    //#class function  TOJSON(aList:TStringList;AOperateType:TOperateType=otNormal):string;overload;
     //#class function  TOJSON(AObjt:TUniEngine;AOperateType:TOperateType=otNormal):string;overload;
-    //#class procedure INJSON(AValue:string;AClass:TUniEngineClass;var AList:TStringList;ACleanList:Boolean=True);overload;
+    //#class procedure INJSON(AValue:string;AClass:TUniEngineClass;var aList:TStringList;ACleanList:Boolean=True);overload;
     //#class procedure INJSON(AValue:string;AClass:TUniEngineClass;var AObjt:TUniEngine;ACleanList:Boolean=True);overload;
 
-    class procedure STRIDX(Args:array of string;AList:TStringList;ASeparator:string;withQuoted:Boolean=False);overload;
-    class function  STRDIY(Args:array of string;AList:TStringList;ASeparator:string=',';withQuoted:Boolean=False):string;overload;
-    class function  STRDIY(Args:array of string;AList:TCollection;ASeparator:string=',';BSeparator:string='-';withQuoted:Boolean=False):string;overload;
 
-    class procedure ToHash(aList:TCollection;var bList:TStringList);
+    class procedure STRIDX(Args:array of string;aList:TStringList;ASeparator:string;withQuoted:Boolean=False);overload;
+    class function  STRDIY(Args:array of string;aList:TStringList;ASeparator:string=',';withQuoted:Boolean=False):string;overload;
+    class function  STRDIY(Args:array of string;aList:TCollection;ASeparator:string=',';BSeparator:string='-';withQuoted:Boolean=False):string;overload;
+
+
+    //#s:source;t:target
+    //#tstringlist->
+    class procedure CopyIt(sList:TStringList;var tList:TCollection);overload;
+    class procedure CopyIt(sList:TStringList;var tList:TStringList;aClass:TUniEngineClass);overload;
+    //#tcollection->
+    class procedure CopyIt(sList:TCollection;var tList:TCollection);overload;
+    class procedure CopyIt(sList:TCollection;var tList:TStringList;aClass:TUniEngineClass);overload;
+
 
     class function  GetUniQuery(ASQL:string;AUniConnection:TUniConnection):TUniQuery;overload;
     class function  GetUniQuery(ASQL:string):TUniQuery;overload;
@@ -145,8 +160,6 @@ implementation
 uses
   UniConfig;
 
-
-{ TUniEngine }
 
 class function TUniEngine.CheckExist(ATable: string;
   Args: array of Variant): Boolean;
@@ -410,10 +423,6 @@ begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.StrsDB] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
 
-class procedure TUniEngine.ToHash(aList: TCollection; var bList: TStringList);
-begin
-  //#
-end;
 
 procedure TUniEngine.TONODE(aNode: IXMLNode);
 var
@@ -799,6 +808,51 @@ begin
   end;
 end;
 
+class procedure TUniEngine.CopyIt(sList: TStringList; var tList: TCollection);
+var
+  I:Integer;
+
+  cObject:TUniEngine;
+  xObject:TUniEngine;
+begin
+  if tList = nil then Exit;
+
+  if (sList = nil) or (sList.Count = 0) then Exit;
+  //for I:=0 to sList.Count -1 do
+
+  for I := 0 to sList.Count -1 do
+  begin
+    cObject := TUniEngine(sList.Objects[I]);
+
+    xObject := TUniEngine(tList.Add);
+    cObject.CopyIt(cObject,xObject);
+  end;
+end;
+
+
+class procedure TUniEngine.CopyIt(sList: TStringList; var tList: TStringList;aClass:TUniEngineClass);
+var
+  I:Integer;
+
+  cObject:TUniEngine;
+  xObject:TUniEngine;
+begin
+  if tList = nil then Exit;
+
+  if (sList = nil) or (sList.Count = 0) then Exit;
+  //for I:=0 to sList.Count -1 do
+
+  for I := 0 to sList.Count -1 do
+  begin
+    cObject := TUniEngine(sList.Objects[I]);
+
+    xObject :=  aClass.Create;
+    xObject.CopyIt(cObject,xObject);
+    tList.AddObject(xObject.GetStrsIndex,xObject);
+  end;
+end;
+
+
 class function TUniEngine.ExistConst(AConstraintType,
   AConstraintName: string; AUniConnection: TUniConnection): Boolean;
 begin
@@ -1033,7 +1087,7 @@ begin
 
 end;
 
-//class function TUniEngine.TOJSON(AList: TStringList;AOperateType:TOperateType): string;
+//class function TUniEngine.TOJSON(aList: TStringList;AOperateType:TOperateType): string;
 //var
 //  I,M,N:Integer;
 //  Instance:TUniEngine;
@@ -1047,11 +1101,11 @@ end;
 //begin
 //  Result:='';
 //
-//  if (AList=nil) or (AList.Count=0) then Exit;
+//  if (aList=nil) or (aList.Count=0) then Exit;
 //
-//  for I:=0 to AList.Count -1 do
+//  for I:=0 to aList.Count -1 do
 //  begin
-//    Instance:=TUniEngine(AList.Objects[I]);
+//    Instance:=TUniEngine(aList.Objects[I]);
 //
 //    TMPA:='';
 //    M:=GetPropList(Instance,PropList);
@@ -1081,7 +1135,7 @@ end;
 //  Result:=Format('[%S]',[Result]);
 //end;
 
-//class procedure TUniEngine.INJSON(AValue:string;AClass:TUniEngineClass;var AList: TStringList;ACleanList:Boolean);
+//class procedure TUniEngine.INJSON(AValue:string;AClass:TUniEngineClass;var aList: TStringList;ACleanList:Boolean);
 //var
 //  I,M,N:Integer; //for avlaue
 //  X,Y,Z:Integer; //for rtti
@@ -1105,10 +1159,10 @@ end;
 //    if Y=0 then Exit;
 //
 //    //make it clean and sorted is false.
-//    if (AList=nil) then Exit;
+//    if (aList=nil) then Exit;
 //    if ACleanList  then
 //    begin
-//      TKzUtils.JustCleanList(AList);
+//      TKzUtils.JustCleanList(aList);
 //    end;
 //    //make sure the list.sort = false. otherwise, it will be igonre same strsindex. code as follow.
 //    {if not Sorted then
@@ -1120,7 +1174,7 @@ end;
 //          dupError: Error(@SDuplicateString, 0);
 //        end;
 //    InsertItem(Result, S, AObject);}
-//    AList.Sorted:=False;
+//    aList.Sorted:=False;
 //
 //    //delete head and tail
 //    if AValue[1]='[' then
@@ -1163,7 +1217,7 @@ end;
 //        end;
 //      end;
 //
-//      AList.AddObject(Instance.GetStrsIndex,Instance);
+//      aList.AddObject(Instance.GetStrsIndex,Instance);
 //      FreeAndNil(ListB);
 //    end;
 //  finally
@@ -1173,19 +1227,19 @@ end;
 //end;
 
 class procedure TUniEngine.STRIDX(Args: array of string;
-  AList: TStringList; ASeparator: string; withQuoted:Boolean);
+  aList: TStringList; ASeparator: string; withQuoted:Boolean);
 var
   I,M  :Integer;
   NameA:string;
   TMPA:string;
   Instance:TUniEngine;
 begin
-  if (AList=nil) or (AList.Count=0) then Exit;
-  AList.Sorted:=False;
+  if (aList=nil) or (aList.Count=0) then Exit;
+  aList.Sorted:=False;
 
-  for I:=0 to AList.Count-1 do
+  for I:=0 to aList.Count-1 do
   begin
-    Instance:=TUniEngine(AList.Objects[I]);
+    Instance:=TUniEngine(aList.Objects[I]);
     if Instance=nil then Continue;
 
     TMPA:='';
@@ -1206,16 +1260,16 @@ begin
 
     if withQuoted then
     begin
-      AList.Strings[I]:=QuotedStr(TMPA);
+      aList.Strings[I]:=QuotedStr(TMPA);
     end else
     begin
-      AList.Strings[I]:=TMPA;
+      aList.Strings[I]:=TMPA;
     end;
   end;
 end;
 
 class function TUniEngine.STRDIY(Args: array of string;
-  AList: TStringList;ASeparator: string;withQuoted:Boolean): string;
+  aList: TStringList;ASeparator: string;withQuoted:Boolean): string;
 var
   I,M:Integer;
   Instance:TUniEngine;
@@ -1223,11 +1277,11 @@ var
   TMPA:string;
 begin
   Result:='';
-  if (AList=nil) or (AList.Count=0) then Exit;
+  if (aList=nil) or (aList.Count=0) then Exit;
 
-  for I:=0 to AList.Count -1 do
+  for I:=0 to aList.Count -1 do
   begin
-    Instance:=TUniEngine(AList.Objects[I]);
+    Instance:=TUniEngine(aList.Objects[I]);
     if Instance=nil then Continue;
 
     TMPA:='';
@@ -1486,7 +1540,7 @@ begin
   end;
 end;
 
-class function TUniEngine.STRDIY(Args: array of string; AList: TCollection;
+class function TUniEngine.STRDIY(Args: array of string; aList: TCollection;
   ASeparator: string; BSeparator:string; withQuoted: Boolean): string;
 var
   I,M:Integer;
@@ -1495,11 +1549,11 @@ var
   TMPA:string;
 begin
   Result:='';
-  if (AList=nil) or (AList.Count=0) then Exit;
+  if (aList=nil) or (aList.Count=0) then Exit;
 
-  for I:=0 to AList.Count -1 do
+  for I:=0 to aList.Count -1 do
   begin
-    Instance:=TUniEngine(AList.Items[I]);
+    Instance:=TUniEngine(aList.Items[I]);
     if Instance=nil then Continue;
 
     TMPA:='';
@@ -1521,6 +1575,43 @@ begin
   end;
   
   Delete(Result,1,Length(ASeparator));
+end;
+
+class procedure TUniEngine.CopyIt(sList: TCollection; var tList: TCollection);
+var
+  I:Integer;
+  cObject:TUniEngine;
+  xObject:TUniEngine;
+begin
+  if tList = nil then Exit;
+  if (sList = nil) or (sList.Count = 0) then Exit;
+
+  for I := 0 to sList.Count-1 do
+  begin
+    cObject := TUniEngine(sList.Items[I]);
+
+    xObject := TUniEngine(tList.Add);
+    cObject.CopyIt(cObject,xObject);
+  end;
+end;
+
+class procedure TUniEngine.CopyIt(sList: TCollection; var tList: TStringList;aClass:TUniEngineClass);
+var
+  I:Integer;
+  cObject:TUniEngine;
+  xObject:TUniEngine;
+begin
+  if tList = nil then Exit;
+  if (sList = nil) or (sList.Count = 0) then Exit;
+
+  for I := 0 to sList.Count-1 do
+  begin
+    cObject := TUniEngine(sList.Items[I]);
+
+    xObject :=  aClass.Create;
+    xObject.CopyIt(cObject,xObject);
+    tList.AddObject(xObject.GetStrsIndex,xObject);
+  end;
 end;
 
 end.
