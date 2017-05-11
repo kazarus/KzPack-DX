@@ -59,7 +59,7 @@ begin
     Result:=FormPickNode.ShowModal;
     if Result = Mrok then
     begin
-
+      FormPickNode.ReadNode(aList);
     end;
   finally
     FreeAndNil(FormPickNode);

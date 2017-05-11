@@ -48,8 +48,7 @@ var
     for I := 0 to aList.Count-1  do
     begin
       xNode := TCellNode(aList.Objects[I]);
-      if xNode.DataINDX = aNode.DataINDX then Continue;                           //如果是自已,拉倒.
-      //@if (xNode.Left = xNode.Right) and (xNode.Top = xNode.Bottom) then  Continue;//如果非合并,拉倒.
+      if xNode.DataINDX = aNode.DataINDX then Continue;                         //如果是自已,拉倒.
 
       if cNode.Top-1 = xNode.Bottom then
       begin
@@ -109,13 +108,8 @@ begin
       cItem:=MergedCells.Items[I];
       if cItem=nil then Continue;
 
-      //#if not Selection.HasArea(cItem.Area) then Continue;
-
-      //#KzDebug.FileFmt('%S',[Trim(cItem.ActiveCell.DisplayText)]);
       with cItem.Area do
       begin
-        //#KzDebug.FileFmt('%S:%D:%D:%D:%D:%S',[self.ClassName,LEFT,RIGHT,TOP,BOTTOM,Trim(cItem.ActiveCell.DisplayText)]);
-
         cNode := TCellNode.Create;
         cNode.Col := cItem.Area.Left;
         cNode.Row := cItem.Area.Top;
@@ -127,13 +121,7 @@ begin
       end;
 
       cIndx := aList.IndexOf(Format('%D-%D',[cNode.Col,cNode.Row]));
-      if cIndx = -1 then
-      begin
-        //#xNode := TCellNode.Create;
-        //#TCellNode.CopyIt(cNode,xNode);
-
-        //#aList.AddObject(Format('%D-%D',[xNode.Col,xNode.Row]),xNode);
-      end else
+      if cIndx <> -1 then
       begin
         xNode := TCellNode(aList.Objects[cIndx]);
         if xNode <> nil then
@@ -141,6 +129,8 @@ begin
           TCellNode.CopyIt(cNode,xNode);
         end;
       end;
+
+      FreeAndNil(cNode);
     end;
   end;
 
@@ -149,8 +139,6 @@ begin
     cNode := TCellNode(aList.Objects[I]);
     if cNode = nil then Continue;
     cNode.DataINDX := I+1;
-
-    //#KzDebug.FileFmt('%S:%D:%D:%D:%D:%D:%D:%S',[self.ClassName,cNode.Col,cNode.Row,cNode.Left,cNode.Right,cNode.Top,cNode.Bottom,cNode.Text]);
   end;
 
   for I := 0 to aList.Count-1 do
@@ -159,20 +147,7 @@ begin
     if cNode = nil then Continue;
     cNode.DataINDX := I+1;
     cNode.ParentID := FindNext(cNode);
-
-    //#KzDebug.FileFmt('%S:%D:%D:%D:%D:%D:%D:%S',[self.ClassName,cNode.Col,cNode.Row,cNode.Left,cNode.Right,cNode.Top,cNode.Bottom,cNode.Text]);
   end;
-
-  for I := 0 to aList.Count-1 do
-  begin
-    cNode := TCellNode(aList.Objects[I]);
-    if cNode = nil then Continue;
-
-    KzDebug.FileFmt('%S:%D:%D:%D:%D:%D:%D:%S_DATAINDX:%D_PARENTID:%D',[self.ClassName,cNode.Col,cNode.Row,cNode.Left,cNode.Right,cNode.Top,cNode.Bottom,cNode.Text,cNode.DataINDX,cNode.ParentID]);
-  end;
-
-
-
 
   Result := True;
 end;
