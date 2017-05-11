@@ -36,6 +36,8 @@ type
     procedure TryFreeAndNil;override;
   public
     procedure ViewPath;
+  public
+    procedure ReadNode(var aList:TStringList);
   end;
 
 var
@@ -45,6 +47,9 @@ function ViewPickNode(var aList:TStringList):Integer;
 
 implementation
 
+uses
+  XlsImport.NodeManager;
+
 {$R *.dfm}
 
 function ViewPickNode(var aList:TStringList):Integer;
@@ -52,6 +57,10 @@ begin
   try
     FormPickNode:=TFormPickNode.Create(nil);
     Result:=FormPickNode.ShowModal;
+    if Result = Mrok then
+    begin
+
+    end;
   finally
     FreeAndNil(FormPickNode);
   end;
@@ -70,6 +79,11 @@ end;
 procedure TFormPickNode.Btnv_ViewClick(Sender: TObject);
 begin
   ViewPath;
+end;
+
+procedure TFormPickNode.ReadNode(var aList: TStringList);
+begin
+  TNodeManager.ReadNode(Excl_Main,aList);
 end;
 
 procedure TFormPickNode.SetComboItems;
@@ -96,7 +110,7 @@ end;
 procedure TFormPickNode.SetInitialize;
 begin
   inherited;
-
+  Btnv_ViewClick(Btnv_View);
 end;
 
 procedure TFormPickNode.TryFreeAndNil;
