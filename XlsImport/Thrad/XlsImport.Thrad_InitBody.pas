@@ -1,9 +1,9 @@
-unit Thrad_InitBody;
+unit XlsImport.Thrad_InitBody;
 
 interface
 
 uses
-  Classes,SysUtils,Class_KzThrad,AdvGrid,IniFiles,Class_Cell_Rows;
+  Classes,SysUtils,Class_KzThrad,AdvGrid,IniFiles,XlsImport.Class_Cell_Rows;
 
 type
   TThradInitBody = class(TKzThrad)

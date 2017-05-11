@@ -1,4 +1,4 @@
-unit Class_Load_Cnfg;
+unit XlsImport.Class_Load_Cnfg;
 //#XlsImport
 
 interface

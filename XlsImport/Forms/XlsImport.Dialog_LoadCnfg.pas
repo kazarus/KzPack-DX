@@ -1,4 +1,4 @@
-unit Dialog_LoadCnfg;
+unit XlsImport.Dialog_LoadCnfg;
 //#XlsImport
 
 interface
@@ -6,7 +6,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Dialog_View, StdCtrls, RzLabel, Mask, RzEdit, RzBtnEdt,
-  Class_Load_Cnfg,Uni,UniConnct, RzCmboBx;
+  XlsImport.Class_Load_Cnfg,Uni,UniConnct, RzCmboBx;
 
 type
   TDialogLoadCnfg = class(TDialogView)

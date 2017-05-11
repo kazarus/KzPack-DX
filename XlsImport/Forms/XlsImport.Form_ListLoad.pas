@@ -1,15 +1,15 @@
-﻿unit Form_ListLoad;
+﻿unit XlsImport.Form_ListLoad;
 //#XlsImport
 
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RzPanel, RzStatus, Vcl.ExtCtrls,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RzPanel, RzStatus, Vcl.ExtCtrls,
   Vcl.Grids, AdvObj, BaseGrid, AdvGrid, System.ImageList, Vcl.ImgList, RzButton,
-  FormEx_View,Class_Load_Cnfg,System.DateUtils, XLSSheetData5, XLSReadWriteII5,Xc12Utils5,
-  System.IniFiles,Class_Cell_Rows,Class_KzThrad,Thrad_InitBody,Class_Cell_Head,
-  qjson;
+  FormEx_View, XlsImport.Class_Load_Cnfg, System.DateUtils, XLSSheetData5,
+  XLSReadWriteII5, Xc12Utils5, System.IniFiles, XlsImport.Class_Cell_Rows,
+  Class_KzThrad, XlsImport.Thrad_InitBody, XlsImport.Class_Cell_Head, qjson;
 
 type
   TFormListLoad = class(TFormExView)
@@ -77,7 +77,7 @@ function ViewListLoad(aClasName:string;aCellHead:TStringList;var Value:string):I
 implementation
 
 uses
-  Class_KzUtils,Class_UiUtils,Helpr_UniEngine,Dialog_LoadCnfg,Dialog_CellHead;
+  Class_KzUtils,Class_UiUtils,Helpr_UniEngine,XlsImport.Dialog_LoadCnfg,XlsImport.Dialog_CellHead;
 
 {$R *.dfm}
 

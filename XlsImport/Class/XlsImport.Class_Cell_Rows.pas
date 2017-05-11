@@ -1,4 +1,4 @@
-unit Class_Cell_Rows;
+unit XlsImport.Class_Cell_Rows;
 //#XlsImport
 
 interface

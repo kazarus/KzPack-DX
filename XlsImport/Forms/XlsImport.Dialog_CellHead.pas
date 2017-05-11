@@ -1,4 +1,4 @@
-unit Dialog_CellHead;
+unit XlsImport.Dialog_CellHead;
 //#XlsImport
 
 interface
@@ -6,7 +6,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Grids, AdvObj,
-  BaseGrid, AdvGrid,Class_Cell_Head,Dialog_View, Vcl.StdCtrls;
+  BaseGrid, AdvGrid,XlsImport.Class_Cell_Head,Dialog_View, Vcl.StdCtrls;
 
 type
   TDialogCellHead = class(TDialogView)
