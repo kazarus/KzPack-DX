@@ -7,13 +7,13 @@ uses
 type
   TLandCell=class(TObject)
   public
-    ColIndex:Integer;
-    RowIndex:Integer;
-    SpanX   :Integer;
-    SpanY   :Integer;
-    CellText:string;
-    ObjtData:Pointer;
-    IsLasted:Boolean;
+    Col: Integer;
+    Row: Integer;
+    SpanX: Integer;
+    SpanY: Integer;
+    Text: string;
+    Data: Pointer;
+    IsLasted: Boolean;
   public
     constructor Create;
   end;

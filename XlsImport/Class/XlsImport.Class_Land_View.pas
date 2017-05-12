@@ -7,9 +7,9 @@ uses
 type
   TLandView=class(TObject)
   public
-    ColTotal:Integer;
-    ListCell:TStringList;
-    IsReadied :Boolean;
+    iReadied: Boolean;
+    ColTotal: Integer;
+    ListCell: TStringList;
   public
     procedure Initialize;
   public
@@ -22,7 +22,7 @@ type
 implementation
 
 uses
-  Class_KzUtils,XlsImport.Class_Land_Cell;
+  Class_KzUtils,XlsImport.Class_Land_Cell,Class_KzDebug;
 
 constructor TLandView.Create;
 begin
@@ -38,19 +38,19 @@ end;
 procedure TLandView.Initialize;
 begin
   ColTotal := 0;
-  IsReadied :=False;
+  iReadied := False;
   TKzUtils.JustCleanList(ListCell);
 end;
 
 
 class function TLandView.ReadView(aMaxLevel:Integer;aTree: TElTree;var aLandView: TLandView): Boolean;
 var
-  I,M:Integer;
-  cIndx:Integer;
-  cItem:TElTreeItem;
-  dItem:TElTreeItem;
-  cCell:TLandCell;
-  dCell:TLandCell;
+  I, M: Integer;
+  cIndx: Integer;
+  cItem: TElTreeItem;
+  dItem: TElTreeItem;
+  cCell: TLandCell;
+  dCell: TLandCell;
 
   function GetSpanX(aItem:TEltreeItem):Integer;
   var
@@ -71,54 +71,6 @@ var
       end;
     end;
   end;
-
-  procedure AddCells(aItem:TelTreeItem;aIndx:Integer);
-  var
-    X:Integer;
-    xIndx:Integer;
-  begin
-    xIndx:=aIndx;
-
-    for X:=0 to aItem.Count-1 do
-    begin
-      dItem:=aItem.Item[X];
-
-      if not dItem.HasChildren then
-      begin
-        dCell:=TLandCell.Create;
-        dCell.ColIndex:=xIndx;
-        dCell.RowIndex:=dItem.Level;
-        dCell.CellText:=dItem.Text;
-        dCell.SpanX   :=1;
-        dCell.SpanY   :=1;
-        dCell.SpanY   :=aMaxLevel - dItem.Level;
-
-        dCell.ObjtData:=dItem.Data;
-        dCell.IsLasted:=not dItem.HasChildren;
-
-        aLandView.ListCell.AddObject('',dCell);
-
-        Inc(xIndx);
-      end else
-      begin
-        dCell:=TLandCell.Create;
-        dCell.ColIndex:=xIndx;
-        dCell.RowIndex:=dItem.Level;
-        dCell.CellText:=dItem.Text;
-        dCell.SpanX   :=1;
-        dCell.SpanY   :=1;
-        dCell.SpanX   :=GetSpanX(dItem);
-
-        dCell.ObjtData:=dItem.Data;
-        dCell.IsLasted:=not dItem.HasChildren;
-
-        aLandView.ListCell.AddObject('',dCell);
-
-        AddCells(dItem,xIndx);
-      end;
-    end;
-  end;
-
 begin
   if aLandView=nil then Exit;
 
@@ -126,49 +78,32 @@ begin
 
   with aTree do
   begin
-    for I:=0 to Items.RootCount-1 do
+    for I:=0 to Items.Count-1 do
     begin
-      cItem:=Items.RootItem[I];
+      cItem:=Items.Item[I];
+      if cItem = nil then Continue;
+
+      cCell := TLandCell.Create;
+      cCell.Col := cIndx;
+      cCell.Row := cItem.Level;
+      cCell.SpanX := GetSpanX(cItem);
+      cCell.SpanY := 1;
       if not cItem.HasChildren then
       begin
-        cCell:=TLandCell.Create;
-        cCell.ColIndex:=cIndx;
-        cCell.RowIndex:=0;
-        cCell.CellText:=cItem.Text;
-        cCell.SpanX   :=1;
-        cCell.SpanY   :=aMaxLevel - cItem.Level;
-
-        cCell.ObjtData:=cItem.Data;
-        cCell.IsLasted:=not cItem.HasChildren;
-
-        aLandView.ListCell.AddObject('',cCell);
+        cCell.SpanY := aMaxLevel - cItem.Level;
+        cCell.IsLasted := True;
 
         Inc(cIndx);
-      end else
-      begin
-        cCell:=TLandCell.Create;
-        cCell.ColIndex:=cIndx;
-        cCell.RowIndex:=0;
-        cCell.CellText:=cItem.Text;
-        cCell.SpanX   :=1;
-        cCell.SpanY   :=1;
-        cCell.SpanX   :=GetSpanX(cItem);
-
-        cCell.ObjtData:=cItem.Data;
-        cCell.IsLasted:=not cItem.HasChildren;
-
-        aLandView.ListCell.AddObject('',cCell);
-
-        AddCells(cItem,cIndx);
-
-        cIndx:=cIndx+cCell.SpanX;
       end;
+      cCell.Text := cItem.Text;
+
+      aLandView.ListCell.AddObject('',cCell);
     end;
 
     aLandView.ColTotal := cIndx;
   end;
 
-  aLandView.IsReadied := True;
+  aLandView.iReadied := True;
 end;
 
 end.
