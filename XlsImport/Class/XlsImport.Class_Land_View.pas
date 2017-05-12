@@ -108,3 +108,66 @@ begin
 end;
 
 end.
+
+{
+var
+  I:Integer;
+  Path:string;
+  cItem:TElTreeItem;
+  pItem:TElTreeItem;
+  cIndx:Integer;
+  sIndx:string;
+  pIndx:Integer;
+  Value:Integer;
+  cHash:THashedStringList;//*
+begin
+  //#
+  {with Tree_View do
+  begin
+    if Selected = nil  then Exit;
+
+    Path := Selected.Text;
+    pItem := Selected.Parent;
+    while  pItem <> nil do
+    begin
+      Path := pItem.Text + '\' + Path;
+      pItem := pItem.Parent;
+    end;
+    ShowMessageFmt('%S',[Path]);
+  end;}
+
+  {#cHash := THashedStringList.Create;
+
+  with Tree_View do
+  begin
+    for I := 0 to Items.Count-1 do
+    begin
+      cItem := Items.Item[I];
+      cItem.Tag := I;
+
+
+      pIndx := 0;
+      if cItem.Parent <> nil then
+      begin
+        pIndx := cItem.Parent.Tag;
+      end;
+
+      sIndx := Format('%D-%D',[pIndx,cItem.Level]);
+
+      cIndx := cHash.IndexOfName(sIndx);
+      if cIndx = -1 then
+      begin
+        cHash.Add(Format('%S=%D',[sIndx,1]));
+        cItem.Text := TKzUtils.FormatCode(1,2);
+      end else
+      begin
+        Value := StrToInt(cHash.Values[sIndx]);
+        Inc(Value);
+        cItem.Text := TKzUtils.FormatCode(Value,2);
+        cHash.Values[sIndx]:=IntToStr(Value);
+      end;
+    end;
+  end;
+
+  FreeAndNil(cHash);}
+end;}
