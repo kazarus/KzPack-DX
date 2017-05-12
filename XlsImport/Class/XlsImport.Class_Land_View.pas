@@ -95,6 +95,7 @@ begin
 
         Inc(cIndx);
       end;
+      cCell.Data := cItem.Data;
       cCell.Text := cItem.Text;
 
       aLandView.ListCell.AddObject('',cCell);
