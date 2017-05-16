@@ -22,8 +22,8 @@ implementation
 
 constructor TLandCell.Create;
 begin
-  SpanX:=1;
-  SpanY:=1;
+  SpanX := 1;
+  SpanY := 1;
 end;
 
 end.

@@ -3,7 +3,7 @@ unit Class_UiUtils;
 
 interface
 uses
-  Classes,SysUtils,AdvGrid,frxClass,ElTree,Math,Graphics,RzBtnEdt;
+  Classes,SysUtils,AdvGrid,frxClass,ElTree,Math,Graphics,RzBtnEdt,IniFiles;
 
 type
   TUiUtils=class(TObject)
@@ -36,7 +36,7 @@ type
     class procedure SetGridCellChked(AAdvGrid:TAdvStringGrid;ACol:Integer;AValue:Boolean);
 
     class procedure ClearGrid(AGrid:TAdvStringGrid;ARowCount:Integer;ADefaultRowCount:Integer=2);
-    class procedure CellIndex(AGrid:TAdvStringGrid;ACol:Integer;ARowStart:Integer=1;ARowEnd:Integer=-1);
+    class procedure CellIndex(AGrid:TAdvStringGrid;ACol:Integer=0;ARowStart:Integer=1;ARowEnd:Integer=-1);
 
     class procedure HeadIndex(AGrid:TAdvStringGrid;ARow:Integer=0);
 
@@ -61,6 +61,8 @@ type
     class function  GetMaxLevelInTreeView(ATree:TElTree):Integer;
     class procedure TreeIndex(ATree:TElTree);
     class procedure TreeInit(aTree:TElTree);
+    class function  GetNamePath(aNameDash:string;aItem:TElTreeItem;aTree:TElTree):string;
+    class procedure GetCodePath(aCodeRule:string;aCodeDash:string;var aHash:THashedStringList);
   public
     //frxreport
     class function  GetfrxReportPage(Afrxreport:TfrxReport):string;
@@ -185,6 +187,12 @@ begin
   end;  
 end;
 
+class procedure TUiUtils.GetCodePath(aCodeRule, aCodeDash: string;
+  var aHash: THashedStringList);
+begin
+  //#
+end;
+
 class function TUiUtils.GetfrxReportPage(Afrxreport: TfrxReport): string;
 begin
   if not Afrxreport.EngineOptions.DoublePass then
@@ -222,6 +230,28 @@ class function TUiUtils.GetMiddLeft(AParentWidth,
   ASelfWidth: Integer): Integer;
 begin
   Result:=(AParentWidth - ASelfWidth) div 2;
+end;
+
+class function TUiUtils.GetNamePath(aNameDash:string;aItem: TElTreeItem; aTree: TElTree): string;
+var
+  cPath:string;
+  pItem:TElTreeItem;
+begin
+  Result := '';
+  with aTree do
+  begin
+    if aItem = nil  then Exit;
+
+    cPath := aItem.Text;
+    pItem := aItem.Parent;
+    while  pItem <> nil do
+    begin
+      cPath := pItem.Text + aNameDash + cPath;
+      pItem := pItem.Parent;
+    end;
+  end;
+
+  Result := cPath;
 end;
 
 class function TUiUtils.GetSizeCellChked(AAdvGrid: TAdvStringGrid;
