@@ -62,7 +62,7 @@ type
     class procedure TreeIndex(ATree:TElTree);
     class procedure TreeInit(aTree:TElTree);
     class function  GetNamePath(aNameDash:string;aItem:TElTreeItem;aTree:TElTree):string;
-    class procedure GetCodePath(aCodeRule:string;aCodeDash:string;var aHash:THashedStringList);
+    class procedure GetCodePath(aCodeRule:string;aCodeDash:string;aTree:TElTree;var aHash:THashedStringList);
   public
     //frxreport
     class function  GetfrxReportPage(Afrxreport:TfrxReport):string;
@@ -187,10 +187,70 @@ begin
   end;  
 end;
 
-class procedure TUiUtils.GetCodePath(aCodeRule, aCodeDash: string;
+class procedure TUiUtils.GetCodePath(aCodeRule, aCodeDash: string;aTree:TElTree;
   var aHash: THashedStringList);
+var
+  I:Integer;
+  cIndx: Integer;
+  pIndx: Integer;
+  sIndx: string;
+  Value: Integer;
+  cItem: TElTreeItem;
+  cHash: THashedStringList;
+
+  function CodeLength(aLevel:Integer):Integer;
+  begin
+    Result := 2;
+    if Trim(aCodeRule) = '' then Exit;
+    
+    if Length(aCodeRule)<aLevel then
+    begin
+      Result := StrToIntDef(aCodeRule[Length(aCodeRule)-1],2);
+    end else
+    begin
+      Result := StrToIntDef(aCodeRule[aLevel],2);
+    end;
+  end;
 begin
-  //#
+  try
+    cHash := THashedStringList.Create;
+
+    with aTree do
+    begin
+      for I := 0 to Items.Count-1 do
+      begin
+        cItem := Items.Item[I];
+        cItem.Tag := I;
+
+        pIndx := 0;
+        if cItem.Parent <> nil then
+        begin
+          pIndx := cItem.Parent.Tag;
+        end;
+
+        sIndx := Format('%D-%D',[pIndx,cItem.Level]);
+
+        cIndx := cHash.IndexOfName(sIndx);
+        if cIndx = -1 then
+        begin
+          cHash.Add(Format('%S=%D',[sIndx,1]));
+          //#cItem.Text := TKzUtils.FormatCode(1,2);
+
+          aHash.Add(Format('%D=%S',[I,TKzUtils.FormatCode(1,CodeLength(cItem.Level+1))]));
+        end else
+        begin
+          Value := StrToInt(cHash.Values[sIndx]);
+          Inc(Value);
+          //#cItem.Text := TKzUtils.FormatCode(Value,2);
+          aHash.Add(Format('%D=%S',[I,TKzUtils.FormatCode(Value,CodeLength(cItem.Level+1))]));
+
+          cHash.Values[sIndx]:=IntToStr(Value);
+        end;
+      end;
+    end;
+  finally
+    FreeAndNil(cHash);
+  end;
 end;
 
 class function TUiUtils.GetfrxReportPage(Afrxreport: TfrxReport): string;
