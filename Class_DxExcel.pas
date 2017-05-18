@@ -118,10 +118,11 @@ begin
   try
     Styl:=TDxCellStyl.Create;
 
-    if FDxCount<FDxExcel.SheetCount then
+    if FDxCount > FDxExcel.SheetCount then
     begin
-      FDxExcel.ActiveSheetIndex:=FDxExcel.SheetCount-1;
+      FDxExcel.AddSheet();
     end;
+    FDxExcel.ActiveSheetIndex:=FDxExcel.SheetCount-1;
 
     if Trim(ATabSheet)<>'' then
     begin
