@@ -7,52 +7,56 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs,Dialog_View, Grids, BaseGrid, AdvGrid, StdCtrls, ExtCtrls,Uni,UniConfig,
-  UniConnct, RzButton, RzRadChk, AdvObj, RzStatus, RzPanel, RzCmboBx;
+  UniConnct, RzButton, RzRadChk, AdvObj, RzStatus, RzPanel, RzCmboBx,
+  System.ImageList, Vcl.ImgList;
 
 type
   TDialogListUniConfigEditMode=(dlucemEdit,dlucemView);
 
   TDialogListUniConfig = class(TDialogView)
-    Panl_1: TPanel;
-    Btnx_Edit: TButton;
-    Btnx_Addx: TButton;
-    Btnx_Delt: TButton;
-    Btnx_Test: TButton;
-    Btnx_Mrok: TButton;
-    Btnx_Quit: TButton;
-    ChkBox_All: TRzCheckBox;
-    Btnx_1: TButton;
-    Btnx_2: TButton;
-    Btnx_Copy: TButton;
     RzStatusBar1: TRzStatusBar;
     Panl_UnixMemo: TRzStatusPane;
     Panl_DataBase: TRzStatusPane;
     Grid_Cnfg: TAdvStringGrid;
     Comb_UnixMark: TRzComboBox;
     Comb_UnixType: TRzComboBox;
-    procedure Btnx_QuitClick(Sender: TObject);
+    Tool_1: TRzToolbar;
+    Btnv_Mrok: TRzToolButton;
+    Btnv_Quit: TRzToolButton;
+    Btnv_AddvCnfg: TRzToolButton;
+    Btnv_DeltCnfg: TRzToolButton;
+    Btnv_EditCnfg: TRzToolButton;
+    Btnv_CopyCnfg: TRzToolButton;
+    Btnv_ActvCnfg: TRzToolButton;
+    Btnv_OrdrCnfg: TRzToolButton;
+    Btnv_TestCnfg: TRzToolButton;
+    il1: TImageList;
+    Line_1: TRzSpacer;
     procedure Grid_CnfgGetAlignment(Sender: TObject; ARow, ACol: Integer;
       var HAlign: TAlignment; var VAlign: TVAlignment);
     procedure Grid_CnfgCanEditCell(Sender: TObject; ARow, ACol: Integer;
       var CanEdit: Boolean);
-    procedure Btnx_AddxClick(Sender: TObject);
     procedure Grid_CnfgDblClick(Sender: TObject);
-    procedure Btnx_EditClick(Sender: TObject);
-    procedure Btnx_DeltClick(Sender: TObject);
-    procedure Btnx_MrokClick(Sender: TObject);
-    procedure Btnx_TestClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure ChkBox_AllClick(Sender: TObject);
-    procedure Btnx_1Click(Sender: TObject);
     procedure Grid_CnfgClickCell(Sender: TObject; ARow, ACol: Integer);
-    procedure Btnx_2Click(Sender: TObject);
     procedure Grid_CnfgRowMoved(Sender: TObject; FromIndex,
       ToIndex: Integer);
     procedure Btnx_CopyClick(Sender: TObject);
     procedure Grid_CnfgSelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
     procedure Comb_UnixTypeCloseUp(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Btnv_AddvCnfgClick(Sender: TObject);
+    procedure Btnv_EditCnfgClick(Sender: TObject);
+    procedure Btnv_QuitClick(Sender: TObject);
+    procedure Btnv_MrokClick(Sender: TObject);
+    procedure Btnv_CopyCnfgClick(Sender: TObject);
+    procedure Btnv_ActvCnfgClick(Sender: TObject);
+    procedure Btnv_OrdrCnfgClick(Sender: TObject);
+    procedure Btnv_TestCnfgClick(Sender: TObject);
+    procedure Grid_CnfgCheckBoxClick(Sender: TObject; ACol, ARow: Integer;
+      State: Boolean);
   private
     FEditMode:TDialogListUniConfigEditMode;
     FListCnfg:TStringList;
@@ -69,6 +73,7 @@ type
     procedure InitCnfg;
     procedure AddvCnfg;
     procedure EditCnfg;
+    procedure DeltCnfg;
     procedure CopyCnfg;
     procedure ActvCnfg(IsFill:Boolean=True);
     procedure OrdrCnfg;
@@ -91,7 +96,8 @@ function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;var ACnfg:TUni
 implementation
 
 uses
-  Dialog_EditUniConfig;
+  Dialog_EditUniConfig, StylManager,Class_UiUtils;
+
 
 {$R *.dfm}
 
@@ -132,15 +138,23 @@ begin
   end;
 end;
 
-{ TDialogListCnfg }
-
 procedure TDialogListUniConfig.SetCommParams;
 begin
   inherited;
-  Caption:='数据库列表配置';
-  Width :=1024;
-  Height:=Trunc(1024 * 0.618);
-  Btnx_Mrok.SetFocus;
+  Caption := '数据库列表配置';
+  Width   := 1024;
+  Height  := Trunc(1024 * 0.618);
+
+  Btnv_Mrok.Caption := '确定';
+  Btnv_Quit.Caption := '取消';
+
+  Btnv_AddvCnfg.Caption := '添加';
+  Btnv_DeltCnfg.Caption := '删除';
+  Btnv_EditCnfg.Caption := '修改';
+  Btnv_CopyCnfg.Caption := '复制';
+  Btnv_ActvCnfg.Caption := '活动';
+  Btnv_OrdrCnfg.Caption := '排序';
+  Btnv_TestCnfg.Caption := '测试';
 end;
 
 procedure TDialogListUniConfig.SetGridParams;
@@ -151,20 +165,8 @@ begin
     RowCount:=2;
     ColCount:=20;
     DefaultColWidth:=90;
-    ColWidths[0]:=40;
-    ColWidths[1]:=40;
-    ColWidths[2]:=40;
-    ColWidths[3]:=40;
-    ColWidths[5]:=40;
-    ColWidths[6]:=40;
-    ColWidths[7]:=160;
-    ColWidths[8]:=130;
-    ColWidths[9 ]:=40;
-    ColWidths[10]:=40;
-    ColWidths[11]:=40;
 
-
-    ShowHint:=True;
+    ShowHint     :=True;
     HintShowCells:=True;
     HintShowSizing:=True;
 
@@ -182,13 +184,12 @@ begin
     begin
       Clear;
       Delimiter:=',';
-      DelimitedText:='序号,勾选,年度,标志,驱动,用户,密码,服务器,数据库,端口号,直联,状态';
+      DelimitedText:='序号,,年度,标志,驱动,用户,密码,服务器,数据库,端口号,直联,状态';
     end;
 
     ColCount:=ColumnHeaders.Count;
 
-    ColumnSize.StretchColumn:=8;
-    ColumnSize.Stretch:=True;
+    AddCheckBox(1,0,False,False);
   end;
 end;
 
@@ -198,12 +199,9 @@ begin
   FCellIdex:=1;
   
   InitCnfg;
-end;
 
-procedure TDialogListUniConfig.Btnx_QuitClick(Sender: TObject);
-begin
-  inherited;
-  ModalResult:=mrCancel;
+  TStylManager.InitColWidth(self.ClassName,self.Grid_Cnfg);
+  TStylManager.InitFormSize(self.ClassName,self);
 end;
 
 procedure TDialogListUniConfig.Grid_CnfgGetAlignment(Sender: TObject; ARow,
@@ -319,10 +317,16 @@ begin
   CanEdit:=ACol=1;
 end;
 
-procedure TDialogListUniConfig.Btnx_AddxClick(Sender: TObject);
+procedure TDialogListUniConfig.Grid_CnfgCheckBoxClick(Sender: TObject; ACol,
+  ARow: Integer; State: Boolean);
 begin
-  inherited;
-  AddvCnfg;
+  with Grid_Cnfg do
+  begin
+    if ARow = 0 then
+    begin
+      TUiUtils.CellCheck(Grid_Cnfg,State);
+    end;
+  end;
 end;
 
 procedure TDialogListUniConfig.Grid_CnfgDblClick(Sender: TObject);
@@ -334,7 +338,7 @@ begin
   end else
   if FEditMode=dlucemView then
   begin
-    Btnx_MrokClick(Btnx_Mrok);
+    Btnv_MrokClick(Btnv_Mrok);
   end;
 end;
 
@@ -365,105 +369,6 @@ begin
   end;
 end;
 
-procedure TDialogListUniConfig.Btnx_EditClick(Sender: TObject);
-begin
-  inherited;
-  EditCnfg;
-end;
-
-procedure TDialogListUniConfig.Btnx_DeltClick(Sender: TObject);
-var
-  I:Integer;
-  StatA:Boolean;
-  
-  UniConfig:TUniConfig;
-  UniConnct:TUniConnection;
-begin
-  inherited;
-  UniConnct:=nil;
-  UniConnct:=UniConnctEx.GetConnection(FConnectionMark);
-  if UniConnct=nil then Exit;
-
-  try
-    UniConnct.StartTransaction;
-
-    try
-      with Grid_Cnfg do
-      begin
-        BeginUpdate;
-        for I:=RowCount-1 downto 1 do
-        begin
-          StatA:=False;
-          if GetCheckBoxState(1,I,StatA) then
-          begin
-            if StatA then
-            begin
-              UniConfig:=nil;
-              UniConfig:=TUniConfig(Objects[0,I]);
-              if UniConfig=nil then Continue;
-
-              UniConfig.DeleteDB(UniConnct);
-
-              if RowCount=2 then
-              begin
-                ClearRows(I,1);
-              end else
-              begin
-                ClearRows(I,1);
-                RemoveRows(I,1);
-              end;
-            end;
-          end;
-        end;
-        EndUpdate;
-      end;
-      UniConnct.Commit;
-    except
-      UniConnct.Rollback;
-    end;
-  finally
-    FreeAndNil(UniConnct);
-  end;
-end;
-
-procedure TDialogListUniConfig.Btnx_MrokClick(Sender: TObject);
-var
-  UniConfig:TUniConfig;
-begin
-  inherited;
-  with Grid_Cnfg do
-  begin
-    UniConfig:=nil;
-    UniConfig:=ExptCnfg;
-
-    //YXC_2014_03_21_17_08_30_<
-    if Assigned(UniConnctEx.OnUniConfigCustomDecryptEvent) then
-    begin
-      UniConnctEx.OnUniConfigCustomDecryptEvent(UniConfig,UniConfig);
-    end;    
-    //YXC_2014_03_21_17_08_30_>
-
-    UniConfig.TstConnection(UniConfig);
-
-    if UniConnctEx.ActiveHint then
-    begin
-      if UniConfig.UnicStat<>1 then
-      begin
-        if MessageBox(Handle,'是否将该连接设为活动?','提示',MB_OKCANCEL+MB_ICONQUESTION)=Mrok then
-        begin
-          ActvCnfg(False);
-        end;
-      end;
-    end;
-
-    FreeAndNil(UniConfig);
-  end;
-
-  UniConnctEx.ConnctLast:=FCellIdex;
-
-  ModalResult:=mrOk;
-end;
-
 function TDialogListUniConfig.ExptCnfg: TUniConfig;
 begin
   Result:=nil;
@@ -471,27 +376,6 @@ begin
   begin
     if Objects[0,RealRow]=nil then Exit;
     Result:=TUniConfig.CopyIt(TUniConfig(Objects[0,RealRow]));
-  end;  
-end;
-
-procedure TDialogListUniConfig.Btnx_TestClick(Sender: TObject);
-var
-  UniConfigA:TUniConfig;
-begin
-  inherited;
-  with Grid_Cnfg do
-  begin
-    UniConfigA:=nil;
-    UniConfigA:=TUniConfig(Objects[0,RealRow]);
-    if UniConfigA=nil then Exit;
-
-    if Assigned(UniConnctEx.OnUniConfigCustomDecryptEvent) then
-    begin
-      UniConnctEx.OnUniConfigCustomDecryptEvent(UniConfigA,UniConfigA);
-    end;
-
-    if not UniConfigA.TstConnection(UniConfigA) then Exit;
-    ShowMessage('该数据库连接有效.');
   end;  
 end;
 
@@ -511,6 +395,13 @@ begin
     FreeAndNil(FListCnfg);
   end;}
   FreeAndNilList(FListCnfg);
+end;
+
+procedure TDialogListUniConfig.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  TStylManager.SaveColWidth(self.ClassName,self.Grid_Cnfg);
+  TStylManager.SaveFormSize(self.ClassName,self);
 end;
 
 procedure TDialogListUniConfig.FormCreate(Sender: TObject);
@@ -545,26 +436,93 @@ begin
   end; 
 end;
 
-procedure TDialogListUniConfig.ChkBox_AllClick(Sender: TObject);
+procedure TDialogListUniConfig.Btnv_MrokClick(Sender: TObject);
 var
-  I:Integer;
+  UniConfig:TUniConfig;
 begin
   inherited;
   with Grid_Cnfg do
   begin
-    BeginUpdate;
-    for I:=1 to RowCount-1 do
+    UniConfig:=nil;
+    UniConfig:=ExptCnfg;
+
+    //YXC_2014_03_21_17_08_30_<
+    if Assigned(UniConnctEx.OnUniConfigCustomDecryptEvent) then
     begin
-      SetCheckBoxState(1,I,TRzCheckBox(Sender).Checked);
-    end;  
-    EndUpdate;
-  end;  
+      UniConnctEx.OnUniConfigCustomDecryptEvent(UniConfig,UniConfig);
+    end;
+    //YXC_2014_03_21_17_08_30_>
+
+    UniConfig.TstConnection(UniConfig);
+
+    if UniConnctEx.ActiveHint then
+    begin
+      if UniConfig.UnicStat<>1 then
+      begin
+        if MessageBox(Handle,'是否将该连接设为活动?','提示',MB_OKCANCEL+MB_ICONQUESTION)=Mrok then
+        begin
+          ActvCnfg(False);
+        end;
+      end;
+    end;
+
+    FreeAndNil(UniConfig);
+  end;
+
+  UniConnctEx.ConnctLast:=FCellIdex;
+
+  ModalResult:=mrOk;
 end;
 
-procedure TDialogListUniConfig.Btnx_1Click(Sender: TObject);
+procedure TDialogListUniConfig.Btnv_QuitClick(Sender: TObject);
+begin
+  ModalResult:=mrCancel;
+end;
+
+procedure TDialogListUniConfig.Btnv_CopyCnfgClick(Sender: TObject);
+begin
+  CopyCnfg;
+end;
+
+procedure TDialogListUniConfig.Btnv_ActvCnfgClick(Sender: TObject);
+begin
+  ActvCnfg;
+end;
+
+procedure TDialogListUniConfig.Btnv_OrdrCnfgClick(Sender: TObject);
+begin
+  OrdrCnfg;
+end;
+
+procedure TDialogListUniConfig.Btnv_TestCnfgClick(Sender: TObject);
+var
+  UniConfigA:TUniConfig;
 begin
   inherited;
-  ActvCnfg;
+  with Grid_Cnfg do
+  begin
+    UniConfigA:=nil;
+    UniConfigA:=TUniConfig(Objects[0,RealRow]);
+    if UniConfigA=nil then Exit;
+
+    if Assigned(UniConnctEx.OnUniConfigCustomDecryptEvent) then
+    begin
+      UniConnctEx.OnUniConfigCustomDecryptEvent(UniConfigA,UniConfigA);
+    end;
+
+    if not UniConfigA.TstConnection(UniConfigA) then Exit;
+    ShowMessage('该数据库连接有效.');
+  end;
+end;
+
+procedure TDialogListUniConfig.Btnv_AddvCnfgClick(Sender: TObject);
+begin
+  AddvCnfg;
+end;
+
+procedure TDialogListUniConfig.Btnv_EditCnfgClick(Sender: TObject);
+begin
+  EditCnfg;
 end;
 
 procedure TDialogListUniConfig.ActvCnfg(IsFill:Boolean);
@@ -618,12 +576,6 @@ begin
   //
   FCellIdex:=Grid_Cnfg.RealRow;
   UniConnctEx.ConnctLast:=FCellIdex;
-end;
-
-procedure TDialogListUniConfig.Btnx_2Click(Sender: TObject);
-begin
-  inherited;
-  OrdrCnfg;
 end;
 
 procedure TDialogListUniConfig.OrdrCnfg;
@@ -750,6 +702,60 @@ begin
       FreeAndNil(UniConnct);
       FreeAndNil(UniConfiH);
     end;
+  end;
+end;
+
+procedure TDialogListUniConfig.DeltCnfg;
+var
+  I:Integer;
+  StatA:Boolean;
+
+  cCnfg:TUniConfig;
+  cUniC:TUniConnection;
+begin
+  inherited;
+  cUniC:=nil;
+  cUniC:=UniConnctEx.GetConnection(FConnectionMark);
+  if cUniC=nil then Exit;
+
+  try
+    cUniC.StartTransaction;
+
+    try
+      with Grid_Cnfg do
+      begin
+        BeginUpdate;
+        for I:=RowCount-1 downto 1 do
+        begin
+          StatA:=False;
+          if GetCheckBoxState(1,I,StatA) then
+          begin
+            if StatA then
+            begin
+              cCnfg:=TUniConfig(Objects[0,I]);
+              if cCnfg=nil then Continue;
+
+              cCnfg.DeleteDB(cUniC);
+
+              if RowCount=2 then
+              begin
+                ClearRows(I,1);
+              end else
+              begin
+                ClearRows(I,1);
+                RemoveRows(I,1);
+              end;
+            end;
+          end;
+        end;
+        EndUpdate;
+      end;
+      cUniC.Commit;
+    except
+      cUniC.Rollback;
+    end;
+  finally
+    FreeAndNil(cUniC);
   end;
 end;
 
