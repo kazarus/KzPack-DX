@@ -111,6 +111,7 @@ type
     //PerlRegEx
     class function  StrsStrCutted(const Source:string;ATag:string):TStrings;
     class procedure ListStrCutted(const Source:string;ATag:string;var Result:TStrings);
+    class procedure ListMatchText(const Source:string;ATag:string;var Result:TStrings);
     class function  StrsStrMatchx(const Source:string;ATag:string):TStrings;
     class function  BoolStrMatchx(const Source:string;ATag:string;var aValue:string):Boolean;
     class function  RegReplaceAll(const Source:string;ATag:string;AReplacement:string):string;
@@ -932,6 +933,28 @@ begin
     if PerlA.ReplaceAll then
     begin
       Result:=PerlA.Subject;
+    end;
+  finally
+    FreeAndNil(PerlA);
+  end;
+end;
+
+class procedure TKzUtils.ListMatchText(const Source: string; ATag: string;
+  var Result: TStrings);
+var
+  PerlA:TPerlRegEx;
+begin
+  if Result = nil then Exit;
+
+  try
+    PerlA:=TPerlRegEx.Create;
+    //PerlA:=TPerlRegEx.Create;
+    PerlA.Subject:=Source;
+    PerlA.RegEx  :=ATag;
+    while PerlA.MatchAgain do
+    begin
+      Result.Add(PerlA.MatchedText);
+      //Result.Add(PerlA.MatchedText);
     end;
   finally
     FreeAndNil(PerlA);
