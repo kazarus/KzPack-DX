@@ -113,7 +113,10 @@ begin
         cNode := TCellNode.Create;
         cNode.Col := cItem.Area.Left;
         cNode.Row := cItem.Area.Top;
-        cNode.Text := Trim(cItem.ActiveCell.DisplayText);
+        if cItem.ActiveCell <> nil then
+        begin
+          cNode.Text := Trim(cItem.ActiveCell.DisplayText);
+        end;
         cNode.Left := cItem.Area.Left;
         cNode.Right := cItem.Area.Right;
         cNode.Top := cItem.Area.Top;

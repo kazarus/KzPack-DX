@@ -46,11 +46,11 @@ type
     {begin
       if Item.Checked then
       begin
-        TAppUtil.SetItemNextChecked(TElTree(Sender),Item,True);
+        TUiUtils.SetItemNextChecked(TElTree(Sender),Item,True);
       end else
       begin
-        TAppUtil.SetItemNextChecked(TElTree(Sender),Item,False);
-        TAppUtil.SetItemPrevChecked(TElTree(Sender),Item,False);
+        TUiUtils.SetItemNextChecked(TElTree(Sender),Item,False);
+        TUiUtils.SetItemPrevChecked(TElTree(Sender),Item,False);
       end;
     end;}
     class procedure SetItemNextChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
