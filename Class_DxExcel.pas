@@ -10,18 +10,18 @@ uses
 type
   TDxCellStyl=class;
 
-  TDxExcelStyleCell=procedure (Sender: TObject; ATabIndex:Integer;ACol,ARow: Integer;var ACellStyl:TDxCellStyl) of object;
-  //procedure OnDxExcelStyleCell(Sender: TObject; ATabSheet:string; ACol,ARow: Integer;var ACellStyl:TObject);
-  TDxExcelValidArea=procedure (Sender: TObject; ATabIndex:Integer;var AColStart,AColEnded,ARowStart,ARowEnded:Integer) of object;
-  //procedure OnDxExcelValidArea(Sender: TObject; ATabSheet:string;var AColStart,AColEnded,ARowStart,ARowEnded:Integer);
-  TDxExcelValidRows=procedure (Sender: TObject; ATabIndex:Integer;ARow:Integer;var Valid:Boolean) of object;
-  //procedure OnDxExcelValidRows(Sender: TObject; ATabSheet:string;ARow:Integer;var Valid:Boolean);
-  TDxExcelValidCols=procedure (Sender: TObject; ATabIndex:Integer;ACol:Integer;var Valid:Boolean) of object;
-  //procedure OnDxExcelValidCols(Sender: TObject; ATabSheet:string;ACol:Integer;var Valid:Boolean);
-  TDxExcelResizeCol=procedure (Sender: TObject; ATabIndex:Integer;ACol:Integer;var Value:Integer) of object;
-  //procedure OnDxExcelResizeCol(Sender: TObject; ATabSheet:string;ACol:Integer;var Value:Integer);
-  TDxExcelResizeRow=procedure (Sender: TObject; ATabIndex:Integer;ARow:Integer;var Value:Integer) of object;
-  //procedure OnDxExcelResizeRow(Sender: TObject; ATabSheet:string;ARow:Integer;var Value:Integer);
+  TDxExcelStyleCell=procedure (Sender: TObject; aTabSheet:Integer;ACol,ARow: Integer;var ACellStyl:TDxCellStyl) of object;
+  //procedure OnDxExcelStyleCell(Sender: TObject; aTabSheet:string; ACol,ARow: Integer;var ACellStyl:TObject);
+  TDxExcelValidArea=procedure (Sender: TObject; aTabSheet:Integer;var AColStart,AColEnded,ARowStart,ARowEnded:Integer) of object;
+  //procedure OnDxExcelValidArea(Sender: TObject; aTabSheet:string;var AColStart,AColEnded,ARowStart,ARowEnded:Integer);
+  TDxExcelValidRows=procedure (Sender: TObject; aTabSheet:Integer;ARow:Integer;var Valid:Boolean) of object;
+  //procedure OnDxExcelValidRows(Sender: TObject; aTabSheet:string;ARow:Integer;var Valid:Boolean);
+  TDxExcelValidCols=procedure (Sender: TObject; aTabSheet:Integer;ACol:Integer;var Valid:Boolean) of object;
+  //procedure OnDxExcelValidCols(Sender: TObject; aTabSheet:string;ACol:Integer;var Valid:Boolean);
+  TDxExcelResizeCol=procedure (Sender: TObject; aTabSheet:Integer;ACol:Integer;var Value:Integer) of object;
+  //procedure OnDxExcelResizeCol(Sender: TObject; aTabSheet:string;ACol:Integer;var Value:Integer);
+  TDxExcelResizeRow=procedure (Sender: TObject; aTabSheet:Integer;ARow:Integer;var Value:Integer) of object;
+  //procedure OnDxExcelResizeRow(Sender: TObject; aTabSheet:string;ARow:Integer;var Value:Integer);
 
   TDxCellStyl=class(TObject)
   public
