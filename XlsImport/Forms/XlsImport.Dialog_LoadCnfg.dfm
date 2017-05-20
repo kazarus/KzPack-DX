@@ -2,7 +2,7 @@ object DialogLoadCnfg: TDialogLoadCnfg
   Left = 270
   Top = 256
   Caption = 'DialogLoadCnfg'
-  ClientHeight = 243
+  ClientHeight = 174
   ClientWidth = 404
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
@@ -40,6 +40,7 @@ object DialogLoadCnfg: TDialogLoadCnfg
     Width = 52
     Height = 13
     Caption = #23548#20837#26399#38388
+    Visible = False
   end
   object Edit_RowTitle: TRzButtonEdit
     Left = 63
@@ -81,8 +82,8 @@ object DialogLoadCnfg: TDialogLoadCnfg
     OnButtonClick = Edit_FilePathButtonClick
   end
   object Btnv_Mrok: TButton
-    Left = 225
-    Top = 207
+    Left = 233
+    Top = 143
     Width = 75
     Height = 25
     Caption = 'Btnv_Mrok'
@@ -90,8 +91,8 @@ object DialogLoadCnfg: TDialogLoadCnfg
     OnClick = Btnv_MrokClick
   end
   object Btnv_Quit: TButton
-    Left = 300
-    Top = 207
+    Left = 308
+    Top = 143
     Width = 75
     Height = 25
     Caption = 'Btnv_1'
@@ -108,5 +109,6 @@ object DialogLoadCnfg: TDialogLoadCnfg
     FramingPreference = fpCustomFraming
     ParentCtl3D = False
     TabOrder = 5
+    Visible = False
   end
 end
