@@ -232,6 +232,7 @@ end;
 procedure TFormListLoad.ImptData(var Value: string);
 var
   I,M :Integer;
+  cSTAT:Boolean;
   cHead:TCellHead;
   JSON1,JSON2,JSON3:TQJson;
 begin
@@ -243,7 +244,13 @@ begin
   begin
     for I := 2 to RowCount-1 do
     begin
+
+      cSTAT := False;
+      if not GetCheckBoxState(1,I,cSTAT) then Continue;
+      if not cSTAT then Continue;
+
       JSON3:=JSON2.Add();
+
       for M:=0 to ColCount-1 do
       begin
         cHead:=TCellHead(Objects[M,1]);
