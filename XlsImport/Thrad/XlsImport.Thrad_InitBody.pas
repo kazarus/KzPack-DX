@@ -47,6 +47,7 @@ begin
       end;
 
       GetMaxProgress(Size);
+
       for I:=0 to Size-1 do
       begin
         GetOneProgress(I+1);
@@ -74,6 +75,7 @@ begin
           end;
         end;
       end;
+
       GetEndProgrees;
       GetMsgProgress(Class_KzThrad.CONST_THRAD_STAT_TRUE,[]);
 

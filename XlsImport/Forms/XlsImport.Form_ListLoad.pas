@@ -59,6 +59,8 @@ type
 
     procedure ImptData(var Value:string);
   public
+    function  ChkValid:Boolean;
+  public
     procedure CallThradInitBody;
   public
     //for tkzthrad
@@ -137,6 +139,8 @@ end;
 
 procedure TFormListLoad.Btnv_MrokClick(Sender: TObject);
 begin
+  if not ChkValid then Exit;
+  
   ModalResult:=mrOk;
 end;
 
@@ -163,6 +167,63 @@ begin
   cThrad.FreeOnTerminate        :=True;
 
   cThrad.Resume;
+end;
+
+function TFormListLoad.ChkValid: Boolean;
+var
+  I,M:Integer;
+
+  Exist:Boolean;
+
+  cHead:TCellHead;
+  xHead:TCellHead;
+  cList:TStringList;
+begin
+  Result := False;
+
+  try
+    cList := TStringList.Create;
+
+    with Grid_Data do
+    begin
+      for I := 0 to FCellHead.Count-1 do
+      begin
+        cHead := TCellHead(FCellHead.Objects[I]);
+        if cHead = nil then Continue;
+
+        if cHead.NonEmpty then
+        begin
+          Exist := False;
+          for M := 1 to ColCount-1  do
+          begin
+            xHead := TCellHead(Objects[M,1]);
+            if xHead = nil then Continue;
+            if xHead.HeadName = cHead.HeadName then
+            begin
+              Exist := True;
+              Break;
+            end;
+          end;
+
+          if not Exist then
+          begin
+            cList.Add(Format('未指定[%S]的对应列.',[cHead.HeadName]));
+          end;
+        end;
+      end;
+    end;
+
+   if cList.Count > 0  then
+   begin
+     TKzUtils.WarnMsg(cList.Text);
+     Exit;
+   end;
+
+  finally
+    FreeAndNil(cList);
+  end;
+
+  Result := True;
 end;
 
 procedure TFormListLoad.CopyHead(aCellHead: TStringList);
@@ -351,6 +412,9 @@ begin
     if AMsgProgress=Class_KzThrad.CONST_THRAD_STAT_TRUE then
     begin
       TUiUtils.CellIndex(Grid_Data,0,2);
+
+      Grid_Data.Cells[0,1] := '对应';
+      Grid_Data.Alignments[0,1] := taCenter;
       //#InitLDGL;
     end;
   end;
