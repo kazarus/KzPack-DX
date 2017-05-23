@@ -117,24 +117,27 @@ begin
 
   Panl_Text.Caption:=Format('导入期间:%D',[FLoadCnfg.KJNDKJQJ]);
 
-  if FileExists(FLoadCnfg.FILEPATH) then
+  if not FileExists(FLoadCnfg.FILEPATH) then
   begin
-    self.XLSReadWriteII51.Filename:=FLoadCnfg.FILEPATH;
-    self.XLSReadWriteII51.Read;
-
-    if FListHead=nil then
-    begin
-      FListHead:=TStringList.Create;
-    end;
-    TKzUtils.JustCleanList(FListHead);
-
-    if not ReadHead(FListHead) then Exit;
-
-    InitHead(FListHead);
-    ReadBody(FListBody);
-
-    CallThradInitBody;
+    TKzUtils.WarnMsg('该文档不存在.'+#13+'%S',[FLoadCnfg.FILEPATH]);
+    Exit;
   end;
+
+  self.XLSReadWriteII51.Filename:=FLoadCnfg.FILEPATH;
+  self.XLSReadWriteII51.Read;
+
+  if FListHead=nil then
+  begin
+    FListHead:=TStringList.Create;
+  end;
+  TKzUtils.JustCleanList(FListHead);
+
+  if not ReadHead(FListHead) then Exit;
+
+  InitHead(FListHead);
+  ReadBody(FListBody);
+
+  CallThradInitBody;
 end;
 
 procedure TFormListLoad.Btnv_MrokClick(Sender: TObject);
