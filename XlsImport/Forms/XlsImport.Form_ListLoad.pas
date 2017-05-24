@@ -364,7 +364,7 @@ begin
     for I:=0 to aList.Count-1 do
     begin
       cIndx:=I+2;
-      if Grid_Data.ColCount-1<cIndx then
+      if Grid_Data.ColCount-1 < cIndx then
       begin
         AddColumn;
       end;

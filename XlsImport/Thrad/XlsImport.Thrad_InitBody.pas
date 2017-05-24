@@ -19,7 +19,7 @@ type
 implementation
 
 uses
-  Class_KzUtils;
+  Class_KzUtils,Class_UiUtils;
 
 procedure TThradInitBody.Execute;
 var
@@ -35,6 +35,18 @@ begin
     with FRealGrid do
     begin
       BeginUpdate;
+
+      //YXC_2017_05_18_15_17_55_<
+      for I := RowCount-1 downto 1 do
+      begin
+        if RowCount = 2 then
+        begin
+        end else
+        begin
+          RemoveRows(I,1);
+        end;
+      end;
+      //YXC_2017_05_18_15_17_55_>
 
       Size := FListBody.Count;
       if FBodySize<>0 then

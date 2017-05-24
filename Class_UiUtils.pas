@@ -53,13 +53,13 @@ type
         TUiUtils.SetItemPrevChecked(TElTree(Sender),Item,False);
       end;
     end;}
-    class procedure SetItemNextChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
-    class procedure SetItemPrevChecked(ATree:TElTree;AItem:TElTreeItem;AStat:Boolean);
+    class procedure SetItemNextChecked(aTree:TElTree;aItem:TElTreeItem;AStat:Boolean);
+    class procedure SetItemPrevChecked(aTree:TElTree;aItem:TElTreeItem;AStat:Boolean);
     //eltree.common
-    class function  GetSizeItemChked(ATree:TElTree;ACheckChild:Boolean=False):Integer;
-    class procedure SetTreeItemCheckedState(AValue,ALastLevl:Boolean;ATree:TElTree);
-    class function  GetMaxLevelInTreeView(ATree:TElTree):Integer;
-    class procedure TreeIndex(ATree:TElTree);
+    class function  GetSizeItemChked(aTree:TElTree;ACheckChild:Boolean=False):Integer;
+    class procedure SetTreeItemCheckedState(AValue,ALastLevl:Boolean;aTree:TElTree);
+    class function  GetMaxLevelInTreeView(aTree:TElTree):Integer;
+    class procedure TreeIndex(aTree:TElTree);
     class procedure TreeInit(aTree:TElTree);
     class function  GetNamePath(aNameDash:string;aItem:TElTreeItem;aTree:TElTree):string;
     class procedure GetCodePath(aCodeRule:string;aCodeDash:string;aTree:TElTree;var aHash:THashedStringList);
@@ -518,18 +518,18 @@ begin
   end;
 end;
 
-class function TUiUtils.GetSizeItemChked(ATree: TElTree;
+class function TUiUtils.GetSizeItemChked(aTree: TElTree;
   ACheckChild: Boolean): Integer;
 var
   I:Integer;
   ItemA:TElTreeItem;
 begin
   Result:=0;
-  with ATree do
+  with aTree do
   begin
-    for I:=0 to ATree.Items.Count-1 do
+    for I:=0 to aTree.Items.Count-1 do
     begin
-      ItemA:=ATree.Items.Item[I];
+      ItemA:=aTree.Items.Item[I];
       if (ItemA.ShowCheckBox) and (ItemA.Checked) then
       begin
         if ACheckChild then
@@ -547,41 +547,41 @@ begin
   end;
 end;
 
-class function TUiUtils.GetMaxLevelInTreeView(ATree: TElTree): Integer;
+class function TUiUtils.GetMaxLevelInTreeView(aTree: TElTree): Integer;
 var
   I:Integer;
 begin
   Result:=0;
-  for I:=0 to ATree.Items.Count-1 do
+  for I:=0 to aTree.Items.Count-1 do
   begin
-    Result:=Max(Result,ATree.Items.Item[I].Level);
+    Result:=Max(Result,aTree.Items.Item[I].Level);
   end;
   Inc(Result);
 end;
 
-class procedure TUiUtils.SetItemNextChecked(ATree: TElTree;
-  AItem: TElTreeItem; AStat: Boolean);
+class procedure TUiUtils.SetItemNextChecked(aTree: TElTree;
+  aItem: TElTreeItem; AStat: Boolean);
 var
   ItemA:TElTreeItem;
   I:Integer;
 begin
-  if AItem.HasChildren then
+  if aItem.HasChildren then
   begin
-    for I:=0 to AItem.Count-1 do
+    for I:=0 to aItem.Count-1 do
     begin
-      ItemA:=AItem.Item[I];
+      ItemA:=aItem.Item[I];
       ItemA.Checked:=AStat;
-      SetItemNextChecked(ATree,ItemA,AStat);
+      SetItemNextChecked(aTree,ItemA,AStat);
     end;
   end;  
 end;
 
-class procedure TUiUtils.SetItemPrevChecked(ATree: TElTree;
-  AItem: TElTreeItem; AStat: Boolean);
+class procedure TUiUtils.SetItemPrevChecked(aTree: TElTree;
+  aItem: TElTreeItem; AStat: Boolean);
 var
   ItemA:TElTreeItem;
 begin
-  ItemA:=AItem.Parent;
+  ItemA:=aItem.Parent;
   while ItemA <>nil do
   begin
     ItemA.Checked:=AStat;
@@ -590,11 +590,11 @@ begin
 end;
 
 class procedure TUiUtils.SetTreeItemCheckedState(AValue,
-  ALastLevl: Boolean; ATree: TElTree);
+  ALastLevl: Boolean; aTree: TElTree);
 var
   I:Integer;
 begin
-  with ATree do
+  with aTree do
   begin
     Items.BeginUpdate;
     for I:=0 to Items.Count-1 do
@@ -609,11 +609,11 @@ begin
   end;  
 end;
 
-class procedure TUiUtils.TreeIndex(ATree: TElTree);
+class procedure TUiUtils.TreeIndex(aTree: TElTree);
 var
   I:Integer;
 begin
-  with ATree do
+  with aTree do
   begin
     Items.BeginUpdate;
     for I:=0 to Items.Count-1 do
