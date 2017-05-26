@@ -57,6 +57,7 @@ type
     procedure Btnv_TestCnfgClick(Sender: TObject);
     procedure Grid_CnfgCheckBoxClick(Sender: TObject; ACol, ARow: Integer;
       State: Boolean);
+    procedure Btnv_DeltCnfgClick(Sender: TObject);
   private
     FEditMode:TDialogListUniConfigEditMode;
     FListCnfg:TStringList;
@@ -202,6 +203,12 @@ begin
 
   TStylManager.InitColWidth(self.ClassName,self.Grid_Cnfg);
   TStylManager.InitFormSize(self.ClassName,self);
+
+  with Grid_Cnfg do
+  begin
+    ColWidths[0] := 40;
+    ColWidths[1] := 40;
+  end;
 end;
 
 procedure TDialogListUniConfig.Grid_CnfgGetAlignment(Sender: TObject; ARow,
@@ -482,6 +489,11 @@ end;
 procedure TDialogListUniConfig.Btnv_CopyCnfgClick(Sender: TObject);
 begin
   CopyCnfg;
+end;
+
+procedure TDialogListUniConfig.Btnv_DeltCnfgClick(Sender: TObject);
+begin
+  DeltCnfg;
 end;
 
 procedure TDialogListUniConfig.Btnv_ActvCnfgClick(Sender: TObject);
