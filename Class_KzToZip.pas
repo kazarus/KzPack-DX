@@ -33,8 +33,6 @@ implementation
 uses
   Class_KzUtils,Vcl.Dialogs;
 
-{ THelprString }
-
 function THelprString.FileDisk(fileName: string): Boolean;
 var
   IntStream:TStringStream;
