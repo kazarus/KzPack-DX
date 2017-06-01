@@ -16,7 +16,9 @@ type
     function GetStrsIndex:string;override;  
   public
     procedure SetInitialize;
-    procedure SetItemParams(AKJND,AKJQJ:Integer);
+
+    procedure SetItemParams(aValue:Integer);overload;
+    procedure SetItemParams(aKJND,aKJQJ:Integer);overload;
 
     function  GetNextKJND:Integer;   //下一个会计年度
     function  GetNextKJQJ:Integer;   //下一个会计期间
@@ -49,8 +51,6 @@ implementation
 
 uses
   Class_KzUtils;
-
-{ TKJQJ }
 
 constructor TKJQJ.Create;
 begin
@@ -222,6 +222,12 @@ procedure TKJQJ.SetInitialize;
 begin
   KJND:=-1;
   KJQJ:=-1;  
+end;
+
+procedure TKJQJ.SetItemParams(aValue: Integer);
+begin
+  KJND := Trunc(aValue / 100);
+  KJQJ := aValue  mod 100;
 end;
 
 procedure TKJQJ.SetItemParams(AKJND, AKJQJ: Integer);
