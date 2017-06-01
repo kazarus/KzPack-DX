@@ -26,6 +26,9 @@ type
     function  GetPrevKJND:Integer;   //上一个会计年度
     function  GetPrevKJQJ:Integer;   //上一个会计期间
 
+    function  GetKJQJNEXT:Integer;   //#value=201701,result=201702
+    function  GetKJQJHEAD:Integer;   //#value=201701,result=201612
+
     function  GetKJNDKJQJ:Integer;overload;                 //取得整型期间
     function  GetKJNDKJQJ(AValue:Integer):Integer;overload; //取得整型期间
     function  GetNameKJQJ:string;overload;
@@ -142,6 +145,16 @@ begin
   TempA :='';
   TempA :=Format('%D%S',[AKJND,TKzUtils.FormatCode(AKJQJ,2)]);
   Result:=StrToInt(TempA);
+end;
+
+function TKJQJ.GetKJQJHEAD: Integer;
+begin
+  Result := (GetPrevKJND * 100) + GetPrevKJQJ;
+end;
+
+function TKJQJ.GetKJQJNEXT: Integer;
+begin
+  Result := (GetNextKJND * 100) + GetNextKJQJ;
 end;
 
 function TKJQJ.GetNextKJND: Integer;
