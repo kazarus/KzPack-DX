@@ -115,7 +115,7 @@ begin
 
   if ViewLoadCnfg(YearOf(Now),FLoadCnfg,False,cPath)<>Mrok then Exit;
 
-  Panl_Text.Caption:=Format('导入期间:%D',[FLoadCnfg.KJNDKJQJ]);
+  //#Panl_Text.Caption:=Format('导入期间:%D',[FLoadCnfg.KJNDKJQJ]);
 
   if not FileExists(FLoadCnfg.FILEPATH) then
   begin
