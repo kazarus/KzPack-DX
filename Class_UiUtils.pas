@@ -20,28 +20,30 @@ type
     class procedure WhenEditExit(Sender:TObject);
   public
     //grid
-    class function  GetCheckBoxState(AGrid:TAdvStringGrid;ACol,ARow:Integer):Integer;
-    class procedure SetCheckBoxState(AGrid:TAdvStringGrid;ACol,ARow,AStat:Integer);
+    class function  GetCheckBoxState(aGrid:TAdvStringGrid;ACol,ARow:Integer):Integer;
+    class procedure SetCheckBoxState(aGrid:TAdvStringGrid;ACol,ARow,AStat:Integer);
 
-    class function  GetCellTextState(AGrid:TAdvStringGrid;ACol,ARow:Integer):Integer;
-    class procedure SetCellTextState(AGrid:TAdvStringGrid;ACol,ARow,AStat:Integer);
+    class function  GetCellTextState(aGrid:TAdvStringGrid;ACol,ARow:Integer):Integer;
+    class procedure SetCellTextState(aGrid:TAdvStringGrid;ACol,ARow,AStat:Integer);
 
-    class function  GetCellTextAlign(AGrid:TAdvStringGrid;ACol,ARow:Integer):Integer;
-    class procedure SetCellTextAlign(AGrid:TAdvStringGrid;ACol,ARow,AAlig:Integer);
+    class function  GetCellTextAlign(aGrid:TAdvStringGrid;ACol,ARow:Integer):Integer;
+    class procedure SetCellTextAlign(aGrid:TAdvStringGrid;ACol,ARow,AAlig:Integer);
     class function  GetGridAlignment(AAlig:Integer):TAlignment;
 
-    class function  GetStrsCellChked(AAdvGrid:TAdvStringGrid;ACol:Integer):TStringList;deprecated;
-    class function  GetListCellChked(AAdvGrid:TAdvStringGrid;ACol:Integer):TStringList;
-    class function  GetSizeCellChked(AAdvGrid:TAdvStringGrid;ACol:Integer):Integer;
-    class procedure SetGridCellChked(AAdvGrid:TAdvStringGrid;ACol:Integer;AValue:Boolean);
+    class function  GetStrsCellChked(aGrid:TAdvStringGrid;ACol:Integer):TStringList;deprecated;
+    class function  GetListCellChked(aGrid:TAdvStringGrid;ACol:Integer):TStringList;
+    class function  GetSizeCellChked(aGrid:TAdvStringGrid;ACol:Integer):Integer;
+    class procedure SetGridCellChked(aGrid:TAdvStringGrid;ACol:Integer;AValue:Boolean);
 
-    class procedure ClearGrid(AGrid:TAdvStringGrid;ARowCount:Integer;ADefaultRowCount:Integer=2);
-    class procedure CellIndex(AGrid:TAdvStringGrid;ACol:Integer=0;ARowStart:Integer=1;ARowEnd:Integer=-1);
+    class procedure ClearGrid(aGrid:TAdvStringGrid;ARowCount:Integer;ADefaultRowCount:Integer=2);
+    class procedure CellIndex(aGrid:TAdvStringGrid;ACol:Integer=0;ARowStart:Integer=1;ARowEnd:Integer=-1);
 
-    class procedure HeadIndex(AGrid:TAdvStringGrid;ARow:Integer=0);
+    class procedure HeadIndex(aGrid:TAdvStringGrid;ARow:Integer=0);
 
-    class function  GridCheck(AGrid:TAdvStringGrid;ACol:Integer=1;ARowStart:Integer=1;ARowEnd:Integer=-1):TStringList;
-    class procedure CellCheck(AGrid:TAdvStringGrid;AValue:Boolean;ACol:Integer=1;ARowStart:Integer=1;ARowEnd:Integer=-1);
+    class function  GridCheck(aGrid:TAdvStringGrid;ACol:Integer=1;ARowStart:Integer=1;ARowEnd:Integer=-1):TStringList;
+    class procedure CellCheck(aGrid:TAdvStringGrid;AValue:Boolean;ACol:Integer=1;ARowStart:Integer=1;ARowEnd:Integer=-1);
+
+    class procedure SelectArea(aGrid:TAdvStringGrid;aCol:Integer=1;aValue:Boolean=True);
   public
     {begin
       if Item.Checked then
@@ -98,13 +100,13 @@ uses
 
 { TUiUtils }
 
-class procedure TUiUtils.CellCheck(AGrid: TAdvStringGrid; AValue: Boolean;
+class procedure TUiUtils.CellCheck(aGrid: TAdvStringGrid; AValue: Boolean;
   ACol, ARowStart, ARowEnd: Integer);
 var
   I:Integer;
   StatA:Boolean;  
 begin
-  with AGrid do
+  with aGrid do
   begin
     if ARowEnd=-1 then ARowEnd:=RowCount-1;
     
@@ -115,14 +117,14 @@ begin
   end;
 end;
 
-class procedure TUiUtils.CellIndex(AGrid: TAdvStringGrid; ACol, ARowStart,
+class procedure TUiUtils.CellIndex(aGrid: TAdvStringGrid; ACol, ARowStart,
   ARowEnd: Integer);
 var
   I,M:Integer;
 begin
-  if ARowEnd=-1 then ARowEnd:=AGrid.RowCount-1;
+  if ARowEnd=-1 then ARowEnd:=aGrid.RowCount-1;
 
-  with AGrid do
+  with aGrid do
   begin
     BeginUpdate;
 
@@ -138,10 +140,10 @@ begin
   end;  
 end;
 
-class procedure TUiUtils.ClearGrid(AGrid: TAdvStringGrid; ARowCount,
+class procedure TUiUtils.ClearGrid(aGrid: TAdvStringGrid; ARowCount,
   ADefaultRowCount: Integer);
 begin
-  with AGrid do
+  with aGrid do
   begin
     BeginUpdate;
 
@@ -159,26 +161,26 @@ begin
   end;
 end;
 
-class function TUiUtils.GetCellTextAlign(AGrid: TAdvStringGrid; ACol,
+class function TUiUtils.GetCellTextAlign(aGrid: TAdvStringGrid; ACol,
   ARow: Integer): Integer;
 begin
 
 end;
 
-class function TUiUtils.GetCellTextState(AGrid: TAdvStringGrid; ACol,
+class function TUiUtils.GetCellTextState(aGrid: TAdvStringGrid; ACol,
   ARow: Integer): Integer;
 begin
 
 end;
 
-class function TUiUtils.GetCheckBoxState(AGrid: TAdvStringGrid; ACol,
+class function TUiUtils.GetCheckBoxState(aGrid: TAdvStringGrid; ACol,
   ARow: Integer): Integer;
 var
   StatA:Boolean;
 begin
   Result:=0;
 
-  with AGrid do
+  with aGrid do
   begin
     if GetCheckBoxState(ACol,ARow,StatA) then
     begin
@@ -278,10 +280,10 @@ begin
   end;      
 end;
 
-class function TUiUtils.GetListCellChked(AAdvGrid: TAdvStringGrid;
+class function TUiUtils.GetListCellChked(aGrid: TAdvStringGrid;
   ACol: Integer): TStringList;
 begin
-  Result:=GetStrsCellChked(AAdvGrid,ACol);
+  Result:=GetStrsCellChked(aGrid,ACol);
 end;
 
 
@@ -314,14 +316,14 @@ begin
   Result := cPath;
 end;
 
-class function TUiUtils.GetSizeCellChked(AAdvGrid: TAdvStringGrid;
+class function TUiUtils.GetSizeCellChked(aGrid: TAdvStringGrid;
   ACol: Integer): Integer;
 var
   I:Integer;
   StatA:Boolean;
 begin
   Result:=0;
-  with AAdvGrid do
+  with aGrid do
   begin
     BeginUpdate;
     for I:=1 to RowCount-1 do
@@ -398,14 +400,14 @@ begin
   end;
 end;
 
-class function TUiUtils.GetStrsCellChked(AAdvGrid: TAdvStringGrid;
+class function TUiUtils.GetStrsCellChked(aGrid: TAdvStringGrid;
   ACol: Integer): TStringList;
 var
   I:Integer;
   StatA:Boolean;
 begin
   Result:=TStringList.Create;
-  with AAdvGrid do
+  with aGrid do
   begin
     BeginUpdate;
     for I:=1 to RowCount-1 do
@@ -423,14 +425,14 @@ end;
 
 
 
-class function TUiUtils.GridCheck(AGrid: TAdvStringGrid; ACol, ARowStart,
+class function TUiUtils.GridCheck(aGrid: TAdvStringGrid; ACol, ARowStart,
   ARowEnd: Integer): TStringList;
 var
   I:Integer;
   StatA:Boolean;  
 begin
   Result:=TStringList.Create;
-  with AGrid do
+  with aGrid do
   begin
     if ARowEnd=-1 then ARowEnd:=RowCount-1;
     
@@ -446,13 +448,13 @@ begin
   end;
 end;
 
-class procedure TUiUtils.HeadIndex(AGrid: TAdvStringGrid; ARow: Integer);
+class procedure TUiUtils.HeadIndex(aGrid: TAdvStringGrid; ARow: Integer);
 var
   I,X,Y:Integer;
   R,S  :string;
 begin
   inherited;
-  with AGrid do
+  with aGrid do
   begin
     for I:=1 to ColCount-1 do
     begin
@@ -481,33 +483,54 @@ begin
 end; 
 
 
-class procedure TUiUtils.SetCellTextAlign(AGrid: TAdvStringGrid; ACol,
+class procedure TUiUtils.SelectArea(aGrid: TAdvStringGrid;aCol:Integer;aValue:Boolean);
+var
+  I:Integer;
+  Start:Integer;
+  Right:Integer;
+begin
+  with aGrid do
+  begin
+    Start := Selection.Top;
+    Right := Selection.Bottom;
+
+
+    BeginUpdate;
+    for I := Start to Right do
+    begin
+      SetCheckBoxState(aCol,I,aValue);
+    end;
+    EndUpdate;
+  end;
+end;
+
+class procedure TUiUtils.SetCellTextAlign(aGrid: TAdvStringGrid; ACol,
   ARow, AAlig: Integer);
 begin
 
 end;
 
-class procedure TUiUtils.SetCellTextState(AGrid: TAdvStringGrid; ACol,
+class procedure TUiUtils.SetCellTextState(aGrid: TAdvStringGrid; ACol,
   ARow, AStat: Integer);
 begin
 
 end;
 
-class procedure TUiUtils.SetCheckBoxState(AGrid: TAdvStringGrid; ACol,
+class procedure TUiUtils.SetCheckBoxState(aGrid: TAdvStringGrid; ACol,
   ARow, AStat: Integer);
 begin
-  with AGrid do
+  with aGrid do
   begin
     SetCheckBoxState(ACol,ARow,AStat=1);
   end;  
 end;
 
-class procedure TUiUtils.SetGridCellChked(AAdvGrid: TAdvStringGrid;
+class procedure TUiUtils.SetGridCellChked(aGrid: TAdvStringGrid;
   ACol: Integer; AValue: Boolean);
 var
   I:Integer;
 begin
-  with AAdvGrid do
+  with aGrid do
   begin
     BeginUpdate;
     for I:=1 to RowCount-1 do

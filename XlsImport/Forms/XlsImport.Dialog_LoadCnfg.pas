@@ -36,6 +36,7 @@ type
     procedure SetComboItems;override;
     procedure TryFreeAndNil;override;
   public
+    procedure ViewPath;
     procedure InitCnfg;
     procedure ImptCnfg(var aLoadCnfg:TLoadCnfg);
   end;
@@ -179,12 +180,16 @@ begin
   if FListKJQJ<>nil then TKzUtils.TryFreeAndNil(FListKJQJ);
 end;
 
-procedure TDialogLoadCnfg.Edit_FilePathButtonClick(Sender: TObject);
+procedure TDialogLoadCnfg.ViewPath;
 var
   OD:TOpenDialog;
 begin
   try
     OD:=TOpenDialog.Create(nil);
+    if Edit_FilePath.Text <> '' then
+    begin
+      OD.InitialDir := ExtractFilePath(Edit_FilePath.Text);
+    end;
     if OD.Execute then
     begin
       Edit_FilePath.Text:=OD.FileName;
@@ -194,9 +199,14 @@ begin
   end;
 end;
 
+procedure TDialogLoadCnfg.Edit_FilePathButtonClick(Sender: TObject);
+begin
+  ViewPath;
+end;
+
 procedure TDialogLoadCnfg.Btnv_QuitClick(Sender: TObject);
 begin
-  ModalResult:=mrCancel;
+  ModalResult := mrCancel;
 end;
 
 procedure TDialogLoadCnfg.Btnv_MrokClick(Sender: TObject);
