@@ -134,7 +134,7 @@ end;
 
 function TUniConfig.GetStrsIndex: string;
 begin
-  Result:='';
+  Result := UnicMark;
 end;
 
 function TUniConfig.GetStrInsert: string;
