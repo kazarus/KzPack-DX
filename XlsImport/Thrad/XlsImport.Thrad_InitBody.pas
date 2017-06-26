@@ -12,6 +12,8 @@ type
     FListBody:TStringList;   //&
     FBodySize:Integer;       //&
     FHashHead:THashedStringList;//&
+  public
+    procedure Initialize;
   protected
     procedure Execute; override;
   end;
@@ -22,6 +24,11 @@ uses
   Class_KzUtils,Class_UiUtils;
 
 procedure TThradInitBody.Execute;
+begin
+  Synchronize(Initialize);
+end;
+
+procedure TThradInitBody.Initialize;
 var
   I,M:Integer;
   cIDX:Integer;
@@ -63,14 +70,14 @@ begin
       for I:=0 to Size-1 do
       begin
         GetOneProgress(I+1);
-        
+
         CellRows:=TCellRows(FListBody.Objects[I]);
 
         AddRow;
 
         //@Cells[0,RowCount-1]:=Format('%D',[I+1]);
         AddCheckBox(1,RowCount-1,True,False);
-        
+
         for M:=0 to CellRows.ListData.Count-1 do
         begin
           CellData := TCellData(CellRows.ListData.Objects[M]);

@@ -112,12 +112,12 @@ begin
     aLoadCnfg.KJNDKJQJ:=cKJQJ.GetKJNDKJQJ;
   end;
 
-  if FFilePath = '' then
+  {#if FFilePath = '' then
   begin
     FFilePath := TKzUtils.ExePath+'loadcnfg.json';
   end;
   
-  aLoadCnfg.ToFILE(FFilePath,True);
+  aLoadCnfg.ToFILE(FFilePath,True);}
 end;
 
 procedure TDialogLoadCnfg.InitCnfg;
@@ -314,15 +314,15 @@ procedure TDialogLoadCnfg.Btnv_MrokClick(Sender: TObject);
 var
   cKJQJ:TKJQJ;
 begin
-  if Trim(Edit_RowTitle.Text)='' then
+  if Trim(Edit_RowTitle.Text) = '' then
   begin
-    ShowMessageFmt('请指定标题行.',[]);
+    ShowMessageFmt('请指定标题行.', []);
     Exit;
   end;
-  if Trim(Edit_RowStart.Text)='' then
+  if Trim(Edit_RowStart.Text) = '' then
   begin
-    ShowMessageFmt('请指定起始行.',[]);
-    Exit;  
+    ShowMessageFmt('请指定起始行.', []);
+    Exit;
   end;
 
   if FIsPrompt then

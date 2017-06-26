@@ -9,7 +9,8 @@ uses
   Vcl.Grids, AdvObj, BaseGrid, AdvGrid, System.ImageList, Vcl.ImgList, RzButton,
   FormEx_View, XlsImport.Class_Load_Cnfg, System.DateUtils, XLSSheetData5,
   XLSReadWriteII5, Xc12Utils5, System.IniFiles, XlsImport.Class_Cell_Rows,
-  Class_KzThrad, XlsImport.Thrad_InitBody, XlsImport.Class_Cell_Head, qjson;
+  Class_KzThrad, XlsImport.Thrad_InitBody, XlsImport.Class_Cell_Head, qjson,
+  XlsImport.Class_Col_Match;
 
 type
   TFormListLoad = class(TFormExView)
@@ -33,16 +34,16 @@ type
     procedure Grid_DataDblClickCell(Sender: TObject; ARow, ACol: Integer);
     procedure FormActivate(Sender: TObject);
   private
-    FClasName:string;
-    FLoadCnfg:TLoadCnfg;//*
+    FClasName: string;
+    FLoadCnfg: TLoadCnfg; //*
 
-    FListHead:TStringList;//*list of string
-    FListBody:TStringList;//*list of string
+    FListHead: TStringList; //*list of string
+    FListBody: TStringList; //*list of string
 
-    FCellHead:TStringList;//*list of *tcellhead
-    FListGrab:TStringList;//*list of *tobject
+    FCellHead: TStringList; //*list of *tcellhead
+    FListGrab: TStringList; //*list of *tobject
 
-    FHashHead:THashedStringList;//*list of string(%s=%d)
+    FHashHead: THashedStringList; //*list of string(%s=%d)
   protected
     procedure SetInitialize;override;
     procedure SetCommParams;override;
@@ -103,10 +104,16 @@ procedure TFormListLoad.Btnv_CnfgClick(Sender: TObject);
 var
   cPath:string;
 begin
-  if FLoadCnfg=nil then
+  if FLoadCnfg = nil then
   begin
-    FLoadCnfg:=TLoadCnfg.Create;
+    FLoadCnfg := TLoadCnfg.Create;
   end;
+  if FLoadCnfg.COLMATCH = nil then
+  begin
+    FLoadCnfg.COLMATCH := TCollection.Create(TColMatch);
+  end;
+  TKzUtils.JustCleanList(FLoadCnfg.FCOLMATCH);
+
   cPath:=FLoadCnfg.GetFilePath(FClasName);
   if FileExists(cPath) then
   begin
@@ -181,6 +188,9 @@ var
   cHead:TCellHead;
   xHead:TCellHead;
   cList:TStringList;
+
+  cPath:string;
+  Match:TColMatch;  //*
 begin
   Result := False;
 
@@ -224,6 +234,31 @@ begin
 
   finally
     FreeAndNil(cList);
+  end;
+
+
+  if FLoadCnfg <> nil then
+  begin
+    with Grid_Data do
+    begin
+      if FLoadCnfg.COLMATCH = nil then
+      begin
+        FLoadCnfg.COLMATCH := TCollection.Create(TColMatch);
+      end;
+      TKzUtils.JustCleanList(FLoadCnfg.FCOLMATCH);
+
+      for I := 2  to ColCount-1 do
+      begin
+        if Trim(Cells[I,1]) = '' then Continue;
+
+        Match := TColMatch(FLoadCnfg.COLMATCH.Add);
+        Match.ColStart := Trim(Cells[I,0]);
+        Match.ColRight := Trim(Cells[I,1]);
+      end;
+    end;
+
+    cPath:=FLoadCnfg.GetFilePath(FClasName);
+    FLoadCnfg.ToFILE(cPath,True);
   end;
 
   Result := True;
@@ -270,10 +305,11 @@ var
 begin
   with Grid_Data do
   begin
-    if ARow=1 then
+    if ARow = 1 then
     begin
-      cHead:=TCellHead.Create;
+      cHead := TCellHead.Create;
       PushGrab(cHead);
+
       if ViewCellHead(FCellHead,cHead)=Mrok then
       begin
         Objects[ACol,1] := cHead;
@@ -287,9 +323,9 @@ end;
 procedure TFormListLoad.Grid_DataGetAlignment(Sender: TObject; ARow,
   ACol: Integer; var HAlign: TAlignment; var VAlign: TVAlignment);
 begin
-  if (ARow=0) or (ACol in [0,1]) then
+  if (ARow = 0) or (ACol in [0, 1]) then
   begin
-    HAlign:=taCenter;
+    HAlign := taCenter;
   end;
 end;
 
@@ -345,12 +381,14 @@ end;
 
 procedure TFormListLoad.InitHead(aList: TStringList);
 var
-  I:Integer;
+  I,M:Integer;
   cIndx: Integer;
 
   dIndx: Integer;
   cHead: TCellHead;
   xHead: TCellHead;
+
+  Match: TColMatch;
 begin
   if FHashHead=nil then
   begin
@@ -361,7 +399,8 @@ begin
   with Grid_Data do
   begin
     BeginUpdate;
-    for I:=0 to aList.Count-1 do
+
+    for I := 0 to aList.Count - 1 do
     begin
       cIndx:=I+2;
       if Grid_Data.ColCount-1 < cIndx then
@@ -371,7 +410,7 @@ begin
       Cells[cIndx,0]:=Trim(aList.Strings[I]);
       FHashHead.Add(Format('%S=%D',[Trim(aList.Strings[I]),cIndx]));
 
-      //YXC_2017_04_14_15_22_29_<
+      //YXC_2017_04_14_15_22_29_<_自动匹配
       if (FCellHead <> nil) and (FCellHead.Count > 0) then
       begin
         dIndx := FCellHead.IndexOf(Trim(aList.Strings[I]));
@@ -397,6 +436,47 @@ begin
       end;
       //YXC_2017_04_14_15_22_29_>
     end;
+
+    //YXC_2017_06_26_16_23_36_<_手工匹配
+    if (FLoadCnfg.COLMATCH <> nil) and (FLoadCnfg.COLMATCH.Count>0) then
+    begin
+      for I := 2 to ColCount-1 do
+      begin
+        if Cells[I,1] <> '' then Continue;
+
+        for M := 0 to FLoadCnfg.COLMATCH.Count-1 do
+        begin
+          Match := TColMatch(FLoadCnfg.COLMATCH.Items[M]);
+          if Match = nil then Continue;
+
+          if Match.ColStart = Trim(Cells[I,0]) then
+          begin
+            dIndx := FCellHead.IndexOf(Match.ColRight);
+            if dIndx <> -1 then
+            begin
+              cHead := TCellHead(FCellHead.Objects[dIndx]);
+              if cHead <> nil then
+              begin
+                xHead := TCellHead.Create;
+                TCellHead.CopyIt(cHead,xHead);
+
+                if FListGrab = nil then
+                begin
+                  FListGrab := TStringList.Create;
+                end;
+                FListGrab.AddObject('',xHead);
+
+                Objects[I, 1] := xHead;
+                Cells[I, 1] := xHead.HeadName;
+                Alignments[I, 1] := taCenter;
+              end;
+            end;
+          end;
+        end;
+      end;
+    end;
+    //YXC_2017_06_26_16_23_36_>
+
     EndUpdate;
   end;
 end;
@@ -528,7 +608,7 @@ end;
 procedure TFormListLoad.SetCommParams;
 begin
   inherited;
-  Caption:='数据导入';
+  Caption := '数据导入';
 end;
 
 procedure TFormListLoad.SetGridParams;

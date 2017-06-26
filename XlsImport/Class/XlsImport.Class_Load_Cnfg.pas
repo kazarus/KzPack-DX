@@ -17,6 +17,8 @@ type
     FROWENDED : Integer;
     FKJNDKJQJ : Integer;
     FFILEPATH : string;
+  public
+    FColMatch : TCollection;//*list of *tcolmatch;
   protected
     procedure SetParameters;override;
     function  GetStrInsert:string;override;
@@ -44,6 +46,8 @@ type
     property ROWENDED : Integer read FROWENDED  write FROWENDED;
     property KJNDKJQJ : Integer read FKJNDKJQJ  write FKJNDKJQJ;
     property FILEPATH : string  read FFILEPATH  write FFILEPATH;
+  published
+    property COLMATCH : TCollection read FColMatch write FColMatch;
   public
     class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
     class procedure ReadDS(AUniQuery:TUniQuery;var Result:TUniEngine);override;
@@ -112,7 +116,7 @@ end;
 
 destructor TLoadCnfg.Destroy;
 begin
-
+  if FColMatch <> nil then TKzUtils.TryFreeAndNil(FColMatch);
   inherited;
 end;
 
