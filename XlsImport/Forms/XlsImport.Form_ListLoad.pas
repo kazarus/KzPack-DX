@@ -502,7 +502,6 @@ end;
 function TFormListLoad.ReadHead(var aList: TStringList): Boolean;
 var
   I,C,R:Integer;
-  cNull:Boolean;
   CellType: TXLSCellType;
 begin
   Result:=False;

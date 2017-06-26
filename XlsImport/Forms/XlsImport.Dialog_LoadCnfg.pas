@@ -6,7 +6,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Dialog_View, StdCtrls, RzLabel, Mask, RzEdit, RzBtnEdt,
-  XlsImport.Class_Load_Cnfg,Uni,UniConnct, RzCmboBx;
+  XlsImport.Class_Load_Cnfg,Uni,UniConnct, RzCmboBx, XLSSheetData5,
+  XLSReadWriteII5,XlsImport.Class_Load_Page;
 
 type
   TDialogLoadCnfg = class(TDialogView)
@@ -20,15 +21,19 @@ type
     Btnv_Quit: TButton;
     Labl_4: TRzLabel;
     Comb_KJQJ: TRzComboBox;
+    Labl_5: TRzLabel;
+    Comb_RealPage: TRzComboBox;
+    XLSReadWriteII51: TXLSReadWriteII5;
     procedure Edit_FilePathButtonClick(Sender: TObject);
     procedure Btnv_QuitClick(Sender: TObject);
     procedure Btnv_MrokClick(Sender: TObject);
   private
-    FRealKJND:Integer;
-    FFilePath:string;
-    FLoadCnfg:TLoadCnfg;  //&
-    FListKJQJ:TStringList;//*
-    FIsPrompt:Boolean;
+    FRealKJND: Integer;
+    FFilePath: string;
+    FLoadCnfg: TLoadCnfg;  //&
+    FListKJQJ: TStringList; //*
+    FIsPrompt: Boolean;    //*
+    FListPage: TStringList; //*
   protected
     procedure SetInitialize;override;
     procedure SetCommParams;override;
@@ -36,8 +41,11 @@ type
     procedure SetComboItems;override;
     procedure TryFreeAndNil;override;
   public
+    function  ReadPage(aFilePath:string;var aList:TStringList):Boolean;
+  public
     procedure ViewPath;
     procedure InitCnfg;
+    procedure InitPage(aList:TStringList;aName:string);
     procedure ImptCnfg(var aLoadCnfg:TLoadCnfg);
   end;
 
@@ -112,6 +120,71 @@ begin
   Edit_RowTitle.Text := Format('%D', [FLoadCnfg.ROWTITLE]);
   Edit_RowStart.Text := Format('%D', [FLoadCnfg.ROWSTART]);
   Edit_FilePath.Text := FLoadCnfg.FILEPATH;
+
+  if (Trim(FLoadCnfg.FILEPATH) <> '') and (FileExists(FLoadCnfg.FILEPATH)) then
+  begin
+    if FListPage = nil then
+    begin
+      FListPage := TStringList.Create;
+    end;
+    TKzUtils.JustCleanList(FListPage);
+    if ReadPage(FLoadCnfg.FILEPATH,FListPAge) then
+    begin
+      InitPage(FListPage, FLoadCnfg.PAGENAME);
+    end;
+  end;
+end;
+
+procedure TDialogLoadCnfg.InitPage(aList:TStringList;aName:string);
+var
+  I:Integer;
+  cPage:TLoadPage;
+begin
+  with Comb_RealPage do
+  begin
+    Items.Clear;
+
+    for I := 0 to aList.Count-1 do
+    begin
+      cPage := TLoadPage(aList.Objects[I]);
+      if cPage = nil then Continue;
+
+      Items.AddObject(cPage.PAGENAME,cPage);
+    end;
+
+    Style := csDropDownList;
+    ItemIndex := 0;
+
+    if Items.IndexOf(aName) <> -1 then
+    begin
+      ItemIndex := Items.IndexOf(aName);
+    end;
+  end;
+end;
+
+function TDialogLoadCnfg.ReadPage(aFilePath:string;var aList:TStringList):Boolean;
+var
+  I:Integer;
+  cPage:TLoadPage;
+begin
+  Result := False;
+
+  if aList = nil then Exit;
+  TKzUtils.JustCleanList(aList);
+
+  self.XLSReadWriteII51.Filename := aFilePath;
+  self.XLSReadWriteII51.Read;
+
+  for I := 0 to self.XLSReadWriteII51.Count -1 do
+  begin
+    cPage := TLoadPage.Create;
+    cPage.PAGEINDX := I;
+    cPage.PAGENAME := self.XLSReadWriteII51.Sheets[I].Name;
+
+    aList.AddObject(cPage.PAGENAME,cPage);
+  end;
+
+  Result := True;
 end;
 
 procedure TDialogLoadCnfg.SetComboItems;
@@ -169,7 +242,8 @@ end;
 
 procedure TDialogLoadCnfg.SetInitialize;
 begin
-  FListKJQJ:=nil;
+  FListKJQJ := nil;
+  FListPage := nil;
   inherited;
   InitCnfg;
 end;
@@ -177,7 +251,8 @@ end;
 procedure TDialogLoadCnfg.TryFreeAndNil;
 begin
   inherited;
-  if FListKJQJ<>nil then TKzUtils.TryFreeAndNil(FListKJQJ);
+  if FListPage <> nil then TKzUtils.TryFreeAndNil(FListPage);
+  if FListKJQJ <> nil then TKzUtils.TryFreeAndNil(FListKJQJ);
 end;
 
 procedure TDialogLoadCnfg.ViewPath;
@@ -193,6 +268,16 @@ begin
     if OD.Execute then
     begin
       Edit_FilePath.Text:=OD.FileName;
+
+      if FListPage = nil then
+      begin
+        FListPage := TStringList.Create;
+      end;
+      TKzUtils.JustCleanList(FListPage);
+      if ReadPage(OD.FileName,FListPage) then
+      begin
+        InitPage(FListPage,'');
+      end;
     end;
   finally
     FreeAndNil(OD);

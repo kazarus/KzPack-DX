@@ -2,7 +2,7 @@ object DialogLoadCnfg: TDialogLoadCnfg
   Left = 270
   Top = 256
   Caption = 'DialogLoadCnfg'
-  ClientHeight = 174
+  ClientHeight = 192
   ClientWidth = 404
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
@@ -14,37 +14,44 @@ object DialogLoadCnfg: TDialogLoadCnfg
   PixelsPerInch = 96
   TextHeight = 13
   object Labl_1: TRzLabel
-    Left = 20
-    Top = 20
-    Width = 39
+    Left = 18
+    Top = 74
+    Width = 46
     Height = 13
-    Caption = #26631#39064#34892
+    Caption = #26631#39064#34892':'
   end
   object Labl_2: TRzLabel
-    Left = 20
-    Top = 45
-    Width = 39
+    Left = 18
+    Top = 99
+    Width = 46
     Height = 13
-    Caption = #36215#22987#34892
+    Caption = #36215#22987#34892':'
   end
   object Labl_3: TRzLabel
-    Left = 7
-    Top = 70
-    Width = 52
+    Left = 5
+    Top = 24
+    Width = 59
     Height = 13
-    Caption = #25991#20214#36335#24452
+    Caption = #25991#20214#36335#24452':'
   end
   object Labl_4: TRzLabel
-    Left = 7
-    Top = 95
-    Width = 52
+    Left = 5
+    Top = 124
+    Width = 59
     Height = 13
-    Caption = #23548#20837#26399#38388
+    Caption = #23548#20837#26399#38388':'
     Visible = False
   end
+  object Labl_5: TRzLabel
+    Left = 18
+    Top = 49
+    Width = 46
+    Height = 13
+    Caption = #26631#31614#39029':'
+  end
   object Edit_RowTitle: TRzButtonEdit
-    Left = 63
-    Top = 16
+    Left = 68
+    Top = 70
     Width = 320
     Height = 21
     Text = '5'
@@ -56,8 +63,8 @@ object DialogLoadCnfg: TDialogLoadCnfg
     ButtonWidth = 15
   end
   object Edit_RowStart: TRzButtonEdit
-    Left = 63
-    Top = 41
+    Left = 68
+    Top = 95
     Width = 320
     Height = 21
     Text = '6'
@@ -69,8 +76,8 @@ object DialogLoadCnfg: TDialogLoadCnfg
     ButtonWidth = 15
   end
   object Edit_FilePath: TRzButtonEdit
-    Left = 63
-    Top = 66
+    Left = 70
+    Top = 20
     Width = 320
     Height = 21
     Text = ''
@@ -82,8 +89,8 @@ object DialogLoadCnfg: TDialogLoadCnfg
     OnButtonClick = Edit_FilePathButtonClick
   end
   object Btnv_Mrok: TButton
-    Left = 233
-    Top = 143
+    Left = 238
+    Top = 159
     Width = 75
     Height = 25
     Caption = 'Btnv_Mrok'
@@ -91,8 +98,8 @@ object DialogLoadCnfg: TDialogLoadCnfg
     OnClick = Btnv_MrokClick
   end
   object Btnv_Quit: TButton
-    Left = 308
-    Top = 143
+    Left = 313
+    Top = 159
     Width = 75
     Height = 25
     Caption = 'Btnv_1'
@@ -100,9 +107,9 @@ object DialogLoadCnfg: TDialogLoadCnfg
     OnClick = Btnv_QuitClick
   end
   object Comb_KJQJ: TRzComboBox
-    Left = 63
-    Top = 91
-    Width = 321
+    Left = 68
+    Top = 120
+    Width = 320
     Height = 21
     Ctl3D = False
     FrameVisible = True
@@ -110,5 +117,24 @@ object DialogLoadCnfg: TDialogLoadCnfg
     ParentCtl3D = False
     TabOrder = 5
     Visible = False
+  end
+  object Comb_RealPage: TRzComboBox
+    Left = 68
+    Top = 45
+    Width = 320
+    Height = 21
+    Ctl3D = False
+    FrameVisible = True
+    FramingPreference = fpCustomFraming
+    ParentCtl3D = False
+    TabOrder = 6
+  end
+  object XLSReadWriteII51: TXLSReadWriteII5
+    ComponentVersion = '5.20.62'
+    Version = xvExcel2007
+    DirectRead = False
+    DirectWrite = False
+    Left = 88
+    Top = 152
   end
 end
