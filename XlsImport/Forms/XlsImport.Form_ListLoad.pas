@@ -461,10 +461,10 @@ var
   function TryFormat(aCol,ARow:Integer):string;
   begin
     try
-      Result:=Trim(XLSReadWriteII51[0].AsFmtString[aCol,aRow]);
+      Result:=Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[aCol,aRow]);
       //Result:=FormatDateTime('YYYY-MM-DD',XLSReadWriteII51[0].AsDateTime[aCol,aRow]);
     except
-      Result:=FloatToStr(XLSReadWriteII51[0].AsFloat[aCol,aRow]);
+      Result:=FloatToStr(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFloat[aCol,aRow]);
     end;
   end;
 begin
@@ -475,22 +475,22 @@ begin
   TKzUtils.JustCleanList(FListBody);
 
 
-  for R := FLoadCnfg.ROWSTART-1 to XLSReadWriteII51[0].LastRow do
+  for R := FLoadCnfg.ROWSTART-1 to XLSReadWriteII51[FLoadCnfg.PAGEINDX].LastRow do
   begin
     CellRows:=TCellRows.Create;
     CellRows.RowIndex:=R;
     CellRows.ListData:=TStringList.Create;
 
-    for C := XLSReadWriteII51[0].FirstCol to XLSReadWriteII51[0].LastCol do
+    for C := XLSReadWriteII51[0].FirstCol to XLSReadWriteII51[FLoadCnfg.PAGEINDX].LastCol do
     begin
-      CellType := XLSReadWriteII51[0].CellType[C,R];
+      CellType := XLSReadWriteII51[FLoadCnfg.PAGEINDX].CellType[C,R];
       if CellType = xctNone then Continue;
 
       CellData:=TCellData.Create;
       CellData.RowIndex:=R;
       CellData.ColIndex:=C;
-      CellData.CellData:=Trim(XLSReadWriteII51[0].AsFmtString[C,R]);
-      CellData.HeadName:=Trim(XLSReadWriteII51[0].AsString[C,FLoadCnfg.RowTitle-1]);
+      CellData.CellData:=Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[C,R]);
+      CellData.HeadName:=Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsString[C,FLoadCnfg.RowTitle-1]);
 
       CellRows.ListData.AddObject('',CellData);
     end;
@@ -506,12 +506,14 @@ var
 begin
   Result:=False;
 
-  for C := XLSReadWriteII51[0].FirstCol to XLSReadWriteII51[0].LastCol do
+  if FLoadCnfg = nil then Exit;
+
+  for C := XLSReadWriteII51[FLoadCnfg.PAGEINDX].FirstCol to XLSReadWriteII51[FLoadCnfg.PAGEINDX].LastCol do
   begin
-    CellType := XLSReadWriteII51[0].CellType[C,FLoadCnfg.RowTitle-1];
+    CellType := XLSReadWriteII51[FLoadCnfg.PAGEINDX].CellType[C,FLoadCnfg.RowTitle-1];
     if CellType = xctNone then Continue;
 
-    aList.Add(Trim(XLSReadWriteII51[0].AsString[C,FLoadCnfg.RowTitle-1]));
+    aList.Add(Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsString[C,FLoadCnfg.RowTitle-1]));
   end;
 
   Result:=True;

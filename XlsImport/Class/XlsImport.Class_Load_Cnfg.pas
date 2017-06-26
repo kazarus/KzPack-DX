@@ -9,6 +9,7 @@ type
   TLoadCnfg=class(TUniEngine)
   private
     FMASTCODE : string;
+    FPAGEINDX : Integer;
     FPAGENAME : string;
     FROWTITLE : Integer;
     FCOLSTART : Integer;
@@ -35,6 +36,7 @@ type
     constructor Create;  
   published
     property MASTCODE : string  read FMASTCODE  write FMASTCODE;
+    property PAGEINDX : Integer read FPAGEINDX  write FPAGEINDX;
     property PAGENAME : string  read FPAGENAME  write FPAGENAME;
     property ROWTITLE : Integer read FROWTITLE  write FROWTITLE;
     property COLSTART : Integer read FCOLSTART  write FCOLSTART;

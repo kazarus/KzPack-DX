@@ -85,7 +85,23 @@ end;
 procedure TDialogLoadCnfg.ImptCnfg(var aLoadCnfg: TLoadCnfg);
 var
   cKJQJ:TKJQJ;
+  cPage:TLoadPage;
 begin
+  if Comb_RealPage.ItemIndex = -1 then
+  begin
+    TKzUtils.ShowMsg('请指定需要导入的标签页.');
+    Exit;
+  end;
+
+  with Comb_RealPage do
+  begin
+    cPage := TLoadPage(Comb_RealPage.Items.Objects[Comb_RealPage.ItemIndex]);
+    if cPage = nil then Exit;
+  end;
+
+  aLoadCnfg.PAGEINDX := cPage.PAGEINDX;
+  aLoadCnfg.PAGENAME := cPage.PAGENAME;
+
   aLoadCnfg.ROWTITLE := StrToIntDef(Edit_RowTitle.Text, 5);
   aLoadCnfg.ROWSTART := StrToIntDef(Edit_RowStart.Text, 5);
   aLoadCnfg.FILEPATH := Edit_FilePath.Text;
