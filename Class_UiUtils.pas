@@ -59,7 +59,7 @@ type
     class procedure SetItemPrevChecked(aTree:TElTree;aItem:TElTreeItem;AStat:Boolean);
     //eltree.common
     class function  GetSizeItemChked(aTree:TElTree;ACheckChild:Boolean=False):Integer;
-    class procedure SetTreeItemCheckedState(AValue,ALastLevl:Boolean;aTree:TElTree);
+    class procedure SetTreeItemChked(Value,IncludeLast:Boolean;aTree:TElTree);
     class function  GetMaxLevelInTreeView(aTree:TElTree):Integer;
     class procedure TreeIndex(aTree:TElTree);
     class procedure TreeInit(aTree:TElTree);
@@ -612,8 +612,8 @@ begin
   end;
 end;
 
-class procedure TUiUtils.SetTreeItemCheckedState(AValue,
-  ALastLevl: Boolean; aTree: TElTree);
+class procedure TUiUtils.SetTreeItemChked(Value,
+  IncludeLast: Boolean; aTree: TElTree);
 var
   I:Integer;
 begin
@@ -622,12 +622,12 @@ begin
     Items.BeginUpdate;
     for I:=0 to Items.Count-1 do
     begin
-      if ALastLevl then
+      if not IncludeLast then
       begin
         if Items.Item[I].HasChildren then Continue;
       end;
-      Items.Item[I].Checked:=AValue;
-    end;  
+      Items.Item[I].Checked := Value;
+    end;
     Items.EndUpdate;
   end;  
 end;
