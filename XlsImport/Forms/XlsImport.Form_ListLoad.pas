@@ -33,6 +33,8 @@ type
       var CanEdit: Boolean);
     procedure Grid_DataDblClickCell(Sender: TObject; ARow, ACol: Integer);
     procedure FormActivate(Sender: TObject);
+    procedure Grid_DataCheckBoxClick(Sender: TObject; ACol, ARow: Integer;
+      State: Boolean);
   private
     FClasName: string;
     FLoadCnfg: TLoadCnfg; //*
@@ -296,6 +298,15 @@ procedure TFormListLoad.Grid_DataCanEditCell(Sender: TObject; ARow,
   ACol: Integer; var CanEdit: Boolean);
 begin
   CanEdit := ACol =1;
+end;
+
+procedure TFormListLoad.Grid_DataCheckBoxClick(Sender: TObject; ACol,
+  ARow: Integer; State: Boolean);
+begin
+  if ARow = 0 then
+  begin
+    TUiUtils.CellCheck(Grid_Data,State);
+  end;
 end;
 
 procedure TFormListLoad.Grid_DataDblClickCell(Sender: TObject; ARow,
@@ -637,8 +648,10 @@ begin
     begin
       Clear;
       Delimiter:=',';
-      DelimitedText:='序号,勾选';
+      DelimitedText:='序号,';
     end;
+
+    AddCheckBox(1,0,False,False);
 
     ColCount:=ColumnHeaders.Count;
   end;

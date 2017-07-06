@@ -114,9 +114,9 @@ type
     //#class procedure INJSON(AValue:string;AClass:TUniEngineClass;var AObjt:TUniEngine;ACleanList:Boolean=True);overload;
 
 
-    class procedure STRIDX(Args:array of string;aList:TStringList;ASeparator:string;withQuoted:Boolean=False);overload;
-    class function  STRDIY(Args:array of string;aList:TStringList;ASeparator:string=',';withQuoted:Boolean=False):string;overload;
-    class function  STRDIY(Args:array of string;aList:TCollection;ASeparator:string=',';BSeparator:string='-';withQuoted:Boolean=False):string;overload;
+    class procedure STRIDX(Args:array of string;aList:TStringList;aSeparator:string='-';withQuoted:Boolean=False);overload;
+    class function  STRDIY(Args:array of string;aList:TStringList;aSeparator:string=',';withQuoted:Boolean=False):string;overload;
+    class function  STRDIY(Args:array of string;aList:TCollection;aSeparator:string=',';bSeparator:string='-';withQuoted:Boolean=False):string;overload;
 
 
     //#s:source;t:target
@@ -133,7 +133,7 @@ type
 
     class function  GetDataSet(ASQL:string;AUniConnection:TUniConnection):TUniQuery;overload;
     class function  GetDataSet(ASQL:string):TUniQuery;overload;
-    class procedure GetDataSet(ASQL:string;Fields:array of string;AUniConnection:TUniConnection;var Result:TStringList;ASeparator:string=',');overload;    
+    class procedure GetDataSet(ASQL:string;Fields:array of string;AUniConnection:TUniConnection;var Result:TStringList;aSeparator:string=',');overload;
 
     class function  GetServDat(AUniConnection:TUniConnection):TDateTime;
 
@@ -1227,11 +1227,11 @@ end;
 //end;
 
 class procedure TUniEngine.STRIDX(Args: array of string;
-  aList: TStringList; ASeparator: string; withQuoted:Boolean);
+  aList: TStringList; aSeparator: string; withQuoted:Boolean);
 var
   I,M  :Integer;
-  NameA:string;
-  TMPA:string;
+  cName:string;
+  cText:string;
   Instance:TUniEngine;
 begin
   if (aList=nil) or (aList.Count=0) then Exit;
@@ -1242,39 +1242,39 @@ begin
     Instance:=TUniEngine(aList.Objects[I]);
     if Instance=nil then Continue;
 
-    TMPA:='';
+    cText:='';
     for M:=0 to Length(Args)-1 do
     begin
-      NameA:=Args[M];
+      cName:=Args[M];
 
-      TMPA:=TMPA + ASeparator + VarToStr(GetPropValue(Instance,NameA));
+      cText:=cText + aSeparator + VarToStr(GetPropValue(Instance,cName));
       {if withQuoted then
       begin
-        TMPA:=TMPA + ASeparator +QuotedStr(VarToStr(GetPropValue(Instance,NameA)));
+        TMPA:=TMPA + aSeparator +QuotedStr(VarToStr(GetPropValue(Instance,NameA)));
       end else
       begin
-        TMPA:=TMPA + ASeparator +VarToStr(GetPropValue(Instance,NameA));
+        TMPA:=TMPA + aSeparator +VarToStr(GetPropValue(Instance,NameA));
       end;}
     end;
-    Delete(TMPA,1,Length(ASeparator));
+    Delete(cText,1,Length(aSeparator));
 
     if withQuoted then
     begin
-      aList.Strings[I]:=QuotedStr(TMPA);
+      aList.Strings[I]:=QuotedStr(cText);
     end else
     begin
-      aList.Strings[I]:=TMPA;
+      aList.Strings[I]:=cText;
     end;
   end;
 end;
 
 class function TUniEngine.STRDIY(Args: array of string;
-  aList: TStringList;ASeparator: string;withQuoted:Boolean): string;
+  aList: TStringList;aSeparator: string;withQuoted:Boolean): string;
 var
   I,M:Integer;
   Instance:TUniEngine;
-  NameA:string;
-  TMPA:string;
+  cName:string;
+  cText:string;
 begin
   Result:='';
   if (aList=nil) or (aList.Count=0) then Exit;
@@ -1284,25 +1284,25 @@ begin
     Instance:=TUniEngine(aList.Objects[I]);
     if Instance=nil then Continue;
 
-    TMPA:='';
+    cText:='';
     for M:=0 to Length(Args)-1 do
     begin
-      NameA:=Args[M];
+      cName:=Args[M];
       
-      TMPA:=TMPA + '-' + VarToStr(GetPropValue(Instance,NameA));
+      cText:=cText + '-' + VarToStr(GetPropValue(Instance,cName));
     end;
-    Delete(TMPA,1,1);
+    Delete(cText,1,1);
 
     if withQuoted then
     begin
-      Result:=Result +  ASeparator +QuotedStr(TMPA);
+      Result:=Result +  aSeparator +QuotedStr(cText);
     end else
     begin
-      Result:=Result +  ASeparator +TMPA;
+      Result:=Result +  aSeparator +cText;
     end;
   end;
   
-  Delete(Result,1,Length(ASeparator));
+  Delete(Result,1,Length(aSeparator));
 end;
 
 //class procedure TUniEngine.INJSON(AValue: string; AClass: TUniEngineClass;
@@ -1451,7 +1451,7 @@ begin
 end;
 
 class procedure TUniEngine.GetDataSet(ASQL:string;Fields:array of string;
-  AUniConnection: TUniConnection; var Result: TStringList;ASeparator:string=',');
+  AUniConnection: TUniConnection; var Result: TStringList;aSeparator:string=',');
 var
   I:Integer;
   TMPA:string;
@@ -1475,7 +1475,7 @@ begin
         for I:=0 to Length(Fields)-1 do
         begin
           TMPB:=Trim(UniQuery.FieldByName(Fields[I]).AsString);
-          TMPA:=TMPA+ASeparator+TMPB;
+          TMPA:=TMPA+aSeparator+TMPB;
         end;
         Delete(TMPA,1,1);
       end;
@@ -1541,12 +1541,12 @@ begin
 end;
 
 class function TUniEngine.STRDIY(Args: array of string; aList: TCollection;
-  ASeparator: string; BSeparator:string; withQuoted: Boolean): string;
+  aSeparator: string; bSeparator:string; withQuoted: Boolean): string;
 var
   I,M:Integer;
   Instance:TUniEngine;
-  NameA:string;
-  TMPA:string;
+  cName:string;
+  cText:string;
 begin
   Result:='';
   if (aList=nil) or (aList.Count=0) then Exit;
@@ -1556,25 +1556,25 @@ begin
     Instance:=TUniEngine(aList.Items[I]);
     if Instance=nil then Continue;
 
-    TMPA:='';
+    cText:='';
     for M:=0 to Length(Args)-1 do
     begin
-      NameA:=Args[M];
+      cName:=Args[M];
       
-      TMPA:=TMPA + BSeparator + VarToStr(GetPropValue(Instance,NameA));
+      cText:=cText + bSeparator + VarToStr(GetPropValue(Instance,cName));
     end;
-    Delete(TMPA,1,1);
+    Delete(cText,1,1);
 
     if withQuoted then
     begin
-      Result:=Result +  ASeparator +QuotedStr(TMPA);
+      Result:=Result +  aSeparator +QuotedStr(cText);
     end else
     begin
-      Result:=Result +  ASeparator +TMPA;
+      Result:=Result +  aSeparator +cText;
     end;
   end;
   
-  Delete(Result,1,Length(ASeparator));
+  Delete(Result,1,Length(aSeparator));
 end;
 
 class procedure TUniEngine.CopyIt(sList: TCollection; var tList: TCollection);
