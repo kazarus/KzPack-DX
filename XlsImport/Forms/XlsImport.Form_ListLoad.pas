@@ -297,7 +297,7 @@ end;
 procedure TFormListLoad.Grid_DataCanEditCell(Sender: TObject; ARow,
   ACol: Integer; var CanEdit: Boolean);
 begin
-  CanEdit := ACol =1;
+  CanEdit := ACol = 1;
 end;
 
 procedure TFormListLoad.Grid_DataCheckBoxClick(Sender: TObject; ACol,

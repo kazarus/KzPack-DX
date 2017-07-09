@@ -31,7 +31,7 @@ type
 
     function  GetKJNDKJQJ:Integer;overload;                 //取得整型期间
     function  GetKJNDKJQJ(AValue:Integer):Integer;overload; //取得整型期间
-    function  GetNameKJQJ:string;overload;
+    function  GetKJQJTEXT:string;overload;
   public
     constructor Create;overload;
     constructor Create(AKJND,AKJQJ:Integer);overload;
@@ -47,7 +47,7 @@ type
     class function  ExpListKJQJ(AStaKJQJ,AEndKJQJ:TKJQJ):TStringList;
     class function  GetKJNDKJQJ(AKJND,AKJQJ:Integer):Integer;overload;
 
-    class function  GetNameKJQJ(aValue:Integer):string;overload;
+    class function  GetKJQJTEXT(aValue:Integer):string;overload;
   end;
 
 implementation
@@ -317,7 +317,7 @@ begin
   Result:=NDT * 100 + QJT;
 end;
 
-class function TKJQJ.GetNameKJQJ(aValue: Integer): string;
+class function TKJQJ.GetKJQJTEXT(aValue: Integer): string;
 var
   cKJQJ:TKJQJ;
 begin
@@ -331,7 +331,7 @@ begin
   end;
 end;
 
-function TKJQJ.GetNameKJQJ: string;
+function TKJQJ.GetKJQJTEXT: string;
 begin
   Result:= Format('%D年%D月',[self.KJND,self.KJQJ]);
 end;
