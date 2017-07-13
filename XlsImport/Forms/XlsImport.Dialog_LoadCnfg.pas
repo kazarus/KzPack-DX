@@ -7,7 +7,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Dialog_View, StdCtrls, RzLabel, Mask, RzEdit, RzBtnEdt,
   XlsImport.Class_Load_Cnfg,Uni,UniConnct, RzCmboBx, XLSSheetData5,
-  XLSReadWriteII5,XlsImport.Class_Load_Page;
+  XLSReadWriteII5,XlsImport.Class_Load_Page, RzButton, RzRadChk;
 
 type
   TDialogLoadCnfg = class(TDialogView)
@@ -24,6 +24,7 @@ type
     Labl_5: TRzLabel;
     Comb_RealPage: TRzComboBox;
     XLSReadWriteII51: TXLSReadWriteII5;
+    Chkb_FileHead: TRzCheckBox;
     procedure Edit_FilePathButtonClick(Sender: TObject);
     procedure Btnv_QuitClick(Sender: TObject);
     procedure Btnv_MrokClick(Sender: TObject);
@@ -111,6 +112,8 @@ begin
   begin
     aLoadCnfg.KJNDKJQJ:=cKJQJ.GetKJNDKJQJ;
   end;
+
+  aLoadCnfg.FILEHEAD := Chkb_FileHead.Checked;
 
   {#if FFilePath = '' then
   begin

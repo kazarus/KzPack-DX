@@ -581,7 +581,14 @@ begin
       CellData.RowIndex:=R;
       CellData.ColIndex:=C;
       CellData.CellData:=Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[C,R]);
-      CellData.HeadName:=Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsString[C,FLoadCnfg.RowTitle-1]);
+
+      if FLoadCnfg.FILEHEAD then
+      begin
+        CellData.HeadName:= Format('%D',[C]);
+      end else
+      begin
+        CellData.HeadName:=Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsString[C,FLoadCnfg.RowTitle-1]);
+      end;
 
       CellRows.ListData.AddObject('',CellData);
     end;
@@ -604,7 +611,14 @@ begin
     CellType := XLSReadWriteII51[FLoadCnfg.PAGEINDX].CellType[C,FLoadCnfg.RowTitle-1];
     if CellType = xctNone then Continue;
 
-    aList.Add(Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsString[C,FLoadCnfg.RowTitle-1]));
+    if FLoadCnfg.FILEHEAD then
+    begin
+      //#aList.Add(Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsString[C,FLoadCnfg.RowTitle-1]));
+      aList.Add(Format('%D',[C]));
+    end else
+    begin
+      aList.Add(Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsString[C,FLoadCnfg.RowTitle-1]));
+    end;
   end;
 
   Result:=True;

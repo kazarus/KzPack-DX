@@ -129,6 +129,15 @@ object DialogLoadCnfg: TDialogLoadCnfg
     ParentCtl3D = False
     TabOrder = 6
   end
+  object Chkb_FileHead: TRzCheckBox
+    Left = 18
+    Top = 149
+    Width = 110
+    Height = 15
+    Caption = #25353#26639#30446#24207#21495#21305#37197
+    State = cbUnchecked
+    TabOrder = 7
+  end
   object XLSReadWriteII51: TXLSReadWriteII5
     ComponentVersion = '5.20.62'
     Version = xvExcel2007

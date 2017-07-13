@@ -17,6 +17,7 @@ type
     FROWENDED : Integer;
     FKJNDKJQJ : Integer;
     FFILEPATH : string;
+    FFILEHEAD : Boolean;
   public
     FColMatch : TCollection;//*list of *tcolmatch;
   protected
@@ -46,11 +47,13 @@ type
     property ROWENDED : Integer read FROWENDED  write FROWENDED;
     property KJNDKJQJ : Integer read FKJNDKJQJ  write FKJNDKJQJ;
     property FILEPATH : string  read FFILEPATH  write FFILEPATH;
+    property FILEHEAD : Boolean read FFILEHEAD  write FFILEHEAD;
   published
     property COLMATCH : TCollection read FColMatch write FColMatch;
   public
     class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
     class procedure ReadDS(AUniQuery:TUniQuery;var Result:TUniEngine);override;
+
     class function  CopyIt(aLoadCnfg:TLoadCnfg):TLoadCnfg;overload;        
     class procedure CopyIt(aLoadCnfg:TLoadCnfg;var Result:TLoadCnfg);overload;       
   end;
@@ -148,6 +151,7 @@ begin
   Result.ROWENDED := aLoadCnfg.ROWENDED;
   Result.KJNDKJQJ := aLoadCnfg.KJNDKJQJ;
   Result.FILEPATH := aLoadCnfg.FILEPATH;
+  Result.FILEHEAD := aLoadCnfg.FILEHEAD;
 end;
 
 end.
