@@ -103,7 +103,7 @@ var
     Result:=DupeString(' ',7-Length(IntToStr(ATick)))+IntToStr(ATick);
   end;
 begin
-  if DebugHook=0 then Exit;
+  //@if DebugHook=0 then Exit;
   
   AValue:=Format(Msg,Params);
   
