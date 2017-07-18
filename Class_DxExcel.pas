@@ -31,7 +31,8 @@ type
     FontSize:Integer;
     IsfsBold:Boolean;
     FontColor:TColor; //[0..55].cell.style.font.fontcolor
-    BackColor:Integer;//[0..55].cell.style.brush.backgroundcolor
+    BackColor:TColor; //[0..55].cell.style.brush.backgroundcolor
+    ForeColor:TColor; //[0..55].cell.style.brush.backgroundcolor
     AlignHorz:TdxSpreadSheetDataAlignHorz;
     AlignVert:TdxSpreadSheetDataAlignVert;
 
@@ -71,8 +72,6 @@ implementation
 
 uses
   Class_KzDebug,Class_KzUtils;
-
-{ TDxExcel }
 
 constructor TDxExcel.Create;
 begin
@@ -168,6 +167,8 @@ begin
         Cell.Style.Font.Name :=Styl.FontName;
         Cell.Style.Font.Size :=Styl.FontSize;
         Cell.Style.Font.Color:=Styl.FontColor;
+        Cell.Style.Brush.BackgroundColor := Styl.BackColor;
+        Cell.Style.Brush.ForegroundColor := Styl.ForeColor;
 
         {#Cell.Style.Borders[bLeft].Color:=clRed;
         Cell.Style.Borders[bTop].Color:=clRed;
@@ -271,8 +272,6 @@ begin
   end;
 end;
 
-{ TDxCellStyl }
-
 constructor TDxCellStyl.Create;
 begin
   Initialize;
@@ -291,6 +290,10 @@ begin
   CellMerge:=False;
   CellSpanX:=0;
   CellSpanY:=0;
+
+  BackColor := clDefault;
+  FontColor := clDefault;
+  ForeColor := clDefault;
 end;
 
 end.
