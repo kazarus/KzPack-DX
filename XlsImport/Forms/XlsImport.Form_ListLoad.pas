@@ -10,7 +10,7 @@ uses
   FormEx_View, XlsImport.Class_Load_Cnfg, System.DateUtils, XLSSheetData5,
   XLSReadWriteII5, Xc12Utils5, System.IniFiles, XlsImport.Class_Cell_Rows,
   Class_KzThrad, XlsImport.Thrad_InitBody, XlsImport.Class_Cell_Head, qjson,
-  XlsImport.Class_Col_Match;
+  XlsImport.Class_Col_Match, Vcl.Menus;
 
 type
   TFormListLoad = class(TFormExView)
@@ -24,6 +24,8 @@ type
     Btnv_Mrok: TRzToolButton;
     Btnv_Quit: TRzToolButton;
     XLSReadWriteII51: TXLSReadWriteII5;
+    Menu_Main: TPopupMenu;
+    N1: TMenuItem;
     procedure Btnv_QuitClick(Sender: TObject);
     procedure Btnv_MrokClick(Sender: TObject);
     procedure Btnv_CnfgClick(Sender: TObject);
@@ -35,6 +37,7 @@ type
     procedure FormActivate(Sender: TObject);
     procedure Grid_DataCheckBoxClick(Sender: TObject; ACol, ARow: Integer;
       State: Boolean);
+    procedure N1Click(Sender: TObject);
   private
     FClasName: string;
     FLoadCnfg: TLoadCnfg; //*
@@ -489,6 +492,15 @@ begin
     //YXC_2017_06_26_16_23_36_>
 
     EndUpdate;
+  end;
+end;
+
+procedure TFormListLoad.N1Click(Sender: TObject);
+begin
+  with Grid_Data do
+  begin
+    Objects[RealCol,1] := nil;
+    Cells  [RealCol,1] := '';
   end;
 end;
 

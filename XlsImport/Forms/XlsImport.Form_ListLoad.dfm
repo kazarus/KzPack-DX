@@ -28,6 +28,7 @@ object FormListLoad: TFormListLoad
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
+    PopupMenu = Menu_Main
     ScrollBars = ssBoth
     TabOrder = 0
     HoverRowCells = [hcNormal, hcSelected]
@@ -241,7 +242,7 @@ object FormListLoad: TFormListLoad
     Left = 184
     Top = 157
     Bitmap = {
-      494C010103000800540010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101030008005C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -387,5 +388,13 @@ object FormListLoad: TFormListLoad
     DirectWrite = False
     Left = 256
     Top = 69
+  end
+  object Menu_Main: TPopupMenu
+    Left = 152
+    Top = 116
+    object N1: TMenuItem
+      Caption = #21462#28040#20851#32852
+      OnClick = N1Click
+    end
   end
 end
