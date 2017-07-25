@@ -10,35 +10,42 @@ uses
 type
   TDxCellStyl=class;
 
-  TDxExcelStyleCell=procedure (Sender: TObject; aTabSheet:Integer;ACol,ARow: Integer;var ACellStyl:TDxCellStyl) of object;
+  TDxExcelStyleCell = procedure(Sender: TObject; aTabSheet: Integer; ACol, ARow: Integer; var ACellStyl: TDxCellStyl) of object;
   //procedure OnDxExcelStyleCell(Sender: TObject; aTabSheet:string; ACol,ARow: Integer;var ACellStyl:TObject);
-  TDxExcelValidArea=procedure (Sender: TObject; aTabSheet:Integer;var AColStart,AColEnded,ARowStart,ARowEnded:Integer) of object;
+
+  TDxExcelValidArea = procedure(Sender: TObject; aTabSheet: Integer; var AColStart, AColEnded, ARowStart, ARowEnded: Integer) of object;
   //procedure OnDxExcelValidArea(Sender: TObject; aTabSheet:string;var AColStart,AColEnded,ARowStart,ARowEnded:Integer);
-  TDxExcelValidRows=procedure (Sender: TObject; aTabSheet:Integer;ARow:Integer;var Valid:Boolean) of object;
+
+  TDxExcelValidRows = procedure(Sender: TObject; aTabSheet: Integer; ARow: Integer; var Valid: Boolean) of object;
   //procedure OnDxExcelValidRows(Sender: TObject; aTabSheet:string;ARow:Integer;var Valid:Boolean);
-  TDxExcelValidCols=procedure (Sender: TObject; aTabSheet:Integer;ACol:Integer;var Valid:Boolean) of object;
+
+  TDxExcelValidCols = procedure(Sender: TObject; aTabSheet: Integer; ACol: Integer; var Valid: Boolean) of object;
   //procedure OnDxExcelValidCols(Sender: TObject; aTabSheet:string;ACol:Integer;var Valid:Boolean);
-  TDxExcelResizeCol=procedure (Sender: TObject; aTabSheet:Integer;ACol:Integer;var Value:Integer) of object;
+
+  TDxExcelResizeCol = procedure(Sender: TObject; aTabSheet: Integer; ACol: Integer; var Value: Integer) of object;
   //procedure OnDxExcelResizeCol(Sender: TObject; aTabSheet:string;ACol:Integer;var Value:Integer);
-  TDxExcelResizeRow=procedure (Sender: TObject; aTabSheet:Integer;ARow:Integer;var Value:Integer) of object;
+
+  TDxExcelResizeRow = procedure(Sender: TObject; aTabSheet: Integer; ARow: Integer; var Value: Integer) of object;
   //procedure OnDxExcelResizeRow(Sender: TObject; aTabSheet:string;ARow:Integer;var Value:Integer);
+
+  TDxExcelStartSave = procedure(Sender: TObject; aTabSheet: Integer) of object;
+  //procedure OnDxExcelStartSave(Sener: TObject; aTabSheet:Integer);
 
   TDxCellStyl=class(TObject)
   public
-    CellText:string;
-    DataType:TdxSpreadSheetCellDataType;
-    FontName:string;
-    FontSize:Integer;
-    IsfsBold:Boolean;
-    FontColor:TColor; //[0..55].cell.style.font.fontcolor
-    BackColor:TColor; //[0..55].cell.style.brush.backgroundcolor
-    ForeColor:TColor; //[0..55].cell.style.brush.backgroundcolor
-    AlignHorz:TdxSpreadSheetDataAlignHorz;
-    AlignVert:TdxSpreadSheetDataAlignVert;
-
-    CellMerge:Boolean;
-    CellSpanX:Integer;
-    CellSpanY:Integer;
+    CellText: string;
+    DataType: TdxSpreadSheetCellDataType;
+    FontName: string;
+    FontSize: Integer;
+    IsfsBold: Boolean;
+    FontColor: TColor; //[0..55].cell.style.font.fontcolor
+    BackColor: TColor; //[0..55].cell.style.brush.backgroundcolor
+    ForeColor: TColor; //[0..55].cell.style.brush.backgroundcolor
+    AlignHorz: TdxSpreadSheetDataAlignHorz;
+    AlignVert: TdxSpreadSheetDataAlignVert;
+    CellMerge: Boolean;
+    CellSpanX: Integer;
+    CellSpanY: Integer;
   protected
     procedure Initialize;
   public
@@ -47,19 +54,20 @@ type
 
   TDxExcel=class(TObject)
   private
-    FDxExcel:TdxSpreadSheet;
-    FDxCount:Integer;
+    FDxExcel: TdxSpreadSheet;
+    FDxCount: Integer;
   public
-    OnDxExcelStyleCell:TDxExcelStyleCell;
-    OnDxExcelValidArea:TDxExcelValidArea;
-    OnDxExcelValidRows:TDxExcelValidRows;
-    OnDxExcelValidCols:TDxExcelValidCols;
-    OnDxExcelResizeRow:TDxExcelResizeRow;
-    OnDxExcelResizeCol:TDxExcelResizeCol;
+    OnDxExcelStyleCell: TDxExcelStyleCell;
+    OnDxExcelValidArea: TDxExcelValidArea;
+    OnDxExcelValidRows: TDxExcelValidRows;
+    OnDxExcelValidCols: TDxExcelValidCols;
+    OnDxExcelResizeRow: TDxExcelResizeRow;
+    OnDxExcelResizeCol: TDxExcelResizeCol;
+    OnDxExcelStartSave: TDxExcelStartSave;
   public
     procedure Initialize;
-    function  Execute(ATabIndex:Integer;ATabSheet:string=''):Boolean;
-    function  SaveXLS(AFileName:string=''):Boolean;
+    function  Execute(aTablIndex:Integer;aTabSheet:string=''):Boolean;
+    function  SaveXLS(aFileName:string=''):Boolean;
   public
     constructor Create;
     destructor Destroy; override;
@@ -86,7 +94,7 @@ begin
   inherited;
 end;
 
-function TDxExcel.Execute(ATabIndex:Integer;ATabSheet:string):Boolean;
+function TDxExcel.Execute(aTablIndex:Integer;aTabSheet:string):Boolean;
 var
   I,M,N:Integer;
 
@@ -108,7 +116,7 @@ begin
 
   if Assigned(OnDxExcelValidArea) then
   begin
-    OnDxExcelValidArea(FDxExcel,ATabIndex,ColStart,ColEnded,RowStart,RowEnded);
+    OnDxExcelValidArea(FDxExcel,aTablIndex,ColStart,ColEnded,RowStart,RowEnded);
   end;
 
   KzDebug.Started;
@@ -123,9 +131,9 @@ begin
     end;
     FDxExcel.ActiveSheetIndex:=FDxExcel.SheetCount-1;
 
-    if Trim(ATabSheet)<>'' then
+    if Trim(aTabSheet)<>'' then
     begin
-      FDxExcel.ActiveSheet.Caption := ATabSheet;
+      FDxExcel.ActiveSheet.Caption := aTabSheet;
     end;
     FDxExcel.ActiveSheetAsTable.BeginUpdate;
 
@@ -135,7 +143,7 @@ begin
       Valid:=True;
       if Assigned(OnDxExcelValidCols) then
       begin
-        OnDxExcelValidCols(FDxExcel,ATabIndex,I,Valid);
+        OnDxExcelValidCols(FDxExcel,aTablIndex,I,Valid);
       end;
       if not Valid then Continue;
 
@@ -145,7 +153,7 @@ begin
         Valid:=True;
         if Assigned(OnDxExcelValidRows) then
         begin
-          OnDxExcelValidRows(FDxExcel,ATabIndex,M,Valid);
+          OnDxExcelValidRows(FDxExcel,aTablIndex,M,Valid);
         end;
         if not Valid then Continue;
 
@@ -155,7 +163,7 @@ begin
         Styl.Initialize;
         if Assigned(OnDxExcelStyleCell) then
         begin
-          OnDxExcelStyleCell(FDxExcel,ATabIndex,I,M,Styl);
+          OnDxExcelStyleCell(FDxExcel,aTablIndex,I,M,Styl);
         end;
 
         if Styl.CellMerge then
@@ -202,7 +210,7 @@ begin
       Value:=0;
       if Assigned(OnDxExcelResizeCol) then
       begin
-        OnDxExcelResizeCol(FDxExcel,ATabIndex,I,Value);
+        OnDxExcelResizeCol(FDxExcel,aTablIndex,I,Value);
       end;
       if (Value<>0) and (FDxExcel.ActiveSheetAsTable.Columns[ColIndex]<>nil) then
       begin
@@ -212,21 +220,21 @@ begin
       Inc(ColIndex);
     end;
 
-
+    //#ValidRows,ResizeRow
     RowIndex:=0;
     for M := RowStart to RowEnded do
     begin
       Valid:=True;
       if Assigned(OnDxExcelValidRows) then
       begin
-        OnDxExcelValidRows(FDxExcel,ATabIndex,M,Valid);
+        OnDxExcelValidRows(FDxExcel,aTablIndex,M,Valid);
       end;
       if not Valid then Continue;
 
       Value:=0;
       if Assigned(OnDxExcelResizeRow) then
       begin
-        OnDxExcelResizeRow(FDxExcel,ATabIndex,M,Value);
+        OnDxExcelResizeRow(FDxExcel,aTablIndex,M,Value);
       end;
       if (Value<>0) and (FDxExcel.ActiveSheetAsTable.Rows[RowIndex]<>nil) then
       begin
@@ -235,6 +243,13 @@ begin
 
       Inc(RowIndex);
     end;
+
+    //#StartSave
+    if Assigned(OnDxExcelStartSave) then
+    begin
+      OnDxExcelStartSave(FDxExcel,aTablIndex);
+    end;
+
 
     FDxExcel.ActiveSheetAsTable.EndUpdate;
     KzDebug.TickFmt('%S:%S',[self.ClassName,'V02']);
@@ -245,10 +260,10 @@ end;
 
 procedure TDxExcel.Initialize;
 begin
-  FDxCount:=0;
+  FDxCount := 0;
 end;
 
-function TDxExcel.SaveXLS(AFileName:string): Boolean;
+function TDxExcel.SaveXLS(aFileName:string): Boolean;
 var
   SD:TSaveDialog;
   FileName:string;
@@ -256,7 +271,7 @@ begin
   try
     SD:=TSaveDialog.Create(nil);
     SD.Filter:='*.xlsx|*.xlsx|*.xls|*.xls';
-    SD.FileName:=AFileName;
+    SD.FileName:=aFileName;
     if SD.Execute then
     begin
       FileName:=SD.FileName;
