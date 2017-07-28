@@ -10,16 +10,16 @@ uses
 type
   TKJQJ=class(TUniEngine)
   public
-    KJND:Integer;
-    KJQJ:Integer;
+    FKJND:Integer;
+    FKJQJ:Integer;
   public
     function GetStrsIndex:string;override;  
   public
     procedure SetInitialize;
-
+    
     procedure SetItemParams(aValue:Integer);overload;
     procedure SetItemParams(aKJND,aKJQJ:Integer);overload;
-
+  public
     function  GetNextKJND:Integer;   //下一个会计年度
     function  GetNextKJQJ:Integer;   //下一个会计期间
 
@@ -29,25 +29,31 @@ type
     function  GetKJQJNEXT:Integer;   //#value=201701,result=201702
     function  GetKJQJHEAD:Integer;   //#value=201701,result=201612
 
-    function  GetKJNDKJQJ:Integer;overload;                 //取得整型期间
-    function  GetKJNDKJQJ(AValue:Integer):Integer;overload; //取得整型期间
     function  GetKJQJTEXT:string;overload;
+
+    function  GetKJNDKJQJ:Integer;overload;                 //取得整型期间
+    function  GetKJNDKJQJ(aValue:Integer):Integer;overload; //取得整型期间
+  published
+    property KJND:Integer read FKJND write FKJND;
+    property KJQJ:Integer read FKJQJ write FKJQJ;
   public
     constructor Create;overload;
-    constructor Create(AKJND,AKJQJ:Integer);overload;
-    constructor Create(AValue:Integer);overload;
+    constructor Create(aKJND,aKJQJ:Integer);overload;
+    constructor Create(aValue:Integer);overload;
     destructor  Destroy; override;
   public
-    class function  CopyIt(AKJQJ:TKJQJ):TKJQJ;overload;
-    class procedure CopyIt(AKJQJ:TKJQJ;var Result:TKJQJ);overload;
+    class function  CopyIt(aKJQJ:TKJQJ):TKJQJ;overload;
+    class procedure CopyIt(aKJQJ:TKJQJ;var Result:TKJQJ);overload;
 
     class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
-    class function  ReadDB(ASQL:string;AUniConnection:TUniConnection):TKJQJ;   
+    class function  ReadDB(ASQL:string;AUniConnection:TUniConnection):TKJQJ;overload;
+    class procedure ReadDB(ASQL:string;AUniConnection:TUniConnection;var aKJQJ:TKJQJ);overload;
   public
-    class function  ExpListKJQJ(AStaKJQJ,AEndKJQJ:TKJQJ):TStringList;
-    class function  GetKJNDKJQJ(AKJND,AKJQJ:Integer):Integer;overload;
-
     class function  GetKJQJTEXT(aValue:Integer):string;overload;
+    class function  GetKJNDKJQJ(aKJND,aKJQJ:Integer):Integer;overload;
+
+    class function  ExpListKJQJ(aStartKJQJ,aEndedKJQJ:TKJQJ):TStringList;overload;
+    class procedure ExpListKJQJ(aKJND,aStartKJQJ,aEndedKJQJ:Integer;var aList:TStringList);overload;
   end;
 
 implementation
@@ -60,24 +66,24 @@ begin
 
 end;
 
-class function TKJQJ.CopyIt(AKJQJ: TKJQJ): TKJQJ;
+class function TKJQJ.CopyIt(aKJQJ: TKJQJ): TKJQJ;
 begin
   Result:=TKJQJ.Create;
-  TKJQJ.CopyIt(AKJQJ,Result);
+  TKJQJ.CopyIt(aKJQJ,Result);
 end;
 
-class procedure TKJQJ.CopyIt(AKJQJ: TKJQJ; var Result: TKJQJ);
+class procedure TKJQJ.CopyIt(aKJQJ: TKJQJ; var Result: TKJQJ);
 begin
   if Result=nil then Exit;
 
-  Result.KJND:=AKJQJ.KJND;
-  Result.KJQJ:=AKJQJ.KJQJ;
+  Result.KJND:=aKJQJ.KJND;
+  Result.KJQJ:=aKJQJ.KJQJ;
 end;
 
-constructor TKJQJ.Create(AKJND, AKJQJ: Integer);
+constructor TKJQJ.Create(aKJND, aKJQJ: Integer);
 begin
-  KJND:=AKJND;
-  KJQJ:=AKJQJ;
+  KJND:=aKJND;
+  KJQJ:=aKJQJ;
 end;
 
 destructor TKJQJ.Destroy;
@@ -86,7 +92,7 @@ begin
   inherited;
 end;
 
-class function TKJQJ.ExpListKJQJ(AStaKJQJ, AEndKJQJ: TKJQJ): TStringList;
+class function TKJQJ.ExpListKJQJ(aStartKJQJ, aEndedKJQJ: TKJQJ): TStringList;
 var
   I:Integer;
   NumbA:Integer;
@@ -96,7 +102,7 @@ begin
   Result:=nil;
 
   NumbA:=-1;
-  NumbA:=((AEndKJQJ.KJND-AStaKJQJ.KJND)*12  + (AEndKJQJ.KJQJ-AStaKJQJ.KJQJ))+1;
+  NumbA:=((aEndedKJQJ.KJND-aStartKJQJ.KJND)*12  + (aEndedKJQJ.KJQJ-aStartKJQJ.KJQJ))+1;
   if NumbA=-1 then Exit;
 
   Result:=TStringList.Create;
@@ -106,26 +112,26 @@ begin
   begin
     if I=1 then
     begin
-      KJQJB:=TKJQJ.Create;
-      KJQJB.KJND:=AStaKJQJ.KJND;
-      KJQJB.KJQJ:=AStaKJQJ.KJQJ;
+      KJQJB := TKJQJ.Create;
+      KJQJB.KJND := aStartKJQJ.KJND;
+      KJQJB.KJQJ := aStartKJQJ.KJQJ;
 
       //TempA:=IntToStr(TAppUtil.GetKjndKjqj(KJQJB.KJND,KJQJB.KJQJ));
-      Result.AddObject(IntToStr(KJQJB.GetKJNDKJQJ),KJQJB);
+      Result.AddObject(IntToStr(KJQJB.GetKJNDKJQJ), KJQJB);
 
-      KJQJA.KJND:=AStaKJQJ.KJND;
-      KJQJA.KJQJ:=AStaKJQJ.KJQJ;
+      KJQJA.KJND := aStartKJQJ.KJND;
+      KJQJA.KJQJ := aStartKJQJ.KJQJ;
     end else
     begin
-      KJQJB:=TKJQJ.Create;
-      KJQJB.KJND:=KJQJA.GetNextKJND;
-      KJQJB.KJQJ:=KJQJA.GetNextKJQJ;
+      KJQJB := TKJQJ.Create;
+      KJQJB.KJND := KJQJA.GetNextKJND;
+      KJQJB.KJQJ := KJQJA.GetNextKJQJ;
 
       //TempA:=IntToStr(TAppUtil.GetKjndKjqj(KJQJB.KJND,KJQJB.KJQJ));
-      Result.AddObject(IntToStr(KJQJB.GetKJNDKJQJ),KJQJB);
+      Result.AddObject(IntToStr(KJQJB.GetKJNDKJQJ), KJQJB);
 
-      KJQJA.KJND:=KJQJB.KJND;
-      KJQJA.KJQJ:=KJQJB.KJQJ;
+      KJQJA.KJND := KJQJB.KJND;
+      KJQJA.KJQJ := KJQJB.KJQJ;
     end;
   end;
 
@@ -138,23 +144,9 @@ begin
   Result := Abs(Result);
 end;
 
-class function TKJQJ.GetKJNDKJQJ(AKJND, AKJQJ: Integer): Integer;
-var
-  TempA:string;
+class function TKJQJ.GetKJNDKJQJ(aKJND, aKJQJ: Integer): Integer;
 begin
-  TempA :='';
-  TempA :=Format('%D%S',[AKJND,TKzUtils.FormatCode(AKJQJ,2)]);
-  Result:=StrToInt(TempA);
-end;
-
-function TKJQJ.GetKJQJHEAD: Integer;
-begin
-  Result := (GetPrevKJND * 100) + GetPrevKJQJ;
-end;
-
-function TKJQJ.GetKJQJNEXT: Integer;
-begin
-  Result := (GetNextKJND * 100) + GetNextKJQJ;
+  Result :=aKJND * 100 + aKJQJ;
 end;
 
 function TKJQJ.GetNextKJND: Integer;
@@ -237,16 +229,10 @@ begin
   KJQJ:=-1;  
 end;
 
-procedure TKJQJ.SetItemParams(aValue: Integer);
+procedure TKJQJ.SetItemParams(aKJND, aKJQJ: Integer);
 begin
-  KJND := Trunc(aValue / 100);
-  KJQJ := aValue  mod 100;
-end;
-
-procedure TKJQJ.SetItemParams(AKJND, AKJQJ: Integer);
-begin
-  KJND:=AKJND;
-  KJQJ:=AKJQJ;
+  KJND:=aKJND;
+  KJQJ:=aKJQJ;
 end;
 
 class function TKJQJ.ReadDB(ASQL: string;
@@ -271,23 +257,23 @@ begin
   Result.KJQJ:=Value mod 100;
 end;
 
-constructor TKJQJ.Create(AValue: Integer);
+constructor TKJQJ.Create(aValue: Integer);
 begin
-  KJND := Trunc(AValue / 100);
-  KJQJ := AValue  mod 100;
+  KJND := Trunc(aValue / 100);
+  KJQJ := aValue  mod 100;
 end;
 
-function TKJQJ.GetKJNDKJQJ(AValue: Integer): Integer;
+function TKJQJ.GetKJNDKJQJ(aValue: Integer): Integer;
 var
   I,M:Integer;
   NDT:Integer;
   QJT:Integer;
 begin
-  I  :=Abs(AValue);
+  I  :=Abs(aValue);
   NDT:=KJND;
   QJT:=KJQJ;
 
-  if AValue > 0 then
+  if aValue > 0 then
   begin
     while I > 0 do
     begin
@@ -300,7 +286,7 @@ begin
       Dec(I);
     end;
   end else
-  if AValue < 0 then  
+  if aValue < 0 then  
   begin
     while I > 0 do
     begin
@@ -334,6 +320,57 @@ end;
 function TKJQJ.GetKJQJTEXT: string;
 begin
   Result:= Format('%D年%D月',[self.KJND,self.KJQJ]);
+end;
+
+class procedure TKJQJ.ExpListKJQJ(aKJND, aStartKJQJ, aEndedKJQJ: Integer;
+  var aList: TStringList);
+var
+  I:Integer;
+  cKJQJ:TKJQJ;  
+begin
+  for I:=aStartKJQJ to aEndedKJQJ do
+  begin
+    cKJQJ := TKJQJ.Create(aKJND,I);
+    aList.AddObject(cKJQJ.GetKJQJTEXT,cKJQJ);
+  end;
+end;
+
+class procedure TKJQJ.ReadDB(ASQL: string; AUniConnection: TUniConnection;
+  var aKJQJ: TKJQJ);
+var
+  Value:Integer;
+  UniDataSet:TUniQuery;
+begin
+  //the sql format shoule be follow this:select xx as value from xx;
+  if aKJQJ = nil then Exit;
+  
+  try
+    UniDataSet:=GetDataSet(ASQL,AUniConnection);
+    Value     :=UniDataSet.FieldByName('VALUE').AsInteger;
+  finally
+    FreeAndNil(UniDataSet);
+  end;
+
+  if (Value=0) or (Value=-1) then Exit;
+
+  aKJQJ.KJND:=Trunc(Value / 100);
+  aKJQJ.KJQJ:=Value mod 100;
+end;
+
+function TKJQJ.GetKJQJHEAD: Integer;
+begin
+  Result := (GetPrevKJND * 100) + GetPrevKJQJ;
+end;
+
+function TKJQJ.GetKJQJNEXT: Integer;
+begin
+  Result := (GetNextKJND * 100) + GetNextKJQJ;
+end;
+
+procedure TKJQJ.SetItemParams(aValue: Integer);
+begin
+  KJND := Trunc(aValue / 100);
+  KJQJ := aValue  mod 100;
 end;
 
 end.
