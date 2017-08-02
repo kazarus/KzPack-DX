@@ -36,6 +36,7 @@ type
     class procedure SetGridCellChked(aGrid:TAdvStringGrid;ACol:Integer;AValue:Boolean);
 
     class procedure ClearGrid(aGrid:TAdvStringGrid;ARowCount:Integer;ADefaultRowCount:Integer=2);
+    class procedure CleanGrid(aGrid:TAdvStringGrid;aDefaultRowCount:Integer=1);
     class procedure CellIndex(aGrid:TAdvStringGrid;ACol:Integer=0;ARowStart:Integer=1;ARowEnd:Integer=-1);
 
     class procedure HeadIndex(aGrid:TAdvStringGrid;ARow:Integer=0);
@@ -138,6 +139,28 @@ begin
 
     EndUpdate;
   end;  
+end;
+
+class procedure TUiUtils.CleanGrid(aGrid: TAdvStringGrid;
+  aDefaultRowCount: Integer);
+var
+  I: Integer;
+begin
+  with aGrid do
+  begin
+    BeginUpdate;
+    for I := RowCount -1 downto aDefaultRowCount do
+    begin
+      if I = aDefaultRowCount then
+      begin
+        ClearRows(I,1);
+      end else
+      begin
+        RemoveRows(I,1);
+      end;
+    end;
+    EndUpdate;
+  end;
 end;
 
 class procedure TUiUtils.ClearGrid(aGrid: TAdvStringGrid; ARowCount,
