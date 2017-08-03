@@ -20,9 +20,9 @@ unit UniEngine;
     function  GetStrsIndex:string;override;    
   public
     function  GetNextIdex:Integer;overload;
-    function  GetNextIdex(AUniConnection:TUniConnection):Integer;overload;
+    function  GetNextIdex(aUniConnection:TUniConnection):Integer;overload;
   public
-    function  CheckExist(AUniConnection:TUniConnection):Boolean;override;       
+    function  CheckExist(aUniConnection:TUniConnection):Boolean;override;
   public
     class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
   public
@@ -56,12 +56,12 @@ type
   public  
     function  GetStrsIndex:string;virtual;
   public
-    procedure InsertDB(AUniConnection:TUniConnection);overload;virtual;
-    procedure UpdateDB(AUniConnection:TUniConnection);overload;virtual;
-    procedure DeleteDB(AUniConnection:TUniConnection);overload;virtual;
-    procedure DeleteFL(AUniConnection:TUniConnection);overload;virtual;
-    procedure SaveItDB(AUniConnection:TUniConnection);overload;virtual;
-    procedure SaveItWhenNotExist(AUniConnection:TUniConnection);overload;virtual;
+    procedure InsertDB(aUniConnection:TUniConnection);overload;virtual;
+    procedure UpdateDB(aUniConnection:TUniConnection);overload;virtual;
+    procedure DeleteDB(aUniConnection:TUniConnection);overload;virtual;
+    procedure DeleteFL(aUniConnection:TUniConnection);overload;virtual;
+    procedure SaveItDB(aUniConnection:TUniConnection);overload;virtual;
+    procedure SaveItWhenNotExist(aUniConnection:TUniConnection);overload;virtual;
 
     procedure InsertDB;overload;virtual;
     procedure UpdateDB;overload;virtual;
@@ -69,7 +69,7 @@ type
     procedure DeleteFL;overload;virtual;
     procedure SaveItDB;overload;virtual;
 
-    function  CheckExist(AUniConnection:TUniConnection):Boolean;overload;virtual;
+    function  CheckExist(aUniConnection:TUniConnection):Boolean;overload;virtual;
 
     //@replace with qjson
     //#function  TOJSON(AOperateType:TOperateType=otNormal):string;overload;
@@ -86,25 +86,25 @@ type
     class function  ReadDS(AUniQuery: TUniQuery): TUniEngine;overload;virtual;abstract;
     class procedure ReadDS(AUniQuery: TUniQuery;var Result:TUniEngine);overload;virtual;abstract;
 
-    class function  ReadDB(ASQL:string;AUniConnection:TUniConnection):TUniEngine;overload;virtual;
+    class function  ReadDB(ASQL:string;aUniConnection:TUniConnection):TUniEngine;overload;virtual;
     class function  ReadDB(ASQL:string):TUniEngine;overload;virtual;
-    class procedure ReadDB(ASQL:string;AUniConnection:TUniConnection;var Result:TUniEngine);overload;virtual;
+    class procedure ReadDB(ASQL:string;aUniConnection:TUniConnection;var Result:TUniEngine);overload;virtual;
 
-    class function  StrsDB(ASQL:string;AUniConnection:TUniConnection;withSorted:Boolean=False):TStringList;overload;virtual;
+    class function  StrsDB(ASQL:string;aUniConnection:TUniConnection;withSorted:Boolean=False):TStringList;overload;virtual;
     class function  StrsDB(ASQL:string;withSorted:Boolean=False):TStringList;overload;virtual;
 
-    class function  StrsDB(ASQL:string;Fields:array of string;AUniConnection:TUniConnection;withSorted:Boolean=False):TStringList;overload;virtual;
+    class function  StrsDB(ASQL:string;Fields:array of string;aUniConnection:TUniConnection;withSorted:Boolean=False):TStringList;overload;virtual;
     class function  StrsDB(ASQL:string;Fields:array of string;withSorted:Boolean=False):TStringList;overload;virtual;
 
-    class function  ListDB(ASQL:string;AUniConnection:TUniConnection;withSorted:Boolean=False):TStringList;overload;virtual;
+    class function  ListDB(ASQL:string;aUniConnection:TUniConnection;withSorted:Boolean=False):TStringList;overload;virtual;
     class function  ListDB(ASQL:string;withSorted:Boolean=True):TStringList;overload;virtual;
 
-    class function  ListDB(ASQL:string;Fields:array of string;AUniConnection:TUniConnection;withSorted:Boolean=False):TStringList;overload;virtual;
+    class function  ListDB(ASQL:string;Fields:array of string;aUniConnection:TUniConnection;withSorted:Boolean=False):TStringList;overload;virtual;
     class function  ListDB(ASQL:string;Fields:array of string;withSorted:Boolean=False):TStringList;overload;virtual;
 
-    class procedure ListDB(ASQL:string;AUniConnection:TUniConnection;var Result:TStringList;withSorted:Boolean=False);overload;virtual;
-    class procedure ListDB(ASQL:string;AUniConnection:TUniConnection;var Result:TCollection;withSorted:Boolean=False);overload;virtual;
-    class procedure ListDB(ASQL:string;Fields:array of string;AUniConnection:TUniConnection;var Result:TStringList;withSorted:Boolean=False);overload;virtual;
+    class procedure ListDB(ASQL:string;aUniConnection:TUniConnection;var Result:TStringList;withSorted:Boolean=False);overload;virtual;
+    class procedure ListDB(ASQL:string;aUniConnection:TUniConnection;var Result:TCollection;withSorted:Boolean=False);overload;virtual;
+    class procedure ListDB(ASQL:string;Fields:array of string;aUniConnection:TUniConnection;var Result:TStringList;withSorted:Boolean=False);overload;virtual;
 
 
     //@replace with qjson
@@ -128,30 +128,32 @@ type
     class procedure CopyIt(sList:TCollection;var tList:TStringList;aClass:TUniEngineClass);overload;
 
 
-    class function  GetUniQuery(ASQL:string;AUniConnection:TUniConnection):TUniQuery;overload;
+    class function  GetUniQuery(ASQL:string;aUniConnection:TUniConnection):TUniQuery;overload;
     class function  GetUniQuery(ASQL:string):TUniQuery;overload;
 
-    class function  GetDataSet(ASQL:string;AUniConnection:TUniConnection):TUniQuery;overload;
+    class function  GetDataSet(ASQL:string;aUniConnection:TUniConnection):TUniQuery;overload;
     class function  GetDataSet(ASQL:string):TUniQuery;overload;
-    class procedure GetDataSet(ASQL:string;Fields:array of string;AUniConnection:TUniConnection;var Result:TStringList;aSeparator:string=',');overload;
+    class procedure GetDataSet(ASQL:string;Fields:array of string;aUniConnection:TUniConnection;var Result:TStringList;aSeparator:string=',');overload;
 
-    class function  GetServDat(AUniConnection:TUniConnection):TDateTime;
+    class function  GetServDat(aUniConnection:TUniConnection):TDateTime;
 
-    class function  CheckExist(ATable:string;Args:array of Variant):Boolean;overload;
-    class function  CheckField(AField,ATable:string;Args:array of Variant):Integer;overload;
+    class function  CheckExist(aTable:string;Args:array of Variant):Boolean;overload;
+    class function  CheckField(aField,aTable:string;Args:array of Variant):Integer;overload;
 
-    class function  CheckExist(ATable:string;Args:array of Variant;AUniConnection:TUniConnection;ASQLAddition:string=''):Boolean;overload;
-    class function  CheckField(AField,ATable:string;Args:array of Variant;AUniConnection:TUniConnection;ASQLAddition:string=''):Integer;overload;
-    class function  CheckCount(AField,ATable:string;Args:array of Variant;AUniConnection:TUniConnection;ASQLAddition:string=''):Integer;overload;
-    class function  CheckField(ASQL:string;AAsField:string;AUniConnection:TUniConnection):Variant;overload;
+    class function  CheckExist(aTable:string;Args:array of Variant;aUniConnection:TUniConnection;ASQLAddition:string=''):Boolean;overload;
+    class function  CheckField(aField,aTable:string;Args:array of Variant;aUniConnection:TUniConnection;ASQLAddition:string=''):Integer;overload;
+    class function  CheckCount(aField,aTable:string;Args:array of Variant;aUniConnection:TUniConnection;ASQLAddition:string=''):Integer;overload;
+    class function  CheckField(ASQL:string;AAsField:string;aUniConnection:TUniConnection):Variant;overload;
 
-    class function  ExistTable(ATable:string;AUniConnection:TUniConnection):Boolean;
-    class function  ExistField(ATable,AField:string;AUniConnection:TUniConnection):Boolean;
-    class function  ExistFieldInOracle(ATable,AField:string;AUniConnection:TUniConnection):Boolean;
-    class function  ExistConst(AConstraintType,AConstraintName:string;AUniConnection:TUniConnection):Boolean;
-    class function  ExistInKey(AConstraintType,AField,ATable:string;AUniConnection:TUniConnection):Boolean;
+    class function  ExistTable(aTable:string;aUniConnection:TUniConnection):Boolean;
+    class function  ExistField(aTable,aField:string;aUniConnection:TUniConnection):Boolean;
+    class function  ExistFieldInOracle(aTable,aField:string;aUniConnection:TUniConnection):Boolean;
+    class function  ExistConst(aConstraintType,aConstraintName:string;aUniConnection:TUniConnection):Boolean;
+    class function  ExistIndex(aIndexName:string;aUniConnection:TUniConnection):Boolean;
 
-    class procedure ExecuteSQL(ASQL:string;AUniConnection:TUniConnection);overload;
+    class function  ExistInKey(aConstraintType,aField,aTable:string;aUniConnection:TUniConnection):Boolean;
+
+    class procedure ExecuteSQL(ASQL:string;aUniConnection:TUniConnection);overload;
     class procedure ExecuteSQL(ASQL:string);overload;
   end;
 
@@ -161,24 +163,24 @@ uses
   UniConfig;
 
 
-class function TUniEngine.CheckExist(ATable: string;
+class function TUniEngine.CheckExist(aTable: string;
   Args: array of Variant): Boolean;
 begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.CheckExist] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
 
-function TUniEngine.CheckExist(AUniConnection: TUniConnection): Boolean;
+function TUniEngine.CheckExist(aUniConnection: TUniConnection): Boolean;
 begin
   
 end;
 
-class function TUniEngine.CheckField(AField, ATable: string;
+class function TUniEngine.CheckField(aField, aTable: string;
   Args: array of Variant): Integer;
 begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.CheckField] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
 
-procedure TUniEngine.DeleteDB(AUniConnection: TUniConnection);
+procedure TUniEngine.DeleteDB(aUniConnection: TUniConnection);
 begin
   try
     FStrSQL:=GetStrDelete;
@@ -186,7 +188,7 @@ begin
 
     FOptTyp:=otDelt;
 
-    UniSQL.Connection:=AUniConnection;
+    UniSQL.Connection:=aUniConnection;
     
     FUniSQL.SQL.Text :=FStrSQL;
 
@@ -214,14 +216,14 @@ begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.DeleteFL] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
 
-procedure TUniEngine.DeleteFL(AUniConnection: TUniConnection);
+procedure TUniEngine.DeleteFL(aUniConnection: TUniConnection);
 begin
   try
     FStrSQL:=GetStrDeltFL;
     if FStrSQL='' then raise Exception.Create('you must be override getstrdeltfl method');
     FOptTyp:=otDelt;
     
-    UniSQL.Connection:=AUniConnection;
+    UniSQL.Connection:=aUniConnection;
     FUniSQL.SQL.Text :=FStrSQL;    
 
     SetParameters;
@@ -244,14 +246,14 @@ begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.SaveItDB] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
 
-procedure TUniEngine.SaveItDB(AUniConnection: TUniConnection);
+procedure TUniEngine.SaveItDB(aUniConnection: TUniConnection);
 begin
-  if CheckExist(AUniConnection) then
+  if CheckExist(aUniConnection) then
   begin
-    UpdateDB(AUniConnection);
+    UpdateDB(aUniConnection);
   end else
   begin
-    InsertDB(AUniConnection);
+    InsertDB(aUniConnection);
   end;
 end;
 
@@ -261,14 +263,14 @@ begin
 end;
 
 class procedure TUniEngine.ExecuteSQL(ASQL: string;
-  AUniConnection: TUniConnection);
+  aUniConnection: TUniConnection);
 var
   UniSQL:TUniSQL;
 begin
   if Trim(ASQL)='' then Exit;
   try
     UniSQL:=TUniSQL.Create(nil);
-    UniSQL.Connection:=AUniConnection;
+    UniSQL.Connection:=aUniConnection;
     UniSQL.SQL.Text  :=ASQL;
     UniSQL.Execute;
   finally
@@ -291,13 +293,13 @@ begin
 end;
 
 class function TUniEngine.GetUniQuery(ASQL: string;
-  AUniConnection: TUniConnection): TUniQuery;
+  aUniConnection: TUniConnection): TUniQuery;
 begin
   Result:=nil;
   if Trim(ASQL)='' then Exit;
 
   Result:=TUniQuery.Create(nil);
-  Result.Connection:=AUniConnection;
+  Result.Connection:=aUniConnection;
   Result.SQL.Text  :=ASQL;
   Result.Open;
 end;
@@ -307,7 +309,7 @@ begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.InsertDB] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');  
 end;
 
-procedure TUniEngine.InsertDB(AUniConnection: TUniConnection);
+procedure TUniEngine.InsertDB(aUniConnection: TUniConnection);
 begin
   try
     FStrSQL:=GetStrInsert;
@@ -315,7 +317,7 @@ begin
     
     FOptTyp:=otAddx;
     
-    UniSQL.Connection:=AUniConnection;
+    UniSQL.Connection:=aUniConnection;
     FUniSQL.SQL.Text :=FStrSQL;
 
     SetParameters;
@@ -339,14 +341,14 @@ begin
 end;
 
 class function TUniEngine.ReadDB(ASQL: string;
-  AUniConnection: TUniConnection): TUniEngine;
+  aUniConnection: TUniConnection): TUniEngine;
 var
   UniQuery:TUniQuery;
 begin
   Result:=nil;
   try
     UniQuery:=TUniQuery.Create(nil);
-    UniQuery.Connection :=AUniConnection;
+    UniQuery.Connection :=aUniConnection;
     //UniQuery.Prepared   :=True;
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
@@ -367,7 +369,7 @@ end;
 
 
 class function TUniEngine.StrsDB(ASQL: string; Fields: array of string;
-  AUniConnection: TUniConnection;withSorted:Boolean): TStringList;
+  aUniConnection: TUniConnection;withSorted:Boolean): TStringList;
 var
   UniQuery:TUniQuery;
   UniEngine:TUniEngine;
@@ -379,7 +381,7 @@ begin
   Result:=nil;
   try
     UniQuery:=TUniQuery.Create(nil);
-    UniQuery.Connection :=AUniConnection;
+    UniQuery.Connection :=aUniConnection;
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
 
@@ -459,7 +461,7 @@ begin
 end;
 
 class function TUniEngine.StrsDB(ASQL: string;
-  AUniConnection: TUniConnection; withSorted:Boolean): TStringList;
+  aUniConnection: TUniConnection; withSorted:Boolean): TStringList;
 var
   UniQuery:TUniQuery;
   UniEngine:TUniEngine;
@@ -467,7 +469,7 @@ begin
   Result:=nil;
   try
     UniQuery:=TUniQuery.Create(nil);
-    UniQuery.Connection :=AUniConnection;
+    UniQuery.Connection :=aUniConnection;
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
 
@@ -498,7 +500,7 @@ begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.StrsDB] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
 
-procedure TUniEngine.UpdateDB(AUniConnection: TUniConnection);
+procedure TUniEngine.UpdateDB(aUniConnection: TUniConnection);
 begin
   try
     FStrSQL:=GetStrUpdate;
@@ -506,7 +508,7 @@ begin
 
     FOptTyp:=otEdit;
 
-    UniSQL.Connection:=AUniConnection;
+    UniSQL.Connection:=aUniConnection;
     FUniSQL.SQL.Text :=FStrSQL;    
 
     SetParameters;
@@ -534,8 +536,8 @@ begin
   Result:='';
 end;
 
-class function TUniEngine.ExistField(ATable, AField: string;
-  AUniConnection: TUniConnection): Boolean;
+class function TUniEngine.ExistField(aTable, aField: string;
+  aUniConnection: TUniConnection): Boolean;
 var
   IdexA:Integer;
   ListA:TStringList;
@@ -543,21 +545,21 @@ var
 begin
   Result:=False;
 
-  if not ExistTable(ATable,AUniConnection) then
+  if not ExistTable(aTable,aUniConnection) then
   begin
-    raise Exception.CreateFmt('NOT EXIST SUCH TABLE:%S',[ATable]);
+    raise Exception.CreateFmt('NOT EXIST SUCH TABLE:%S',[aTable]);
   end;
   
   UniTable:=TUniTable.Create(nil);
-  UniTable.Connection:=AUniConnection;
-  UniTable.TableName:=ATable;
+  UniTable.Connection:=aUniConnection;
+  UniTable.TableName:=aTable;
   ListA:=TStringList.Create;
   UniTable.GetFieldNames(ListA);
   
   ListA.Sorted:=True;
-  Result:=ListA.IndexOf(AField)<>-1;
+  Result:=ListA.IndexOf(aField)<>-1;
   {IdexA:=-1;
-  if ListA.Find(AField,IdexA) then
+  if ListA.Find(aField,IdexA) then
   begin
     Result:=IdexA<>-1;
   end;}
@@ -566,24 +568,24 @@ begin
   FreeAndNil(ListA);  
 end;
 
-class function TUniEngine.ExistTable(ATable: string;
-  AUniConnection: TUniConnection): Boolean;
+class function TUniEngine.ExistTable(aTable: string;
+  aUniConnection: TUniConnection): Boolean;
 var
   IdexA:Integer;
   ListA:TStringList;
 begin
   Result:=False;
-  if AUniConnection=nil then Exit;
+  if aUniConnection=nil then Exit;
 
   try
     ListA:=TStringList.Create;
-    AUniConnection.GetTableNames(ListA);
+    aUniConnection.GetTableNames(ListA);
     if (ListA<>nil) and (ListA.Count>0) then
     begin
       ListA.Sorted:=True;
-      Result:=ListA.IndexOf(ATable)<>-1;
+      Result:=ListA.IndexOf(aTable)<>-1;
       {IdexA:=-1;
-      if ListA.Find(ATable,IdexA) then
+      if ListA.Find(aTable,IdexA) then
       begin
         Result:=IdexA<>-1;
       end;}
@@ -593,8 +595,8 @@ begin
   end;
 end;
 
-class function TUniEngine.CheckExist(ATable: string;
-  Args: array of Variant; AUniConnection: TUniConnection;ASQLAddition:string): Boolean;
+class function TUniEngine.CheckExist(aTable: string;
+  Args: array of Variant; aUniConnection: TUniConnection;ASQLAddition:string): Boolean;
 var
   UniQuery:TUniQuery;
   ASQL :string;
@@ -611,7 +613,7 @@ begin
 
   ALen:=Length(Args) div 2;
 
-  ASQL:=Format('SELECT 1 FROM  %S  WHERE 1=1',[ATable]);
+  ASQL:=Format('SELECT 1 FROM  %S  WHERE 1=1',[aTable]);
 
   if ALen<>0 then
   begin
@@ -638,7 +640,7 @@ begin
     
   try
     UniQuery:=TUniQuery.Create(nil);
-    UniQuery.Connection :=AUniConnection;
+    UniQuery.Connection :=aUniConnection;
     UniQuery.SQL.Text   :=ASQL;
     UniQuery.Open;
     UniQuery.First;
@@ -650,8 +652,8 @@ begin
 end;
 
 
-class function TUniEngine.CheckField(AField, ATable: string;
-  Args: array of Variant; AUniConnection: TUniConnection;ASQLAddition:string): Integer;
+class function TUniEngine.CheckField(aField, aTable: string;
+  Args: array of Variant; aUniConnection: TUniConnection;ASQLAddition:string): Integer;
 var
   UniQuery:TUniQuery;
   ASQL :string;
@@ -668,7 +670,7 @@ begin
 
   ALen:=Length(Args) div 2;
 
-  ASQL:=Format('SELECT MAX( %S )+1 AS MAXX FROM  %S  WHERE 1=1',[AField,ATable]);
+  ASQL:=Format('SELECT MAX( %S )+1 AS MAXX FROM  %S  WHERE 1=1',[aField,aTable]);
 
   if ALen<>0 then
   begin
@@ -695,7 +697,7 @@ begin
 
   try
     UniQuery:=TUniQuery.Create(nil);
-    UniQuery.Connection:=AUniConnection;
+    UniQuery.Connection:=aUniConnection;
     UniQuery.SQL.Text  :=ASQL;
     UniQuery.Open;
 
@@ -708,8 +710,8 @@ begin
 end;
 
 
-class function TUniEngine.CheckCount(AField, ATable: string;
-  Args: array of Variant; AUniConnection: TUniConnection;ASQLAddition:string): Integer;
+class function TUniEngine.CheckCount(aField, aTable: string;
+  Args: array of Variant; aUniConnection: TUniConnection;ASQLAddition:string): Integer;
 var
   UniQuery:TUniQuery;
   ASQL :string;
@@ -726,7 +728,7 @@ begin
 
   ALen:=Length(Args) div 2;
 
-  ASQL:=Format('SELECT COUNT( %S ) AS NUMB FROM  %S  WHERE 1=1',[AField,ATable]);
+  ASQL:=Format('SELECT COUNT( %S ) AS NUMB FROM  %S  WHERE 1=1',[aField,aTable]);
 
   if ALen<>0 then
   begin
@@ -753,7 +755,7 @@ begin
   
   try
     UniQuery:=TUniQuery.Create(nil);
-    UniQuery.Connection:=AUniConnection;
+    UniQuery.Connection:=aUniConnection;
     UniQuery.SQL.Text  :=ASQL;
     UniQuery.Open;
 
@@ -764,22 +766,22 @@ begin
   end;
 end;
 
-procedure TUniEngine.SaveItWhenNotExist(AUniConnection: TUniConnection);
+procedure TUniEngine.SaveItWhenNotExist(aUniConnection: TUniConnection);
 begin
-  if not CheckExist(AUniConnection) then
+  if not CheckExist(aUniConnection) then
   begin
-    InsertDB(AUniConnection);
+    InsertDB(aUniConnection);
   end;
 end;
 
 class function TUniEngine.GetDataSet(ASQL: string;
-  AUniConnection: TUniConnection): TUniQuery;
+  aUniConnection: TUniConnection): TUniQuery;
 begin
   Result:=nil;
   if Trim(ASQL)='' then Exit;
 
   Result:=TUniQuery.Create(nil);
-  Result.Connection := AUniConnection;
+  Result.Connection := aUniConnection;
   Result.SQL.Text   := ASQL;
   Result.Open;
 end;
@@ -790,13 +792,13 @@ begin
 end;
 
 class function TUniEngine.CheckField(ASQL, AAsField: string;
-  AUniConnection: TUniConnection):Variant;
+  aUniConnection: TUniConnection):Variant;
 var
   ADataSet:TUniQuery;  
 begin
   Result:=0;
   try
-    ADataSet:=GetDataSet(ASQL,AUniConnection);
+    ADataSet:=GetDataSet(ASQL,aUniConnection);
     if ADataSet.RecordCount=0 then Exit;
     Result:=ADataSet.FieldByName(AAsField).AsVariant;
     if VarIsNull(Result) then
@@ -853,37 +855,37 @@ begin
 end;
 
 
-class function TUniEngine.ExistConst(AConstraintType,
-  AConstraintName: string; AUniConnection: TUniConnection): Boolean;
+class function TUniEngine.ExistConst(aConstraintType,
+  aConstraintName: string; aUniConnection: TUniConnection): Boolean;
 begin
   Result := False;
-  if AUniConnection.ProviderName = CONST_PROVIDER_SQLSRV then
+  if aUniConnection.ProviderName = CONST_PROVIDER_SQLSRV then
   begin
-    if Trim(AConstraintType)='FK' then
+    if Trim(aConstraintType)='FK' then
     begin
-      AConstraintType:='F';
+      aConstraintType:='F';
     end;
 
     //because constraint include.PK,FK,TR,V,
-    {if (Trim(AConstraintType)<>'PK') and (Trim(AConstraintType)<>'F') then
+    {if (Trim(aConstraintType)<>'PK') and (Trim(aConstraintType)<>'F') then
     begin
       raise Exception.Create('ERROR:UniEngine.pas.TUniEngine.ExistConst.LINE:725.INFO:OUT OF RANGE'+#13+'TRY PASS IT WITH "PK" OR "FK"');
     end;}
 
-    Result := CheckExist('SYSOBJECTS',['XTYPE',AConstraintType,'NAME',AConstraintName],AUniConnection);
+    Result := CheckExist('SYSOBJECTS',['XTYPE',aConstraintType,'NAME',aConstraintName],aUniConnection);
   end else
-  if AUniConnection.ProviderName = CONST_PROVIDER_ACCESS then
+  if aUniConnection.ProviderName = CONST_PROVIDER_ACCESS then
   begin
     raise Exception.Create('ERROR:UniEngine.pas.TUniEngine.ExistConst.LINE:693.INFO:Not Support Access');
   end else
-  if AUniConnection.ProviderName = CONST_PROVIDER_ORACLE then
+  if aUniConnection.ProviderName = CONST_PROVIDER_ORACLE then
   begin
     raise Exception.Create('ERROR:UniEngine.pas.TUniEngine.ExistConst.LINE:693.INFO:Not Support Oracle');
   end;
 end;
 
 class function TUniEngine.GetServDat(
-  AUniConnection: TUniConnection): TDateTime;
+  aUniConnection: TUniConnection): TDateTime;
 var
   SQLA:string;
   UniDataSet:TUniQuery;
@@ -892,15 +894,15 @@ begin
   Result:=Now;
 
   SQLA:='';
-  if AUniConnection.ProviderName = CONST_PROVIDER_SQLSRV then
+  if aUniConnection.ProviderName = CONST_PROVIDER_SQLSRV then
   begin
     SQLA:='SELECT GETDATE() AS SYSDATE';
   end else
-  if AUniConnection.ProviderName = CONST_PROVIDER_ACCESS then
+  if aUniConnection.ProviderName = CONST_PROVIDER_ACCESS then
   begin
     SQLA:='SELECT DATE() AS SYSDATE'
   end else
-  if AUniConnection.ProviderName = CONST_PROVIDER_ORACLE then
+  if aUniConnection.ProviderName = CONST_PROVIDER_ORACLE then
   begin
     SQLA:='SELECT SYSDATE FROM DUAL'
   end;
@@ -908,7 +910,7 @@ begin
   if SQLA='' then Exit;
   try
     UniDataSet:=nil;
-    UniDataSet:=GetDataSet(SQLA,AUniConnection);
+    UniDataSet:=GetDataSet(SQLA,aUniConnection);
     if (UniDataSet<>nil) and (UniDataSet.RecordCount=1) then
     begin
       Result:=UniDataSet.FieldByName('SYSDATE').AsDateTime;
@@ -924,9 +926,9 @@ begin
 end;
 
 class function TUniEngine.ListDB(ASQL: string;
-  AUniConnection: TUniConnection;withSorted:Boolean): TStringList;
+  aUniConnection: TUniConnection;withSorted:Boolean): TStringList;
 begin
-  Result:=StrsDB(ASQL,AUniConnection,withSorted);
+  Result:=StrsDB(ASQL,aUniConnection,withSorted);
 end;
 
 class function TUniEngine.ListDB(ASQL: string;
@@ -936,13 +938,13 @@ begin
 end;
 
 class function TUniEngine.ListDB(ASQL: string; Fields: array of string;
-  AUniConnection: TUniConnection;withSorted:Boolean): TStringList;
+  aUniConnection: TUniConnection;withSorted:Boolean): TStringList;
 begin
-  Result:=StrsDB(ASQL,Fields,AUniConnection,withSorted);
+  Result:=StrsDB(ASQL,Fields,aUniConnection,withSorted);
 end;
 
 class procedure TUniEngine.ListDB(ASQL: string;
-  AUniConnection: TUniConnection; var Result: TStringList;withSorted:Boolean);
+  aUniConnection: TUniConnection; var Result: TStringList;withSorted:Boolean);
 var
   UniQuery :TUniQuery;
   UniEngine:TUniEngine;
@@ -963,7 +965,7 @@ begin
   
   try
     UniQuery:=TUniQuery.Create(nil);
-    UniQuery.Connection :=AUniConnection;
+    UniQuery.Connection :=aUniConnection;
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
 
@@ -990,7 +992,7 @@ end;
 
 
 class procedure TUniEngine.ListDB(ASQL: string; Fields: array of string;
-  AUniConnection: TUniConnection; var Result: TStringList;withSorted:Boolean);
+  aUniConnection: TUniConnection; var Result: TStringList;withSorted:Boolean);
 var
   UniQuery :TUniQuery;
   UniEngine:TUniEngine;
@@ -1015,7 +1017,7 @@ begin
   
   try
     UniQuery:=TUniQuery.Create(nil);
-    UniQuery.Connection :=AUniConnection;    
+    UniQuery.Connection :=aUniConnection;
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
     
@@ -1053,7 +1055,7 @@ begin
 end;
 
 class procedure TUniEngine.ReadDB(ASQL: string;
-  AUniConnection: TUniConnection; var Result: TUniEngine);
+  aUniConnection: TUniConnection; var Result: TUniEngine);
 var
   UniQuery:TUniQuery;
 begin
@@ -1061,7 +1063,7 @@ begin
   
   try
     UniQuery:=TUniQuery.Create(nil);
-    UniQuery.Connection :=AUniConnection;
+    UniQuery.Connection :=aUniConnection;
     //UniQuery.Prepared   :=True;
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
@@ -1081,8 +1083,26 @@ begin
 end;
 
 
-class function TUniEngine.ExistInKey(AConstraintType, AField,
-  ATable: string; AUniConnection: TUniConnection): Boolean;
+class function TUniEngine.ExistIndex(aIndexName: string;
+  aUniConnection: TUniConnection): Boolean;
+begin
+  Result := False;
+  if aUniConnection.ProviderName = CONST_PROVIDER_SQLSRV then
+  begin
+    Result := CheckExist('SYSINDEXES',['NAME',aIndexName],aUniConnection);
+  end else
+  if aUniConnection.ProviderName = CONST_PROVIDER_ACCESS then
+  begin
+    raise Exception.Create('ERROR:UniEngine.pas.TUniEngine.ExistConst.LINE:693.INFO:Not Support Access');
+  end else
+  if aUniConnection.ProviderName = CONST_PROVIDER_ORACLE then
+  begin
+    raise Exception.Create('ERROR:UniEngine.pas.TUniEngine.ExistConst.LINE:693.INFO:Not Support Oracle');
+  end;
+end;
+
+class function TUniEngine.ExistInKey(aConstraintType, aField,
+  aTable: string; aUniConnection: TUniConnection): Boolean;
 begin
 
 end;
@@ -1428,30 +1448,29 @@ end;
 //  end;
 //end;
 
-class function TUniEngine.ExistFieldInOracle(ATable, AField: string;
-  AUniConnection: TUniConnection): Boolean;
+class function TUniEngine.ExistFieldInOracle(aTable, aField: string;
+  aUniConnection: TUniConnection): Boolean;
 var
-  IdexA:Integer;
   ListA:TStringList;
   UniDataSet:TUniQuery;
 begin
   Result:=False;
 
-  if not ExistTable(ATable,AUniConnection) then
+  if not ExistTable(aTable,aUniConnection) then
   begin
-    raise Exception.CreateFmt('NOT EXIST SUCH TABLE:%S',[ATable]);
+    raise Exception.CreateFmt('NOT EXIST SUCH TABLE:%S',[aTable]);
   end;
 
-  UniDataSet:=GetDataSet(Format('SELECT * FROM %S WHERE ROWNUM<1',[ATable]),AUniConnection);
+  UniDataSet:=GetDataSet(Format('SELECT * FROM %S WHERE ROWNUM<1',[aTable]),aUniConnection);
   if UniDataSet<>nil then
   begin
-    Result:=UniDataSet.FindField(AField)<>nil;
+    Result:=UniDataSet.FindField(aField)<>nil;
     FreeAndNil(UniDataSet);
   end;
 end;
 
 class procedure TUniEngine.GetDataSet(ASQL:string;Fields:array of string;
-  AUniConnection: TUniConnection; var Result: TStringList;aSeparator:string=',');
+  aUniConnection: TUniConnection; var Result: TStringList;aSeparator:string=',');
 var
   I:Integer;
   TMPA:string;
@@ -1462,7 +1481,7 @@ begin
   if Result=nil then Exit;
 
   try
-    UniQuery:=GetUniQuery(ASQL,AUniConnection);
+    UniQuery:=GetUniQuery(ASQL,aUniConnection);
     if UniQuery=nil then Exit;
     if UniQuery.RecordCount=0 then Exit;
 
@@ -1496,7 +1515,7 @@ begin
 end;
 
 class procedure TUniEngine.ListDB(ASQL: string;
-  AUniConnection: TUniConnection; var Result: TCollection;
+  aUniConnection: TUniConnection; var Result: TCollection;
   withSorted: Boolean);
 var
   UniQuery :TUniQuery;
@@ -1518,7 +1537,7 @@ begin
   
   try
     UniQuery:=TUniQuery.Create(nil);
-    UniQuery.Connection :=AUniConnection;
+    UniQuery.Connection :=aUniConnection;
 
     if ASQL='' then raise Exception.Create('SQL=NIL');
 
