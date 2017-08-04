@@ -37,7 +37,8 @@ type
     DataType: TdxSpreadSheetCellDataType;
     FontName: string;
     FontSize: Integer;
-    IsfsBold: Boolean;
+    //@IsfsBold: Boolean;
+    FontStyle: TFontStyles;
     FontColor: TColor; //[0..55].cell.style.font.fontcolor
     BackColor: TColor; //[0..55].cell.style.brush.backgroundcolor
     ForeColor: TColor; //[0..55].cell.style.brush.backgroundcolor
@@ -170,11 +171,13 @@ begin
         begin
           FDxExcel.ActiveSheetAsTable.MergedCells.Add(Rect(ColIndex,RowIndex,ColIndex+Styl.CellSpanX,RowIndex+Styl.CellSpanY));
         end;
-        Cell.Style.AlignHorz :=Styl.AlignHorz;
-        Cell.Style.AlignVert :=Styl.AlignVert;
-        Cell.Style.Font.Name :=Styl.FontName;
-        Cell.Style.Font.Size :=Styl.FontSize;
-        Cell.Style.Font.Color:=Styl.FontColor;
+        Cell.Style.AlignHorz  := Styl.AlignHorz;
+        Cell.Style.AlignVert  := Styl.AlignVert;
+        Cell.Style.Font.Name  := Styl.FontName;
+        Cell.Style.Font.Size  := Styl.FontSize;
+        Cell.Style.Font.Color := Styl.FontColor;
+        Cell.Style.Font.Style := Styl.FontStyle;
+        Cell.Style.Brush.BackgroundColor := Styl.BackColor;
         Cell.Style.Brush.BackgroundColor := Styl.BackColor;
         Cell.Style.Brush.ForegroundColor := Styl.ForeColor;
 
@@ -294,17 +297,18 @@ end;
 
 procedure TDxCellStyl.Initialize;
 begin
-  DataType :=cdtString;
-  CellText :='';
-  FontName :='ËÎÌו';
-  FontSize :=10;
-  IsfsBold :=False;
-  AlignHorz:=ssahLeft;
-  AlignVert:=ssavCenter;
+  DataType := cdtString;
+  CellText := '';
+  FontName := 'ËÎÌו';
+  FontSize := 10;
+  //@IsfsBold :=False;
+  FontStyle := [];
+  AlignHorz := ssahLeft;
+  AlignVert := ssavCenter;
 
-  CellMerge:=False;
-  CellSpanX:=0;
-  CellSpanY:=0;
+  CellMerge := False;
+  CellSpanX := 0;
+  CellSpanY := 0;
 
   BackColor := clDefault;
   FontColor := clDefault;
