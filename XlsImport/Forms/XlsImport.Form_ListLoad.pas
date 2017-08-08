@@ -26,6 +26,8 @@ type
     XLSReadWriteII51: TXLSReadWriteII5;
     Menu_Main: TPopupMenu;
     N1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
     procedure Btnv_QuitClick(Sender: TObject);
     procedure Btnv_MrokClick(Sender: TObject);
     procedure Btnv_CnfgClick(Sender: TObject);
@@ -38,6 +40,7 @@ type
     procedure Grid_DataCheckBoxClick(Sender: TObject; ACol, ARow: Integer;
       State: Boolean);
     procedure N1Click(Sender: TObject);
+    procedure N3Click(Sender: TObject);
   private
     FClasName: string;
     FLoadCnfg: TLoadCnfg; //*
@@ -501,6 +504,30 @@ begin
   begin
     Objects[RealCol,1] := nil;
     Cells  [RealCol,1] := '';
+  end;
+end;
+
+procedure TFormListLoad.N3Click(Sender: TObject);
+var
+  I,M:Integer;
+  cHead:TCellHead;
+begin
+  if (FCellHead = nil) or (FCellHead.Count =0 ) then Exit;
+
+  with Grid_Data do
+  begin
+    M := 2;
+    for I := 0 to FCellHead.Count-1 do
+    begin
+      cHead := TCellHead(FCellHead.Objects[I]);
+      if cHead = nil then Continue;
+      if not cHead.IsLasted then Continue;
+
+      Objects[M,1] := cHead;
+      Cells  [M,1] := cHead.HeadName;
+
+      Inc(M);
+    end;
   end;
 end;
 

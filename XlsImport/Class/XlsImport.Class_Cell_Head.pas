@@ -7,19 +7,21 @@ type
 
   TCellHead=class(TObject)
   private
-    FHeadName:string;
-    FHeadCode:string;
-    FDataType:TCellHeadDataType;
-    FNonEmpty:Boolean;           //不允许为空;
+    FHeadName: string;
+    FHeadCode: string;
+    FDataType: TCellHeadDataType;
+    FNonEmpty: Boolean;           //不允许为空;
+    FIsLastEd: Boolean;           //是否最明细;
   public
-    class function  PushHead(AName,ACode:string;AType:TCellHeadDataType=chdtString;aNonEmpty:Boolean=False):TCellHead;
-    class function  CopyIt(aCellHead:TCellHead):TCellHead;overload;
-    class procedure CopyIt(aCellHead:TCellHead;var Result:TCellHead);overload;
+    class function  PushHead(AName, ACode: string; AType: TCellHeadDataType = chdtString; aNonEmpty: Boolean = False; aIsLastEd: Boolean = False): TCellHead;
+    class function  CopyIt(aCellHead: TCellHead): TCellHead; overload;
+    class procedure CopyIt(aCellHead: TCellHead; var Result: TCellHead); overload;
   published
     property HeadName:string  read FHeadName write FHeadName;
     property HeadCode:string  read FHeadCode write FHeadCode;
     property DataType:TCellHeadDataType read FDataType write FDataType;
     property NonEmpty:Boolean read FNonEmpty write FNonEmpty;
+    property IsLasted:Boolean read FIsLastEd write FIsLastEd;
   end;
 
 implementation
@@ -37,16 +39,17 @@ begin
   Result.HeadCode := aCellHead.HeadCode;
   Result.DataType := aCellHead.DataType;
   Result.NonEmpty := aCellHead.NonEmpty;
+  Result.IsLasted := aCellHead.IsLasted;
 end;
 
-class function TCellHead.PushHead(AName, ACode: string;
-  AType: TCellHeadDataType;aNonEmpty:Boolean): TCellHead;
+class function TCellHead.PushHead(AName, ACode: string; AType: TCellHeadDataType; aNonEmpty: Boolean; aIsLastEd: Boolean): TCellHead;
 begin
   Result:=TCellHead.Create;
   Result.HeadName := AName;
   Result.HeadCode := ACode;
   Result.DataType := AType;
   Result.NonEmpty := aNonEmpty;
+  Result.IsLasted := aIsLastEd;
 end;
 
 end.
