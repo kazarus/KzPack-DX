@@ -35,8 +35,10 @@ type
     function  Initialize(aSrvrAddr,aSrvrPort:string;InUseZIP:Boolean=False;InUseTLS:Boolean=False):Boolean;
     procedure setTimeOut(aConnTimeOut:Integer=60000;aRespTimeOut:Integer=60000);
 
-    function  Post(aFileName:string;aUrlParam:array of string):TNetClientResult;overload;
-    function  Post(aFileName:string;aUrlParam:array of string;trueBlock:TNetClientDataRequestTrueBlock;failBlock:TNetClientDataRequestFailBlock):TNetClientResult;overload;
+    function  Post(aFileName: string; aUrlParam: array of string): TNetClientResult; overload;
+    function  Post(aFileName: string; aUrlParam: array of string; trueBlock: TNetClientDataRequestTrueBlock; failBlock: TNetClientDataRequestFailBlock): TNetClientResult; overload;
+
+    function  PostFmt(aFileName: string; Params: array of const; aUrlParam: array of string): TNetClientResult; overload;
   published
     property  Value:string  read FValue write SetValue;
     property  Error:string  read FError write SetError;
@@ -151,6 +153,12 @@ begin
   end;
 end;
 
+function TNetClient.PostFmt(aFileName: string; Params: array of const;
+  aUrlParam: array of string): TNetClientResult;
+begin
+  Result := Post(Format(aFileName,Params), aUrlParam, nil, nil);
+end;
+
 procedure TNetClient.OnRequestError(const Sender: TObject; const AError: string);
 begin
   FError:=Format('OnRequestError:%s',[aError]);
@@ -182,7 +190,7 @@ end;
 function TNetClient.Post(aFileName: string;
   aUrlParam: array of string): TNetClientResult;
 begin
-  Result:=Post(aFileName,aUrlParam,nil,nil);
+  Result := Post(aFileName, aUrlParam, nil, nil);
 end;
 
 initialization
