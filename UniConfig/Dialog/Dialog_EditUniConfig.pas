@@ -356,18 +356,20 @@ end;
 procedure TDialogEditUniConfig.ViewFilePath;
 var
   OD:TOpenDialog;
-  PathA:string;
+  cRoot:string;
+  cPath:string;
 begin
   if Trim(Comb_Type.Text)=CONST_PROVIDER_ACCESS then
   begin
     OD:=TOpenDialog.Create(nil);
     OD.Filter:='*.mdb';
 
-    if Trim(Edit_DataBase.Text)<>'' then
+    cRoot := Trim(Edit_DataBase.Text);
+    if (cRoot <> '') and (Pos('\\',cRoot) < 0) then
     begin
-      PathA:=ExtractFileDir(Edit_DataBase.Text);
-      OD.InitialDir:=PathA;
-    end;  
+      cPath := ExtractFileDir(Edit_DataBase.Text);
+      OD.InitialDir := cPath;
+    end;
 
     if OD.Execute then
     begin
