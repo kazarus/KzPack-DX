@@ -229,7 +229,7 @@ var
   mBYT:TBytes;
 begin
   Result:='';
-  if intStream=nil then Exit;
+  if intStream = nil then Exit;
 
   try
     intStream.Position:=0;
@@ -237,7 +237,7 @@ begin
     intStream.Read(mBYT[0],intStream.Size);
     Result:=TNetEncoding.Base64.EncodeBytesToString(mBYT);
   finally
-    FreeAndNil(intStream);
+    //@FreeAndNil(intStream);
   end;
 end;
 

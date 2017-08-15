@@ -57,6 +57,7 @@ procedure THelprUniEngine.ToFILE(AFileName: string;doFormat:Boolean=False);
 var
   JSON:TQJson;
 begin
+  EncodeJsonBinaryAsBase64;
   try
     JSON:=TQJson.Create;
     JSON.FromRtti(Self);
