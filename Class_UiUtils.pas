@@ -31,7 +31,7 @@ type
     class function  GetGridAlignment(AAlig:Integer):TAlignment;
 
     class function  GetStrsCellChked(aGrid:TAdvStringGrid;ACol:Integer):TStringList;deprecated;
-    class function  GetListCellChked(aGrid:TAdvStringGrid;ACol:Integer):TStringList;
+    class function  GetListCellChked(aGrid:TAdvStringGrid;ACol:Integer = 1):TStringList;
     class function  GetSizeCellChked(aGrid:TAdvStringGrid;ACol:Integer):Integer;
     class procedure SetGridCellChked(aGrid:TAdvStringGrid;ACol:Integer;AValue:Boolean);
 
