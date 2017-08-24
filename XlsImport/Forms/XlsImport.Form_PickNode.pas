@@ -14,6 +14,8 @@ uses
   RzButton, RzPanel, RzStatus, Vcl.ExtCtrls, System.ImageList, Vcl.ImgList;
 
 type
+  TFormPickNodePickType = (fpnptNull,fpnptNode,fpnptExpt);
+
   TFormPickNode = class(TFormExView)
     Panl_1: TRzStatusBar;
     Panl_2: TRzStatusPane;
@@ -28,6 +30,7 @@ type
     procedure Btnv_MrokClick(Sender: TObject);
     procedure Btnv_ViewClick(Sender: TObject);
   private
+    FPickType : TFormPickNodePickType;
   protected
     procedure SetInitialize;override;
     procedure SetCommParams;override;
@@ -43,7 +46,7 @@ type
 var
   FormPickNode: TFormPickNode;
 
-function ViewPickNode(var aList:TStringList):Integer;
+function ViewPickNode(var aList:TStringList;aPickType : TFormPickNodePickType = fpnptNode):Integer;
 
 implementation
 
@@ -52,10 +55,11 @@ uses
 
 {$R *.dfm}
 
-function ViewPickNode(var aList:TStringList):Integer;
+function ViewPickNode(var aList:TStringList;aPickType : TFormPickNodePickType):Integer;
 begin
   try
     FormPickNode:=TFormPickNode.Create(nil);
+    FormPickNode.FPickType := aPickType;
     Result:=FormPickNode.ShowModal;
     if Result = Mrok then
     begin
@@ -83,7 +87,16 @@ end;
 
 procedure TFormPickNode.ReadNode(var aList: TStringList);
 begin
-  TNodeManager.ReadNode(Excl_Main,aList);
+  case FPickType of
+    fpnptNode:
+    begin
+      TNodeManager.ReadNode(Excl_Main,aList);
+    end;
+    fpnptExpt:
+    begin
+      TNodeManager.ReadExpt(Excl_Main,aList);
+    end;
+  end;
 end;
 
 procedure TFormPickNode.SetComboItems;

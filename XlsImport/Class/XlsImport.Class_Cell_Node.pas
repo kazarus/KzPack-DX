@@ -19,6 +19,10 @@ type
     Top: Integer;
     Bottom: Integer;
   public
+    Info: string;
+    FontSize: Integer;
+    Align: Integer;
+  public
     class function  CopyIt(aCellNode:TCellNode):TCellNode;overload;
     class procedure CopyIt(aCellNode:TCellNode;var Result:TCellNode);overload;
   end;
@@ -40,6 +44,9 @@ begin
   Result.Right := aCellNode.Right;
   Result.Top := aCellNode.Top;
   Result.Bottom := aCellNode.Bottom;
+  Result.FontSize := aCellNode.FontSize;
+  Result.Info := aCellNode.Info;
+  Result.Align := aCellNode.Align;
 end;
 
 end.
