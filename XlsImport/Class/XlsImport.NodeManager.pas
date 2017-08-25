@@ -140,10 +140,16 @@ begin
             end;
           end;
         end;
+
         cNode.Left := cItem.Area.Left-Selection.Area.Left;
         cNode.Right := cItem.Area.right-ColStart;
         cNode.Top := cItem.Area.Top-Selection.Area.Top;
         cNode.Bottom := cItem.Area.Bottom-RowStart;
+        if cItem.Area.Right = ColEnded  then
+        begin
+          cNode.Right:=-1;
+          //tgzjgexpt.EXPTMERGECOLEND :=-1;
+        end;
       end;
 
       cIndx := aList.IndexOf(Format('%D-%D',[cNode.Col,cNode.Row]));
