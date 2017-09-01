@@ -19,6 +19,7 @@ type
     FSRVRPORT:string;
     FFileName:string;
     FUNIQUEID:string;
+    FDataEncd:Boolean;
     FPromptTxt:string;
     FCSInHTTP:TCriticalSection;
   public
@@ -148,9 +149,17 @@ begin
     begin
       //#if Request.FileName=Class_AppUtil_IN_GKZF.CONST_REQUEST_FILE_NAME_TAPPCNFG_SELECTDB then
       begin
-        DataRead:=DecodeString(Trim(Read));
-        GetMsgProgress(Class_KzThrad.CONST_THRAD_STAT_DATA,[FUNIQUEID,DataRead]);
-        FNetStatusEnded:=True;
+        if FDataEncd then
+        begin
+          DataRead:=DecodeString(Trim(Read));
+          GetMsgProgress(Class_KzThrad.CONST_THRAD_STAT_DATA,[FUNIQUEID,DataRead]);
+          FNetStatusEnded:=True;
+        end else
+        begin
+          DataRead:=(Trim(Read));
+          GetMsgProgress(Class_KzThrad.CONST_THRAD_STAT_DATA,[FUNIQUEID,DataRead]);
+          FNetStatusEnded:=True;
+        end;
       end;
     end;
   end;
