@@ -1,4 +1,4 @@
-unit Class_UiUtils;
+ï»¿unit Class_UiUtils;
 //YXC_2012_11_21_10_19_57
 
 interface
@@ -25,6 +25,8 @@ type
 
     class function  GetCellTextState(aGrid:TAdvStringGrid;ACol,ARow:Integer):Integer;
     class procedure SetCellTextState(aGrid:TAdvStringGrid;ACol,ARow,AStat:Integer);
+
+    class procedure SetGridColParams(aGrid:TAdvStringGrid;aColParams:TStringList;aFontColor:TColor=clBlack);
 
     class function  GetCellTextAlign(aGrid:TAdvStringGrid;ACol,ARow:Integer):Integer;
     class procedure SetCellTextAlign(aGrid:TAdvStringGrid;ACol,ARow,AAlig:Integer);
@@ -72,34 +74,32 @@ type
   end;
 
 const
-  CONST_CELL_STAT_TEXT  ='ÎÄ±¾';
-  CONST_CELL_STAT_NUMB  ='ÊıÖµ';
+  CONST_CELL_STAT_TEXT  ='æ–‡æœ¬';
+  CONST_CELL_STAT_NUMB  ='æ•°å€¼';
 
   CONST_MARK_DATA       ='DATA';
   CONST_MARK_ZBGL       ='ZBGL';
   CONST_TABL_DICT       ='TBL_YOTO_DICT';
 
-  CONST_DICT_MODE_SJKBBH='00001';//Êı¾İ¿â°æ±¾ºÅ
-  CONST_DICT_MODE_APPBBH='00002';//³ÌĞò°æ±¾ºÅ  
+  CONST_DICT_MODE_SJKBBH='00001';//æ•°æ®åº“ç‰ˆæœ¬å·
+  CONST_DICT_MODE_APPBBH='00002';//ç¨‹åºç‰ˆæœ¬å·  
 
-  CONST_DICT_MODE_DWBMGZ='00003';//µ¥Î»±àÂë¹æÔò
-  CONST_DICT_MODE_BMBMGZ='00004';//²¿ÃÅ±àÂë¹æÔò
-  CONST_DICT_MODE_LXBMGZ='00005';//ÀàĞÍ±àÂë¹æÔò
-  CONST_DICT_MODE_RYBMCD='00006';//ÈËÔ±±àÂë³¤¶È
+  CONST_DICT_MODE_DWBMGZ='00003';//å•ä½ç¼–ç è§„åˆ™
+  CONST_DICT_MODE_BMBMGZ='00004';//éƒ¨é—¨ç¼–ç è§„åˆ™
+  CONST_DICT_MODE_LXBMGZ='00005';//ç±»å‹ç¼–ç è§„åˆ™
+  CONST_DICT_MODE_RYBMCD='00006';//äººå‘˜ç¼–ç é•¿åº¦
 
-  CONST_DICT_MODE_BDCZDW='00007';//±¾µØ²Ù×÷µ¥Î»
-  CONST_DICT_MODE_KJNDKD='00008';//»á¼ÆÄê¶È¿ç¶È
-  CONST_DICT_MODE_YZDGZD='00009';//ÔÂ×î´ó¹¤×Êµ¥ºÅ
-  CONST_DICT_MODE_NZDGZD='00010';//Äê×î´ó¹¤×Êµ¥ºÅ
-  CONST_DICT_MODE_LXGXCX='00011';//ÀàĞÍ¹ØÏµ²éÑ¯  
+  CONST_DICT_MODE_BDCZDW='00007';//æœ¬åœ°æ“ä½œå•ä½
+  CONST_DICT_MODE_KJNDKD='00008';//ä¼šè®¡å¹´åº¦è·¨åº¦
+  CONST_DICT_MODE_YZDGZD='00009';//æœˆæœ€å¤§å·¥èµ„å•å·
+  CONST_DICT_MODE_NZDGZD='00010';//å¹´æœ€å¤§å·¥èµ„å•å·
+  CONST_DICT_MODE_LXGXCX='00011';//ç±»å‹å…³ç³»æŸ¥è¯¢  
 
 implementation
 
 uses
-  Class_KzUtils;
+  Class_KzUtils,PerlRegEx;
 
-
-{ TUiUtils }
 
 class procedure TUiUtils.CellCheck(aGrid: TAdvStringGrid; AValue: Boolean;
   ACol, ARowStart, ARowEnd: Integer);
@@ -284,7 +284,7 @@ begin
   begin
     Afrxreport.EngineOptions.DoublePass:=True;
   end;  
-  Result:=Format('µÚ%dÒ³£¨¹²%dÒ³£©',[Afrxreport.PreviewPages.Count,Afrxreport.Engine.TotalPages]);
+  Result:=Format('ç¬¬%dé¡µï¼ˆå…±%dé¡µï¼‰',[Afrxreport.PreviewPages.Count,Afrxreport.Engine.TotalPages]);
 end;
 
 class function TUiUtils.GetGridAlignment(AAlig: Integer): TAlignment;
@@ -561,6 +561,45 @@ begin
       SetCheckBoxState(ACol,I,AValue);
     end;
     EndUpdate;
+  end;
+end;
+
+class procedure TUiUtils.SetGridColParams(aGrid: TAdvStringGrid;
+  aColParams: TStringList; aFontColor: TColor);
+var
+  I,A,B,C,D:Integer;
+  RegEx:TPerlRegEx;
+  pList:TStringList;
+begin
+  if aColParams.Count=0 then raise Exception.Create('å‚æ•°ä¸ªæ•°ä¸ºé›¶.');
+
+  RegEx := TPerlRegEx.Create;
+  pList := TStringList.Create;
+  try
+    for I:=0 to AColParams.Count-1 do
+    begin
+      with AGrid do
+      begin
+        pList.Clear;
+        RegEx.Subject := aColParams.Strings[I];
+        RegEx.RegEx := ',';
+        RegEx.Split(pList, MaxInt);
+
+        A := StrToInt(Trim(pList.Strings[0]));
+        B := StrToInt(Trim(pList.Strings[1]));
+        C := StrToInt(Trim(pList.Strings[2]));
+        D := StrToInt(Trim(pList.Strings[3]));
+
+        MergeCells(A, B, C, D);
+        Cells[A, B] := TKzUtils.jsdecode(Trim(pList.Strings[4]));
+        FontStyles[A, B] := [fsBold];
+        FontColors[A, B] := aFontColor;
+        Alignments[A, B] := taCenter;
+      end;
+    end;
+  finally
+    FreeAndNil(RegEx);
+    FreeAndNil(pList);
   end;
 end;
 
