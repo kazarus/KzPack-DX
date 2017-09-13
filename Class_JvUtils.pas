@@ -8,14 +8,19 @@ type
   TJvUtils=class(TObject)
   public
     class function toString(paramInt1:Integer;paramInt2:Integer):string;
-    class function hashCode(paramsStr1:string):Integer;
+    class function hashCode(paramsStr1:string):Cardinal;
+    class function hashText(const SoureStr: string):Cardinal;
+    class function hashCode2(val: string): Integer;
   end;
 
 implementation
 
+uses
+  System.Math;
+
 { TJvUtils }
 
-class function TJvUtils.hashCode(paramsStr1: string): Integer;
+class function TJvUtils.hashCode(paramsStr1: string): Cardinal;
 var
   I:Integer;
 begin
@@ -45,6 +50,55 @@ begin
   for I := 1 to Length(paramsStr1) do
   begin
     Result := Result * 31 + Ord(paramsStr1[I]);
+  end;
+end;
+
+class function TJvUtils.hashCode2(val: string): Integer;
+var
+  i: Integer;
+  res: Extended;
+  x: Integer;
+
+  function RoundEx(x: Extended): Integer;
+  begin
+    Result := Trunc(x) + Trunc(Frac(x) * 2);
+  end;
+begin
+  if val = '' then Exit;
+
+  res := 0;
+
+  for i := 1 to Length(val) do
+  begin
+    res := res + Ord(val[i]) * Power(31, Length(val) - (i - 1) - 1);
+  end;
+
+  Result := RoundEx(res);
+end;
+
+
+class function TJvUtils.hashText(const SoureStr: string): Cardinal;
+const
+  cLongBits = 32;
+  cOneEight = 4;
+  cThreeFourths = 24;
+  cHighBits = $F0000000;
+var
+  I: Integer;
+  P: PChar;
+  Temp: Cardinal;
+begin
+  Result := 0;
+  P := PChar(SoureStr);
+  I := Length(SoureStr);
+  while I > 0 do
+  begin
+    Result := (Result shl cOneEight) + Ord(P^);
+    Temp := Result and cHighBits;
+    if Temp <> 0 then
+      Result := (Result xor (Temp shr cThreeFourths)) and (not cHighBits);
+    Dec(I);
+    Inc(P);
   end;
 end;
 
