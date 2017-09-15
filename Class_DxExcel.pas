@@ -47,6 +47,7 @@ type
     CellMerge: Boolean;
     CellSpanX: Integer;
     CellSpanY: Integer;
+    AddBorder: Boolean;
   protected
     procedure Initialize;
   public
@@ -180,6 +181,15 @@ begin
         Cell.Style.Brush.BackgroundColor := Styl.BackColor;
         Cell.Style.Brush.BackgroundColor := Styl.BackColor;
         Cell.Style.Brush.ForegroundColor := Styl.ForeColor;
+
+        if Styl.AddBorder then
+        begin
+          Cell.Style.Borders[bLeft].Style := sscbsThin;
+          Cell.Style.Borders[bTop].Style := sscbsThin;
+          Cell.Style.Borders[bRight].Style := sscbsThin;
+          Cell.Style.Borders[bBottom].Style := sscbsThin;
+        end;
+
 
         {#Cell.Style.Borders[bLeft].Color:=clRed;
         Cell.Style.Borders[bTop].Color:=clRed;
