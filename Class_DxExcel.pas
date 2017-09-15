@@ -139,6 +139,7 @@ begin
     end;
     FDxExcel.ActiveSheetAsTable.BeginUpdate;
 
+
     ColIndex:=0;
     for I := ColStart to ColEnded do
     begin
@@ -184,9 +185,9 @@ begin
 
         if Styl.AddBorder then
         begin
-          Cell.Style.Borders[bLeft].Style := sscbsThin;
-          Cell.Style.Borders[bTop].Style := sscbsThin;
-          Cell.Style.Borders[bRight].Style := sscbsThin;
+          Cell.Style.Borders[bLeft]  .Style := sscbsThin;
+          Cell.Style.Borders[bTop]   .Style := sscbsThin;
+          Cell.Style.Borders[bRight] .Style := sscbsThin;
           Cell.Style.Borders[bBottom].Style := sscbsThin;
         end;
 
