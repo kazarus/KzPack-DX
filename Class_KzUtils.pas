@@ -81,7 +81,7 @@ type
     class function  FloatToDate(aValue:Extended):TDateTime;
     class function  FloatToTime(aValue:Extended):TDateTime;
 
-    class function  DateIsNull(ADate:TDateTime):Boolean;
+    class function  DateIsNull(aDate:TDateTime):Boolean;
 
     class function  NumbInRect(aValue:Integer;aHead,ANext:Integer):Boolean;overload;
     class function  NumbInRect(aValue:Integer;aArrayOfInteger:array of Integer):Boolean;overload;
@@ -159,19 +159,19 @@ end;
 
 class function TKzUtils.FloatToDate(aValue: Extended): TDateTime;
 var
-  TMPA:string;
-  TMPB:string;
+  cTMP:string;
+  dTMP:string;
 begin
   Result:=Unassigned;
   if aValue=0 then Exit;
-  TMPA:=FloatToStr(aValue);
-  TMPB:=Format('%s-%s-%s',[Copy(TMPA,1,4),Copy(TMPA,5,2),Copy(TMPA,7,2)]);
+  cTMP:=FloatToStr(aValue);
+  dTMP:=Format('%s-%s-%s',[Copy(cTMP,1,4),Copy(cTMP,5,2),Copy(cTMP,7,2)]);
 
 
   try
     //#DateSeparator:='-';
     FormatSettings.DateSeparator:='-';
-    Result:=StrToDate(TMPB);
+    Result:=StrToDate(dTMP);
   except
     on E:Exception do
     begin
@@ -702,10 +702,10 @@ begin
   Result:=StrToFloatDef(FormatDateTime('YYYYMMDDHHMMSS',aValue),0);
 end;
 
-class function TKzUtils.DateIsNull(ADate: TDateTime): Boolean;
+class function TKzUtils.DateIsNull(aDate: TDateTime): Boolean;
 begin
   Result:=False;
-  if FormatDateTime('YYYYMMDD',ADate)='18991230' then
+  if FormatDateTime('YYYYMMDD',aDate)='18991230' then
   begin
     Result:=True;
   end;  
