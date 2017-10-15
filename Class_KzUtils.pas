@@ -125,8 +125,6 @@ uses
   Vcl.Dialogs,Vcl.StdCtrls,Vcl.Consts,Vcl.Controls,Winapi.ShellAPI;
 {$ENDIF}
 
-{ TKzUtils }
-
 class function TKzUtils.BoolStrMatchx(const Source: string;
   ATag: string;var aValue:string): Boolean;
 var
