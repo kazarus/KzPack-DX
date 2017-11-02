@@ -9,18 +9,18 @@ type
   THelprUniEngine=class helper for TUniEngine
   public
     function  ToJSON(doFormat:Boolean=False):string;overload;
-    procedure InJSON(AValue:string);overload;
-    procedure InJSON(AValue:string;AField:string;AIndex:Integer=0);overload;
+    procedure InJSON(aValue:string);overload;
+    procedure InJSON(aValue:string;AField:string;AIndex:Integer=0);overload;
 
-    procedure ToFILE(AFileName:string;doFormat:Boolean=False);overload;
-    procedure InFILE(AFileName:string);overload;
+    procedure ToFILE(aFileName:string;doFormat:Boolean=False);overload;
+    procedure InFILE(aFileName:string);overload;
   public
-    class function  ToJSON(AList:TCollection;doFormat:Boolean=False):string;overload;
-    class procedure InJSON(AValue:string;var AList:TCollection);overload;
-    class procedure InJSON(AValue:string;AField:string;var AList:TCollection;AIndex:Integer=0);overload;
+    class function  ToJSON(aList:TCollection;doFormat:Boolean=False):string;overload;
+    class procedure InJSON(aValue:string;var aList:TCollection);overload;
+    class procedure InJSON(aValue:string;AField:string;var aList:TCollection;AIndex:Integer=0);overload;
 
-    class procedure ToFILE(AFileName:string;AList:TCollection;doFormat:Boolean=False);overload;
-    class procedure InFILE(AFileName:string;var AList:TCollection);overload;
+    class procedure ToFILE(aFileName:string;aList:TCollection;doFormat:Boolean=False);overload;
+    class procedure InFILE(aFileName:string;var aList:TCollection);overload;
   end;
 
 implementation
@@ -40,20 +40,22 @@ begin
   end;
 end;
 
-procedure THelprUniEngine.InJson(AValue:string);
+procedure THelprUniEngine.InJson(aValue:string);
 var
   JSON:TQJson;
 begin
+  if Trim(aValue) = '' then Exit;
+  
   try
     JSON:=TQJson.Create;
-    JSON.Parse(AValue);
+    JSON.Parse(aValue);
     JSON.ToRtti(Self);
   finally
     FreeAndNil(JSON);
   end;
 end;
 
-procedure THelprUniEngine.ToFILE(AFileName: string;doFormat:Boolean=False);
+procedure THelprUniEngine.ToFILE(aFileName: string;doFormat:Boolean=False);
 var
   JSON:TQJson;
 begin
@@ -61,33 +63,33 @@ begin
   try
     JSON:=TQJson.Create;
     JSON.FromRtti(Self);
-    JSON.SaveToFile(AFileName,teUTF8,False,doFormat);
+    JSON.SaveToFile(aFileName,teUTF8,False,doFormat);
   finally
     FreeAndNil(JSON);
   end;
 end;
 
-class procedure THelprUniEngine.ToFILE(AFileName: string; AList: TCollection;doFormat:Boolean);
+class procedure THelprUniEngine.ToFILE(aFileName: string; aList: TCollection;doFormat:Boolean);
 var
   JSON:TQJson;
 begin
   try
     JSON:=TQJson.Create;
-    JSON.FromRtti(AList);
-    JSON.SaveToFile(AFileName,teUTF8,False,doFormat);
+    JSON.FromRtti(aList);
+    JSON.SaveToFile(aFileName,teUTF8,False,doFormat);
   finally
     FreeAndNil(JSON);
   end;
 end;
 
-class function THelprUniEngine.ToJson(AList: TCollection;doFormat:Boolean): string;
+class function THelprUniEngine.ToJson(aList: TCollection;doFormat:Boolean): string;
 var
   JSON:TQJson;
 begin
   Result:='';
   try
     JSON:=TQJson.Create;
-    JSON.FromRtti(AList);
+    JSON.FromRtti(aList);
     Result:=JSON.Encode(doFormat,True);
   finally
     FreeAndNil(JSON);
@@ -95,53 +97,57 @@ begin
 end;
 
 
-procedure THelprUniEngine.InFILE(AFileName: string);
+procedure THelprUniEngine.InFILE(aFileName: string);
 var
   JSON:TQJson;
 begin
   try
     JSON:=TQJson.Create;
-    JSON.LoadFromFile(AFileName);
+    JSON.LoadFromFile(aFileName);
     JSON.ToRtti(Self);
   finally
     FreeAndNil(JSON);
   end;
 end;
 
-class procedure THelprUniEngine.InFILE(AFileName: string;
-  var AList: TCollection);
+class procedure THelprUniEngine.InFILE(aFileName: string;
+  var aList: TCollection);
 var
   JSON:TQJson;
 begin
   try
     JSON:=TQJson.Create;
-    JSON.LoadFromFile(AFileName);
-    JSON.ToRtti(AList);
+    JSON.LoadFromFile(aFileName);
+    JSON.ToRtti(aList);
   finally
     FreeAndNil(JSON);
   end;
 end;
 
-class procedure THelprUniEngine.InJson(AValue: string; var AList: TCollection);
+class procedure THelprUniEngine.InJson(aValue: string; var aList: TCollection);
 var
   JSON:TQJson;
 begin
+  if Trim(aValue) = '' then Exit;
+
   try
     JSON:=TQJson.Create;
-    JSON.Parse(AValue);
-    JSON.ToRtti(AList);
+    JSON.Parse(aValue);
+    JSON.ToRtti(aList);
   finally
     FreeAndNil(JSON);
   end;
 end;
 
-procedure THelprUniEngine.InJSON(AValue, AField: string;AIndex:Integer);
+procedure THelprUniEngine.InJSON(aValue, AField: string;AIndex:Integer);
 var
   JSON:TQJson;
 begin
+  if Trim(aValue) = '' then Exit;
+
   try
     JSON:=TQJson.Create;
-    JSON.Parse(AValue);
+    JSON.Parse(aValue);
     if JSON.ItemByName(AField)<>nil then
     begin
       if JSON.ItemByName(AField).Count>0 then
@@ -154,15 +160,17 @@ begin
   end;
 end;
 
-class procedure THelprUniEngine.InJSON(AValue, AField: string;
-  var AList: TCollection; AIndex: Integer);
+class procedure THelprUniEngine.InJSON(aValue, AField: string;
+  var aList: TCollection; AIndex: Integer);
 var
   JSON:TQJson;
 begin
+  if Trim(aValue) = '' then Exit;
+
   try
     JSON:=TQJson.Create;
-    JSON.Parse(AValue);
-    JSON.ItemByName(AField).ToRtti(AList);
+    JSON.Parse(aValue);
+    JSON.ItemByName(AField).ToRtti(aList);
   finally
     FreeAndNil(JSON);
   end;
