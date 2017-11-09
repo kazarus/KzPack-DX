@@ -152,6 +152,7 @@ type
     class function  ExistIndex(aIndexName:string;aUniConnection:TUniConnection):Boolean;
 
     class function  ExistInKey(aConstraintType,aField,aTable:string;aUniConnection:TUniConnection):Boolean;
+    class function  AlterField(aTable,aField:string;length:Integer;aUniConnection:TUniConnection):Boolean;
 
     class procedure ExecuteSQL(ASQL:string;aUniConnection:TUniConnection);overload;
     class procedure ExecuteSQL(ASQL:string);overload;
@@ -709,6 +710,30 @@ begin
   end;
 end;
 
+
+class function TUniEngine.AlterField(aTable, aField: string; length: Integer;
+  aUniConnection: TUniConnection): Boolean;
+var
+  cSQL:string;
+  cSize:Integer;
+begin
+  Result := False;
+
+  if aUniConnection.ProviderName = CONST_PROVIDER_SQLSRV then
+  begin
+    cSQL := 'SELECT 1 AS SIZE FROM SYSCOLUMNS WHERE ID=OBJECT_ID(%S) AND NAME=%S AND LENGTH >= %d';
+    cSQL := Format(cSQL, [QuotedStr(aTable), QuotedStr(aField), length]);
+    cSize := CheckField(cSQL, 'SIZE', aUniConnection);
+    if cSize = 0 then
+    begin
+      cSQL := 'ALTER TABLE %S ALTER COLUMN %S VARCHAR(%d) NULL';
+      cSQL := Format(cSQL, [aTable, aField, length]);
+      ExecuteSQL(cSQL, aUniConnection);
+    end;
+  end;
+
+  Result := True;
+end;
 
 class function TUniEngine.CheckCount(aField, aTable: string;
   Args: array of Variant; aUniConnection: TUniConnection;ASQLAddition:string): Integer;
