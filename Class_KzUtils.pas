@@ -115,6 +115,9 @@ type
     class function  StrsStrMatchx(const Source:string;ATag:string):TStrings;
     class function  BoolStrMatchx(const Source:string;ATag:string;var aValue:string):Boolean;
     class function  RegReplaceAll(const Source:string;ATag:string;AReplacement:string):string;
+  public
+    //CreateDir
+    class function  CreateDirEx(const aPath:string;aSeparator:Char='\'):Boolean;
   end;
 
 
@@ -331,6 +334,35 @@ begin
   begin
     Result:=True;
   end;}
+end;
+
+
+class function TKzUtils.CreateDirEx(const aPath: string;aSeparator:Char): Boolean;
+var
+  I:Integer;
+  cList:TStrings;
+  cTemp:string;
+begin
+  Result := False;
+
+  if Trim(aPath)='' then Exit;
+
+  try
+    cList := TStringList.Create;
+    ListStrCutted(ExtractFilePath(aPath),'\'+aSeparator,cList);
+
+    for I:=0  to cList.Count-1 do
+    begin
+      cTemp := cTemp + cList.Strings[I]+'\';
+
+      if not DirectoryExists(ExePath + cTemp) then
+      begin
+        CreateDir(ExePath + cTemp);
+      end;
+    end;
+  finally
+    FreeAndNil(cList);
+  end;
 end;
 
 
