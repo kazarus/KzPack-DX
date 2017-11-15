@@ -70,15 +70,14 @@ type
     
     class function  CopyIt(uCnfg:TUniConfig):TUniConfig;overload;
     class procedure CopyIt(uCnfg:TUniConfig;var Result:TUniConfig);overload;
+
+    class function  CopyIt(aUniEngine:TUniEngine):TUniEngine;overload;override;
+    class procedure CopyIt(aUniEngine:TUniEngine;var Result:TUniEngine)overload;override;
   public
     class procedure Initialize(ADataBase:string='-1');
     class function  ADD_TBL_UNICNFG:string;
     class function  ADD_TBL_UNIDICT:string;
   end;
-
-
-{var
-  UniConfigEntity:TUniConfig;}
    
 const
   CONST_DB_UNICONFIG='config.db';
@@ -89,8 +88,6 @@ const
   CONST_PROVIDER_SQLITE='SQLite';
   CONST_PROVIDER_MYSQLX='MySQL';
   CONST_PROVIDER_POSTGR='PostgreSQL';
-
-
 
 
 implementation
@@ -489,6 +486,19 @@ begin
       UNICMEMO := AUniQuery.FieldByName('UNIX_MEMO').AsString;
     end;
   end;
+end;
+
+class function TUniConfig.CopyIt(aUniEngine: TUniEngine): TUniEngine;
+begin
+  Result := TUniConfig.Create;
+  TUniEngine.CopyIt(aUniEngine,Result);
+end;
+
+class procedure TUniConfig.CopyIt(aUniEngine: TUniEngine;
+  var Result: TUniEngine);
+begin
+  if Result = nil then Exit;
+  TUniConfig.CopyIt(TUniConfig(aUniEngine),TUniConfig(Result));
 end;
 
 end.
