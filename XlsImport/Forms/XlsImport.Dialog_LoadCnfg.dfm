@@ -143,7 +143,7 @@ object DialogLoadCnfg: TDialogLoadCnfg
     Version = xvExcel2007
     DirectRead = False
     DirectWrite = False
-    Left = 88
+    Left = 152
     Top = 152
   end
 end

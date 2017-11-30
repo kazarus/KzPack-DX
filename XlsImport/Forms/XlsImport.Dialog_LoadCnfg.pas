@@ -31,9 +31,10 @@ type
   private
     FRealKJND: Integer;
     FFilePath: string;
-    FLoadCnfg: TLoadCnfg;  //&
+    FKeyWords: string;
+    FLoadCnfg: TLoadCnfg;   //&
     FListKJQJ: TStringList; //*
-    FIsPrompt: Boolean;    //*
+    FIsPrompt: Boolean;     //*
     FListPage: TStringList; //*
   protected
     procedure SetInitialize;override;
@@ -53,7 +54,7 @@ type
 var
   DialogLoadCnfg: TDialogLoadCnfg;
 
-function ViewLoadCnfg(aRealKJND:Integer;var aLoadCnfg:TLoadCnfg;IsPrompt:Boolean=True;aFilePath:string=''):Integer;
+function ViewLoadCnfg(aRealKJND:Integer;var aLoadCnfg:TLoadCnfg;IsPrompt:Boolean=True;aFilePath:string='';aKeyWords:string = ''):Integer;
 
 implementation
 
@@ -62,7 +63,7 @@ uses
 
 {$R *.dfm}
 
-function ViewLoadCnfg(aRealKJND:Integer;var aLoadCnfg:TLoadCnfg;IsPrompt:Boolean;aFilePath:string):Integer;
+function ViewLoadCnfg(aRealKJND:Integer;var aLoadCnfg:TLoadCnfg;IsPrompt:Boolean;aFilePath:string;aKeyWords:string):Integer;
 begin
   try
     DialogLoadCnfg:=TDialogLoadCnfg.Create(nil);
@@ -70,6 +71,7 @@ begin
     DialogLoadCnfg.FRealKJND := aRealKJND;
     DialogLoadCnfg.FIsPrompt := IsPrompt;
     DialogLoadCnfg.FFilePath := aFilePath;
+    DialogLoadCnfg.FKeyWords := aKeyWords;
 
 
     Result:=DialogLoadCnfg.ShowModal;
@@ -276,7 +278,10 @@ end;
 
 procedure TDialogLoadCnfg.ViewPath;
 var
+  I: Integer;
   OD:TOpenDialog;
+
+  cList:TStringList;
 begin
   try
     OD:=TOpenDialog.Create(nil);
@@ -286,6 +291,27 @@ begin
     end;
     if OD.Execute then
     begin
+      //XC-DEV@2017-11-30-15-13-52-<
+      if FKeyWords <> '' then
+      begin
+        try
+          cList := TStringList.Create;
+          cList.Delimiter := ',';
+          cList.DelimitedText := FKeyWords;
+
+          for I := 0 to cList.Count-1 do
+          begin
+            if not TKzUtils.CompareTextLike(cList.Strings[I],OD.FileName) then
+            begin
+              if TKzUtils.ShowFmt('当前文件名称不符合关键词[%S],是否继续?',[cList.Strings[I]]) <> Mrok then Exit;
+            end;
+          end;
+        finally
+          FreeAndNil(cList);
+        end;
+      end;
+      //XC-DEV@2017-11-30-15-13-52->
+
       Edit_FilePath.Text:=OD.FileName;
 
       if FListPage = nil then
@@ -293,6 +319,7 @@ begin
         FListPage := TStringList.Create;
       end;
       TKzUtils.JustCleanList(FListPage);
+
       if ReadPage(OD.FileName,FListPage) then
       begin
         InitPage(FListPage,'');

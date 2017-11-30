@@ -43,6 +43,7 @@ type
     procedure N3Click(Sender: TObject);
   private
     FClasName: string;
+    FKeyWords: string;
     FLoadCnfg: TLoadCnfg; //*
 
     FListHead: TStringList; //*list of string
@@ -83,7 +84,7 @@ type
 var
   FormListLoad: TFormListLoad;
 
-function ViewListLoad(aClasName:string;aCellHead:TStringList;var Value:string):Integer;
+function ViewListLoad(aClasName:string;aCellHead:TStringList;var Value:string;aKeyWords:string = ''):Integer;
 
 implementation
 
@@ -92,11 +93,12 @@ uses
 
 {$R *.dfm}
 
-function ViewListLoad(aClasName:string;aCellHead:TStringList;var Value:string):Integer;
+function ViewListLoad(aClasName:string;aCellHead:TStringList;var Value:string;aKeyWords:string = ''):Integer;
 begin
   try
     FormListLoad:=TFormListLoad.Create(nil);
     FormListLoad.FClasName := aClasName;
+    FormListLoad.FKeyWords := aKeyWords;
     FormListLoad.CopyHead(aCellHead);
     Result:=FormListLoad.ShowModal;
     if Result=Mrok then
@@ -128,7 +130,7 @@ begin
     FLoadCnfg.InFILE(cPath);
   end;
 
-  if ViewLoadCnfg(YearOf(Now),FLoadCnfg,False,cPath)<>Mrok then Exit;
+  if ViewLoadCnfg(YearOf(Now),FLoadCnfg,False,cPath,FKeyWords)<>Mrok then Exit;
 
   //#Panl_Text.Caption:=Format('导入期间:%D',[FLoadCnfg.KJNDKJQJ]);
 
