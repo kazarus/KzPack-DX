@@ -301,7 +301,8 @@ begin
 
           for I := 0 to cList.Count-1 do
           begin
-            if not TKzUtils.CompareTextLike(cList.Strings[I],OD.FileName) then
+            //#if not TKzUtils.CompareTextLike(cList.Strings[I],OD.FileName) then
+            if Pos(cList.Strings[I],ExtractFileName(OD.FileName)) <= 0 then
             begin
               if TKzUtils.ShowFmt('当前文件名称不符合关键词[%S],是否继续?',[cList.Strings[I]]) <> Mrok then Exit;
             end;
@@ -344,6 +345,11 @@ procedure TDialogLoadCnfg.Btnv_MrokClick(Sender: TObject);
 var
   cKJQJ:TKJQJ;
 begin
+  if Trim(Edit_FilePath.Text) = '' then
+  begin
+    ShowMessageFmt('请指定文件路径.', []);
+    Exit;
+  end;
   if Trim(Edit_RowTitle.Text) = '' then
   begin
     ShowMessageFmt('请指定标题行.', []);
@@ -354,6 +360,8 @@ begin
     ShowMessageFmt('请指定起始行.', []);
     Exit;
   end;
+
+
 
   if FIsPrompt then
   begin
