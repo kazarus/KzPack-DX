@@ -43,7 +43,8 @@ type
     procedure N3Click(Sender: TObject);
   private
     FClasName: string;
-    FKeyWords: string;
+    FPromptTx: string;    //提示文本;
+    FKeyWords: string;    //关键词组;
     FLoadCnfg: TLoadCnfg; //*
 
     FListHead: TStringList; //*list of string
@@ -84,7 +85,7 @@ type
 var
   FormListLoad: TFormListLoad;
 
-function ViewListLoad(aClasName:string;aCellHead:TStringList;var Value:string;aKeyWords:string = ''):Integer;
+function ViewListLoad(aClasName:string;aCellHead:TStringList;var Value:string;aPromptTx:string='';aKeyWords:string = ''):Integer;
 
 implementation
 
@@ -93,11 +94,12 @@ uses
 
 {$R *.dfm}
 
-function ViewListLoad(aClasName:string;aCellHead:TStringList;var Value:string;aKeyWords:string = ''):Integer;
+function ViewListLoad(aClasName:string;aCellHead:TStringList;var Value:string;aPromptTx:string='';aKeyWords:string = ''):Integer;
 begin
   try
     FormListLoad:=TFormListLoad.Create(nil);
     FormListLoad.FClasName := aClasName;
+    FormListLoad.FPromptTx := aPromptTx;
     FormListLoad.FKeyWords := aKeyWords;
     FormListLoad.CopyHead(aCellHead);
     Result:=FormListLoad.ShowModal;
@@ -130,7 +132,7 @@ begin
     FLoadCnfg.InFILE(cPath);
   end;
 
-  if ViewLoadCnfg(YearOf(Now),FLoadCnfg,False,cPath,FKeyWords)<>Mrok then Exit;
+  if ViewLoadCnfg(YearOf(Now),FLoadCnfg,False,cPath,FPromptTx,FKeyWords)<>Mrok then Exit;
 
   //#Panl_Text.Caption:=Format('导入期间:%D',[FLoadCnfg.KJNDKJQJ]);
 
@@ -675,6 +677,10 @@ procedure TFormListLoad.SetCommParams;
 begin
   inherited;
   Caption := '数据导入';
+  if FPromptTx <> '' then
+  begin
+    Caption := Format('数据导入:%S',[FPromptTx]);
+  end;
 end;
 
 procedure TFormListLoad.SetGridParams;

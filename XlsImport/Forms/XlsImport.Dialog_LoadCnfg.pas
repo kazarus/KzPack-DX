@@ -30,7 +30,8 @@ type
     procedure Btnv_MrokClick(Sender: TObject);
   private
     FRealKJND: Integer;
-    FFilePath: string;
+    FFilePath: string;      //
+    FPromptTx: string;
     FKeyWords: string;
     FLoadCnfg: TLoadCnfg;   //&
     FListKJQJ: TStringList; //*
@@ -54,7 +55,7 @@ type
 var
   DialogLoadCnfg: TDialogLoadCnfg;
 
-function ViewLoadCnfg(aRealKJND:Integer;var aLoadCnfg:TLoadCnfg;IsPrompt:Boolean=True;aFilePath:string='';aKeyWords:string = ''):Integer;
+function ViewLoadCnfg(aRealKJND:Integer;var aLoadCnfg:TLoadCnfg;IsPrompt:Boolean=True;aFilePath:string='';aPromptTx:string='';aKeyWords:string = ''):Integer;
 
 implementation
 
@@ -63,7 +64,7 @@ uses
 
 {$R *.dfm}
 
-function ViewLoadCnfg(aRealKJND:Integer;var aLoadCnfg:TLoadCnfg;IsPrompt:Boolean;aFilePath:string;aKeyWords:string):Integer;
+function ViewLoadCnfg(aRealKJND:Integer;var aLoadCnfg:TLoadCnfg;IsPrompt:Boolean;aFilePath:string;aPromptTx:string;aKeyWords:string):Integer;
 begin
   try
     DialogLoadCnfg:=TDialogLoadCnfg.Create(nil);
@@ -71,6 +72,7 @@ begin
     DialogLoadCnfg.FRealKJND := aRealKJND;
     DialogLoadCnfg.FIsPrompt := IsPrompt;
     DialogLoadCnfg.FFilePath := aFilePath;
+    DialogLoadCnfg.FPromptTx := aPromptTx;
     DialogLoadCnfg.FKeyWords := aKeyWords;
 
 
@@ -248,6 +250,10 @@ procedure TDialogLoadCnfg.SetCommParams;
 begin
   inherited;
   Caption:='导入参数';
+  if FPromptTx <> '' then
+  begin
+    Caption := Format('导入参数:%S',[FPromptTx]);
+  end;
   Btnv_Quit.Caption:='取消';
   Btnv_Mrok.Caption:='确定';
   
@@ -304,10 +310,11 @@ begin
 
           for I := 0 to cList.Count-1 do
           begin
-            //#if not TKzUtils.CompareTextLike(cList.Strings[I],OD.FileName) then
             if Pos(cList.Strings[I],ExtractFileName(OD.FileName)) <= 0 then
             begin
-              if TKzUtils.ShowFmt('当前文件名称不符合关键词[%S],是否继续?',[cList.Strings[I]]) <> Mrok then Exit;
+              //@if TKzUtils.ShowFmt('当前文件名称不符合关键词[%S],是否继续?',[cList.Strings[I]]) <> Mrok then Exit;
+              TKzUtils.ErorMsg('操作无效:当前文件名称不符合关键词[%S]',[cList.Strings[I]]);
+              Exit;
             end;
           end;
         finally
@@ -364,8 +371,6 @@ begin
     Exit;
   end;
 
-
-
   if FIsPrompt then
   begin
     cKJQJ := TKJQJ(Comb_KJQJ.Items.Objects[Comb_KJQJ.ItemIndex]);
@@ -375,7 +380,6 @@ begin
     end;
   end;
 
-  
   ModalResult:=mrOk;
 end;
 
