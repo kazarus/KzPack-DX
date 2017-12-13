@@ -285,9 +285,12 @@ var
 begin
   try
     OD:=TOpenDialog.Create(nil);
-    if Edit_FilePath.Text <> '' then
+    if (Edit_FilePath.Text <> '') then
     begin
-      OD.InitialDir := ExtractFilePath(Edit_FilePath.Text);
+      if Pos('\\',Edit_FilePath.Text) < 0 then
+      begin
+        OD.InitialDir := ExtractFilePath(Edit_FilePath.Text);
+      end;
     end;
     if OD.Execute then
     begin
