@@ -11126,6 +11126,7 @@ begin
     FPreviewForm := TfrxPreviewForm.Create(Application);
     with TfrxPreviewForm(FPreviewForm) do
     begin
+      FormStyle := fsStayOnTop;
       Preview.FReport := Self;
       Preview.FPreviewPages := FPreviewPages;
       FPreview := Preview;

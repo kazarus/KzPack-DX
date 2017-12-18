@@ -44,11 +44,6 @@ implementation
 uses
   Class_KzUtils,Class_AppUtil;
 
-{ TEROR }
-
-
-{ TEROR }
-
 
 class procedure TEROR.InData(AValue: string; var AList: TCollection);
 var
