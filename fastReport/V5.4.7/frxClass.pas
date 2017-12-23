@@ -2321,7 +2321,7 @@ type
     property DrillState: TStrings read FDrillState;
     property LocalValue: Variant read GetLocalValue write SetLocalValue;
     property SelfValue: TfrxView read GetSelfValue write SetSelfValue;
-    property PreviewForm: TForm read FPreviewForm;
+    property PreviewForm: TForm read FPreviewForm write FPreviewForm;
     property XMLSerializer: TObject read FXMLSerializer;
     property Reloading: Boolean read FReloading write FReloading;
 
@@ -11126,7 +11126,7 @@ begin
     FPreviewForm := TfrxPreviewForm.Create(Application);
     with TfrxPreviewForm(FPreviewForm) do
     begin
-      FormStyle := fsStayOnTop;
+      //#FormStyle := fsStayOnTop;
       Preview.FReport := Self;
       Preview.FPreviewPages := FPreviewPages;
       FPreview := Preview;

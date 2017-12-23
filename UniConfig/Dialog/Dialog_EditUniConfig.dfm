@@ -222,8 +222,8 @@ object DialogEditUniConfig: TDialogEditUniConfig
     OnCloseUp = Comb_TypeCloseUp
   end
   object Edit_DataBase: TRzButtonEdit
-    Left = 66
-    Top = 110
+    Left = 64
+    Top = 112
     Width = 320
     Height = 21
     Text = ''
