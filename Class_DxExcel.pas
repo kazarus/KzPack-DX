@@ -282,23 +282,26 @@ var
   SD:TSaveDialog;
   FileName:string;
 begin
+  Result := False;
+
   try
     SD:=TSaveDialog.Create(nil);
     SD.Filter:='*.xlsx|*.xlsx|*.xls|*.xls';
     SD.FileName:=aFileName;
-    if SD.Execute then
-    begin
-      FileName:=SD.FileName;
-      if ExtractFileExt(FileName)='' then
-      begin
-        FileName:=Format('%S.xlsx',[FileName]);
-      end;
+    if not SD.Execute then Exit;
 
-      FDxExcel.ActiveSheet.SpreadSheet.SaveToFile(FileName);
+    FileName:=SD.FileName;
+    if ExtractFileExt(FileName)='' then
+    begin
+      FileName:=Format('%S.xlsx',[FileName]);
     end;
+
+    FDxExcel.ActiveSheet.SpreadSheet.SaveToFile(FileName);
   finally
     FreeAndNil(SD);
   end;
+
+  Result := True;
 end;
 
 constructor TDxCellStyl.Create;
