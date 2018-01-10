@@ -12,18 +12,18 @@ uses
   Classes,SysUtils,Uni,UniEngine,UniConnct;
 
 type
-  TProcPatch=procedure();
+  TProcPatch = procedure();
 
   TOncePatch=class(TObject)
   public
-    VersionMod:string;
-    ConnctMark:string;
-    ProcPatchA:TProcPatch;
+    VersionNow: string;
+    ConnctMark: string;
+    ProcPatchA: TProcPatch;
   end;
 
   TListPatch=class(TStringList)
   public
-    procedure AddPatch(AVersion,AConnctMark:string;AObject:TProcPatch);
+    procedure AddPatch(aVersion,AConnctMark:string;AObject:TProcPatch);
   end;
 
   TUniPatchX=class(TUniEngine)
@@ -34,22 +34,22 @@ type
     FListConnct:TStringList;
   protected
     function  GetDataBaseVersion:Integer;
-    procedure SetDataBaseVersion(AValue:Integer);
+    procedure SetDataBaseVersion(aValue:Integer);
 
     function  ADD_TBL_DICT:string;
     function  ADD_PK_TBL_DICT:string;
-    function  ADD_DICT_VERSION:string;
+    function  ADD_DICT_VERSION(aDictCode:string = '10001'):string;
 
-    procedure Connect(ATargetMark:string);
+    procedure Connect(aTargetMark:string);
     procedure Rollback;
     procedure CommitDB;
   protected
     procedure Execute10001;
   public
-    function  Initialize(ATargetMark,ATargetTabl:string):Boolean;
-    procedure Execute(AVersion:Integer);
+    function  Initialize(aTargetMark,aTargetTabl:string):Boolean;
+    procedure Execute(aVersion:Integer);
   public
-    procedure AddPatch(AVersion,AConnctMark:string;AObject:TProcPatch);
+    procedure AddPatch(aVersion,AConnctMark:string;AObject:TProcPatch);
   public
     destructor Destroy; override;
     constructor Create;
@@ -71,16 +71,16 @@ uses
   Class_Dict,Class_SQLX;
 
 
-procedure TUniPatchX.AddPatch(AVersion, AConnctMark: string;
+procedure TUniPatchX.AddPatch(aVersion, AConnctMark: string;
   AObject: TProcPatch);
 begin
-  FListPatch.AddPatch(AVersion,AConnctMark,AObject);
+  FListPatch.AddPatch(aVersion,AConnctMark,AObject);
 end;
 
-function TUniPatchX.ADD_DICT_VERSION: string;
+function TUniPatchX.ADD_DICT_VERSION(aDictCode:string): string;
 begin
   Result:='INSERT INTO %S (DICT_INDX,DICT_MODE,DICT_INFO,DICT_CODE,DICT_NAME,DICT_MEMO) VALUES (%D,%S,%S,%S,%S,%S)';
-  Result:=Format(Result,[TargetTabl,1,QuotedStr(CONST_DATA_BASE_DICTMOD),QuotedStr('数据库版本号'),QuotedStr('10001'),QuotedStr(''),QuotedStr('')]);
+  Result:=Format(Result,[TargetTabl,1,QuotedStr(CONST_DATA_BASE_DICTMOD),QuotedStr('数据库版本号'),QuotedStr(aDictCode),QuotedStr(''),QuotedStr('')]);
 end;
 
 function TUniPatchX.ADD_PK_TBL_DICT: string;
@@ -120,21 +120,21 @@ begin
   end;
 end;
 
-procedure TUniPatchX.Connect(ATargetMark: string);
+procedure TUniPatchX.Connect(aTargetMark: string);
 var
-  IDXA:Integer;
+  cIndx:Integer;
   UniConnctA:TUniConnection;
 begin
-  IDXA:=FListConnct.IndexOf(ATargetMark);
-  if IDXA=-1 then
+  cIndx:=FListConnct.IndexOf(aTargetMark);
+  if cIndx=-1 then
   begin
-    UniConnctA:=UniConnctEx.GetConnection(ATargetMark);
+    UniConnctA:=UniConnctEx.GetConnection(aTargetMark);
     UniConnctA.StartTransaction;
-    FListConnct.AddObject(ATargetMark,UniConnctA);
+    FListConnct.AddObject(aTargetMark,UniConnctA);
     FUniConnct:=UniConnctA;
   end else
   begin
-    FUniConnct:=TUniConnection(FListConnct.Objects[IDXA]);
+    FUniConnct:=TUniConnection(FListConnct.Objects[cIndx]);
   end;
 end;
 
@@ -172,54 +172,55 @@ begin
   inherited;
 end;
 
-procedure TUniPatchX.Execute(AVersion:Integer);
+procedure TUniPatchX.Execute(aVersion:Integer);
 var
   I:Integer;
   SQLA :string;
-  IDXA:Integer; //databaseversion=tbl_dict.code
-  IDXB:Integer; //
-  PatchA:TOncePatch;
+  cIndx:Integer; //databaseversion=tbl_dict.code
+  xIndx:Integer; //
+  Patch:TOncePatch;
 begin
-  IDXA:=GetDataBaseVersion;
-  if IDXA=-1 then
+  cIndx := GetDataBaseVersion;
+  if cIndx=-1 then
   begin
     Connect(TargetMark);
     Execute10001;
-    IDXA:=10001;
+    cIndx:=10001;
   end;
 
 
 
   //YXC_2012_11_21_10_24_05_不需要升级.
-  if IDXA = AVersion then Exit;
+  if cIndx = aVersion then Exit;
 
   try
     try
-      for I:=IDXA+1  to AVersion do
+      for I:=cIndx+1  to aVersion do
       begin
-        IDXB:=-1;
-        IDXB:=FListPatch.IndexOf(IntToStr(I));
-        if IDXB<>-1 then
+        xIndx:=-1;
+        xIndx:=FListPatch.IndexOf(IntToStr(I));
+        if xIndx<>-1 then
         begin
-          PatchA:=nil;
-          PatchA:=TOncePatch(FListPatch.Objects[IDXB]);
-          if PatchA=nil then Continue;
+          Patch:=nil;
+          Patch:=TOncePatch(FListPatch.Objects[xIndx]);
+          if Patch=nil then Continue;
 
-          Connect(PatchA.ConnctMark);
-          PatchA.ProcPatchA();
+          Connect(Patch.ConnctMark);
+          Patch.ProcPatchA();
         end;
       end;
     except
       on E:Exception do
       begin
         Rollback;
-        raise Exception.CreateFmt('UPGRADE ERROR:%S:%S,%S',[PatchA.VersionMod,PatchA.ConnctMark,E.Message]);
+        raise Exception.CreateFmt('UPGRADE ERROR:%S:%S,%S',[Patch.VersionNow,Patch.ConnctMark,E.Message]);
       end;
     end;
   finally
     CommitDB;
   end;
-  SetDataBaseVersion(AVersion);
+
+  SetDataBaseVersion(aVersion);
 end;
 
 procedure TUniPatchX.Execute10001;
@@ -230,51 +231,51 @@ end;
 
 function TUniPatchX.GetDataBaseVersion: Integer;
 var
-  SQLA :string;
+  cSQL :string;
   
-  UniQueryA:TUniQuery;
-  UniConnct:TUniConnection;
+  cUniD:TUniQuery;
+  cUniC:TUniConnection;
 begin
   Result:=-1;
-  UniQueryA:=nil;  
+  cUniD:=nil;
 
-  SQLA  :='SELECT DICT_CODE FROM %S WHERE DICT_MODE=%S';
-  SQLA  :=Format(SQLA,[TargetTabl,QuotedStr(CONST_DATA_BASE_DICTMOD)]);
+  cSQL  :='SELECT DICT_CODE FROM %S WHERE DICT_MODE=%S';
+  cSQL  :=Format(cSQL,[TargetTabl,QuotedStr(CONST_DATA_BASE_DICTMOD)]);
 
   try
-    UniConnct:=UniConnctEx.GetConnection(TargetMark);
-    if not ExistTable(TargetTabl,UniConnct) then Exit;      
+    cUniC:=UniConnctEx.GetConnection(TargetMark);
+    if not ExistTable(TargetTabl,cUniC) then Exit;
     //->
-    UniQueryA:=GetUniQuery(SQLA,UniConnct);
-    Result:=StrToIntDef(UniQueryA.FieldByName('DICT_CODE').AsString,-1);
+    cUniD:=GetUniQuery(cSQL,cUniC);
+    Result:=StrToIntDef(cUniD.FieldByName('DICT_CODE').AsString,-1);
     //-<
   finally
-    FreeAndNil(UniConnct);
-    if UniQueryA<>nil then  FreeAndNil(UniQueryA);
+    FreeAndNil(cUniC);
+    if cUniD<>nil then  FreeAndNil(cUniD);
   end;
 end;
 
-function  TUniPatchX.Initialize(ATargetMark,ATargetTabl:string):Boolean;
+function  TUniPatchX.Initialize(aTargetMark,aTargetTabl:string):Boolean;
 var
   I:Integer;
-  UniConnct:TUniConnection;
+  cUniC:TUniConnection;
 begin
   Result:=False;
 
-  UniConnct :=nil;
-  TargetMark:=ATargetMark;
-  TargetTabl:=ATargetTabl;
+  cUniC     :=nil;
+  TargetMark:=aTargetMark;
+  TargetTabl:=aTargetTabl;
   
   try
-    UniConnct:=UniConnctEx.GetConnection(TargetMark);
-    if UniConnct=nil then Exit;
+    cUniC:=UniConnctEx.GetConnection(TargetMark);
+    if cUniC=nil then Exit;
     //->
-    if not ExistTable(TargetTabl,UniConnct) then
+    if not ExistTable(TargetTabl,cUniC) then
     begin
-      ExecuteSQL(ADD_TBL_DICT,UniConnct);
+      ExecuteSQL(ADD_TBL_DICT,cUniC);
       //YXC_2013_02_06_14_39_33_sqllite不支持该语法.
-      ExecuteSQL(ADD_PK_TBL_DICT,UniConnct);
-      ExecuteSQL(ADD_DICT_VERSION,UniConnct);      
+      ExecuteSQL(ADD_PK_TBL_DICT,cUniC);
+      ExecuteSQL(ADD_DICT_VERSION,cUniC);
     end;
     //-<
 
@@ -289,7 +290,7 @@ begin
     end;
     FListConnct:=TStringList.Create;
   finally
-    if UniConnct<>nil then FreeAndNil(UniConnct);
+    if cUniC<>nil then FreeAndNil(cUniC);
   end;
 
   Result:=True;         
@@ -298,50 +299,59 @@ end;
 procedure TUniPatchX.Rollback;
 var
   I:Integer;
-  UniConnct:TUniConnection;
+  cUniC:TUniConnection;
 begin
   for I:=0 to FListConnct.Count-1 do
   begin
-    UniConnct:=TUniConnection(FListConnct.Objects[I]);
-    if UniConnct<>nil then
+    cUniC:=TUniConnection(FListConnct.Objects[I]);
+    if cUniC<>nil then
     begin
-      UniConnct.Rollback;
+      cUniC.Rollback;
     end;  
   end;  
 end;
 
-procedure TUniPatchX.SetDataBaseVersion(AValue: Integer);
+procedure TUniPatchX.SetDataBaseVersion(aValue: Integer);
 var
-  SQLA :string;
-  UniConnct:TUniConnection;
+  cSQL :string;
+  cUniC:TUniConnection;
 begin
-  SQLA  :='UPDATE %S SET DICT_CODE=%D WHERE DICT_MODE=%S';
-  SQLA  :=Format(SQLA,[TargetTabl,AValue,QuotedStr(CONST_DATA_BASE_DICTMOD)]);
-
   try
-    UniConnct:=UniConnctEx.GetConnection(TargetMark);
-    if not ExistTable(TargetTabl,UniConnct) then Exit;      
+    cUniC:=UniConnctEx.GetConnection(TargetMark);
+    if not ExistTable(TargetTabl,cUniC) then Exit;
     //->
-    ExecuteSQL(SQLA,UniConnct);
+    cSQL := 'SELECT COUNT(*) AS VALUE FROM %s WHERE DICT_MODE=%s';
+    cSQL := Format(cSQL,[TargetTabl,QuotedStr(CONST_DATA_BASE_DICTMOD)]);
+
+    if UniConnctEx.CheckField(cSQL,'VALUE',cUniC) > 0 then
+    begin
+      cSQL :='UPDATE %S SET DICT_CODE=%D WHERE DICT_MODE=%S';
+      cSQL :=Format(cSQL,[TargetTabl,aValue,QuotedStr(CONST_DATA_BASE_DICTMOD)]);
+    end else
+    begin
+      cSQL := ADD_DICT_VERSION(IntToStr(aValue))
+    end;
+
+
+
+    ExecuteSQL(cSQL,cUniC);
     //-<
   finally
-    FreeAndNil(UniConnct);
+    FreeAndNil(cUniC);
   end;
 end;
 
-{ TListPatch }
-
-procedure TListPatch.AddPatch(AVersion, AConnctMark: string;
+procedure TListPatch.AddPatch(aVersion, AConnctMark: string;
   AObject: TProcPatch);
 var
-  OncePatchA:TOncePatch;
+  OncePatch:TOncePatch;
 begin
-  OncePatchA:=TOncePatch.Create;
-  OncePatchA.VersionMod:=AVersion;  
-  OncePatchA.ConnctMark:=AConnctMark;
-  OncePatchA.ProcPatchA:=AObject;
+  OncePatch := TOncePatch.Create;
+  OncePatch.VersionNow := aVersion;
+  OncePatch.ConnctMark := AConnctMark;
+  OncePatch.ProcPatchA := AObject;
 
-  AddObject(OncePatchA.VersionMod,OncePatchA);
+  AddObject(OncePatch.VersionNow,OncePatch);
 end;
 
 initialization
