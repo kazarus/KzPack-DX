@@ -23,7 +23,7 @@ type
 
   TListPatch=class(TStringList)
   public
-    procedure AddPatch(aVersion,AConnctMark:string;AObject:TProcPatch);
+    procedure AddPatch(aVersion, aConnctMark: string; aObject: TProcPatch);
   end;
 
   TUniPatchX=class(TUniEngine)
@@ -38,7 +38,7 @@ type
 
     function  ADD_TBL_DICT:string;
     function  ADD_PK_TBL_DICT:string;
-    function  ADD_DICT_VERSION(aDictCode:string = '10001'):string;
+    function  ADD_DICT_VERSION(aDictCode: string = '10001'): string;
 
     procedure Connect(aTargetMark:string);
     procedure Rollback;
@@ -49,7 +49,7 @@ type
     function  Initialize(aTargetMark,aTargetTabl:string):Boolean;
     procedure Execute(aVersion:Integer);
   public
-    procedure AddPatch(aVersion,AConnctMark:string;AObject:TProcPatch);
+    procedure AddPatch(aVersion,aConnctMark:string;aObject:TProcPatch);
   public
     destructor Destroy; override;
     constructor Create;
@@ -71,10 +71,10 @@ uses
   Class_Dict,Class_SQLX;
 
 
-procedure TUniPatchX.AddPatch(aVersion, AConnctMark: string;
-  AObject: TProcPatch);
+procedure TUniPatchX.AddPatch(aVersion, aConnctMark: string;
+  aObject: TProcPatch);
 begin
-  FListPatch.AddPatch(aVersion,AConnctMark,AObject);
+  FListPatch.AddPatch(aVersion,aConnctMark,aObject);
 end;
 
 function TUniPatchX.ADD_DICT_VERSION(aDictCode:string): string;
@@ -341,15 +341,15 @@ begin
   end;
 end;
 
-procedure TListPatch.AddPatch(aVersion, AConnctMark: string;
-  AObject: TProcPatch);
+procedure TListPatch.AddPatch(aVersion, aConnctMark: string;
+  aObject: TProcPatch);
 var
   OncePatch:TOncePatch;
 begin
   OncePatch := TOncePatch.Create;
   OncePatch.VersionNow := aVersion;
-  OncePatch.ConnctMark := AConnctMark;
-  OncePatch.ProcPatchA := AObject;
+  OncePatch.ConnctMark := aConnctMark;
+  OncePatch.ProcPatchA := aObject;
 
   AddObject(OncePatch.VersionNow,OncePatch);
 end;
