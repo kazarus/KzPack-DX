@@ -13,7 +13,7 @@ type
     FKJND:Integer;
     FKJQJ:Integer;
   public
-    function GetStrsIndex:string;override;  
+    function  GetStrsIndex:string;override;
   public
     procedure SetInitialize;
     
@@ -34,8 +34,8 @@ type
     function  GetKJNDKJQJ:Integer;overload;                 //取得整型期间
     function  GetKJNDKJQJ(aValue:Integer):Integer;overload; //取得整型期间
   published
-    property KJND:Integer read FKJND write FKJND;
-    property KJQJ:Integer read FKJQJ write FKJQJ;
+    property  KJND:Integer read FKJND write FKJND;
+    property  KJQJ:Integer read FKJQJ write FKJQJ;
   public
     constructor Create;overload;
     constructor Create(aKJND,aKJQJ:Integer);overload;
@@ -54,6 +54,7 @@ type
 
     class function  ExpListKJQJ(aStartKJQJ,aEndedKJQJ:TKJQJ):TStringList;overload;
     class procedure ExpListKJQJ(aKJND,aStartKJQJ,aEndedKJQJ:Integer;var aList:TStringList);overload;
+    class procedure InitKJQJ(aStartVal:Integer;aEndedVal:Integer;var aList:TStringList);overload;
   end;
 
 implementation
@@ -191,6 +192,56 @@ end;
 function TKJQJ.GetStrsIndex: string;
 begin
   Result:=Format('%D-%D',[KJND,KJQJ]);
+end;
+
+class procedure TKJQJ.InitKJQJ(aStartVal, aEndedVal: Integer;
+  var aList: TStringList);
+var
+  I:Integer;
+  cSize: Integer;
+  sKJQJ: TKJQJ;
+  eKJQJ: TKJQJ;
+  xKJQJ: TKJQJ;
+  zKJQJ: TKJQJ;
+begin
+  if aList = nil then Exit;
+  
+  try
+    sKJQJ := TKJQJ.Create(aStartVal);
+    eKJQJ := TKJQJ.Create(aEndedVal);
+    xKJQJ := TKJQJ.Create;
+
+    cSize := ((eKJQJ.KJND - sKJQJ.KJND) * 12 + (eKJQJ.KJQJ - sKJQJ.KJQJ)) + 1;
+
+    for I:=1 to cSize do
+    begin
+      if I=1 then
+      begin
+        zKJQJ := TKJQJ.Create;
+        zKJQJ.KJND := sKJQJ.KJND;
+        zKJQJ.KJQJ := sKJQJ.KJQJ;
+
+        aList.AddObject(IntToStr(zKJQJ.GetKJNDKJQJ), zKJQJ);
+
+        xKJQJ.KJND := sKJQJ.KJND;
+        xKJQJ.KJQJ := sKJQJ.KJQJ;
+      end else
+      begin
+        zKJQJ := TKJQJ.Create;
+        zKJQJ.KJND := xKJQJ.GetNextKJND;
+        zKJQJ.KJQJ := xKJQJ.GetNextKJQJ;
+
+        aList.AddObject(IntToStr(zKJQJ.GetKJNDKJQJ), zKJQJ);
+
+        xKJQJ.KJND := zKJQJ.KJND;
+        xKJQJ.KJQJ := zKJQJ.KJQJ;
+      end;
+    end;
+  finally
+    FreeAndNil(sKJQJ);
+    FreeAndNil(eKJQJ);
+    FreeAndNil(xKJQJ);
+  end;
 end;
 
 class function TKJQJ.ReadDS(AUniQuery: TUniQuery): TUniEngine;
