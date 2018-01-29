@@ -11147,6 +11147,7 @@ begin
         begin
           WndExStyles := GetWindowLong(Handle, GWL_EXSTYLE);
           SetWindowLong(Handle, GWL_EXSTYLE, WndExStyles or WS_EX_APPWINDOW);
+          //#SetWindowPos(Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE);
         end;
         FreeOnClose := True;
         Show;

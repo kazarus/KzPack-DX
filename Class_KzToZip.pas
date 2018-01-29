@@ -198,6 +198,7 @@ begin
     //#bytStream.SaveToFile(TKzUtils.ExePath+'2.fr3');
     bytStream.Position:=0;
     msStream.CopyFrom(bytStream,bytStream.Size);
+    msStream.Position := 0;
   finally
     FreeAndNil(bytStream);
   end;
