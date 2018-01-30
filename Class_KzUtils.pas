@@ -20,7 +20,7 @@ unit Class_KzUtils;
 
 interface
 uses
-  Classes,SysUtils,Variants,StrUtils,System.DateUtils,
+  Classes,SysUtils,Variants,StrUtils,DateUtils,IniFiles,
   {$IFDEF MSWINDOWS} Windows,Vcl.Forms,TLHelp32,Vcl.Graphics,{$ENDIF}
   {$IFDEF ENABLE_REGEX}
        PerlRegEx, pcre
@@ -66,6 +66,7 @@ type
     class procedure WritLog(aValue:Variant);
     class procedure WritFmt(const Msg: string; Params: array of const);
 
+    class procedure FileFind(aPath:string;var Result:THashedStringList;untilFind:string='';findExt:string='*.*');
 
     class function  jsencode(const aValue: Widestring): Widestring;
     class function  jsdecode(const aValue: Widestring): Widestring;
@@ -157,6 +158,43 @@ begin
   Result:=Application.MessageBox(Pchar(aValue),'¾¯¸æ',MB_OKCANCEL+MB_ICONERROR);
   {$ENDIF}
 end;
+
+class procedure TKzUtils.FileFind(aPath: string; var Result: THashedStringList;
+  untilFind, findExt: string);
+var
+  F: TSearchRec;
+begin
+  if aPath[Length(aPath)] <> '\' then
+  begin
+    aPath := aPath +'\';
+  end;
+
+  if FindFirst(aPath + findExt, faDirectory  + faReadOnly + faHidden + faSysFile + faAnyFile + faArchive , F) = 0 then
+  begin
+    repeat
+      if F.Attr and faArchive > 0 then
+      begin
+        if (F.Name <> '.') and (F.name <> '..') then
+        begin
+          Result.Add(Format('%S=%S',[LowerCase(F.Name),LowerCase(aPath + F.Name)]));
+          if (untilFind<>'') and (LowerCase(untilFind)=LowerCase(F.Name)) then
+          begin
+            Break;
+          end;
+        end;
+      end else
+      if F.Attr and faDirectory > 0 then
+      begin
+        if (F.Name <> '.') and (F.Name <> '..') then
+        begin
+          FileFind(aPath + F.Name,Result,untilFind);
+        end;
+      end;
+    until FindNext(F) <> 0;
+    SysUtils.FindClose(F);
+  end;
+end;
+
 
 class function TKzUtils.FloatToDate(aValue: Extended): TDateTime;
 var
