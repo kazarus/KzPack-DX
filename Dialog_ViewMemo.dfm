@@ -224,14 +224,13 @@ object DialogViewMemo: TDialogViewMemo
     TabOrder = 0
     FrameVisible = True
     FramingPreference = fpCustomFraming
-    ExplicitTop = 0
-    ExplicitHeight = 339
   end
   object Tool_Main: TRzToolbar
     Left = 0
     Top = 0
     Width = 643
     Height = 44
+    AutoStyle = False
     Images = ImageList1
     RowHeight = 40
     ButtonLayout = blGlyphTop
@@ -241,7 +240,7 @@ object DialogViewMemo: TDialogViewMemo
     TextOptions = ttoCustom
     BorderInner = fsNone
     BorderOuter = fsGroove
-    BorderSides = [sdTop]
+    BorderSides = []
     BorderWidth = 0
     TabOrder = 1
     VisualStyle = vsClassic
@@ -291,9 +290,6 @@ object DialogViewMemo: TDialogViewMemo
     BorderWidth = 0
     TabOrder = 2
     VisualStyle = vsClassic
-    ExplicitLeft = 144
-    ExplicitTop = 184
-    ExplicitWidth = 185
     object Panl_Text: TRzStatusPane
       Left = 0
       Top = 0
@@ -310,7 +306,7 @@ object DialogViewMemo: TDialogViewMemo
     Left = 296
     Top = 216
     Bitmap = {
-      494C010106000800080010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C0101060008000C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -578,6 +574,7 @@ object DialogViewMemo: TDialogViewMemo
       801FA05FFFCFFFCF001F803FE007E007001F001FFFCFFFCF000F000FFFDFFFDF
       000F000FFFFFFFFF000F000F018001800001000101807D800101000101807D80
       0101000101807D80000F000F01807D80008F000F0180618000AF002F03816381
-      803F803F07836783E1FFE1FF0F870F87}
+      803F803F07836783E1FFE1FF0F870F8700000000000000000000000000000000
+      000000000000}
   end
 end
