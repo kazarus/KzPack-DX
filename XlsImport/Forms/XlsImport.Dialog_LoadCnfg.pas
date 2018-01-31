@@ -32,7 +32,10 @@ type
     FRealKJND: Integer;
     FFilePath: string;      //
     FPromptTx: string;
-    FKeyWords: string;
+    FKeyWords: string;      //&
+    FRowTitle: Integer;     //&
+    FRowStart: Integer;     //&
+  private
     FLoadCnfg: TLoadCnfg;   //&
     FListKJQJ: TStringList; //*
     FIsPrompt: Boolean;     //*
@@ -55,7 +58,7 @@ type
 var
   DialogLoadCnfg: TDialogLoadCnfg;
 
-function ViewLoadCnfg(aRealKJND:Integer;var aLoadCnfg:TLoadCnfg;IsPrompt:Boolean=True;aFilePath:string='';aPromptTx:string='';aKeyWords:string = ''):Integer;
+function ViewLoadCnfg(aRealKJND: Integer; var aLoadCnfg: TLoadCnfg; IsPrompt: Boolean = True; aFilePath: string = ''; aPromptTx: string = ''; aKeyWords: string = ''; aRowTitle: Integer = 0; aRowStart: Integer = 0): Integer;
 
 implementation
 
@@ -64,7 +67,7 @@ uses
 
 {$R *.dfm}
 
-function ViewLoadCnfg(aRealKJND:Integer;var aLoadCnfg:TLoadCnfg;IsPrompt:Boolean;aFilePath:string;aPromptTx:string;aKeyWords:string):Integer;
+function ViewLoadCnfg(aRealKJND: Integer; var aLoadCnfg: TLoadCnfg; IsPrompt: Boolean; aFilePath: string; aPromptTx: string; aKeyWords: string; aRowTitle: Integer; aRowStart: Integer): Integer;
 begin
   try
     DialogLoadCnfg:=TDialogLoadCnfg.Create(nil);
@@ -74,6 +77,8 @@ begin
     DialogLoadCnfg.FFilePath := aFilePath;
     DialogLoadCnfg.FPromptTx := aPromptTx;
     DialogLoadCnfg.FKeyWords := aKeyWords;
+    DialogLoadCnfg.FRowTitle := aRowTitle;
+    DialogLoadCnfg.FRowStart := aRowStart;
 
 
     Result:=DialogLoadCnfg.ShowModal;
@@ -133,11 +138,11 @@ begin
 
   if FLoadCnfg.ROWTITLE = 0 then
   begin
-    FLoadCnfg.ROWTITLE := 1;
+    FLoadCnfg.ROWTITLE := 3;
   end;
   if FLoadCnfg.ROWSTART = 0 then
   begin
-    FLoadCnfg.ROWSTART := 2;
+    FLoadCnfg.ROWSTART := 4;
   end;
 
   Edit_RowTitle.Text := Format('%D', [FLoadCnfg.ROWTITLE]);
@@ -259,6 +264,15 @@ begin
   
   Edit_FilePath.ReadOnly:=True;
   Edit_FilePath.HideButtonsOnReadOnly:=False;
+
+  if FRowTitle <> 0 then
+  begin
+    Edit_RowTitle.Text := Format('%D', [FLoadCnfg.ROWTITLE]);
+  end;
+  if FRowStart <> 0 then
+  begin
+    Edit_RowStart.Text := Format('%D', [FLoadCnfg.ROWSTART]);
+  end;
 end;
 
 procedure TDialogLoadCnfg.SetGridParams;

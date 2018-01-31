@@ -45,6 +45,8 @@ type
     FClasName: string;
     FPromptTx: string;    //提示文本;
     FKeyWords: string;    //关键词组;
+    FRowTitle: Integer;   //标题行
+    FRowStart: Integer;   //起始行
     FLoadCnfg: TLoadCnfg; //*
 
     FListHead: TStringList; //*list of string
@@ -85,7 +87,7 @@ type
 var
   FormListLoad: TFormListLoad;
 
-function ViewListLoad(aClasName:string;aCellHead:TStringList;var Value:string;aPromptTx:string='';aKeyWords:string = ''):Integer;
+function ViewListLoad(aClasName: string; aCellHead: TStringList; var Value: string; aPromptTx: string = ''; aKeyWords: string = ''; aRowTitle: Integer = 0; aRowStart: Integer = 0): Integer;
 
 implementation
 
@@ -94,13 +96,16 @@ uses
 
 {$R *.dfm}
 
-function ViewListLoad(aClasName:string;aCellHead:TStringList;var Value:string;aPromptTx:string='';aKeyWords:string = ''):Integer;
+function ViewListLoad(aClasName: string; aCellHead: TStringList; var Value: string; aPromptTx: string = ''; aKeyWords: string = ''; aRowTitle: Integer = 0; aRowStart: Integer = 0): Integer;
 begin
   try
     FormListLoad:=TFormListLoad.Create(nil);
     FormListLoad.FClasName := aClasName;
     FormListLoad.FPromptTx := aPromptTx;
     FormListLoad.FKeyWords := aKeyWords;
+    FormListLoad.FRowTitle := aRowTitle;
+    FormListLoad.FRowStart := aRowStart;
+
     FormListLoad.CopyHead(aCellHead);
     Result:=FormListLoad.ShowModal;
     if Result=Mrok then
