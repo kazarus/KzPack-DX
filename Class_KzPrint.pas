@@ -19,6 +19,8 @@ unit Class_KzPrint;
 
 //the page is
 
+//Memo.Font.Charset and WordWarp ´æÔÚ³åÍ».
+
 interface
 uses
   SysUtils,AdvGrid,frxClass,frxDesgn,Classes,XMLDoc,XMLIntf,Dialogs,frxXML,
@@ -116,6 +118,7 @@ type
     Align    :string;
     AutoFontSize:Boolean;//
     CharSpacing :Integer;//
+    WordWrap:Boolean;
   public
     constructor Create;
   end;
@@ -1132,6 +1135,19 @@ var
         end;
       end;
 
+      ViewA.WordWrap := True;
+      if ListB.Values['WordWrap']<>'' then
+      begin
+        if ListB.Values['WordWrap']='True' then
+        begin
+          ViewA.WordWrap:=True;
+        end else
+        if ListB.Values['WordWrap']='False' then
+        begin
+          ViewA.WordWrap:=False;
+        end;
+      end;
+
       ViewA.AutoFontSize:=False;
       if ListB.Values['AutoFontSize']<>'' then
       begin
@@ -1394,6 +1410,8 @@ begin
   FramStyl:='-1';
 
   FCharSet:=1;
+
+  WordWrap := False;
 end;
 
 { TKzCellText }
@@ -2486,6 +2504,7 @@ begin
           MemoA.Font.Color :=ViewA.FontColr;
           MemoA.Font.Charset:=ViewA.FCharSet;
 
+
           MemoA.Frame.Typ:=GetFrameType(StrToIntDef(ViewA.FramType,0));
 
           MemoA.AutoWidth:=ViewA.AutoWidt;
@@ -2578,8 +2597,19 @@ begin
             MemoA.Width:=TKzCellText(FListCell.Objects[M]).Widt;
             MemoA.Text :=TKzCellText(FListCell.Objects[M]).Titl;
             //Writeln('Ëø¶¨ÁÐ:'+TKzCellText(FListCell.Objects[M]).Text);
-            MemoA.HAlign:=frxClass.haCenter;
-            MemoA.VAlign:=frxClass.vaCenter;
+            //#MemoA.HAlign:=frxClass.haCenter;
+            //#MemoA.VAlign:=frxClass.vaCenter;
+
+            //KAZARUS:TO BE PREFECT
+            if ViewA.HAlign<>'-1' then
+            begin
+              MemoA.HAlign:=GetMemoHAlig(ViewA.HAlign);
+            end;
+
+            if ViewA.VAlign<>'-1' then
+            begin
+              MemoA.VAlign :=GetMemoVAlig(ViewA.VAlign);
+            end;
 
             MemoA.Frame.Typ:=GetFrameType(StrToIntDef(ViewA.FramType,0));
             MemoA.Height:=HeadCellHeig;
@@ -2599,6 +2629,7 @@ begin
             end;
 
             MemoA.CharSpacing:=ViewA.CharSpacing;
+            MemoA.WordWrap := ViewA.WordWrap;
 
             if ViewA.FontStyl='1' then
             begin
@@ -2629,6 +2660,17 @@ begin
               1:MemoB.HAlign:=haLeft ;
               2:MemoB.HAlign:=haCenter ;
               3:MemoB.HAlign:=haRight;
+            end;
+
+            //KAZARUS:TO BE PREFECT
+            if ViewB.HAlign<>'-1' then
+            begin
+              MemoA.HAlign:=GetMemoHAlig(ViewB.HAlign);
+            end;
+
+            if ViewB.VAlign<>'-1' then
+            begin
+              MemoA.VAlign :=GetMemoVAlig(ViewB.VAlign);
             end;
 
             MemoB.Frame.Typ:=GetFrameType(StrToIntDef(ViewB.FramType,0));
@@ -2677,22 +2719,32 @@ begin
           MemoA:=TfrxMemoView.Create(FindComponent(ViewA.PrevCont));
           MemoA.CreateUniqueName;
 
+          MemoA.AutoWidth := False;
           MemoA.Left :=PostB;
           MemoA.Top  :=HeadCellTop;
-          MemoA.Width:=TKzCellText(FListCell.Objects[M]).Widt;
-          MemoA.Text :=TKzCellText(FListCell.Objects[M]).Titl;
+          MemoA.Height:=HeadCellHeig;
+          MemoA.WordWrap := ViewA.WordWrap;
           //Writeln(TKzCellText(FListCell.Objects[M]).Text);
-          MemoA.HAlign:=frxClass.haCenter;
-          MemoA.VAlign:=frxClass.vaCenter;
+          //#MemoA.HAlign:=frxClass.haCenter;
+          //#MemoA.VAlign:=frxClass.vaCenter;
+          if ViewA.HAlign<>'-1' then
+          begin
+            MemoA.HAlign:=GetMemoHAlig(ViewA.HAlign);
+          end;
+
+          if ViewA.VAlign<>'-1' then
+          begin
+            MemoA.VAlign :=GetMemoVAlig(ViewA.VAlign);
+          end;
 
           MemoA.Frame.Typ:=GetFrameType(StrToIntDef(ViewA.FramType,0));
-      
-          MemoA.Height:=HeadCellHeig;
 
           MemoA.Font.Name  :=ViewA.FontName;
           MemoA.Font.Height:=ViewA.FontHeig;
           MemoA.Font.Color :=ViewA.FontColr;
-          MemoA.Font.Charset:=ViewA.FCharSet;
+          //#MemoA.Font.Charset:=ViewA.FCharSet;
+
+
         
           //YXC_2010_05_31_17_52_41
           if BoolReadFromCnfg then
@@ -2704,11 +2756,16 @@ begin
           end;
 
           MemoA.CharSpacing:=ViewA.CharSpacing;
+          MemoA.WordWrap:=ViewA.WordWrap;
 
           if ViewA.FontStyl='1' then
           begin
             MemoA.Font.Style:=[fsBold];
           end;
+
+          MemoA.Text :=TKzCellText(FListCell.Objects[M]).Titl;
+          MemoA.Width:=TKzCellText(FListCell.Objects[M]).Widt;
+
         end;
 
         if ViewB<>nil then
@@ -2735,7 +2792,7 @@ begin
           MemoB.Font.Name  :=ViewB.FontName;
           MemoB.Font.Height:=ViewB.FontHeig;
           MemoB.Font.Color :=ViewB.FontColr;
-          MemoB.Font.Charset:=ViewB.FCharSet;
+          //#MemoB.Font.Charset:=ViewB.FCharSet;
 
           //YXC_2010_05_31_17_52_41
           if BoolReadFromCnfg then
@@ -2855,7 +2912,7 @@ begin
           MemoA.Font.Name  :=ViewA.FontName;
           MemoA.Font.Height:=ViewA.FontHeig;
           MemoA.Font.Color :=ViewA.FontColr;
-          MemoA.Font.Charset:=ViewA.FCharSet;
+          //#MemoA.Font.Charset:=ViewA.FCharSet;
 
           MemoA.Frame.Typ:=GetFrameType(StrToIntDef(ViewA.FramType,0));
           MemoA.AutoWidth:=ViewA.AutoWidt;
@@ -2930,7 +2987,7 @@ begin
         MemoA.Font.Name  :=ViewA.FontName;
         MemoA.Font.Height:=ViewA.FontHeig;
         MemoA.Font.Color :=ViewA.FontColr;
-        MemoA.Font.Charset:=ViewA.FCharSet;
+        //#MemoA.Font.Charset:=ViewA.FCharSet;
         
         if BoolReadFromCnfg then
         begin
@@ -2968,7 +3025,7 @@ begin
         MemoB.Font.Name  :=ViewB.FontName;
         MemoB.Font.Height:=ViewB.FontHeig;
         MemoB.Font.Color :=ViewB.FontColr;
-        MemoB.Font.Charset:=ViewB.FCharSet;
+        //#MemoB.Font.Charset:=ViewB.FCharSet;
         
         if BoolReadFromCnfg then
         begin
