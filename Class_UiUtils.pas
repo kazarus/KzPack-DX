@@ -39,12 +39,12 @@ type
 
     class procedure ClearGrid(aGrid:TAdvStringGrid;ARowCount:Integer;ADefaultRowCount:Integer=2);
     class procedure CleanGrid(aGrid:TAdvStringGrid;aDefaultRowCount:Integer=1);
-    class procedure CellIndex(aGrid:TAdvStringGrid;ACol:Integer=0;ARowStart:Integer=1;ARowEnd:Integer=-1);
+    class procedure CellIndex(aGrid:TAdvStringGrid;ACol:Integer=0;aRowStart:Integer=1;aRowEndEd:Integer=-1);
 
     class procedure HeadIndex(aGrid:TAdvStringGrid;ARow:Integer=0);
 
-    class function  GridCheck(aGrid:TAdvStringGrid;ACol:Integer=1;ARowStart:Integer=1;ARowEnd:Integer=-1):TStringList;
-    class procedure CellCheck(aGrid:TAdvStringGrid;AValue:Boolean;ACol:Integer=1;ARowStart:Integer=1;ARowEnd:Integer=-1);
+    class function  GridCheck(aGrid:TAdvStringGrid;ACol:Integer=1;aRowStart:Integer=1;aRowEndEd:Integer=-1):TStringList;
+    class procedure CellCheck(aGrid:TAdvStringGrid;AValue:Boolean;ACol:Integer=1;aRowStart:Integer=1;aRowEndEd:Integer=-1);
 
     class procedure SelectArea(aGrid:TAdvStringGrid;aCol:Integer=1;aValue:Boolean=True);
   public
@@ -84,37 +84,37 @@ uses
 
 
 class procedure TUiUtils.CellCheck(aGrid: TAdvStringGrid; AValue: Boolean;
-  ACol, ARowStart, ARowEnd: Integer);
+  ACol, aRowStart, aRowEndEd: Integer);
 var
   I:Integer;
   StatA:Boolean;  
 begin
   with aGrid do
   begin
-    if ARowEnd=-1 then ARowEnd:=RowCount-1;
+    if aRowEndEd=-1 then aRowEndEd:=RowCount-1;
     
-    for I:=ARowStart to ARowEnd do
+    for I:=aRowStart to aRowEndEd do
     begin
       SetCheckBoxState(ACol,I,AValue);
     end;
   end;
 end;
 
-class procedure TUiUtils.CellIndex(aGrid: TAdvStringGrid; ACol, ARowStart,
-  ARowEnd: Integer);
+class procedure TUiUtils.CellIndex(aGrid: TAdvStringGrid; aCol, aRowStart,
+  aRowEndEd: Integer);
 var
   I,M:Integer;
 begin
-  if ARowEnd=-1 then ARowEnd:=aGrid.RowCount-1;
+  if aRowEndEd = -1 then aRowEndEd := aGrid.RowCount - 1;
 
   with aGrid do
   begin
     BeginUpdate;
 
     M:=1;
-    for I:=ARowStart to ARowEnd do
+    for I:=aRowStart to aRowEndEd do
     begin
-      Ints[ACol,I]:=M;
+      Ints[aCol,I]:=M;
 
       Inc(M);
     end;
@@ -430,8 +430,8 @@ end;
 
 
 
-class function TUiUtils.GridCheck(aGrid: TAdvStringGrid; ACol, ARowStart,
-  ARowEnd: Integer): TStringList;
+class function TUiUtils.GridCheck(aGrid: TAdvStringGrid; ACol, aRowStart,
+  aRowEndEd: Integer): TStringList;
 var
   I:Integer;
   StatA:Boolean;  
@@ -439,9 +439,9 @@ begin
   Result:=TStringList.Create;
   with aGrid do
   begin
-    if ARowEnd=-1 then ARowEnd:=RowCount-1;
+    if aRowEndEd=-1 then aRowEndEd:=RowCount-1;
     
-    for I:=ARowStart to ARowEnd do
+    for I:=aRowStart to aRowEndEd do
     begin
       StatA:=False;
       GetCheckBoxState(ACol,I,StatA);
