@@ -5,7 +5,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs;
+  Dialogs, RzPanel, RzCommon;
 
 type
   TFormExView = class(TForm)
@@ -42,8 +42,17 @@ begin
 end;
 
 procedure TFormExView.SetCommParams;
+var
+  I:Integer;
 begin
-
+  //#È¥µô¶¥À¸
+  for I := 0 to ComponentCount -1 do
+  begin
+    if Components[I] is TRzToolbar then
+    begin
+      TRzToolbar(Components[I]).BorderSides := TRzToolbar(Components[I]).BorderSides - [sdTop];
+    end;
+  end;
 end;
 
 procedure TFormExView.SetGridParams;
