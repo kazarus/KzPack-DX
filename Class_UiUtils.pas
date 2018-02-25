@@ -183,13 +183,13 @@ class function TUiUtils.GetCheckBoxState(aGrid: TAdvStringGrid; ACol,
 var
   StatA:Boolean;
 begin
-  Result:=0;
+  Result := 0;
 
   with aGrid do
   begin
     if GetCheckBoxState(ACol,ARow,StatA) then
     begin
-      if StatA then Result:=1;
+      if StatA then Result := 1;
     end;
   end;  
 end;

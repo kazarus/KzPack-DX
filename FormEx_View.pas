@@ -45,6 +45,10 @@ procedure TFormExView.SetCommParams;
 var
   I:Integer;
 begin
+  Font.Name:='ËÎÌå';
+  Font.Size:=10;
+  Font.Charset:=GB2312_CHARSET;
+
   //#È¥µô¶¥À¸
   for I := 0 to ComponentCount -1 do
   begin

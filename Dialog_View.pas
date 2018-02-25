@@ -6,7 +6,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs;
+  Dialogs, RzPanel, RzCommon;
 
 type
   TDialogViewEditMode  = (dvemNULL,dvemADDV,dvemEDIT);
@@ -42,10 +42,21 @@ begin
 end;
 
 procedure TDialogView.SetCommParams;
+var
+  I:Integer;
 begin
   Font.Name:='ËÎÌå';
   Font.Size:=10;
   Font.Charset:=GB2312_CHARSET;
+
+  //#È¥µô¶¥À¸
+  for I := 0 to ComponentCount -1 do
+  begin
+    if Components[I] is TRzToolbar then
+    begin
+      TRzToolbar(Components[I]).BorderSides := TRzToolbar(Components[I]).BorderSides - [sdTop];
+    end;
+  end;
 end;
 
 procedure TDialogView.SetGridParams;
