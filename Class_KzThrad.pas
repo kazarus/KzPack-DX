@@ -17,6 +17,7 @@ type
     
 
   TKzThradParamType  = (ktptMax,ktptOne,ktptTxt,ktptMsg);
+  TKzThradLoadMode   = (ktlmNull,ktlmReload,ktlmAppend);
 
   TKzThrad = class(TThread)
   private
