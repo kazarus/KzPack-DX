@@ -45,6 +45,7 @@ type
 
     class function  GridCheck(aGrid:TAdvStringGrid;ACol:Integer=1;aRowStart:Integer=1;aRowEndEd:Integer=-1):TStringList;
     class procedure CellCheck(aGrid:TAdvStringGrid;AValue:Boolean;ACol:Integer=1;aRowStart:Integer=1;aRowEndEd:Integer=-1);
+    class procedure CellClick(Sender: TObject; ARow,ACol: Integer);
 
     class procedure SelectArea(aGrid:TAdvStringGrid;aCol:Integer=1;aValue:Boolean=True);
   public
@@ -96,6 +97,35 @@ begin
     for I:=aRowStart to aRowEndEd do
     begin
       SetCheckBoxState(ACol,I,AValue);
+    end;
+  end;
+end;
+
+class procedure TUiUtils.CellClick(Sender: TObject; ARow, ACol: Integer);
+var
+  cChkd:Boolean;
+begin
+  inherited;
+  if not (TObject(Sender) is TAdvStringGrid)  then Exit;
+  
+  with TAdvStringGrid(Sender) do
+  begin
+    if ARow > 0 then
+    begin
+      cChkd := False;
+      GetCheckBoxState(1,ARow,cChkd);
+      cChkd := not cChkd;
+      SetCheckBoxState(1,ARow,cChkd);
+
+      if cChkd then
+      begin
+        RowColor[ARow] := SelectionColor;
+        RowFontColor[ARow] := clWhite;
+      end else
+      begin
+        RowColor[ARow] := clWhite;
+        RowFontColor[ARow] := clBlack;
+      end;
     end;
   end;
 end;
