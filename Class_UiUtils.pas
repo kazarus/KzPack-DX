@@ -45,7 +45,7 @@ type
 
     class function  GridCheck(aGrid:TAdvStringGrid;ACol:Integer=1;aRowStart:Integer=1;aRowEndEd:Integer=-1):TStringList;
     class procedure CellCheck(aGrid:TAdvStringGrid;AValue:Boolean;ACol:Integer=1;aRowStart:Integer=1;aRowEndEd:Integer=-1);
-    class procedure CellClick(Sender: TObject; ARow,ACol: Integer);
+    class procedure CellClick(Sender: TObject; ARow, ACol: Integer; aCheckBoxCol: Integer = 1);
 
     class procedure SelectArea(aGrid:TAdvStringGrid;aCol:Integer=1;aValue:Boolean=True);
   public
@@ -101,7 +101,7 @@ begin
   end;
 end;
 
-class procedure TUiUtils.CellClick(Sender: TObject; ARow, ACol: Integer);
+class procedure TUiUtils.CellClick(Sender: TObject; ARow, ACol: Integer; aCheckBoxCol: Integer);
 var
   cChkd:Boolean;
 begin
@@ -113,9 +113,10 @@ begin
     if ARow > 0 then
     begin
       cChkd := False;
-      GetCheckBoxState(1,ARow,cChkd);
+
+      GetCheckBoxState(aCheckBoxCol,ARow,cChkd);
       cChkd := not cChkd;
-      SetCheckBoxState(1,ARow,cChkd);
+      SetCheckBoxState(aCheckBoxCol,ARow,cChkd);
 
       if cChkd then
       begin
