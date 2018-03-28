@@ -37,6 +37,8 @@ type
 
     class function  CopyIt(aUniEngine:TUniEngine):TUniEngine;overload;override;
     class procedure CopyIt(aUniEngine:TUniEngine;var Result:TUniEngine)overload;override;
+  public
+    class function  ExpSQL_SQLSRV:string;
   end;
 
 implementation
@@ -106,6 +108,14 @@ destructor TUniTableX.Destroy;
 begin
 
   inherited;
+end;
+
+class function TUniTableX.ExpSQL_SQLSRV: string;
+begin
+  Result:='SELECT OBJECT_NAME(D.RKEYID) AS TABLNAME ,COUNT(*) AS PRIORITY FROM'
+         +'    (SELECT CONSTID,FKEYID,RKEYID FROM SYSFOREIGNKEYS'
+         +'    GROUP BY CONSTID,FKEYID,RKEYID) AS D'
+         +'    GROUP BY D.RKEYID';
 end;
 
 class function TUniTableX.ReadDS(aUniQuery: TUniQuery): TUniEngine;
