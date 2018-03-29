@@ -79,10 +79,10 @@ type
     procedure ActvCnfg(IsFill:Boolean=True);
     procedure OrdrCnfg;
     procedure FillCnfg(AList:TStringList);overload;
-    procedure FillCnfg(AIdex:Integer;ACnfg:TUniConfig);overload;
+    procedure FillCnfg(aIndx:Integer;aCnfg:TUniConfig);overload;
   public
     function  ExptCnfg:TUniConfig;overload;
-    procedure ExptCnfg(var ACnfg:TUniConfig);overload;
+    procedure ExptCnfg(var aCnfg:TUniConfig);overload;
   public    
     procedure FreeAndNilList(AList:TStringList);
     procedure ClearGrid(AGrid:TAdvStringGrid;ARowCount:Integer;ADefaultRowCount:Integer=2);
@@ -91,8 +91,8 @@ type
 var
   DialogListUniConfig: TDialogListUniConfig;
 
-function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;AConnectionMark:string=''):Integer;overload;
-function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;var ACnfg:TUniConfig;IsCreate:Boolean=True;AConnectionMark:string=''):Integer;overload;
+function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;aConnectionMark:string=''):Integer;overload;
+function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;var aCnfg:TUniConfig;IsCreate:Boolean=True;aConnectionMark:string=''):Integer;overload;
 
 implementation
 
@@ -102,12 +102,12 @@ uses
 
 {$R *.dfm}
 
-function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;AConnectionMark:string):Integer;
+function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;aConnectionMark:string):Integer;
 begin
   try
     DialogListUniConfig:=TDialogListUniConfig.Create(nil);
     DialogListUniConfig.FEditMode:=AEditMode;
-    DialogListUniConfig.FConnectionMark:=AConnectionMark;
+    DialogListUniConfig.FConnectionMark:=aConnectionMark;
     DialogListUniConfig.BorderStyle:=bsSizeable;
     Result:=DialogListUniConfig.ShowModal;
   finally
@@ -115,23 +115,23 @@ begin
   end;
 end;
 
-function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;var ACnfg:TUniConfig;IsCreate:Boolean;AConnectionMark:string):Integer;
+function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;var aCnfg:TUniConfig;IsCreate:Boolean;aConnectionMark:string):Integer;
 begin
   try
     DialogListUniConfig:=TDialogListUniConfig.Create(nil);
     
     DialogListUniConfig.FEditMode:=AEditMode;
-    DialogListUniConfig.FConnectionMark:=AConnectionMark;
+    DialogListUniConfig.FConnectionMark:=aConnectionMark;
     DialogListUniConfig.BorderStyle:=bsSizeable;   
     Result:=DialogListUniConfig.ShowModal;
     if Result=Mrok then
     begin
       if IsCreate then
       begin
-        ACnfg:=DialogListUniConfig.ExptCnfg;
+        aCnfg:=DialogListUniConfig.ExptCnfg;
       end else
       begin
-        DialogListUniConfig.ExptCnfg(ACnfg);
+        DialogListUniConfig.ExptCnfg(aCnfg);
       end;
     end;
   finally
@@ -434,12 +434,12 @@ begin
   FreeAndNil(AList);
 end;
 
-procedure TDialogListUniConfig.ExptCnfg(var ACnfg: TUniConfig);
+procedure TDialogListUniConfig.ExptCnfg(var aCnfg: TUniConfig);
 begin
   with Grid_Cnfg do
   begin
     if Objects[0,RealRow]=nil then Exit;
-    TUniConfig.CopyIt(TUniConfig(Objects[0,RealRow]),ACnfg);
+    TUniConfig.CopyIt(TUniConfig(Objects[0,RealRow]),aCnfg);
   end; 
 end;
 
@@ -660,7 +660,7 @@ begin
   end;
 end;
 
-procedure TDialogListUniConfig.FillCnfg(AIdex: Integer; ACnfg: TUniConfig);
+procedure TDialogListUniConfig.FillCnfg(aIndx: Integer; aCnfg: TUniConfig);
 begin
 
 end;
