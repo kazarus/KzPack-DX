@@ -43,7 +43,8 @@ type
        
     //Forms
     class function  ExePath:string;
-    class function  Explore:string;
+    class function  Explore:string;overload;
+    class function  Explore(aRootPath:string):string;overload;
 
     class procedure ShowMsg(aValue:string);overload;
     class procedure ShowMsg(const Msg: string; Params: array of const);overload;
@@ -453,6 +454,13 @@ end;
 class function TKzUtils.ExePath: string;
 begin
   Result:=ExtractFilePath(ParamStr(0));
+end;
+
+class function TKzUtils.Explore(aRootPath: string): string;
+begin
+  {$IFDEF MSWINDOWS}
+  ShellExecute(Application.Handle,'open','explorer.exe',PChar(aRootPath),'',SW_MAXIMIZE);
+  {$ENDIF}
 end;
 
 class function TKzUtils.Explore: string;
