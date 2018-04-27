@@ -668,7 +668,7 @@ begin
       if UpperCase(RightStr(FilePath,4))<>'.mdb' then
       begin
         FilePath:=FilePath + '.mdb';
-        TBuildMdb.BuildMdb(FilePath);
+        //@TBuildMdb.BuildMdb(FilePath);
       end;
     end;
   finally

@@ -47,6 +47,8 @@ type
     class procedure CellCheck(aGrid:TAdvStringGrid;AValue:Boolean;ACol:Integer=1;aRowStart:Integer=1;aRowEndEd:Integer=-1);
     class procedure CellClick(Sender: TObject; ARow, ACol: Integer; aCheckBoxCol: Integer = 1);
 
+    class procedure WordWarps(aGrid: TAdvStringGrid; aStartCol: Integer = 0; aStartRow: Integer = 1);
+
     class procedure SelectArea(aGrid:TAdvStringGrid;aCol:Integer=1;aValue:Boolean=True);
   public
     {begin
@@ -740,6 +742,23 @@ end;
 class procedure TUiUtils.WhenEditExit(Sender: TObject);
 begin
   TRzButtonEdit(Sender).Text := TKzUtils.FloatToText(TKzUtils.TextToFloat(TRzButtonEdit(Sender).Text));
+end;
+
+class procedure TUiUtils.WordWarps(aGrid: TAdvStringGrid; aStartCol,
+  aStartRow: Integer);
+var
+  I,M:Integer;
+begin
+  with aGrid do
+  begin
+    for I := aStartCol to ColCount-1 do
+    begin
+      for M := aStartRow to RowCount-1 do
+      begin
+        WordWraps[I,M] := True;
+      end;
+    end;
+  end;
 end;
 
 class function TUiUtils.StringToColorDef(AValue, ADef: string): TColor;
