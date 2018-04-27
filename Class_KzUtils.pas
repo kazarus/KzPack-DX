@@ -85,6 +85,8 @@ type
 
     class function  DateIsNull(aDate:TDateTime):Boolean;
 
+    class function  SmallToBig(small:real):string;
+
     class function  NumbInRect(aValue:Integer;aHead,ANext:Integer):Boolean;overload;
     class function  NumbInRect(aValue:Integer;aArrayOfInteger:array of Integer):Boolean;overload;
     class function  NumbInRect(aValue:Extended;aHead,ANext:Extended):Boolean;overload;
@@ -895,6 +897,126 @@ begin
   {$IFDEF MSWINDOWS}
   Application.MessageBox(Pchar(Format(Msg,Params)),'提示',MB_OK+MB_ICONINFORMATION);
   {$ENDIF}
+end;
+
+class function TKzUtils.SmallToBig(small:real): string;
+var
+  j: Integer;
+  SmallMonth,BigMonth:AnsiString;
+  wei1,qianwei1:string[2];
+  qianwei,dianweizhi,qian:integer;
+
+  TempA:AnsiString;
+  TempB:AnsiString;
+  TempC:AnsiString;
+begin
+  if Small=0 then
+  begin
+    Result:='零元整';
+    Exit;
+  end;
+  {------- 修改参数令值更精确 -------}
+  {小数点后的位置，需要的话也可以改动-2值}
+  qianwei:=-2;
+  {转换成货币形式，需要的话小数点后加多几个零}
+  Smallmonth:=formatfloat('0.00',small);
+  {---------------------------------}
+  dianweizhi :=pos('.',Smallmonth);{小数点的位置}
+  {循环小写货币的每一位，从小写的右边位置到左边}
+  for qian:=length(Smallmonth) downto 1 do
+  begin
+    {如果读到的不是小数点就继续}
+    if qian<>dianweizhi then
+    begin
+      {位置上的数转换成大写}
+      case strtoint(copy(Smallmonth,qian,1)) of
+        1:wei1:='壹'; 2:wei1:='贰';
+        3:wei1:='叁'; 4:wei1:='肆';
+        5:wei1:='伍'; 6:wei1:='陆';
+        7:wei1:='柒'; 8:wei1:='捌';
+        9:wei1:='玖'; 0:wei1:='零';
+      end;
+      {判断大写位置，可以继续增大到real类型的最大值}
+      case qianwei of
+        -3:qianwei1:='厘';
+        -2:qianwei1:='分';
+        -1:qianwei1:='角';
+        0 :qianwei1:='元';
+        1 :qianwei1:='拾';
+        2 :qianwei1:='佰';
+        3 :qianwei1:='仟';
+        4 :qianwei1:='万';
+        5 :qianwei1:='拾';
+        6 :qianwei1:='佰';
+        7 :qianwei1:='仟';
+        8 :qianwei1:='亿';
+        9 :qianwei1:='拾';
+        10:qianwei1:='佰';
+        11:qianwei1:='仟';
+      end;
+      inc(qianwei);
+      BigMonth :=wei1+qianwei1+BigMonth;{组合成大写金额}
+      if (wei1='零') and (Copy(BigMonth,5,2)='零') then
+      begin
+        if (Copy(BigMonth,3,2)='万') or (Copy(BigMonth,3,2)='亿') or
+          (Copy(BigMonth,3,2)='元') then
+          Delete(BigMonth,1,2)
+        else
+          Delete(BigMonth,1,4);
+      end;
+      if (Copy(BigMonth,1,2)='零') and //(Pos(Copy(BigMonth,3,2),'亿万元')=0) and
+        (Pos(Copy(BigMonth,3,2),'壹贰叁肆伍陆柒捌玖')=0) then
+      begin
+        if (Copy(BigMonth,Length(BigMonth)-3,4)= '零万') or
+          (Copy(BigMonth,Length(BigMonth)-3,4)= '零亿') or
+          (Copy(BigMonth,Length(BigMonth)-3,4)= '零元') or
+          (Copy(BigMonth,1,4)= '零万') or
+          (Copy(BigMonth,1,4)= '零亿') or
+          (Copy(BigMonth,1,4)= '零元')  then
+            Delete(BigMonth,1,2)
+        else begin
+          Delete(BigMonth,3,2);
+
+        if (Copy(BigMonth,Length(BigMonth)-3,4)= '零万') or
+          (Copy(BigMonth,Length(BigMonth)-3,4)= '零亿') or
+          (Copy(BigMonth,Length(BigMonth)-3,4)= '零元') or
+          (Copy(BigMonth,1,4)= '零万') or
+          (Copy(BigMonth,1,4)= '零亿') or
+          (Copy(BigMonth,1,4)= '零元')  then
+            Delete(BigMonth,1,2)
+        end;
+      end;
+      //除最后一位零
+     if Copy(BigMonth,Length(BigMonth)-1,2)= '零' then
+       Delete(BigMonth,Length(BigMonth)-1,2)
+
+    end;
+  end;
+
+  if Pos(Copy(BigMonth,Length(BigMonth)-1,2),'元角')>0 then
+    BigMonth:= BigMonth+'整';
+  j:= Pos('亿万',BigMonth);
+  if j>1 then
+    Delete(BigMonth,j+2,2);
+
+  //SmallTOBig:=BigMonth;
+  Result:=BigMonth;
+
+  if Copy(Result,1,2)='元' then
+  begin
+    Result:=Copy(Result,3,Length(Result)-2);
+  end;
+
+  TempA:=FormatFloat('0',small);
+  if Length(TempA)>5 then
+  begin
+    TempB:=(Copy(TempA,Length(TempA)-4,1));
+    TempC:=(Copy(TempA,Length(TempA)-3,1));
+    if (TempB='0') and (TempC<>'0') then
+    begin
+      Result:=StringReplace(Result,'万','万零',[rfReplaceAll]);
+    end;
+  end;
 end;
 
 class function TKzUtils.WarnFmt(const Msg: string;
