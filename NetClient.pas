@@ -59,7 +59,8 @@ uses
 constructor TNetClient.Create;
 begin
   FNhClient:=TNetHTTPClient.Create(nil);
-  //#FNhClient.ConnectionTimeout:=1000;
+  FNhClient.ConnectionTimeout := 1000;
+  FNhClient.ResponseTimeout   := 60 * 1000 * 60;
 
   FNhClient.OnRequestError             :=self.OnRequestError;
   FNhClient.OnValidateServerCertificate:=self.OnValidateServerCertificate;
