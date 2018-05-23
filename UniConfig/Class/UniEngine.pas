@@ -75,8 +75,10 @@ type
     //#function  TOJSON(AOperateType:TOperateType=otNormal):string;overload;
     //#procedure INJSON(AValue:string);overload;
     procedure TONODE(aNode:IXMLNode);overload;
+
+    procedure DeleteDB(aTabs:array of string;aSqlWhere:string;aUniConnection:TUniConnection);overload;
   public
-    constructor Create; virtual;  
+    constructor Create; virtual;
   public
     property UniSQL:TUniSQL read GetUniSQL;
   public
@@ -210,6 +212,19 @@ end;
 procedure TUniEngine.DeleteDB;
 begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.DeleteDB] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
+end;
+
+procedure TUniEngine.DeleteDB(aTabs: array of string; aSqlWhere: string;
+  aUniConnection: TUniConnection);
+var
+  I:Integer;
+  cSQL:string;
+begin
+  for I := 0 to Length(aTabs)-1 do
+  begin
+    cSQL := Format('DELETE FROM %s WHERE 1=1 AND %s',[aTabs[I],aSqlWhere]);
+    ExecuteSQL(cSQL,aUniConnection);
+  end;
 end;
 
 procedure TUniEngine.DeleteFL;
