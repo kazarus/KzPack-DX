@@ -68,7 +68,7 @@ var
 implementation
 
 uses
-  Class_Dict,Class_SQLX;
+  Class_Dict,Class_SQLX,Class_KzDebug;
 
 
 procedure TUniPatchX.AddPatch(aVersion, aConnctMark: string;
@@ -213,6 +213,7 @@ begin
       on E:Exception do
       begin
         Rollback;
+        KzDebug.FileFmt('UPGRADE ERROR:%S:%S,%S',[Patch.VersionNow,Patch.ConnctMark,E.Message]);
         raise Exception.CreateFmt('UPGRADE ERROR:%S:%S,%S',[Patch.VersionNow,Patch.ConnctMark,E.Message]);
       end;
     end;
@@ -320,13 +321,13 @@ begin
     cUniC:=UniConnctEx.GetConnection(TargetMark);
     if not ExistTable(TargetTabl,cUniC) then Exit;
     //->
-    cSQL := 'SELECT COUNT(*) AS VALUE FROM %s WHERE DICT_MODE=%s';
+    cSQL := 'SELECT COUNT(*) AS COUNT FROM %s WHERE DICT_MODE=%s';
     cSQL := Format(cSQL,[TargetTabl,QuotedStr(CONST_DATA_BASE_DICTMOD)]);
 
-    if UniConnctEx.CheckField(cSQL,'VALUE',cUniC) > 0 then
+    if UniConnctEx.CheckField(cSQL,'COUNT',cUniC) > 0 then
     begin
-      cSQL :='UPDATE %S SET DICT_CODE=%D WHERE DICT_MODE=%S';
-      cSQL :=Format(cSQL,[TargetTabl,aValue,QuotedStr(CONST_DATA_BASE_DICTMOD)]);
+      cSQL := 'UPDATE %S SET DICT_CODE=%D WHERE DICT_MODE=%S';
+      cSQL := Format(cSQL,[TargetTabl,aValue,QuotedStr(CONST_DATA_BASE_DICTMOD)]);
     end else
     begin
       cSQL := ADD_DICT_VERSION(IntToStr(aValue))
