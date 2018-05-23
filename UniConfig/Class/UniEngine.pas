@@ -821,14 +821,14 @@ class function TUniEngine.CheckField(ASQL, AAsField: string;
 var
   ADataSet:TUniQuery;  
 begin
-  Result:=0;
+  Result := 0;
   try
     ADataSet:=GetDataSet(ASQL,aUniConnection);
     if ADataSet.RecordCount=0 then Exit;
     Result:=ADataSet.FieldByName(AAsField).AsVariant;
     if VarIsNull(Result) then
     begin
-      Result:=0;
+      Result := 0;
     end;  
   finally
     FreeAndNil(ADataSet);
