@@ -9,6 +9,15 @@ uses
   Classes,SysUtils,Uni,UniEngine;
 
 type
+  TLitConfig = class(TUniEngine)
+  private
+    FUnicType: string;    //*驱动类型
+    FDataBase: string;    //*数据库
+  published
+    property UnicType : string read FUnicType  write FUnicType;
+    property DataBase : string read FDataBase  write FDataBase;
+  end;
+
   TUniConfig=class(TUniEngine)
   public
     FUnicIndx: Integer;   //配置序列
@@ -44,6 +53,8 @@ type
     function  GetActvStat(AValue:string):string;overload;
   public
     function  CheckExist(AUniConnection:TUniConnection):Boolean;override;
+    function  toLittle:TLitConfig;
+    function  toAccess:string;
   public
     function  TstConnection(uCnfg:TUniConfig):Boolean;
   public
@@ -78,6 +89,9 @@ type
     class function  ADD_TBL_UNICNFG:string;
     class function  ADD_TBL_UNIDICT:string;
   end;
+
+
+
    
 const
   CONST_DB_UNICONFIG='config.db';
@@ -91,6 +105,9 @@ const
 
 
 implementation
+
+uses
+  Helpr_UniEngine;
 
 function TUniConfig.CheckExist(AUniConnection: TUniConnection): Boolean;
 begin
@@ -278,6 +295,25 @@ begin
     end;
 
   end;  
+end;
+
+function TUniConfig.toAccess: string;
+var
+  Little:TLitConfig;
+begin
+  try
+    Little := self.toLittle;
+    Result := Little.ToJSON();
+  finally
+    FreeAndNil(Little);
+  end;
+end;
+
+function TUniConfig.toLittle: TLitConfig;
+begin
+  Result := TLitConfig.Create;
+  Result.UnicType := self.UnicType;
+  Result.DataBase := self.DataBase;
 end;
 
 function TUniConfig.GetIsDirect: string;
