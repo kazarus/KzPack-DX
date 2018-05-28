@@ -20,7 +20,7 @@ unit Class_KzUtils;
 
 interface
 uses
-  Classes,SysUtils,Variants,StrUtils,DateUtils,IniFiles,
+  Classes,SysUtils,Variants,StrUtils,DateUtils,IniFiles,Registry,
   {$IFDEF MSWINDOWS} Windows,Vcl.Forms,TLHelp32,Vcl.Graphics,{$ENDIF}
   {$IFDEF ENABLE_REGEX}
        PerlRegEx, pcre
@@ -40,8 +40,11 @@ type
     class function  GetChr(AIdex:Integer):string;
     class function  IfThen(ABool:Boolean;ATrue,AFail:Variant):Variant;
     class function  GetGUID:string;
-       
+  private
+    class function  GetShellFolders(strDir: string): string;
+  public
     //Forms
+    class function  getPath(dirName:string):string;
     class function  ExePath:string;
     class function  Explore:string;overload;
     class function  Explore(aRootPath:string):string;overload;
@@ -735,6 +738,30 @@ end;
 class function TKzUtils.GetOrd(AChar: Char): Integer;
 begin
   Result:=Ord(UpCase(AChar))-64;
+end;
+
+class function TKzUtils.getPath(dirName: string): string;
+begin
+  Result := GetShellFolders(dirName); //是取得桌面文件夹的路径
+end;
+
+class function TKzUtils.GetShellFolders(strDir: string): string;
+const
+  regPath = '\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders';
+var
+  Reg: TRegistry;
+  strFolders: string;
+begin
+  Reg := TRegistry.Create;
+  try
+    Reg.RootKey := HKEY_CURRENT_USER;
+    if Reg.OpenKey(regPath, false) then begin
+      strFolders := Reg.ReadString(strDir);
+    end;
+  finally
+    Reg.Free;
+  end;
+  result := strFolders;
 end;
 
 class function TKzUtils.HashCode(const aValue: string): Integer;
