@@ -121,7 +121,7 @@ type
     class function  RegReplaceAll(const Source:string;ATag:string;AReplacement:string):string;
   public
     //CreateDir
-    class function  CreateDirEx(const aPath:string;aSeparator:Char='\'):Boolean;
+    class function  CreateDirEx(const aPath:string;aSeparator:Char='\';aRootPath:string=''):Boolean;
   end;
 
 
@@ -378,7 +378,7 @@ begin
 end;
 
 
-class function TKzUtils.CreateDirEx(const aPath: string;aSeparator:Char): Boolean;
+class function TKzUtils.CreateDirEx(const aPath: string;aSeparator:Char;aRootPath:string): Boolean;
 var
   I:Integer;
   cList:TStrings;
@@ -388,6 +388,11 @@ begin
 
   if Trim(aPath)='' then Exit;
 
+  if aRootPath <> '' then
+  begin
+    aRootPath := ExePath;
+  end;
+
   try
     cList := TStringList.Create;
     ListStrCutted(ExtractFilePath(aPath),'\'+aSeparator,cList);
@@ -396,9 +401,9 @@ begin
     begin
       cTemp := cTemp + cList.Strings[I]+'\';
 
-      if not DirectoryExists(ExePath + cTemp) then
+      if not DirectoryExists(aRootPath + cTemp) then
       begin
-        CreateDir(ExePath + cTemp);
+        CreateDir(aRootPath + cTemp);
       end;
     end;
   finally

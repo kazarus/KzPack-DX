@@ -359,7 +359,10 @@ begin
     try
       UniConnectionA.Connected:=True;
     except
-      Exit;
+      on E:Exception do
+      begin
+        raise Exception.CreateFmt('%S',[E.Message]);
+      end;
     end;
   finally
     FreeAndNil(UniConnectionA);
