@@ -13,9 +13,15 @@ type
   private
     FUnicType: string;    //*驱动类型
     FDataBase: string;    //*数据库
+    FUnicUser: string;    //*用户
+    FUnicSrvr: string;    //*服务器
+    FUnicPswd: string;    //*密码
   published
     property UnicType : string read FUnicType  write FUnicType;
     property DataBase : string read FDataBase  write FDataBase;
+    property UnicUser : string read FUnicUser  write FUnicUser;
+    property UnicSrvr : string read FUnicSrvr  write FUnicSrvr;
+    property UnicPswd : string read FUnicPswd  write FUnicPswd;
   end;
 
   TUniConfig=class(TUniEngine)
@@ -314,6 +320,9 @@ begin
   Result := TLitConfig.Create;
   Result.UnicType := self.UnicType;
   Result.DataBase := self.DataBase;
+  Result.UnicUser := self.UnicUser;
+  Result.UnicPswd := self.UnicPswd;
+  Result.UnicSrvr := self.UnicSrvr;
 end;
 
 function TUniConfig.GetIsDirect: string;
