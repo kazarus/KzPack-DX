@@ -9,17 +9,18 @@ type
   
   TUniFieldX=class(TUniEngine)
   private
-    FColIndex: Integer;
-    FColvName: string; //etc:UNIT_LINK
-    FColvType: Integer;//etc:167
-    FTypeName: string; //etc:varchar
-    FDataSize: Integer;//etc:18
-
+    FCOLINDEX: Integer;
+    FTABLNAME: string; //ETC:TBL_UNIT
+    FCOLVNAME: string; //ETC:UNIT_LINK
+    FCOLVTYPE: Integer;//ETC:167
+    FTYPENAME: string; //ETC:VARCHAR
+    FDATASIZE: Integer;//ETC:18
+    FDATATYPE: string; //ETC:INTEGER,STRING
+    FOBJTNAME: string; //ETC:UNITLINK
+    FPROPNAME: string; //ETC:UNITLINK
+  private
     FIsKey   : Boolean;
     FIsInc   : Boolean;
-    FDataType: string; //etc:integer,string
-    FObjtName: string; //etc:UNITLINK
-    FPropName: string; //etc:UnitLink
   protected
     procedure SetParameters;override;
     function  GetStrInsert:string;override;
@@ -28,35 +29,42 @@ type
   public
     function  GetStrsIndex:string;override;
   public
-    function  GetNextIdex:Integer;overload;
-    function  GetNextIdex(AUniConnection:TUniConnection):Integer;overload;
-  public
     function  CheckExist(AUniConnection:TUniConnection):Boolean;override;
     function  GetAsValue:string;
     function  GetPropName(AValue:string):string;//以'_'为间隔
     function  GetObjtName(AValue:string):string;//没有'_'间隔
     function  GetDataType(AValue:string):string;
   published
-    property  ColIndex:Integer read FColIndex write FColIndex;
-    property  ColvName:string  read FColvName write FColvName;
-    property  ColvType:Integer read FColvType write FColvType;
-    property  TypeName:string  read FTypeName write FTypeName;
-    property  DataSize:Integer read FDataSize write FDataSize;
+    property  COLINDEX:Integer read FCOLINDEX write FCOLINDEX;
+    property  TABLNAME:string  read FTABLNAME write FTABLNAME;
+    property  COLVNAME:string  read FCOLVNAME write FCOLVNAME;
+    property  COLVTYPE:Integer read FCOLVTYPE write FCOLVTYPE;
+    property  TYPENAME:string  read FTYPENAME write FTYPENAME;
+    property  DATASIZE:Integer read FDATASIZE write FDATASIZE;
+    property  DATATYPE:string  read FDATATYPE write FDATATYPE;
+    property  OBJTNAME:string  read FOBJTNAME write FOBJTNAME;
+    property  PROPNAME:string  read FPROPNAME write FPROPNAME;
+  published
     property  IsKey   :Boolean read FIsKey    write FIsKey;
     property  IsInc   :Boolean read FIsInc    write FIsInc;
-    property  DataType:string  read FDataType write FDataType;
-    property  ObjtName:string  read FObjtName write FObjtName;
-    property  PropName:string  read FPropName write FPropName;
   public
-    class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
+    class function  ReadDS(aUniQuery: TUniQuery): TUniEngine; override;
+    class procedure ReadDS(aUniQuery: TUniQuery; var Result: TUniEngine); override;
 
     class function  CopyIt(aUniFieldX:TUniFieldX):TUniFieldX;overload;
     class procedure CopyIt(aUniFieldX:TUniFieldX;var Result:TUniFieldX);overload;
 
-    class function GetListCols(aTabl:string;AUniConnection:TUniConnection):TStringList;
-    class function ExpSqlInSQLSRV(aTabl:string):string;
-    class function ExpSqlInORACLE(aTabl:string):string;
-    class function ExpSQLInPOSTGR(aTabl:string):string;
+    class function  CopyIt(aUniEngine:TUniEngine):TUniEngine;overload;override;
+    class procedure CopyIt(aUniEngine:TUniEngine;var Result:TUniEngine)overload;override;
+  public
+    class function  GetListCols(aTabl:string;AUniConnection:TUniConnection):TStringList;
+  public
+    class function  ExpSQLInSQLSRV:string;overload;
+    class function  ExpSQLInORACLE:string;overload;
+
+    class function  ExpSqlInSQLSRV(aTabl:string):string;overload;
+    class function  ExpSqlInORACLE(aTabl:string):string;overload;
+    class function  ExpSQLInPOSTGR(aTabl:string):string;overload;
   public
     {$IFDEF MSWINDOWS}
     class function GetKeyInACCESS(aTabl,ADataBase:string):TStringList;overload;
@@ -89,10 +97,6 @@ begin
 
 end;
 
-function TUniFieldX.GetNextIdex: Integer;
-begin
-
-end;
 
 
 class function TUniFieldX.ExpSqlInSQLSRV(aTabl: string): string;
@@ -111,11 +115,6 @@ begin
   Result:=StringReplace(Result,'$TABL',QuotedStr(aTabl),[rfReplaceAll]);
 end;
 
-function TUniFieldX.GetNextIdex(AUniConnection: TUniConnection): Integer;
-begin
-
-end;
-
 function TUniFieldX.GetStrDelete: string;
 begin
 
@@ -128,7 +127,7 @@ end;
 
 function TUniFieldX.GetStrsIndex: string;
 begin
-  Result:=ColvName;
+  Result := Format('%S-%S',[TablName,ColvName]);
 end;
 
 function TUniFieldX.GetStrUpdate: string;
@@ -136,23 +135,62 @@ begin
 
 end;
 
-class function TUniFieldX.ReadDS(AUniQuery: TUniQuery): TUniEngine;
+class procedure TUniFieldX.ReadDS(AUniQuery: TUniQuery; var Result: TUniEngine);
+var
+  I:Integer;
+  Field:TField;
+  FieldName:string;
 begin
-  Result:=TUniFieldX.Create;
+  if Result = nil then Exit;
+
   with TUniFieldX(Result) do
   begin
-    ColIndex:=AUniQuery.FieldByName('COLINDEX').AsInteger;
-    ColvName:=AUniQuery.FieldByName('ColvName').AsString;
-    ColvType:=AUniQuery.FieldByName('ColvType').AsInteger;
-    TypeName:=UpperCase(Trim(AUniQuery.FieldByName('TYPENAME').AsString));
-    DataSize:=AUniQuery.FieldByName('DATASIZE').AsInteger;
-    
-    IsKey   :=AUniQuery.FieldByName('ISKEY').AsInteger=1;
-    IsInc   :=False;
-    DataType:=GetDataType(TypeName);
-    ObjtName:=GetObjtName(ColvName);
-    PropName:=GetObjtName(ColvName);
-  end;  
+    for I:=0 to aUniQuery.Fields.Count-1 do
+    begin
+      Field := aUniQuery.Fields.Fields[I];
+      //if field.fieldname is not all uppercase,please use uppercase().
+      FieldName := UpperCase(Field.FieldName);
+      if FieldName = 'COLINDEX' then
+      begin
+        COLINDEX  := Field.AsInteger;
+      end else
+      if FieldName = 'TABLNAME' then
+      begin
+        TABLNAME  := Field.AsString;
+      end else
+      if FieldName = 'COLVNAME' then
+      begin
+        COLVNAME  := Field.AsString;
+        ObjtName  := GetObjtName(ColvName);
+        PropName  := GetObjtName(ColvName);
+      end else
+      if FieldName = 'COLVTYPE' then
+      begin
+        COLVTYPE  := Field.AsInteger;
+      end else
+      if FieldName = 'TYPENAME' then
+      begin
+        TYPENAME  := UpperCase(Field.AsString);
+        DataType  := GetDataType(TypeName);
+      end else
+      if FieldName = 'DATASIZE' then
+      begin
+        DATASIZE  := Field.AsInteger;
+      end else
+      if FieldName = 'ISKEY' then
+      begin
+        IsKey     := Field.AsInteger = 1;
+      end;
+
+      IsInc := False;
+    end
+  end;
+end;
+
+class function TUniFieldX.ReadDS(AUniQuery: TUniQuery): TUniEngine;
+begin
+  Result := TUniFieldX.Create;
+  ReadDS(AUniQuery, Result);
 end;
 
 procedure TUniFieldX.SetParameters;
@@ -487,6 +525,7 @@ begin
     FreeAndNil(ADataSet);
   end;
 end;
+
 {$IFEND}
 
 class function TUniFieldX.CopyIt(aUniFieldX: TUniFieldX): TUniFieldX;
@@ -501,17 +540,31 @@ begin
   if Result=nil then  Exit;
   if aUniFieldX=nil then Exit;
 
-  Result.ColIndex:=aUniFieldX.ColIndex;
-  Result.ColvName:=aUniFieldX.ColvName;
-  Result.ColvType:=aUniFieldX.ColvType;
-  Result.TypeName:=aUniFieldX.TypeName;
-  Result.DataSize:=aUniFieldX.DataSize;
-  Result.IsKey   :=aUniFieldX.IsKey;
-  Result.IsInc   :=aUniFieldX.IsInc;
-  Result.DataType:=aUniFieldX.DataType;
-  Result.ObjtName:=aUniFieldX.ObjtName;
-  Result.PropName:=aUniFieldX.PropName;
+  Result.ColIndex := aUniFieldX.ColIndex;
+  Result.TablName := aUniFieldX.TablName;
+  Result.ColvName := aUniFieldX.ColvName;
+  Result.ColvType := aUniFieldX.ColvType;
+  Result.TypeName := aUniFieldX.TypeName;
+  Result.DataSize := aUniFieldX.DataSize;
+  Result.DataType := aUniFieldX.DataType;
+  Result.ObjtName := aUniFieldX.ObjtName;
+  Result.PropName := aUniFieldX.PropName;
 
+  Result.IsKey    := aUniFieldX.IsKey;
+  Result.IsInc    := aUniFieldX.IsInc;
+end;
+
+class function TUniFieldX.CopyIt(aUniEngine: TUniEngine): TUniEngine;
+begin
+  Result := TUniFieldX.Create;
+  TUniEngine.CopyIt(aUniEngine,Result);
+end;
+
+class procedure TUniFieldX.CopyIt(aUniEngine: TUniEngine;
+  var Result: TUniEngine);
+begin
+  if Result = nil then Exit;
+  TUniFieldX.CopyIt(TUniFieldX(aUniEngine),TUniFieldX(Result));
 end;
 
 {$IFDEF MSWINDOWS}
@@ -543,6 +596,11 @@ begin
   Result:=StringReplace(Result,'$TABL',QuotedStr(aTabl),[rfReplaceAll]);
 end;
 
+class function TUniFieldX.ExpSQLInORACLE: string;
+begin
+
+end;
+
 class function TUniFieldX.ExpSQLInPOSTGR(aTabl: string): string;
 begin
   Result:='SELECT ATTNUM AS COLINDEX,ATTNAME AS COLVNAME,1 AS COLVTYPE,PG_TYPE.TYPNAME AS TYPENAME,PG_TYPE.TYPLEN AS DATASIZE ,'
@@ -554,7 +612,15 @@ begin
   Result:=Format(Result,[QuotedStr('p'),QuotedStr(aTabl)]);
 end;
 
-{ TIdentity }
+class function TUniFieldX.ExpSQLInSQLSRV: string;
+begin
+  Result := 'SELECT A.NAME AS COLVNAME,B.NAME AS TABLNAME FROM SYSCOLUMNS A'
+          + '    LEFT JOIN SYSOBJECTS B ON A.ID=B.ID'
+          + '    WHERE B.TYPE=%S'
+          + '    ORDER BY B.NAME';
+
+  Result := Format(Result,[QuotedStr('U')]);
+end;
 
 function TIdentity.GetStrsIndex: string;
 begin

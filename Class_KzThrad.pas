@@ -21,20 +21,19 @@ type
 
   TKzThrad = class(TThread)
   private
-    FMaxProgress:Integer;
-    FOneProgress:Integer;
-    FTxtProgress:string;
-
-    FMsgProgress:string;
-    FVarProgress:array of Variant;
-  private  
+    FMaxProgress: Integer;
+    FOneProgress: Integer;
+    FTxtProgress: string;
+    FMsgProgress: string;
+    FVarProgress: array of Variant;
+  private
     procedure GetMaxProgress();overload;
     procedure GetOneProgress();overload;
     procedure GetTxtProgress();overload;
 
     procedure GetMsgProgress();overload;
   public
-    FActionOnTerminate     :string;
+    FActionOnTerminate: string;
   public
     OnKzThradGetMaxProgress:TKzThradGetMaxProgress;
     OnKzThradGetOneProgress:TKzThradGetOneProgress;
@@ -54,21 +53,17 @@ type
 
 
 const
-  CONST_THRAD_STAT_DATA='DATA';
-  CONST_THRAD_STAT_EROR='EROR';
-  CONST_THRAD_STAT_TRUE='TRUE';
-  CONST_THRAD_STAT_FAIL='FAIL';
-  CONST_THRAD_STAT_NULL='NULL';          
-  
+  CONST_THRAD_STAT_DATA = 'DATA';
+  CONST_THRAD_STAT_EROR = 'EROR';
+  CONST_THRAD_STAT_TRUE = 'TRUE';
+  CONST_THRAD_STAT_FAIL = 'FAIL';
+  CONST_THRAD_STAT_NULL = 'NULL';
+
 
 implementation
 
 uses
   Class_KzDebug;
-{ TKzThrad }
-
-
-{ TKzThrad }
 
 procedure TKzThrad.Execute;
 begin
