@@ -13,7 +13,7 @@ type
     FKJND:Integer;
     FKJQJ:Integer;
   public
-    function  GetStrsIndex:string;override;
+    function  GetStrsIndex:string;override;  
   public
     procedure SetInitialize;
     
@@ -31,11 +31,15 @@ type
 
     function  GetKJQJTEXT:string;overload;
 
+    procedure impKJNDKJQJ(aValue:integer);
+    function  expKJNDKJQJ():Integer;
+    
     function  GetKJNDKJQJ:Integer;overload;                 //取得整型期间
     function  GetKJNDKJQJ(aValue:Integer):Integer;overload; //取得整型期间
   published
-    property  KJND:Integer read FKJND write FKJND;
-    property  KJQJ:Integer read FKJQJ write FKJQJ;
+    property KJND:Integer read FKJND write FKJND;
+    property KJQJ:Integer read FKJQJ write FKJQJ;
+    property KJNDKJQJ:Integer read expKJNDKJQJ write impKJNDKJQJ;
   public
     constructor Create;overload;
     constructor Create(aKJND,aKJQJ:Integer);overload;
@@ -46,15 +50,18 @@ type
     class procedure CopyIt(aKJQJ:TKJQJ;var Result:TKJQJ);overload;
 
     class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
+    class procedure ReadDS(AUniQuery: TUniQuery;var Result:TUniEngine);override;    
+    
     class function  ReadDB(ASQL:string;AUniConnection:TUniConnection):TKJQJ;overload;
     class procedure ReadDB(ASQL:string;AUniConnection:TUniConnection;var aKJQJ:TKJQJ);overload;
   public
     class function  GetKJQJTEXT(aValue:Integer):string;overload;
     class function  GetKJNDKJQJ(aKJND,aKJQJ:Integer):Integer;overload;
 
-    class function  ExpListKJQJ(aStartKJQJ,aEndedKJQJ:TKJQJ):TStringList;overload;
-    class procedure ExpListKJQJ(aKJND,aStartKJQJ,aEndedKJQJ:Integer;var aList:TStringList);overload;
-    class procedure InitKJQJ(aStartVal:Integer;aEndedVal:Integer;var aList:TStringList);overload;
+    class function  ExpListKJQJ(aStartKJQJ,aEndedKJQJ:TKJQJ):TStringList;overload;deprecated;
+    class procedure ExpListKJQJ(aStartKJQJ,aEndedKJQJ:TKJQJ;var Result:TStringList);overload;
+    class procedure ExpListKJQJ(aKJND,aStartKJQJ,aEndedKJQJ:Integer;var Result:TStringList);overload;
+    class procedure ExpListKJQJ(aStartKJQJ:Integer;aEndedKJQJ:Integer;var Result:TStringList);overload;
   end;
 
 implementation
@@ -96,47 +103,50 @@ end;
 class function TKJQJ.ExpListKJQJ(aStartKJQJ, aEndedKJQJ: TKJQJ): TStringList;
 var
   I:Integer;
-  NumbA:Integer;
+  Count:Integer;
   KJQJA:TKJQJ;
   KJQJB:TKJQJ;
 begin
   Result:=nil;
 
-  NumbA:=-1;
-  NumbA:=((aEndedKJQJ.KJND-aStartKJQJ.KJND)*12  + (aEndedKJQJ.KJQJ-aStartKJQJ.KJQJ))+1;
-  if NumbA=-1 then Exit;
+  Count:=-1;
+  Count:=((aEndedKJQJ.KJND-aStartKJQJ.KJND)*12  + (aEndedKJQJ.KJQJ-aStartKJQJ.KJQJ))+1;
+  if Count=-1 then Exit;
 
   Result:=TStringList.Create;
-  KJQJA :=TKJQJ.Create;
-  
-  for I:=1 to NumbA do
-  begin
-    if I=1 then
+
+  try
+    KJQJA :=TKJQJ.Create;
+
+    for I:=1 to Count do
     begin
-      KJQJB := TKJQJ.Create;
-      KJQJB.KJND := aStartKJQJ.KJND;
-      KJQJB.KJQJ := aStartKJQJ.KJQJ;
+      if I=1 then
+      begin
+        KJQJB := TKJQJ.Create;
+        KJQJB.KJND := aStartKJQJ.KJND;
+        KJQJB.KJQJ := aStartKJQJ.KJQJ;
 
-      //TempA:=IntToStr(TAppUtil.GetKjndKjqj(KJQJB.KJND,KJQJB.KJQJ));
-      Result.AddObject(IntToStr(KJQJB.GetKJNDKJQJ), KJQJB);
+        //TempA:=IntToStr(TAppUtil.GetKjndKjqj(KJQJB.KJND,KJQJB.KJQJ));
+        Result.AddObject(IntToStr(KJQJB.GetKJNDKJQJ), KJQJB);
 
-      KJQJA.KJND := aStartKJQJ.KJND;
-      KJQJA.KJQJ := aStartKJQJ.KJQJ;
-    end else
-    begin
-      KJQJB := TKJQJ.Create;
-      KJQJB.KJND := KJQJA.GetNextKJND;
-      KJQJB.KJQJ := KJQJA.GetNextKJQJ;
+        KJQJA.KJND := aStartKJQJ.KJND;
+        KJQJA.KJQJ := aStartKJQJ.KJQJ;
+      end else
+      begin
+        KJQJB := TKJQJ.Create;
+        KJQJB.KJND := KJQJA.GetNextKJND;
+        KJQJB.KJQJ := KJQJA.GetNextKJQJ;
 
-      //TempA:=IntToStr(TAppUtil.GetKjndKjqj(KJQJB.KJND,KJQJB.KJQJ));
-      Result.AddObject(IntToStr(KJQJB.GetKJNDKJQJ), KJQJB);
+        //TempA:=IntToStr(TAppUtil.GetKjndKjqj(KJQJB.KJND,KJQJB.KJQJ));
+        Result.AddObject(IntToStr(KJQJB.GetKJNDKJQJ), KJQJB);
 
-      KJQJA.KJND := KJQJB.KJND;
-      KJQJA.KJQJ := KJQJB.KJQJ;
-    end;
+        KJQJA.KJND := KJQJB.KJND;
+        KJQJA.KJQJ := KJQJB.KJQJ;
+      end;
+    end;  
+  finally
+    FreeAndNil(KJQJA);
   end;
-
-  FreeAndNil(KJQJA);
 end;
 
 function TKJQJ.GetKJNDKJQJ: Integer;
@@ -194,84 +204,10 @@ begin
   Result:=Format('%D-%D',[KJND,KJQJ]);
 end;
 
-class procedure TKJQJ.InitKJQJ(aStartVal, aEndedVal: Integer;
-  var aList: TStringList);
-var
-  I:Integer;
-  cSize: Integer;
-  sKJQJ: TKJQJ;
-  eKJQJ: TKJQJ;
-  xKJQJ: TKJQJ;
-  zKJQJ: TKJQJ;
-begin
-  if aList = nil then Exit;
-  
-  try
-    sKJQJ := TKJQJ.Create(aStartVal);
-    eKJQJ := TKJQJ.Create(aEndedVal);
-    xKJQJ := TKJQJ.Create;
-
-    cSize := ((eKJQJ.KJND - sKJQJ.KJND) * 12 + (eKJQJ.KJQJ - sKJQJ.KJQJ)) + 1;
-
-    for I:=1 to cSize do
-    begin
-      if I=1 then
-      begin
-        zKJQJ := TKJQJ.Create;
-        zKJQJ.KJND := sKJQJ.KJND;
-        zKJQJ.KJQJ := sKJQJ.KJQJ;
-
-        aList.AddObject(IntToStr(zKJQJ.GetKJNDKJQJ), zKJQJ);
-
-        xKJQJ.KJND := sKJQJ.KJND;
-        xKJQJ.KJQJ := sKJQJ.KJQJ;
-      end else
-      begin
-        zKJQJ := TKJQJ.Create;
-        zKJQJ.KJND := xKJQJ.GetNextKJND;
-        zKJQJ.KJQJ := xKJQJ.GetNextKJQJ;
-
-        aList.AddObject(IntToStr(zKJQJ.GetKJNDKJQJ), zKJQJ);
-
-        xKJQJ.KJND := zKJQJ.KJND;
-        xKJQJ.KJQJ := zKJQJ.KJQJ;
-      end;
-    end;
-  finally
-    FreeAndNil(sKJQJ);
-    FreeAndNil(eKJQJ);
-    FreeAndNil(xKJQJ);
-  end;
-end;
-
 class function TKJQJ.ReadDS(AUniQuery: TUniQuery): TUniEngine;
-var
-  I:Integer;
-  Field:TField;
-  Value:Integer;
 begin
-  Result:=TKJQJ.Create;
-  with TKJQJ(Result) do
-  begin
-    for I:=0 to AUniQuery.Fields.Count-1 do
-    begin
-      Field:=AUniQuery.Fields.Fields[I];
-      if Field.FieldName = 'KJND' then
-      begin
-        KJND := Field.AsInteger;
-      end else
-      if Field.FieldName = 'KJQJ' then 
-      begin
-        KJQJ := Field.AsInteger;
-      end else
-      if Field.FieldName = 'KJND_KJQJ' then 
-      begin
-        Value := Field.AsInteger;
-        KJND  := Trunc(Value / 100);
-        KJQJ  := Value  mod 100;
-      end;
-    end;
-  end;
+  Result := TKJQJ.Create;
+  ReadDS(AUniQuery,Result);
 end;
 
 procedure TKJQJ.SetInitialize;
@@ -374,7 +310,7 @@ begin
 end;
 
 class procedure TKJQJ.ExpListKJQJ(aKJND, aStartKJQJ, aEndedKJQJ: Integer;
-  var aList: TStringList);
+  var Result: TStringList);
 var
   I:Integer;
   cKJQJ:TKJQJ;  
@@ -382,7 +318,7 @@ begin
   for I:=aStartKJQJ to aEndedKJQJ do
   begin
     cKJQJ := TKJQJ.Create(aKJND,I);
-    aList.AddObject(cKJQJ.GetKJQJTEXT,cKJQJ);
+    Result.AddObject(cKJQJ.GetKJQJTEXT,cKJQJ);
   end;
 end;
 
@@ -424,4 +360,112 @@ begin
   KJQJ := aValue  mod 100;
 end;
 
+class procedure TKJQJ.ExpListKJQJ(aStartKJQJ, aEndedKJQJ: TKJQJ;
+  var Result: TStringList);
+var
+  I:Integer;
+  Count:Integer;
+  KJQJA:TKJQJ;
+  KJQJB:TKJQJ;
+begin
+  if Result = nil then Exit;
+
+  Count:=-1;
+  Count:=((aEndedKJQJ.KJND-aStartKJQJ.KJND)*12  + (aEndedKJQJ.KJQJ-aStartKJQJ.KJQJ))+1;
+  if Count=-1 then Exit;
+
+  try
+    KJQJA :=TKJQJ.Create;
+
+    for I:=1 to Count do
+    begin
+      if I=1 then
+      begin
+        KJQJB := TKJQJ.Create;
+        KJQJB.KJND := aStartKJQJ.KJND;
+        KJQJB.KJQJ := aStartKJQJ.KJQJ;
+
+        //TempA:=IntToStr(TAppUtil.GetKjndKjqj(KJQJB.KJND,KJQJB.KJQJ));
+        Result.AddObject(IntToStr(KJQJB.GetKJNDKJQJ), KJQJB);
+
+        KJQJA.KJND := aStartKJQJ.KJND;
+        KJQJA.KJQJ := aStartKJQJ.KJQJ;
+      end else
+      begin
+        KJQJB := TKJQJ.Create;
+        KJQJB.KJND := KJQJA.GetNextKJND;
+        KJQJB.KJQJ := KJQJA.GetNextKJQJ;
+
+        //TempA:=IntToStr(TAppUtil.GetKjndKjqj(KJQJB.KJND,KJQJB.KJQJ));
+        Result.AddObject(IntToStr(KJQJB.GetKJNDKJQJ), KJQJB);
+
+        KJQJA.KJND := KJQJB.KJND;
+        KJQJA.KJQJ := KJQJB.KJQJ;
+      end;
+    end;  
+  finally
+    FreeAndNil(KJQJA);
+  end;
+end;
+
+class procedure TKJQJ.ReadDS(AUniQuery: TUniQuery; var Result: TUniEngine);
+var
+  I:Integer;
+  Field:TField;
+  Value:Integer;
+begin
+  if Result = nil then Exit;
+
+  with TKJQJ(Result) do
+  begin
+    for I:=0 to AUniQuery.Fields.Count-1 do
+    begin
+      Field:=AUniQuery.Fields.Fields[I];
+      if Field.FieldName = 'KJND' then
+      begin
+        KJND := Field.AsInteger;
+      end else
+      if Field.FieldName = 'KJQJ' then 
+      begin
+        KJQJ := Field.AsInteger;
+      end else
+      if Field.FieldName = 'KJND_KJQJ' then 
+      begin
+        Value := Field.AsInteger;
+        KJND  := Trunc(Value / 100);
+        KJQJ  := Value  mod 100;
+      end;
+    end;
+  end;
+end;
+
+procedure TKJQJ.impKJNDKJQJ(aValue: integer);
+begin
+
+end;
+
+function TKJQJ.expKJNDKJQJ:Integer;
+begin
+  Result := GetKJNDKJQJ; 
+end;
+
+class procedure TKJQJ.ExpListKJQJ(aStartKJQJ, aEndedKJQJ: Integer;
+  var Result: TStringList);
+var
+  sKJQJ:TKJQJ;
+  eKJQJ:TKJQJ;
+begin
+  try
+    sKJQJ := TKJQJ.Create(aStartKJQJ);
+    eKJQJ := TKJQJ.Create(aEndedKJQJ);
+
+    ExpListKJQJ(sKJQJ,eKJQJ,Result);
+
+  finally
+    FreeAndNil(sKJQJ);
+    FreeAndNil(eKJQJ);
+  end;
+end;
+
 end.
+
