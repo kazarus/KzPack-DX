@@ -13,8 +13,10 @@ type
     FTABLNAME: string; //ETC:TBL_UNIT
     FCOLVNAME: string; //ETC:UNIT_LINK
     FCOLVTYPE: Integer;//ETC:167
-    FTYPENAME: string; //ETC:VARCHAR
-    FDATASIZE: Integer;//ETC:18
+    FTYPENAME: string; //ETC:VARCHAR,from:type_name
+    FDATASIZE: Integer;//ETC:18,from:precision
+    FDATASCAL: Integer;//ETC:4,from:scale
+  private
     FDATATYPE: string; //ETC:INTEGER,STRING
     FOBJTNAME: string; //ETC:UNITLINK
     FPROPNAME: string; //ETC:UNITLINK
@@ -41,6 +43,8 @@ type
     property  COLVTYPE:Integer read FCOLVTYPE write FCOLVTYPE;
     property  TYPENAME:string  read FTYPENAME write FTYPENAME;
     property  DATASIZE:Integer read FDATASIZE write FDATASIZE;
+    property  DATASCAL:Integer read FDATASCAL write FDATASCAL;
+  published
     property  DATATYPE:string  read FDATATYPE write FDATATYPE;
     property  OBJTNAME:string  read FOBJTNAME write FOBJTNAME;
     property  PROPNAME:string  read FPROPNAME write FPROPNAME;
@@ -65,6 +69,9 @@ type
     class function  ExpSqlInSQLSRV(aTabl:string):string;overload;
     class function  ExpSqlInORACLE(aTabl:string):string;overload;
     class function  ExpSQLInPOSTGR(aTabl:string):string;overload;
+
+    class function  ExpSqlInSQLSRV(aTabl:string;aColv:string):string;overload;
+    class function  ExpSqlInORACLE(aTabl:string;aColv:string):string;overload;
   public
     {$IFDEF MSWINDOWS}
     class function GetKeyInACCESS(aTabl,ADataBase:string):TStringList;overload;
@@ -101,7 +108,7 @@ end;
 
 class function TUniFieldX.ExpSqlInSQLSRV(aTabl: string): string;
 begin
-  Result:='SELECT SYSCOLUMNS.COLID AS COLINDEX,SYSCOLUMNS.NAME AS ColvName,SYSCOLUMNS.XTYPE AS ColvType,SYSTYPES.NAME AS TYPENAME,SYSCOLUMNS.LENGTH AS DATASIZE,'
+  Result:='SELECT SYSCOLUMNS.COLID AS COLINDEX,SYSCOLUMNS.NAME AS COLVNAME,SYSCOLUMNS.XTYPE AS COLVTYPE,SYSTYPES.NAME AS TYPENAME,SYSCOLUMNS.PREC AS DATASIZE,SYSCOLUMNS.SCALE AS DATASCAL,'
          +'    CASE WHEN EXISTS(SELECT 1 FROM SYSINDEXKEYS WHERE ID =OBJECT_ID($TABL) AND COLID=SYSCOLUMNS.COLID'
          +'        AND INDID = (SELECT INDID FROM SYSINDEXES WHERE NAME =(SELECT NAME FROM SYSOBJECTS WHERE XTYPE=$PK AND PARENT_OBJ=OBJECT_ID($TABL)))) '
          +'    THEN 1 ELSE 0 END AS ISKEY'
@@ -176,6 +183,10 @@ begin
       if FieldName = 'DATASIZE' then
       begin
         DATASIZE  := Field.AsInteger;
+      end else
+      if FieldName = 'DATASCAL' then
+      begin
+        DATASCAL  := Field.AsInteger;
       end else
       if FieldName = 'ISKEY' then
       begin
@@ -601,6 +612,16 @@ begin
 
 end;
 
+class function TUniFieldX.ExpSQLInORACLE(aTabl, aColv: string): string;
+begin
+  Result:='SELECT COLUMN_ID AS COLINDEX,COLUMN_NAME AS COLVNAME,1 AS COLVTYPE,DATA_TYPE AS TYPENAME,DATA_LENGTH AS DATASIZE,'
+         +'    CASE WHEN EXISTS (SELECT 1 FROM USER_CONS_COLUMNS WHERE TABLE_NAME=$TABL AND POSITION >0 AND USER_CONS_COLUMNS.COLUMN_NAME=USER_TAB_COLUMNS.COLUMN_NAME) THEN 1 ELSE 0 END AS ISKEY'
+         +'    FROM USER_TAB_COLUMNS'
+         +'    WHERE  TABLE_NAME=$TABL AND COLUMN_NAME=$COLV ORDER BY COLUMN_ID';
+  Result:=StringReplace(Result,'$TABL',QuotedStr(aTabl),[rfReplaceAll]);
+  Result:=StringReplace(Result,'$COLV',QuotedStr(aColv),[rfReplaceAll]);
+end;
+
 class function TUniFieldX.ExpSQLInPOSTGR(aTabl: string): string;
 begin
   Result:='SELECT ATTNUM AS COLINDEX,ATTNAME AS COLVNAME,1 AS COLVTYPE,PG_TYPE.TYPNAME AS TYPENAME,PG_TYPE.TYPLEN AS DATASIZE ,'
@@ -610,6 +631,23 @@ begin
          +'    LEFT JOIN PG_CLASS ON  PG_ATTRIBUTE.ATTRELID = PG_CLASS.OID'
          +'    WHERE PG_CLASS.RELNAME = %S AND ATTSTATTARGET=-1';
   Result:=Format(Result,[QuotedStr('p'),QuotedStr(aTabl)]);
+end;
+
+class function TUniFieldX.ExpSQLInSQLSRV(aTabl, aColv: string): string;
+begin
+  Result:='SELECT SYSCOLUMNS.COLID AS COLINDEX,SYSCOLUMNS.NAME AS COLVNAME,SYSCOLUMNS.XTYPE AS COLVTYPE,SYSTYPES.NAME AS TYPENAME,SYSCOLUMNS.PREC AS DATASIZE,SYSCOLUMNS.SCALE AS DATASCAL,'
+         +'    CASE WHEN EXISTS(SELECT 1 FROM SYSINDEXKEYS WHERE ID =OBJECT_ID($TABL) AND COLID=SYSCOLUMNS.COLID'
+         +'        AND INDID = (SELECT INDID FROM SYSINDEXES WHERE NAME =(SELECT NAME FROM SYSOBJECTS WHERE XTYPE=$PK AND PARENT_OBJ=OBJECT_ID($TABL)))) '
+         +'    THEN 1 ELSE 0 END AS ISKEY'
+         +'    FROM SYSCOLUMNS'
+         +'    INNER JOIN SYSOBJECTS  ON SYSOBJECTS.ID=SYSCOLUMNS.ID'
+         +'    INNER JOIN SYSTYPES   ON SYSCOLUMNS.XTYPE=SYSTYPES.XTYPE AND SYSTYPES.XUSERTYPE<256'
+         +'    WHERE SYSOBJECTS.XTYPE=$U AND SYSOBJECTS.NAME=$TABL AND SYSCOLUMNS.NAME=$COLV'
+         +'    ORDER BY SYSOBJECTS.ID,SYSCOLUMNS.COLID';
+  Result:=StringReplace(Result,'$PK',QuotedStr('PK'),[rfReplaceAll]);
+  Result:=StringReplace(Result,'$U',QuotedStr('U'),[rfReplaceAll]);
+  Result:=StringReplace(Result,'$TABL',QuotedStr(aTabl),[rfReplaceAll]);
+  Result:=StringReplace(Result,'$COLV',QuotedStr(aColv),[rfReplaceAll]);
 end;
 
 class function TUniFieldX.ExpSQLInSQLSRV: string;

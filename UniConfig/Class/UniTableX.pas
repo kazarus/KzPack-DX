@@ -10,6 +10,8 @@ type
   private
     FTABLNAME : string;
     FPRIORITY : Integer;
+  public
+    FListCols : TStringList;
   protected
     procedure SetParameters;override;
     function  GetStrInsert:string;override;
@@ -30,6 +32,7 @@ type
   published
     property TABLNAME : string read FTABLNAME  write FTABLNAME;
     property PRIORITY : Integer read FPRIORITY  write FPRIORITY;
+    property ListCols : TStringList read FListCols write FListCols;
   public
     class function  ReadDS(aUniQuery:TUniQuery):TUniEngine;override;
     class procedure ReadDS(aUniQuery:TUniQuery;var Result:TUniEngine);override;
@@ -47,7 +50,7 @@ type
 implementation
 
 uses
-  Class_KzDebug;
+  Class_KzDebug,Class_KzUtils;
 
 
 procedure TUniTableX.SetParameters;
@@ -139,11 +142,12 @@ end;
 
 constructor TUniTableX.Create;
 begin
-
+  FListCols := nil;
 end;
 
 destructor TUniTableX.Destroy;
 begin
+  if FListCols <> nil then TKzUtils.TryFreeAndNil(FListCols);
 
   inherited;
 end;
