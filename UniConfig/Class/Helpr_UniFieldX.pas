@@ -10,6 +10,7 @@ type
   public
     function  ToScript:string;
     function  AddAlter(aProviderName:string=CONST_PROVIDER_SQLSRV):string;
+    function  ExpAlter(aProviderName:string=CONST_PROVIDER_SQLSRV):string;
     procedure ReadFrom(aUniConnection:TUniConnection);
   end;
 
@@ -30,6 +31,29 @@ begin
     end;
 
     sText := 'ALTER TABLE %s ADD %s %s NULL';
+    sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
+    cList.Add(sText);
+
+    Result := cList.Text;
+  finally
+    FreeAndNil(cList);
+  end;
+end;
+
+function TObjectEx.ExpAlter(aProviderName: string): string;
+var
+  sText:string;
+  cList:TStringList;
+begin
+  try
+    cList := TStringList.Create;
+
+    if aProviderName = CONST_PROVIDER_SQLSRV then
+    begin
+      cList.Add(Format('IF COL_LENGTH(%S,%S) != %D',[QuotedStr(self.TABLNAME),QuotedStr(self.COLVNAME),self.DATASIZE]));
+    end;
+
+    sText := 'ALTER TABLE %s ALTER COLUMN %s %s NULL';
     sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
     cList.Add(sText);
 
@@ -73,3 +97,6 @@ begin
 end;
 
 end.
+
+//if (select prec from syscolumns where name='DISPLAY' and id=OBJECT_ID('T_GAMS_PROJECT')) !=1
+//print 'false'
