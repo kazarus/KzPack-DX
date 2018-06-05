@@ -16,6 +16,9 @@ type
 
 implementation
 
+uses
+  Class_KzDebug;
+
 
 function TObjectEx.AddAlter(aProviderName:string): string;
 var
@@ -50,11 +53,28 @@ begin
 
     if aProviderName = CONST_PROVIDER_SQLSRV then
     begin
-      cList.Add(Format('IF COL_LENGTH(%S,%S) != %D',[QuotedStr(self.TABLNAME),QuotedStr(self.COLVNAME),self.DATASIZE]));
+      cList.Add(Format('IF ((SELECT PREC FROM SYSCOLUMNS WHERE 1=1 AND ID=OBJECT_ID(%S) AND NAME=%S) != %D) OR ((SELECT SCALE FROM SYSCOLUMNS WHERE 1=1 AND ID=OBJECT_ID(%S) AND NAME=%S) != %D)',[QuotedStr(self.TABLNAME),QuotedStr(self.COLVNAME),self.DATASIZE,QuotedStr(self.TABLNAME),QuotedStr(self.COLVNAME),self.DATASCAL]));
     end;
 
-    sText := 'ALTER TABLE %s ALTER COLUMN %s %s NULL';
-    sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
+    if (self.IsKey) or (self.IsRef) then
+    begin
+      if self.IsKey then
+      begin
+        cList.Add('--主键字段,需要手工更新');
+        sText := '--ALTER TABLE %s ALTER COLUMN %s %s NULL';
+        sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
+      end else
+      if self.IsRef then
+      begin
+        cList.Add('--外键字段,需要手工更新');
+        sText := '--ALTER TABLE %s ALTER COLUMN %s %s NULL';
+        sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
+      end;
+    end else
+    begin
+      sText := 'ALTER TABLE %s ALTER COLUMN %s %s NULL';
+      sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
+    end;
     cList.Add(sText);
 
     Result := cList.Text;
@@ -76,6 +96,7 @@ begin
     cSQL := self.ExpSQLInORACLE(self.TABLNAME,self.COLVNAME);
   end;
 
+  KzDebug.FileFmt('%S:%S',[self.ClassName,cSQL]);
   self.ReadDB(cSQL,aUniConnection,TUniEngine(self));
 end;
 

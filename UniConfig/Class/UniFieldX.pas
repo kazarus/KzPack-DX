@@ -23,6 +23,7 @@ type
   private
     FIsKey   : Boolean;
     FIsInc   : Boolean;
+    FIsRef   : Boolean;
   protected
     procedure SetParameters;override;
     function  GetStrInsert:string;override;
@@ -51,6 +52,7 @@ type
   published
     property  IsKey   :Boolean read FIsKey    write FIsKey;
     property  IsInc   :Boolean read FIsInc    write FIsInc;
+    property  IsRef   :Boolean read FIsRef    write FIsRef;
   public
     class function  ReadDS(aUniQuery: TUniQuery): TUniEngine; override;
     class procedure ReadDS(aUniQuery: TUniQuery; var Result: TUniEngine); override;
@@ -191,6 +193,10 @@ begin
       if FieldName = 'ISKEY' then
       begin
         IsKey     := Field.AsInteger = 1;
+      end else
+      if FieldName = 'ISREF' then
+      begin
+        IsRef     := Field.AsInteger = 1;
       end;
 
       IsInc := False;
@@ -563,6 +569,7 @@ begin
 
   Result.IsKey    := aUniFieldX.IsKey;
   Result.IsInc    := aUniFieldX.IsInc;
+  Result.IsRef    := aUniFieldX.IsRef;
 end;
 
 class function TUniFieldX.CopyIt(aUniEngine: TUniEngine): TUniEngine;
@@ -638,10 +645,12 @@ begin
   Result:='SELECT SYSCOLUMNS.COLID AS COLINDEX,SYSCOLUMNS.NAME AS COLVNAME,SYSCOLUMNS.XTYPE AS COLVTYPE,SYSTYPES.NAME AS TYPENAME,SYSCOLUMNS.PREC AS DATASIZE,SYSCOLUMNS.SCALE AS DATASCAL,'
          +'    CASE WHEN EXISTS(SELECT 1 FROM SYSINDEXKEYS WHERE ID =OBJECT_ID($TABL) AND COLID=SYSCOLUMNS.COLID'
          +'        AND INDID = (SELECT INDID FROM SYSINDEXES WHERE NAME =(SELECT NAME FROM SYSOBJECTS WHERE XTYPE=$PK AND PARENT_OBJ=OBJECT_ID($TABL)))) '
-         +'    THEN 1 ELSE 0 END AS ISKEY'
+         +'    THEN 1 ELSE 0 END AS ISKEY,'
+         +'    CASE WHEN SYSFOREIGNKEYS.CONSTID IS NULL THEN 0 ELSE 1 END AS ISREF'
          +'    FROM SYSCOLUMNS'
          +'    INNER JOIN SYSOBJECTS  ON SYSOBJECTS.ID=SYSCOLUMNS.ID'
-         +'     JOIN SYSTYPES   ON SYSCOLUMNS.XTYPE=SYSTYPES.XTYPE AND SYSTYPES.XUSERTYPE<256'
+         +'    INNER JOIN SYSTYPES ON SYSCOLUMNS.XTYPE=SYSTYPES.XTYPE AND SYSTYPES.XUSERTYPE<256'
+         +'    LEFT  JOIN SYSFOREIGNKEYS ON SYSFOREIGNKEYS.FKEYID=SYSCOLUMNS.ID AND SYSFOREIGNKEYS.FKEY=SYSCOLUMNS.COLID'
          +'    WHERE SYSOBJECTS.XTYPE=$U AND SYSOBJECTS.NAME=$TABL AND SYSCOLUMNS.NAME=$COLV'
          +'    ORDER BY SYSOBJECTS.ID,SYSCOLUMNS.COLID';
   Result:=StringReplace(Result,'$PK',QuotedStr('PK'),[rfReplaceAll]);
