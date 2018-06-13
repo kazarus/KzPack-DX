@@ -10,20 +10,20 @@ type
   TUniFieldX=class(TUniEngine)
   private
     FCOLINDEX: Integer;
-    FTABLNAME: string; //ETC:TBL_UNIT
-    FCOLVNAME: string; //ETC:UNIT_LINK
-    FCOLVTYPE: Integer;//ETC:167
-    FTYPENAME: string; //ETC:VARCHAR,from:type_name
-    FDATASIZE: Integer;//ETC:18,from:precision
-    FDATASCAL: Integer;//ETC:4,from:scale
+    FTABLNAME: string;  //ETC:TBL_UNIT
+    FCOLVNAME: string;  //ETC:UNIT_LINK
+    FCOLVTYPE: Integer; //ETC:167
+    FTYPENAME: string;  //ETC:VARCHAR,from:type_name
+    FDATASIZE: Integer; //ETC:18,from:precision
+    FDATASCAL: Integer; //ETC:4,from:scale
   private
-    FDATATYPE: string; //ETC:INTEGER,STRING
-    FOBJTNAME: string; //ETC:UNITLINK
-    FPROPNAME: string; //ETC:UNITLINK
+    FDATATYPE: string;  //ETC:INTEGER,STRING
+    FOBJTNAME: string;  //ETC:UNITLINK
+    FPROPNAME: string;  //ETC:UNITLINK
   private
-    FIsKey   : Boolean;
-    FIsInc   : Boolean;
-    FIsRef   : Boolean;
+    FIsKey   : Boolean; //*primarykey
+    FIsInc   : Boolean; //*auto_increment
+    FIsRef   : Boolean; //*foreignkey
   protected
     procedure SetParameters;override;
     function  GetStrInsert:string;override;
@@ -113,15 +113,19 @@ begin
   Result:='SELECT SYSCOLUMNS.COLID AS COLINDEX,SYSCOLUMNS.NAME AS COLVNAME,SYSCOLUMNS.XTYPE AS COLVTYPE,SYSTYPES.NAME AS TYPENAME,SYSCOLUMNS.PREC AS DATASIZE,SYSCOLUMNS.SCALE AS DATASCAL,'
          +'    CASE WHEN EXISTS(SELECT 1 FROM SYSINDEXKEYS WHERE ID =OBJECT_ID($TABL) AND COLID=SYSCOLUMNS.COLID'
          +'        AND INDID = (SELECT INDID FROM SYSINDEXES WHERE NAME =(SELECT NAME FROM SYSOBJECTS WHERE XTYPE=$PK AND PARENT_OBJ=OBJECT_ID($TABL)))) '
-         +'    THEN 1 ELSE 0 END AS ISKEY'
+         +'    THEN 1 ELSE 0 END AS ISKEY,'
+         +'    CASE WHEN EXISTS(SELECT 1 FROM SYSFOREIGNKEYS WHERE SYSFOREIGNKEYS.FKEYID=SYSCOLUMNS.ID AND SYSFOREIGNKEYS.FKEY=SYSCOLUMNS.COLID) THEN 1 ELSE 0 END AS ISREF,'
+         +'    CASE WHEN COLUMNPROPERTY(SYSCOLUMNS.ID,SYSCOLUMNS.NAME,$ISIDENTITY)=1 THEN 1 ELSE 0 END AS ISINC'
          +'    FROM SYSCOLUMNS'
          +'    INNER JOIN SYSOBJECTS  ON SYSOBJECTS.ID=SYSCOLUMNS.ID'
          +'    INNER JOIN SYSTYPES   ON SYSCOLUMNS.XTYPE=SYSTYPES.XTYPE AND SYSTYPES.XUSERTYPE<256'
          +'    WHERE SYSOBJECTS.XTYPE=$U AND SYSOBJECTS.NAME=$TABL'
          +'    ORDER BY SYSOBJECTS.ID,SYSCOLUMNS.COLID';
-  Result:=StringReplace(Result,'$PK',QuotedStr('PK'),[rfReplaceAll]);
-  Result:=StringReplace(Result,'$U',QuotedStr('U'),[rfReplaceAll]);
-  Result:=StringReplace(Result,'$TABL',QuotedStr(aTabl),[rfReplaceAll]);
+
+  Result := StringReplace(Result, '$PK', QuotedStr('PK'), [rfReplaceAll]);
+  Result := StringReplace(Result, '$U', QuotedStr('U'), [rfReplaceAll]);
+  Result := StringReplace(Result, '$TABL', QuotedStr(aTabl), [rfReplaceAll]);
+  Result := StringReplace(Result, '$ISIDENTITY', QuotedStr('ISIDENTITY'), [rfReplaceAll]);
 end;
 
 function TUniFieldX.GetStrDelete: string;
@@ -197,9 +201,11 @@ begin
       if FieldName = 'ISREF' then
       begin
         IsRef     := Field.AsInteger = 1;
+      end else
+      if FieldName = 'ISINC' then
+      begin
+        IsInc     := Field.AsInteger = 1;
       end;
-
-      IsInc := False;
     end
   end;
 end;
@@ -646,17 +652,19 @@ begin
          +'    CASE WHEN EXISTS(SELECT 1 FROM SYSINDEXKEYS WHERE ID =OBJECT_ID($TABL) AND COLID=SYSCOLUMNS.COLID'
          +'        AND INDID = (SELECT INDID FROM SYSINDEXES WHERE NAME =(SELECT NAME FROM SYSOBJECTS WHERE XTYPE=$PK AND PARENT_OBJ=OBJECT_ID($TABL)))) '
          +'    THEN 1 ELSE 0 END AS ISKEY,'
-         +'    CASE WHEN SYSFOREIGNKEYS.CONSTID IS NULL THEN 0 ELSE 1 END AS ISREF'
+         +'    CASE WHEN EXISTS(SELECT 1 FROM SYSFOREIGNKEYS WHERE SYSFOREIGNKEYS.FKEYID=SYSCOLUMNS.ID AND SYSFOREIGNKEYS.FKEY=SYSCOLUMNS.COLID) THEN 1 ELSE 0 END AS ISREF,'
+         +'    CASE WHEN COLUMNPROPERTY(SYSCOLUMNS.ID,SYSCOLUMNS.NAME,$ISIDENTITY)=1 THEN 1 ELSE 0 END AS ISINC'
          +'    FROM SYSCOLUMNS'
          +'    INNER JOIN SYSOBJECTS  ON SYSOBJECTS.ID=SYSCOLUMNS.ID'
          +'    INNER JOIN SYSTYPES ON SYSCOLUMNS.XTYPE=SYSTYPES.XTYPE AND SYSTYPES.XUSERTYPE<256'
-         +'    LEFT  JOIN SYSFOREIGNKEYS ON SYSFOREIGNKEYS.FKEYID=SYSCOLUMNS.ID AND SYSFOREIGNKEYS.FKEY=SYSCOLUMNS.COLID'
          +'    WHERE SYSOBJECTS.XTYPE=$U AND SYSOBJECTS.NAME=$TABL AND SYSCOLUMNS.NAME=$COLV'
          +'    ORDER BY SYSOBJECTS.ID,SYSCOLUMNS.COLID';
-  Result:=StringReplace(Result,'$PK',QuotedStr('PK'),[rfReplaceAll]);
-  Result:=StringReplace(Result,'$U',QuotedStr('U'),[rfReplaceAll]);
-  Result:=StringReplace(Result,'$TABL',QuotedStr(aTabl),[rfReplaceAll]);
-  Result:=StringReplace(Result,'$COLV',QuotedStr(aColv),[rfReplaceAll]);
+
+  Result := StringReplace(Result, '$PK', QuotedStr('PK'), [rfReplaceAll]);
+  Result := StringReplace(Result, '$U', QuotedStr('U'), [rfReplaceAll]);
+  Result := StringReplace(Result, '$TABL', QuotedStr(aTabl), [rfReplaceAll]);
+  Result := StringReplace(Result, '$COLV', QuotedStr(aColv), [rfReplaceAll]);
+  Result := StringReplace(Result, '$ISIDENTITY', QuotedStr('ISIDENTITY'), [rfReplaceAll]);
 end;
 
 class function TUniFieldX.ExpSQLInSQLSRV: string;

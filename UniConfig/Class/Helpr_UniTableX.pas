@@ -14,7 +14,7 @@ type
 
 implementation
 uses
-  Class_KzUtils,Helpr_UniFieldX;
+  Class_KzUtils, Class_KzDebug, Helpr_UniFieldX;
 
 procedure TObjectEx.ReadFrom(aUniConnection: TUniConnection);
 var
@@ -35,6 +35,7 @@ begin
     cSQL := TUniFieldX.ExpSQLInORACLE(Self.TABLNAME);
   end;
 
+  KzDebug.FileFmt('%S:%S',[self.ClassName,cSQL]);
   TUniFieldX.ListDB(cSQL,aUniConnection,self.FListCols);
 end;
 
@@ -66,6 +67,11 @@ begin
         begin
           sText := 'NOT NULL';
         end;
+        if cField.IsInc then
+        begin
+          sText := 'NOT NULL IDENTITY(1,1)';
+        end;
+
         if I = self.FListCols.Count-1 then
         begin
           cList.Add(Format('%S %S %S' ,[cField.COLVNAME,cField.ToScript,sText]));
