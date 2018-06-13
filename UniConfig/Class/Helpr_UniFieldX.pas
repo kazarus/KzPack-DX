@@ -33,9 +33,12 @@ begin
       cList.Add(Format('IF COL_LENGTH(%S,%S) IS NULL',[QuotedStr(self.TABLNAME),QuotedStr(self.COLVNAME)]));
     end;
 
-    sText := 'ALTER TABLE %s ADD %s %s NULL';
+    cList.Add('BEGIN');
+    sText := 'ALTER TABLE %s ADD %s %s NULL;';
     sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
     cList.Add(sText);
+    cList.Add(Format('PRINT %s',[QuotedStr(Format('添加字段:%S.%S',[self.TABLNAME,self.COLVNAME]))]));
+    cList.Add('END;');
 
     Result := cList.Text;
   finally
@@ -56,6 +59,8 @@ begin
       cList.Add(Format('IF ((SELECT PREC FROM SYSCOLUMNS WHERE 1=1 AND ID=OBJECT_ID(%S) AND NAME=%S) != %D) OR ((SELECT SCALE FROM SYSCOLUMNS WHERE 1=1 AND ID=OBJECT_ID(%S) AND NAME=%S) != %D)',[QuotedStr(self.TABLNAME),QuotedStr(self.COLVNAME),self.DATASIZE,QuotedStr(self.TABLNAME),QuotedStr(self.COLVNAME),self.DATASCAL]));
     end;
 
+    cList.Add('BEGIN');
+
     if (self.IsKey) or (self.IsRef) then
     begin
       if self.IsKey then
@@ -63,19 +68,27 @@ begin
         cList.Add('--主键字段,需要手工更新');
         sText := '--ALTER TABLE %s ALTER COLUMN %s %s NULL';
         sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
+        cList.Add(sText);
+        cList.Add(Format('PRINT %s',[QuotedStr(Format('主键字段,需要手工更新:%S.%S',[self.TABLNAME,self.COLVNAME]))]));
       end else
       if self.IsRef then
       begin
         cList.Add('--外键字段,需要手工更新');
         sText := '--ALTER TABLE %s ALTER COLUMN %s %s NULL';
         sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
+        cList.Add(sText);
+        cList.Add(Format('PRINT %s',[QuotedStr(Format('外键字段,需要手工更新:%S.%S',[self.TABLNAME,self.COLVNAME]))]));
       end;
     end else
     begin
       sText := 'ALTER TABLE %s ALTER COLUMN %s %s NULL';
       sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
+
+      cList.Add(sText);
+      cList.Add(Format('PRINT %s',[QuotedStr(Format('修改字段:%S.%S',[self.TABLNAME,self.COLVNAME]))]));
     end;
-    cList.Add(sText);
+
+    cList.Add('END');
 
     Result := cList.Text;
   finally
