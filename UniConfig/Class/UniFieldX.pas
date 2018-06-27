@@ -370,7 +370,7 @@ begin
   end else
   if AValue='NUMERIC' then
   begin
-    Result:='Integer';
+    Result:='Extended';
   end else
   if AValue='NTEXT' then
   begin
