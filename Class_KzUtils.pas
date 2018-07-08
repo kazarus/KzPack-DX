@@ -20,13 +20,9 @@ unit Class_KzUtils;
 
 interface
 uses
-  Classes,SysUtils,Variants,StrUtils,DateUtils,IniFiles,Registry,
-  {$IFDEF MSWINDOWS} Windows,Vcl.Forms,TLHelp32,Vcl.Graphics,{$ENDIF}
-  {$IFDEF ENABLE_REGEX}
-       PerlRegEx, pcre
-  {$ELSE}
-       RegularExpressionsCore
-  {$IFEND};
+  Classes, SysUtils, Variants, StrUtils, DateUtils, IniFiles, Registry,
+  {$IFDEF MSWINDOWS} Windows, Vcl.Forms, TLHelp32, Vcl.Graphics, {$ENDIF}
+  RegularExpressionsCore;
 
 type
   TKzUtils=class(TObject)
@@ -82,7 +78,10 @@ type
     class function  DateToInt(aValue:TDateTime; short:Boolean = False):Integer;
     class function  DateToFloat(aValue:TDateTime):Extended;
     class function  StrToDateX(aValue:string):Integer;
+
+    class function  IntToDateS(aValue:Integer):TDateTime;
     class function  IntToDateX(aValue:Integer):TDateTime;
+
     class function  FloatToDate(aValue:Extended):TDateTime;
     class function  FloatToTime(aValue:Extended):TDateTime;
 
@@ -821,23 +820,53 @@ begin
   end;  
 end;
 
-class function TKzUtils.IntToDateX(aValue:Integer):TDateTime;
+class function TKzUtils.IntToDateS(aValue: Integer): TDateTime;
 var
-  TMPA:string;
-  TMPB:string;
+  cText: string;
+  xText: string;
 begin
   Result:=Unassigned;
-  if aValue=0 then Exit;
-  TMPA:=IntToStr(aValue);
-  if Length(TMPA)<>8 then Exit;
-  TMPB:=Format('%s-%s-%s',[Copy(TMPA,1,4),Copy(TMPA,5,2),Copy(TMPA,7,2)]);
 
+  if aValue = 0 then Exit;
+  cText := IntToStr(aValue);
+  if Length(cText) <> 6 then
+  begin
+    raise Exception.Create('error:this method need a value with 6 digit.');
+  end;
+  xText := Format('%s-%s-01', [Copy(cText, 1, 4), Copy(cText, 5, 2)]);
 
   try
     //#DateSeparator:='-';
     FormatSettings.DateSeparator:='-';
+    Result:=StrToDate(xText);
+  except
+    on E:Exception do
+    begin
+      raise Exception.Create(E.Message);
+    end;
+  end;
+end;
 
-    Result:=StrToDate(TMPB);
+class function TKzUtils.IntToDateX(aValue:Integer):TDateTime;
+var
+  cText: string;
+  xText: string;
+begin
+  Result:=Unassigned;
+
+  if aValue = 0 then Exit;
+  cText := IntToStr(aValue);
+  if Length(cText) <> 8 then
+  begin
+    raise Exception.Create('error:this method need a value with 8 digit.');
+  end;
+
+  xText := Format('%s-%s-%s', [Copy(cText, 1, 4), Copy(cText, 5, 2), Copy(cText, 7, 2)]);
+
+  try
+    //#DateSeparator:='-';
+    FormatSettings.DateSeparator:='-';
+    Result:=StrToDate(xText);
   except
     on E:Exception do
     begin
