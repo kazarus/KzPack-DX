@@ -9,7 +9,7 @@ unit Class_KzUtils;
 //YXC_2012_10_31_15_25_47_add_inputqueryex
 //YXC_2012_11_28_15_45_59_add_comparetextlike
 //YXC_2012_12_03_20_34_31_add_endtask
-//YXC_2012_12_28_10_57_20_modify_tryformatcode.aboolprev->tryformatcode.ABoolBack
+//YXC_2012_12_28_10_57_20_modify_tryformatcode.aBoolprev->tryformatcode.aBoolBack
 //YXC_2013_01_05_18_05_42_modify_double->extended
 //YXC_2013_08_14_11_10_31_add_numbinrect
 //YXC_2013_09_06_14_00_26_modify_floattotext_add_aformat:paramter
@@ -33,12 +33,12 @@ type
   public
     //TLHelp32
     {$IFDEF MSWINDOWS}
-    class function  EndTask(AExeName:string):Integer;
+    class function  EndTask(aExeName:string):Integer;
     {$ENDIF}
     //System
-    class function  GetOrd(AChar:Char):Integer;
-    class function  GetChr(AIdex:Integer):string;
-    class function  IfThen(ABool:Boolean;ATrue,AFail:Variant):Variant;
+    class function  GetOrd(aChar:Char):Integer;
+    class function  GetChr(aIndx:Integer):string;
+    class function  IfThen(aBool:Boolean;aTrue,aFail:Variant):Variant;
     class function  GetGUID:string;
   private
     class function  GetShellFolders(strDir: string): string;
@@ -79,7 +79,7 @@ type
     class procedure TryFreeAndNil(var AObject);
     class procedure JustCleanList(var AObject);
 
-    class function  DateToInt(aValue:TDateTime):Integer;
+    class function  DateToInt(aValue:TDateTime; short:Boolean = False):Integer;
     class function  DateToFloat(aValue:TDateTime):Extended;
     class function  StrToDateX(aValue:string):Integer;
     class function  IntToDateX(aValue:Integer):TDateTime;
@@ -112,7 +112,7 @@ type
     class function  TryFormatCode(aValue,ALength:Integer;const AText:string):string;overload;
     class function  FormatCode(aValue,ALength:Integer):string;overload;
 
-    class function  TryFormatCode(ALength,ABoolBack:Integer;const AStrSub,ASource:string):string;overload;
+    class function  TryFormatCode(ALength,aBoolBack:Integer;const AStrSub,ASource:string):string;overload;
     class function  FormatCode(aValue:string;ALength:Integer;AStrSub:string):string;overload;
   public
     //PerlRegEx
@@ -602,7 +602,7 @@ begin
   end;
 end;    
 
-class function TKzUtils.TryFormatCode(ALength, ABoolBack: Integer;
+class function TKzUtils.TryFormatCode(ALength, aBoolBack: Integer;
   const AStrSub, ASource: string): string;
 var
   ACount:Integer;
@@ -615,11 +615,11 @@ begin
 
   ACount:=ALength - Length(ASource);
 
-  if ABoolBack=0 then
+  if aBoolBack=0 then
   begin
     Result:=DupeString(AStrSub,ACount)+ASource;
   end else
-  if ABoolBack=1 then
+  if aBoolBack=1 then
   begin
     Result:=ASource+DupeString(AStrSub,ACount);
   end;
@@ -688,7 +688,7 @@ begin
 end;
 
 {$IFDEF MSWINDOWS}
-class function TKzUtils.EndTask(AExeName: string): Integer;
+class function TKzUtils.EndTask(aExeName: string): Integer;
 const
   PROCESS_TERMINATE = $0001;
 var
@@ -704,8 +704,8 @@ begin
   while Integer(ContinueLoop) <> 0 do
   begin
     if ((UpperCase(ExtractFileName(FProcessEntry32.szExeFile)) =
-      UpperCase(AExeName)) or (UpperCase(FProcessEntry32.szExeFile) =
-      UpperCase(AExeName))) then
+      UpperCase(aExeName)) or (UpperCase(FProcessEntry32.szExeFile) =
+      UpperCase(aExeName))) then
     Result := Integer(TerminateProcess(
     OpenProcess(PROCESS_TERMINATE,
     BOOL(0),
@@ -735,9 +735,9 @@ begin
   end;  
 end;
 
-class function TKzUtils.GetOrd(AChar: Char): Integer;
+class function TKzUtils.GetOrd(aChar: Char): Integer;
 begin
-  Result:=Ord(UpCase(AChar))-64;
+  Result:=Ord(UpCase(aChar))-64;
 end;
 
 class function TKzUtils.getPath(dirName: string): string;
@@ -797,11 +797,11 @@ begin
   end;
 end;
 
-class function TKzUtils.IfThen(ABool: Boolean; ATrue,
-  AFail: Variant): Variant;
+class function TKzUtils.IfThen(aBool: Boolean; aTrue,
+  aFail: Variant): Variant;
 begin
   Result:=AFail;
-  if ABool then
+  if aBool then
   begin
     Result:=ATrue;
   end;
@@ -1209,12 +1209,12 @@ begin
   end;
 end;
 
-class function TKzUtils.GetChr(AIdex: Integer): string;
+class function TKzUtils.GetChr(aIndx: Integer): string;
 var
   I,X,Y:Integer;
   R,S  :string;
 begin
-  I:=AIdex;
+  I:=aIndx;
   X:=I div 26;
   Y:=I mod 26;
 
@@ -1305,9 +1305,15 @@ begin
   Result:=GUIDToString(GUID);
 end;
 
-class function TKzUtils.DateToInt(aValue: TDateTime): Integer;
+class function TKzUtils.DateToInt(aValue: TDateTime;short:Boolean): Integer;
 begin
-  Result:=StrToIntDef(FormatDateTime('YYYYMMDD',aValue),18991230);
+  if short then
+  begin
+    Result:=StrToIntDef(FormatDateTime('YYYYMM',aValue),189912);
+  end else
+  begin
+    Result:=StrToIntDef(FormatDateTime('YYYYMMDD',aValue),18991230);
+  end;
 end;
 
 
