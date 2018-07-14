@@ -112,18 +112,18 @@ class function TUniFieldX.ExpSqlInSQLSRV(aTabl: string): string;
 begin
   Result:='SELECT SYSCOLUMNS.COLID AS COLINDEX,SYSCOLUMNS.NAME AS COLVNAME,SYSCOLUMNS.XTYPE AS COLVTYPE,SYSTYPES.NAME AS TYPENAME,SYSCOLUMNS.PREC AS DATASIZE,SYSCOLUMNS.SCALE AS DATASCAL,'
          +'    CASE WHEN EXISTS(SELECT 1 FROM SYSINDEXKEYS WHERE ID =OBJECT_ID($TABL) AND COLID=SYSCOLUMNS.COLID'
-         +'        AND INDID = (SELECT INDID FROM SYSINDEXES WHERE NAME =(SELECT NAME FROM SYSOBJECTS WHERE XTYPE=$PK AND PARENT_OBJ=OBJECT_ID($TABL)))) '
+         +'        AND INDID = (SELECT INDID FROM SYSINDEXES WHERE 1=1 AND NAME =(SELECT NAME FROM SYSOBJECTS WHERE  1=1  AND PARENT_OBJ=OBJECT_ID($TABL)))) '//@XTYPE=$PK
          +'    THEN 1 ELSE 0 END AS ISKEY,'
          +'    CASE WHEN EXISTS(SELECT 1 FROM SYSFOREIGNKEYS WHERE SYSFOREIGNKEYS.FKEYID=SYSCOLUMNS.ID AND SYSFOREIGNKEYS.FKEY=SYSCOLUMNS.COLID) THEN 1 ELSE 0 END AS ISREF,'
          +'    CASE WHEN COLUMNPROPERTY(SYSCOLUMNS.ID,SYSCOLUMNS.NAME,$ISIDENTITY)=1 THEN 1 ELSE 0 END AS ISINC'
          +'    FROM SYSCOLUMNS'
          +'    INNER JOIN SYSOBJECTS  ON SYSOBJECTS.ID=SYSCOLUMNS.ID'
-         +'    INNER JOIN SYSTYPES   ON SYSCOLUMNS.XTYPE=SYSTYPES.XTYPE AND SYSTYPES.XUSERTYPE<256'
-         +'    WHERE SYSOBJECTS.XTYPE=$U AND SYSOBJECTS.NAME=$TABL'
+         +'    INNER JOIN SYSTYPES    ON SYSCOLUMNS.XTYPE=SYSTYPES.XTYPE AND SYSTYPES.XUSERTYPE<256'
+         +'    WHERE 1=1 AND SYSOBJECTS.NAME=$TABL'//@SYSOBJECTS.XTYPE=$U
          +'    ORDER BY SYSOBJECTS.ID,SYSCOLUMNS.COLID';
 
   Result := StringReplace(Result, '$PK', QuotedStr('PK'), [rfReplaceAll]);
-  Result := StringReplace(Result, '$U', QuotedStr('U'), [rfReplaceAll]);
+  //@Result := StringReplace(Result, '$U', QuotedStr('U'), [rfReplaceAll]);
   Result := StringReplace(Result, '$TABL', QuotedStr(aTabl), [rfReplaceAll]);
   Result := StringReplace(Result, '$ISIDENTITY', QuotedStr('ISIDENTITY'), [rfReplaceAll]);
 end;
@@ -225,7 +225,7 @@ end;
 class function TUniFieldX.GetListCols(aTabl: string;
   AUniConnection: TUniConnection): TStringList;
 var
-  SQLA:string;  
+  cSQL:string;
 begin
   if Pos('[',aTabl)>0 then
   begin
@@ -243,18 +243,18 @@ begin
   end else
   if AUniConnection.ProviderName=CONST_PROVIDER_SQLSRV then
   begin
-    SQLA:=ExpSqlInSQLSRV(aTabl);
+    cSQL := ExpSqlInSQLSRV(aTabl);
   end else
   if AUniConnection.ProviderName=CONST_PROVIDER_ORACLE then
   begin
-    SQLA:=ExpSqlInORACLE(aTabl);
+    cSQL := ExpSqlInORACLE(aTabl);
   end else
   if AUniConnection.ProviderName=CONST_PROVIDER_POSTGR then
   begin
-    SQLA:=ExpSQLInPOSTGR(LowerCase(aTabl));
+    cSQL := ExpSQLInPOSTGR(LowerCase(aTabl));
   end;
 
-  Result:=ListDB(SQLA,AUniConnection,False);
+  Result:=ListDB(cSQL,AUniConnection,False);
 end;
 
 function TUniFieldX.GetAsValue: string;
