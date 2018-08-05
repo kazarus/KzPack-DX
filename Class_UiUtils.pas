@@ -46,10 +46,11 @@ type
     class function  GridCheck(aGrid:TAdvStringGrid;ACol:Integer=1;aRowStart:Integer=1;aRowEndEd:Integer=-1):TStringList;
     class procedure CellCheck(aGrid:TAdvStringGrid;AValue:Boolean;ACol:Integer=1;aRowStart:Integer=1;aRowEndEd:Integer=-1);
     class procedure CellClick(Sender: TObject; ARow, ACol: Integer; aCheckBoxCol: Integer = 1);
-
     class procedure WordWarps(aGrid: TAdvStringGrid; aStartCol: Integer = 0; aStartRow: Integer = 1);
 
     class procedure SelectArea(aGrid:TAdvStringGrid;aCol:Integer=1;aValue:Boolean=True);
+
+    class procedure DblClickCell(aGrid: TAdvStringGrid; aRow: Integer);
   public
     {begin
       if Item.Checked then
@@ -195,6 +196,28 @@ begin
     else
       RowCount:=ADefaultRowCount;
 
+    EndUpdate;
+  end;
+end;
+
+class procedure TUiUtils.DblClickCell(aGrid: TAdvStringGrid; aRow: Integer);
+var
+  I:Integer;
+begin
+  with aGrid do
+  begin
+    if ARow =0 then Exit;
+
+    BeginUpdate;
+    TUiUtils.CellCheck(aGrid,False);
+    for I:=1 to RowCount-1 do
+    begin
+      RowColor[I] := clWhite;
+      RowFontColor[I] := clBlack;
+    end;
+    TUiUtils.CellCheck(aGrid,True,1,ARow,ARow);
+    RowColor[ARow] := SelectionColor;
+    RowFontColor[ARow] := clWhite;
     EndUpdate;
   end;
 end;
