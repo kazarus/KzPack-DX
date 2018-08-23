@@ -46,12 +46,11 @@ type
     procedure Edit_DataBaseAltBtnClick(Sender: TObject);
     procedure Edit_UnicPswdExit(Sender: TObject);
   private
-    FRealCnfg:TUniConfig;
-    FRealPswd:string;
-    FEditMode:TDialogEditUniConfigEditMode;
-
-    //YXC_2014_04_28_10_43_31
-    FConnectionMark:string;    
+    FRealCnfg: TUniConfig;        //*
+    FRealPswd: string;
+    FEditMode: TDialogEditUniConfigEditMode;
+    FLoadLast: Boolean;          //是否记忆上次配置
+    FConnectionMark:string;
   protected
     procedure SetInitialize;override;
     procedure SetComboItems;override;
@@ -61,53 +60,56 @@ type
   public
     procedure ViewFilePath;
     procedure ViewDataBase(AUnixType:string='');
-    function  CheckLicit:Boolean; 
+    function  ChkValid:Boolean;
   public
     procedure InsertDB;
     procedure UpdateDB;
     procedure ReadCnfg;
     procedure InitCnfg;
-    procedure ImptCnfg(var ACnfg:TUniConfig);
+    procedure ImptCnfg(var aCnfg:TUniConfig);
   end;
 
 var
   DialogEditUniConfig: TDialogEditUniConfig;
 
-function ViewEditCnfg(AEditMode:TDialogEditUniConfigEditMode;ACnfg:TUniConfig;AConnectionMark:string=''):Integer;overload;
-function ViewCnfgCnfg(AEditMode:TDialogEditUniConfigEditMode;var ACnfg:TUniConfig;AConnectionMark:string=''):Integer;overload;
+function ViewEditCnfg(aEditMode: TDialogEditUniConfigEditMode; aCnfg: TUniConfig; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
+function ViewCnfgCnfg(aEditMode: TDialogEditUniConfigEditMode; var aCnfg: TUniConfig; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
 
 implementation
+uses
+  Class_KzUtils,Helpr_UniEngine;
 
 
 {$R *.dfm}
 
 
-function ViewEditCnfg(AEditMode:TDialogEditUniConfigEditMode;ACnfg:TUniConfig;AConnectionMark:string):Integer;
+function ViewEditCnfg(aEditMode: TDialogEditUniConfigEditMode; aCnfg: TUniConfig; aConnectionMark: string; aLoadLast: Boolean): Integer;
 begin
   try
-    DialogEditUniConfig:=TDialogEditUniConfig.Create(nil);
-    DialogEditUniConfig.FEditMode:=AEditMode;
-    DialogEditUniConfig.FRealCnfg:=ACnfg;
-    DialogEditUniConfig.FConnectionMark:=AConnectionMark;
-    DialogEditUniConfig.BorderStyle:=bsSizeable;
-    Result:=DialogEditUniConfig.ShowModal;
+    DialogEditUniConfig := TDialogEditUniConfig.Create(nil);
+    DialogEditUniConfig.FEditMode := aEditMode;
+    DialogEditUniConfig.FRealCnfg := aCnfg;
+    DialogEditUniConfig.FLoadLast := aLoadLast;
+    DialogEditUniConfig.FConnectionMark := aConnectionMark;
+    DialogEditUniConfig.BorderStyle := bsSizeable;
+    Result := DialogEditUniConfig.ShowModal;
   finally
     FreeAndNil(DialogEditUniConfig);
   end;
 end;
 
-function ViewCnfgCnfg(AEditMode:TDialogEditUniConfigEditMode;var ACnfg:TUniConfig;AConnectionMark:string):Integer;overload;
+function ViewCnfgCnfg(aEditMode: TDialogEditUniConfigEditMode; var aCnfg: TUniConfig; aConnectionMark: string; aLoadLast: Boolean): Integer; overload;
 begin
   try
     DialogEditUniConfig:=TDialogEditUniConfig.Create(nil);
     DialogEditUniConfig.FEditMode:=deuemCnfg;
-    DialogEditUniConfig.FRealCnfg:=ACnfg;
-    DialogEditUniConfig.FConnectionMark:=AConnectionMark;
+    DialogEditUniConfig.FRealCnfg:=aCnfg;
+    DialogEditUniConfig.FConnectionMark:=aConnectionMark;
         
     Result:=DialogEditUniConfig.ShowModal;
     if Result=Mrok then
     begin
-      DialogEditUniConfig.ImptCnfg(ACnfg);
+      DialogEditUniConfig.ImptCnfg(aCnfg);
     end;  
   finally
     FreeAndNil(DialogEditUniConfig);
@@ -122,7 +124,7 @@ end;
 
 procedure TDialogEditUniConfig.Btnx_MrokClick(Sender: TObject);
 begin
-  if not CheckLicit then Exit;
+  if not ChkValid then Exit;
   
   case FEditMode of
     deuemAddv:
@@ -144,24 +146,24 @@ end;
 
 procedure TDialogEditUniConfig.InsertDB;
 var
-  UniConnct:TUniConnection;
+  cUniC: TUniConnection;
 begin
   try
-    UniConnct:=UniConnctEx.GetConnection(FConnectionMark);
+    cUniC:=UniConnctEx.GetConnection(FConnectionMark);
 
     if FRealCnfg=nil then
     begin
       FRealCnfg:=TUniConfig.Create;
     end;
 
-    FRealCnfg.UnicIndx:=FRealCnfg.GetNextIdex(UniConnct);
+    FRealCnfg.UnicIndx:=FRealCnfg.GetNextIdex(cUniC);
     FRealCnfg.UnicType:=Comb_Type.Text;
     FRealCnfg.UnicUser:=Edit_UnicUser.Text;
     FRealCnfg.UnicPswd:=Edit_UnicPswd.Text;
     FRealCnfg.UnicSrvr:=Edit_UnicSrvr.Text;
 
     //YXC_2012_12_04_09_36_39_<
-    if (FRealCnfg.UnicType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnicType=CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnicType=CONST_PROVIDER_POSTGR) then
+    if (FRealCnfg.UnicType = CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnicType = CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnicType = CONST_PROVIDER_POSTGR) then
     begin
       FRealCnfg.DataBase:=Comb_DataBase.Text;
     end else
@@ -191,9 +193,17 @@ begin
       UniConnctEx.OnUniConfigCustomEncryptEvent(FRealCnfg,FRealCnfg);
     end;
 
-    FRealCnfg.InsertDB(UniConnct);
+    FRealCnfg.InsertDB(cUniC);
+
+    if FLoadLast then
+    begin
+      if FRealCnfg <> nil then
+      begin
+        FRealCnfg.ToFILE(TKzUtils.ExePath+'config-default.json');
+      end;
+    end;
   finally
-    FreeAndNil(UniConnct);
+    FreeAndNil(cUniC);
     FreeAndNil(FRealCnfg);
   end;
 end;
@@ -222,6 +232,18 @@ end;
 procedure TDialogEditUniConfig.SetInitialize;
 begin
   inherited;
+
+  if FLoadLast then
+  begin
+    if FRealCnfg = nil then
+    begin
+      FRealCnfg := TUniConfig.Create;
+    end;
+    if FileExists(TKzUtils.ExePath+'config-default.json') then
+    begin
+      FRealCnfg.InFILE(TKzUtils.ExePath+'config-default.json');
+    end;
+  end;
 
   InitCnfg;
 end;
@@ -308,43 +330,42 @@ end;
 
 procedure TDialogEditUniConfig.InitCnfg;
 begin
-  if FRealCnfg<>nil then
+  if FRealCnfg = nil then Exit;
+
+  Comb_Type.ItemIndex:=Comb_Type.Items.IndexOf(FRealCnfg.UnicType);
+  Comb_TypeCloseUp(Comb_Type);
+
+  Edit_UnicYear.Text:=IntToStr(FRealCnfg.UnicYear);
+  Edit_UnicUser.Text:=FRealCnfg.UnicUser;
+
+  if Assigned(UniConnctEx.OnUniConfigCustomDecryptEvent) then
   begin
-    Comb_Type.ItemIndex:=Comb_Type.Items.IndexOf(FRealCnfg.UnicType);
-    Comb_TypeCloseUp(Comb_Type);
+    UniConnctEx.OnUniConfigCustomDecryptEvent(FRealCnfg,FRealCnfg);
+  end;
+  FRealPswd:=FRealCnfg.UnicPswd;
+  Edit_UnicPswd.Text:=FRealPswd;
 
-    Edit_UnicYear.Text:=IntToStr(FRealCnfg.UnicYear);
-    Edit_UnicUser.Text:=FRealCnfg.UnicUser;
+  Edit_UnicSrvr.Text:=FRealCnfg.UnicSrvr;
 
-    if Assigned(UniConnctEx.OnUniConfigCustomDecryptEvent) then
-    begin
-      UniConnctEx.OnUniConfigCustomDecryptEvent(FRealCnfg,FRealCnfg);
-    end;
-    FRealPswd:=FRealCnfg.UnicPswd;
-    Edit_UnicPswd.Text:=FRealPswd;
+  //YXC_2012_12_04_09_39_28_<
+  if FRealCnfg.UnicType=UniConfig.CONST_PROVIDER_SQLSRV then
+  begin
+    Comb_DataBase.Text:=FRealCnfg.DataBase;
+  end else
+  begin
+    Edit_DataBase.Text:=FRealCnfg.DataBase;
+  end;
+  //YXC_2012_12_04_09_39_28_>
 
-    Edit_UnicSrvr.Text:=FRealCnfg.UnicSrvr;
-
-    //YXC_2012_12_04_09_39_28_<
-    if FRealCnfg.UnicType=UniConfig.CONST_PROVIDER_SQLSRV then
-    begin
-      Comb_DataBase.Text:=FRealCnfg.DataBase;
-    end else
-    begin
-      Edit_DataBase.Text:=FRealCnfg.DataBase;
-    end;    
-    //YXC_2012_12_04_09_39_28_>
-
-    Edit_UnicPort.Text:=FRealCnfg.UnicPort;
+  Edit_UnicPort.Text:=FRealCnfg.UnicPort;
     
-    Comb_Mark.ItemIndex:=Comb_Mark.Items.IndexOf(FRealCnfg.UnicMark);
+  Comb_Mark.ItemIndex:=Comb_Mark.Items.IndexOf(FRealCnfg.UnicMark);
 
-    ChkBox_Direct.Checked:=False;
-    if FRealCnfg.IsDirect=1 then
-    begin
-      ChkBox_Direct.Checked:=True;
-    end;  
-  end;  
+  ChkBox_Direct.Checked:=False;
+  if FRealCnfg.IsDirect=1 then
+  begin
+    ChkBox_Direct.Checked:=True;
+  end;
 end;
 
 procedure TDialogEditUniConfig.Edit_DataBaseDblClick(Sender: TObject);
@@ -391,7 +412,7 @@ var
   CnfgA:TUniConfig;
 begin
   inherited;
-  if not CheckLicit then Exit;
+  if not ChkValid then Exit;
     
   try
     CnfgA:=TUniConfig.Create;
@@ -505,60 +526,63 @@ begin
   end;}
 end;
 
-procedure TDialogEditUniConfig.ImptCnfg(var ACnfg: TUniConfig);
+procedure TDialogEditUniConfig.ImptCnfg(var aCnfg: TUniConfig);
 begin
-  if ACnfg    =nil then Exit;
+  if aCnfg    =nil then Exit;
   if FRealCnfg=nil then Exit;
 
-  TUniConfig.CopyIt(FRealCnfg,ACnfg);
+  TUniConfig.CopyIt(FRealCnfg,aCnfg);
 end;
 
 procedure TDialogEditUniConfig.ReadCnfg;
 begin
-  if FRealCnfg=nil then
+  if FRealCnfg = nil then
   begin
-    FRealCnfg:=TUniConfig.Create;
+    FRealCnfg := TUniConfig.Create;
   end;
-  FRealCnfg.UnicIndx:=0;
-  
-  FRealCnfg.UnicType:=Comb_Type.Text;
-  FRealCnfg.UnicUser:=Edit_UnicUser.Text;
-  FRealCnfg.UnicPswd:=Edit_UnicPswd.Text;
-  FRealCnfg.UnicSrvr:=Edit_UnicSrvr.Text;
+  FRealCnfg.UnicIndx := 0;
+
+  FRealCnfg.UnicType := Comb_Type.Text;
+  FRealCnfg.UnicUser := Edit_UnicUser.Text;
+  FRealCnfg.UnicPswd := Edit_UnicPswd.Text;
+  FRealCnfg.UnicSrvr := Edit_UnicSrvr.Text;
 
   //YXC_2012_12_04_09_36_39_<
-  if (FRealCnfg.UnicType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnicType=CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnicType=CONST_PROVIDER_POSTGR) then
+  if (FRealCnfg.UnicType = CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnicType = CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnicType = CONST_PROVIDER_POSTGR) then
   begin
-    FRealCnfg.DataBase:=Comb_DataBase.Text;
-  end else
+    FRealCnfg.DataBase := Comb_DataBase.Text;
+  end
+  else
   begin
-    FRealCnfg.DataBase:=Edit_DataBase.Text;
+    FRealCnfg.DataBase := Edit_DataBase.Text;
   end;
   //YXC_2012_12_04_09_36_46_>
 
-  FRealCnfg.UnicPort:=Edit_UnicPort.Text;
-  FRealCnfg.UnicYear:=StrToIntDef(Edit_UnicYear.Text,0);
-  FRealCnfg.UnicMark:=Comb_Mark.Text;
-  FRealCnfg.IsDirect:=0;
+  FRealCnfg.UnicPort := Edit_UnicPort.Text;
+  FRealCnfg.UnicYear := StrToIntDef(Edit_UnicYear.Text, 0);
+  FRealCnfg.UnicMark := Comb_Mark.Text;
+  FRealCnfg.IsDirect := 0;
   if ChkBox_Direct.Checked then
   begin
-    FRealCnfg.IsDirect:=1;
+    FRealCnfg.IsDirect := 1;
   end;
-  FRealCnfg.UnicOrdr:=FRealCnfg.UnicIndx;
+  FRealCnfg.UnicOrdr := FRealCnfg.UnicIndx;
 end;
 
-function TDialogEditUniConfig.CheckLicit: Boolean;
+function TDialogEditUniConfig.ChkValid: Boolean;
 begin
-  Result:=False;
-  if Comb_Type.Text=CONST_PROVIDER_SQLSRV then
+  Result := False;
+
+  if Comb_Type.Text = CONST_PROVIDER_SQLSRV then
   begin
-    if Trim(Comb_DataBase.Text)='' then
+    if Trim(Comb_DataBase.Text) = '' then
     begin
-      ShowMessage('请填写数据库.');
+      TKzUtils.WarnMsg('请填写数据库.');
       Exit;
-    end;  
-  end;  
-  Result:=True;
+    end;
+  end;
+
+  Result := True;
 end;
 
 procedure TDialogEditUniConfig.Comb_TypeCloseUp(Sender: TObject);

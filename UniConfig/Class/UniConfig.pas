@@ -42,8 +42,8 @@ type
     FUnicMemo: string;    //±¸×¢
     FWhoBuild: Integer;   //»úÆ÷Âë
   public
-    IsDecrypt:Boolean;   //
-    IsEncrypt:Boolean;   //
+    IsDecrypt:Boolean;    //
+    IsEncrypt:Boolean;    //
   protected
     procedure SetParameters;override;
     function  GetStrInsert:string;override;

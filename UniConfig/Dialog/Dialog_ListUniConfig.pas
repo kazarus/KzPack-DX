@@ -59,9 +59,11 @@ type
       State: Boolean);
     procedure Btnv_DeltCnfgClick(Sender: TObject);
   private
-    FEditMode:TDialogListUniConfigEditMode;
-    FListCnfg:TStringList;
-    FCellIdex:Integer;
+    FEditMode: TDialogListUniConfigEditMode;
+    FListCnfg: TStringList;
+    FCellIdex: Integer;
+    FLoadLast: Boolean;
+
 
     //YXC_2014_04_28_10_43_31
     FConnectionMark:string;
@@ -91,22 +93,23 @@ type
 var
   DialogListUniConfig: TDialogListUniConfig;
 
-function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;aConnectionMark:string=''):Integer;overload;
-function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;var aCnfg:TUniConfig;IsCreate:Boolean=True;aConnectionMark:string=''):Integer;overload;
+function ViewListUniConfig(AEditMode: TDialogListUniConfigEditMode; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
+function ViewListUniConfig(AEditMode: TDialogListUniConfigEditMode; var aCnfg: TUniConfig; IsCreate: Boolean = True; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
 
 implementation
 
 uses
-  Dialog_EditUniConfig, StylManager,Class_UiUtils;
+  Dialog_EditUniConfig, StylManager,Class_UiUtils,Class_KzUtils;
 
 
 {$R *.dfm}
 
-function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;aConnectionMark:string):Integer;
+function ViewListUniConfig(AEditMode: TDialogListUniConfigEditMode; aConnectionMark: string; aLoadLast: Boolean): Integer;
 begin
   try
     DialogListUniConfig:=TDialogListUniConfig.Create(nil);
-    DialogListUniConfig.FEditMode:=AEditMode;
+    DialogListUniConfig.FEditMode := AEditMode;
+    DialogListUniConfig.FLoadLast := aLoadLast;
     DialogListUniConfig.FConnectionMark:=aConnectionMark;
     DialogListUniConfig.BorderStyle:=bsSizeable;
     Result:=DialogListUniConfig.ShowModal;
@@ -115,12 +118,13 @@ begin
   end;
 end;
 
-function ViewListUniConfig(AEditMode:TDialogListUniConfigEditMode;var aCnfg:TUniConfig;IsCreate:Boolean;aConnectionMark:string):Integer;
+function ViewListUniConfig(AEditMode: TDialogListUniConfigEditMode; var aCnfg: TUniConfig; IsCreate: Boolean; aConnectionMark: string; aLoadLast: Boolean): Integer;
 begin
   try
     DialogListUniConfig:=TDialogListUniConfig.Create(nil);
     
-    DialogListUniConfig.FEditMode:=AEditMode;
+    DialogListUniConfig.FEditMode := AEditMode;
+    DialogListUniConfig.FLoadLast := aLoadLast;
     DialogListUniConfig.FConnectionMark:=aConnectionMark;
     DialogListUniConfig.BorderStyle:=bsSizeable;   
     Result:=DialogListUniConfig.ShowModal;
@@ -276,28 +280,31 @@ end;
   
 procedure TDialogListUniConfig.InitCnfg;
 var
-  SQLA :string;
-  UniConnct:TUniConnection;
+  cSQL: string;
+  cUniC: TUniConnection;
 begin
-  UniConnct:=UniConnctEx.GetConnection(FConnectionMark);
-  
-  FreeAndNilList(FListCnfg);
-  
-  SQLA :='SELECT * FROM TBL_UNICONFIG WHERE 1=1';
-  if Comb_UnixType.ItemIndex<>0 then
-  begin
-    SQLA:=SQLA+Format('    AND  UNIX_TYPE=%S',[QuotedStr(Comb_UnixType.Text)]);
-  end;  
-  SQLA:=SQLA+'    ORDER BY UNIX_TYPE,UNIX_ORDR';
-  
-  FListCnfg:=TUniConfig.StrsDB(SQLA,UniConnct);
+  try
+    cUniC:=UniConnctEx.GetConnection(FConnectionMark);
+
+    if FListCnfg = nil then
+    begin
+      FListCnfg := TStringList.Create;
+    end;
+    TKzUtils.JustCleanList(FListCnfg);
+
+    cSQL :='SELECT * FROM TBL_UNICONFIG WHERE 1=1';
+    if Comb_UnixType.ItemIndex<>0 then
+    begin
+      cSQL:=cSQL+Format('    AND  UNIX_TYPE=%S',[QuotedStr(Comb_UnixType.Text)]);
+    end;
+    cSQL:=cSQL+'    ORDER BY UNIX_TYPE,UNIX_ORDR';
+
+    FListCnfg:=TUniConfig.StrsDB(cSQL,cUniC);
+  finally
+    if cUniC<>nil then FreeAndNil(cUniC);
+  end;
 
   FillCnfg(FListCnfg);
-
-  if UniConnct<>nil then
-  begin
-    FreeAndNil(UniConnct);
-  end;
 
   with Grid_Cnfg do
   begin
@@ -309,7 +316,6 @@ begin
       SelectRows(FCellIdex,1);
     end;  
   end;
-
 
   if Assigned(UniConnctEx.OnDialogListUniConfigCustomStyleEvent) then
   begin
@@ -351,10 +357,8 @@ end;
 
 procedure TDialogListUniConfig.AddvCnfg;
 begin
-  if ViewEditCnfg(deuemAddv,nil,FConnectionMark)=Mrok then
-  begin
-    InitCnfg;
-  end;
+  if ViewEditCnfg(deuemAddv, nil, FConnectionMark, FLoadLast) <> Mrok then  Exit;
+  InitCnfg;
 end;
 
 procedure TDialogListUniConfig.EditCnfg;
@@ -539,7 +543,7 @@ end;
 
 procedure TDialogListUniConfig.ActvCnfg(IsFill:Boolean);
 var
-  SQLA :string;
+  cSQL :string;
   StatA:Boolean;
   UniConfig:TUniConfig;
   UniConnct:TUniConnection;
@@ -557,13 +561,13 @@ begin
         UniConnct:=UniConnctEx.GetConnection(FConnectionMark);
         UniConnct.StartTransaction;
 
-        SQLA:='UPDATE TBL_UNICONFIG SET UNIX_STAT=0 WHERE UNIX_IDEX<>%D  AND UNIX_MARK=%S';
-        SQLA:=Format(SQLA,[UniConfig.UnicIndx,QuotedStr(UniConfig.UnicMark)]);
-        UniConfig.ExecuteSQL(SQLA,UniConnct);
+        cSQL:='UPDATE TBL_UNICONFIG SET UNIX_STAT=0 WHERE UNIX_IDEX<>%D  AND UNIX_MARK=%S';
+        cSQL:=Format(cSQL,[UniConfig.UnicIndx,QuotedStr(UniConfig.UnicMark)]);
+        UniConfig.ExecuteSQL(cSQL,UniConnct);
 
-        SQLA:='UPDATE TBL_UNICONFIG SET UNIX_STAT=1 WHERE UNIX_IDEX=%D   AND UNIX_MARK=%S';
-        SQLA:=Format(SQLA,[UniConfig.UnicIndx,QuotedStr(UniConfig.UnicMark)]);
-        UniConfig.ExecuteSQL(SQLA,UniConnct);        
+        cSQL:='UPDATE TBL_UNICONFIG SET UNIX_STAT=1 WHERE UNIX_IDEX=%D   AND UNIX_MARK=%S';
+        cSQL:=Format(cSQL,[UniConfig.UnicIndx,QuotedStr(UniConfig.UnicMark)]);
+        UniConfig.ExecuteSQL(cSQL,UniConnct);
 
         UniConnct.Commit;
         StatA:=True;
