@@ -151,16 +151,16 @@ begin
   try
     cUniC:=UniConnctEx.GetConnection(FConnectionMark);
 
-    if FRealCnfg=nil then
+    if FRealCnfg = nil then
     begin
-      FRealCnfg:=TUniConfig.Create;
+      FRealCnfg := TUniConfig.Create;
     end;
 
-    FRealCnfg.UnicIndx:=FRealCnfg.GetNextIdex(cUniC);
-    FRealCnfg.UnicType:=Comb_Type.Text;
-    FRealCnfg.UnicUser:=Edit_UnicUser.Text;
-    FRealCnfg.UnicPswd:=Edit_UnicPswd.Text;
-    FRealCnfg.UnicSrvr:=Edit_UnicSrvr.Text;
+    FRealCnfg.UnicIndx := FRealCnfg.GetNextIdex(cUniC);
+    FRealCnfg.UnicType := Comb_Type.Text;
+    FRealCnfg.UnicUser := Edit_UnicUser.Text;
+    FRealCnfg.UnicPswd := Edit_UnicPswd.Text;
+    FRealCnfg.UnicSrvr := Edit_UnicSrvr.Text;
 
     //YXC_2012_12_04_09_36_39_<
     if (FRealCnfg.UnicType = CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnicType = CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnicType = CONST_PROVIDER_POSTGR) then
@@ -199,7 +199,7 @@ begin
     begin
       if FRealCnfg <> nil then
       begin
-        FRealCnfg.ToFILE(TKzUtils.ExePath+'config-default.json');
+        FRealCnfg.ToFILE(TKzUtils.ExePath+Format('config-default-%s.json',[LowerCase(FRealCnfg.UnicType)]));
       end;
     end;
   finally
@@ -676,6 +676,18 @@ begin
     begin
       ViewDataBase(CONST_PROVIDER_MYSQLX);
     end;  
+  end;
+
+  if FLoadLast then
+  begin
+    if FRealCnfg = nil then
+    begin
+      FRealCnfg := TUniConfig.Create;
+    end;
+    if FileExists(TKzUtils.ExePath+Format('config-default-%s.json',[LowerCase(Comb_Type.Text)])) then
+    begin
+      FRealCnfg.InFILE(TKzUtils.ExePath+Format('config-default-%s.json',[LowerCase(Comb_Type.Text)]));
+    end;
   end;
 end;
 
