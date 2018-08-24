@@ -2,7 +2,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   Left = 361
   Top = 275
   Caption = 'DialogEditUniConfig'
-  ClientHeight = 255
+  ClientHeight = 263
   ClientWidth = 431
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
