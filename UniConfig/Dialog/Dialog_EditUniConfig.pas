@@ -58,7 +58,7 @@ type
     procedure SetGridParams;override;
     procedure TryFreeAndNil;override;
   public
-    procedure ViewFilePath;
+    procedure ViewPath;
     procedure ViewDataBase(AUnixType:string='');
     function  ChkValid:Boolean;
   public
@@ -333,77 +333,66 @@ begin
   if FRealCnfg = nil then Exit;
 
   Comb_Type.ItemIndex:=Comb_Type.Items.IndexOf(FRealCnfg.UnicType);
-  Comb_TypeCloseUp(Comb_Type);
+  //#Comb_TypeCloseUp(Comb_Type);
 
-  Edit_UnicYear.Text:=IntToStr(FRealCnfg.UnicYear);
-  Edit_UnicUser.Text:=FRealCnfg.UnicUser;
+  Edit_UnicYear.Text := IntToStr(FRealCnfg.UnicYear);
+  Edit_UnicUser.Text := FRealCnfg.UnicUser;
 
   if Assigned(UniConnctEx.OnUniConfigCustomDecryptEvent) then
   begin
-    UniConnctEx.OnUniConfigCustomDecryptEvent(FRealCnfg,FRealCnfg);
+    UniConnctEx.OnUniConfigCustomDecryptEvent(FRealCnfg, FRealCnfg);
   end;
-  FRealPswd:=FRealCnfg.UnicPswd;
-  Edit_UnicPswd.Text:=FRealPswd;
+  FRealPswd := FRealCnfg.UnicPswd;
+  Edit_UnicPswd.Text := FRealPswd;
 
-  Edit_UnicSrvr.Text:=FRealCnfg.UnicSrvr;
+  Edit_UnicSrvr.Text := FRealCnfg.UnicSrvr;
+  Comb_DataBase.Text := FRealCnfg.DataBase;
+  Edit_UnicPort.Text := FRealCnfg.UnicPort;
+  Comb_Mark.ItemIndex := Comb_Mark.Items.IndexOf(FRealCnfg.UnicMark);
 
-  //YXC_2012_12_04_09_39_28_<
-  if FRealCnfg.UnicType=UniConfig.CONST_PROVIDER_SQLSRV then
+  ChkBox_Direct.Checked := False;
+  if FRealCnfg.IsDirect = 1 then
   begin
-    Comb_DataBase.Text:=FRealCnfg.DataBase;
-  end else
-  begin
-    Edit_DataBase.Text:=FRealCnfg.DataBase;
-  end;
-  //YXC_2012_12_04_09_39_28_>
-
-  Edit_UnicPort.Text:=FRealCnfg.UnicPort;
-    
-  Comb_Mark.ItemIndex:=Comb_Mark.Items.IndexOf(FRealCnfg.UnicMark);
-
-  ChkBox_Direct.Checked:=False;
-  if FRealCnfg.IsDirect=1 then
-  begin
-    ChkBox_Direct.Checked:=True;
+    ChkBox_Direct.Checked := True;
   end;
 end;
 
 procedure TDialogEditUniConfig.Edit_DataBaseDblClick(Sender: TObject);
 begin
   inherited;
-  ViewFilePath;
+  ViewPath;
 end;
 
-procedure TDialogEditUniConfig.ViewFilePath;
+procedure TDialogEditUniConfig.ViewPath;
 var
   OD:TOpenDialog;
   cRoot:string;
   cPath:string;
 begin
-  if Trim(Comb_Type.Text)=CONST_PROVIDER_ACCESS then
+  if Trim(Comb_Type.Text) = CONST_PROVIDER_ACCESS then
   begin
-    OD:=TOpenDialog.Create(nil);
-    OD.Filter:='*.mdb';
+    OD := TOpenDialog.Create(nil);
+    OD.Filter := '*.mdb|*.mdb';
 
-    cRoot := Trim(Edit_DataBase.Text);
-    if (cRoot <> '') and (Pos('\\',cRoot) < 0) then
+    cRoot := Trim(Comb_DataBase.Text);
+    if (cRoot <> '') and (Pos('\\', cRoot) < 0) then
     begin
-      cPath := ExtractFileDir(Edit_DataBase.Text);
+      cPath := ExtractFileDir(Comb_DataBase.Text);
       OD.InitialDir := cPath;
     end;
 
     if OD.Execute then
     begin
-      Edit_DataBase.Text:=OD.FileName;
-    end;  
+      Comb_DataBase.Text := OD.FileName;
+    end;
     FreeAndNil(OD);
-  end;  
+  end;
 end;
 
 procedure TDialogEditUniConfig.Edit_DataBaseButtonClick(Sender: TObject);
 begin
   inherited;
-  ViewFilePath;
+  ViewPath;
 end;
 
 procedure TDialogEditUniConfig.Btnx_TestClick(Sender: TObject);
@@ -413,7 +402,7 @@ var
 begin
   inherited;
   if not ChkValid then Exit;
-    
+
   try
     CnfgA:=TUniConfig.Create;
     CnfgA.UnicType:=Comb_Type.Text;
@@ -599,9 +588,6 @@ begin
   ChkBox_Direct.Checked:=False;
   ChkBox_Direct.Visible:=False;
 
-  Edit_DataBase.Visible:=False;
-  Comb_DataBase.Visible:=False;
-
   if (Trim(Comb_Type.Text)=CONST_PROVIDER_ACCESS) OR (Trim(Comb_Type.Text)=CONST_PROVIDER_SQLITE) then
   begin
     Caption:='数据连接';
@@ -614,9 +600,6 @@ begin
     Edit_UnicSrvr.Clear;
     Edit_UnicPort.Enabled:=False;
     Edit_UnicPort.Clear;
-
-    Edit_DataBase.Visible:=True;
-    Edit_DataBase.AltBtnVisible:=True;
   end else
   if Trim(Comb_Type.Text)=CONST_PROVIDER_SQLSRV then
   begin
@@ -626,9 +609,6 @@ begin
     Edit_UnicPswd.Text:='sa';
     Edit_UnicSrvr.Text:='.';
     Edit_UnicPort.Text:='1433';
-
-    Comb_DataBase.Visible:=True;
-
     {if FEditMode=deuemAddx then
     begin
       ViewDataBase;
@@ -642,21 +622,15 @@ begin
     Edit_UnicPswd.Text:='root';
     Edit_UnicSrvr.Text:='localhost';
     Edit_UnicPort.Text:='5432';
-
-    Comb_DataBase.Visible:=True;
   end else
   if Trim(Comb_Type.Text)=CONST_PROVIDER_ORACLE then
   begin
     Caption:='直联示例:IP地址:端口:实例名';
-
-    Edit_DataBase.Visible:=True;
-    Edit_DataBase.Enabled:=False;
     
     Edit_UnicPort.Text   :='1521';
     ChkBox_Direct.Visible:=True;
     ChkBox_Direct.Checked:=True;
 
-    Edit_DataBase.Clear;
     Edit_UnicUser.Clear;
     Edit_UnicPswd.Clear;
     Edit_UnicSrvr.Clear;
@@ -664,18 +638,11 @@ begin
   if Trim(Comb_Type.Text)=CONST_PROVIDER_MYSQLX then
   begin
     Caption:='数据连接';
-      
-    Edit_UnicUser.Text:='root';
-    Edit_UnicPswd.Text:='root';
-    Edit_UnicSrvr.Text:='localhost';
-    Edit_UnicPort.Text:='0';
 
-    Comb_DataBase.Visible:=True;
-
-    if FEditMode=deuemAddv then
+    {#if FEditMode=deuemAddv then
     begin
       ViewDataBase(CONST_PROVIDER_MYSQLX);
-    end;  
+    end;}
   end;
 
   if FLoadLast then
@@ -687,6 +654,7 @@ begin
     if FileExists(TKzUtils.ExePath+Format('config-default-%s.json',[LowerCase(Comb_Type.Text)])) then
     begin
       FRealCnfg.InFILE(TKzUtils.ExePath+Format('config-default-%s.json',[LowerCase(Comb_Type.Text)]));
+      InitCnfg;
     end;
   end;
 end;
