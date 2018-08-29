@@ -372,7 +372,7 @@ begin
   if Trim(Comb_Type.Text) = CONST_PROVIDER_ACCESS then
   begin
     OD := TOpenDialog.Create(nil);
-    OD.Filter := '*.mdb|*.mdb';
+    OD.Filter := '*.mdb|*.mdb|*.bac|*.bac';
 
     cRoot := Trim(Comb_DataBase.Text);
     if (cRoot <> '') and (Pos('\\', cRoot) < 0) then
@@ -535,18 +535,7 @@ begin
   FRealCnfg.UnicUser := Edit_UnicUser.Text;
   FRealCnfg.UnicPswd := Edit_UnicPswd.Text;
   FRealCnfg.UnicSrvr := Edit_UnicSrvr.Text;
-
-  //YXC_2012_12_04_09_36_39_<
-  if (FRealCnfg.UnicType = CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnicType = CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnicType = CONST_PROVIDER_POSTGR) then
-  begin
-    FRealCnfg.DataBase := Comb_DataBase.Text;
-  end
-  else
-  begin
-    FRealCnfg.DataBase := Edit_DataBase.Text;
-  end;
-  //YXC_2012_12_04_09_36_46_>
-
+  FRealCnfg.DataBase := Comb_DataBase.Text;
   FRealCnfg.UnicPort := Edit_UnicPort.Text;
   FRealCnfg.UnicYear := StrToIntDef(Edit_UnicYear.Text, 0);
   FRealCnfg.UnicMark := Comb_Mark.Text;
