@@ -161,20 +161,10 @@ begin
     FRealCnfg.UnicUser := Edit_UnicUser.Text;
     FRealCnfg.UnicPswd := Edit_UnicPswd.Text;
     FRealCnfg.UnicSrvr := Edit_UnicSrvr.Text;
-
-    //YXC_2012_12_04_09_36_39_<
-    if (FRealCnfg.UnicType = CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnicType = CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnicType = CONST_PROVIDER_POSTGR) then
-    begin
-      FRealCnfg.DataBase:=Comb_DataBase.Text;
-    end else
-    begin
-      FRealCnfg.DataBase:=Edit_DataBase.Text;
-    end;
-    //YXC_2012_12_04_09_36_46_>
-
-    FRealCnfg.UnicPort:=Edit_UnicPort.Text;
-    FRealCnfg.UnicYear:=StrToIntDef(Edit_UnicYear.Text,0);
-    FRealCnfg.UnicMark:=Comb_Mark.Text;
+    FRealCnfg.DataBase := Comb_DataBase.Text;
+    FRealCnfg.UnicPort := Edit_UnicPort.Text;
+    FRealCnfg.UnicYear := StrToIntDef(Edit_UnicYear.Text, 0);
+    FRealCnfg.UnicMark := Comb_Mark.Text;
     FRealCnfg.IsDirect:=0;
     if ChkBox_Direct.Checked then
     begin
@@ -250,30 +240,20 @@ end;
 
 procedure TDialogEditUniConfig.UpdateDB;
 var
-  UniConnct:TUniConnection;
+  cUniC:TUniConnection;
 begin
   try
-    UniConnct:=UniConnctEx.GetConnection(FConnectionMark);
+    cUniC := UniConnctEx.GetConnection(FConnectionMark);
 
-    FRealCnfg.UnicType:=Comb_Type.Text;
-    FRealCnfg.UnicUser:=Edit_UnicUser.Text;
-    FRealCnfg.UnicPswd:=Edit_UnicPswd.Text;
-    FRealCnfg.UnicSrvr:=Edit_UnicSrvr.Text;
-
-    //YXC_2012_12_04_09_36_39_<
-    if (FRealCnfg.UnicType=CONST_PROVIDER_SQLSRV) or (FRealCnfg.UnicType=CONST_PROVIDER_MYSQLX) or (FRealCnfg.UnicType=CONST_PROVIDER_POSTGR) then
-    begin
-      FRealCnfg.DataBase:=Comb_DataBase.Text;
-    end else
-    begin
-      FRealCnfg.DataBase:=Edit_DataBase.Text;
-    end;
-    //YXC_2012_12_04_09_36_46_>
-
-    FRealCnfg.UnicPort:=Edit_UnicPort.Text;
-    FRealCnfg.UnicYear:=StrToIntDef(Edit_UnicYear.Text,0);
-    FRealCnfg.UnicMark:=Comb_Mark.Text;
-    FRealCnfg.IsDirect:=0;
+    FRealCnfg.UnicType := Comb_Type.Text;
+    FRealCnfg.UnicUser := Edit_UnicUser.Text;
+    FRealCnfg.UnicPswd := Edit_UnicPswd.Text;
+    FRealCnfg.UnicSrvr := Edit_UnicSrvr.Text;
+    FRealCnfg.DataBase := Comb_DataBase.Text;
+    FRealCnfg.UnicPort := Edit_UnicPort.Text;
+    FRealCnfg.UnicYear := StrToIntDef(Edit_UnicYear.Text, 0);
+    FRealCnfg.UnicMark := Comb_Mark.Text;
+    FRealCnfg.IsDirect := 0;
     if ChkBox_Direct.Checked then
     begin
       FRealCnfg.IsDirect:=1;
@@ -290,9 +270,9 @@ begin
       UniConnctEx.OnUniConfigCustomEncryptEvent(FRealCnfg,FRealCnfg);
     end;
 
-    FRealCnfg.UpdateDB(UniConnct);
+    FRealCnfg.UpdateDB(cUniC);
   finally
-    FreeAndNil(UniConnct);
+    FreeAndNil(cUniC);
   end;
 end;
 
