@@ -31,7 +31,7 @@ object DialogListUniConfig: TDialogListUniConfig
     Font.Style = []
     ParentFont = False
     ScrollBars = ssBoth
-    TabOrder = 0
+    TabOrder = 1
     OnDblClick = Grid_CnfgDblClick
     OnRowMoved = Grid_CnfgRowMoved
     OnSelectCell = Grid_CnfgSelectCell
@@ -166,7 +166,7 @@ object DialogListUniConfig: TDialogListUniConfig
     BorderOuter = fsGroove
     BorderSides = [sdTop]
     BorderWidth = 0
-    TabOrder = 1
+    TabOrder = 0
     VisualStyle = vsClassic
     ToolbarControls = (
       Btnv_Mrok
@@ -334,7 +334,7 @@ object DialogListUniConfig: TDialogListUniConfig
     Left = 480
     Top = 380
     Bitmap = {
-      494C01010A001800280010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010A0018002C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

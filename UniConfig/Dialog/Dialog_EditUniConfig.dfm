@@ -128,7 +128,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     FrameVisible = True
     FramingPreference = fpCustomFraming
     ParentCtl3D = False
-    TabOrder = 12
+    TabOrder = 4
   end
   object Btnx_Mrok: TButton
     Left = 253
@@ -136,7 +136,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Width = 75
     Height = 25
     Caption = #30830#23450
-    TabOrder = 0
+    TabOrder = 10
     OnClick = Btnx_MrokClick
   end
   object Btnx_Quit: TButton
@@ -145,7 +145,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Width = 75
     Height = 25
     Caption = #21462#28040
-    TabOrder = 1
+    TabOrder = 11
     OnClick = Btnx_QuitClick
   end
   object Btnx_Test: TButton
@@ -154,7 +154,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Width = 75
     Height = 25
     Caption = #27979#35797
-    TabOrder = 2
+    TabOrder = 9
     OnClick = Btnx_TestClick
   end
   object Edit_UnicUser: TRzEdit
@@ -165,7 +165,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
-    TabOrder = 3
+    TabOrder = 1
   end
   object Edit_UnicPswd: TRzEdit
     Left = 83
@@ -175,7 +175,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
-    TabOrder = 4
+    TabOrder = 2
     OnExit = Edit_UnicPswdExit
   end
   object Edit_UnicSrvr: TRzEdit
@@ -186,7 +186,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
-    TabOrder = 5
+    TabOrder = 3
     OnDblClick = Edit_UnicSrvrDblClick
   end
   object Edit_UnicPort: TRzEdit
@@ -207,7 +207,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
-    TabOrder = 7
+    TabOrder = 8
   end
   object Comb_Type: TRzComboBox
     Left = 83
@@ -218,7 +218,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     FrameVisible = True
     FramingPreference = fpCustomFraming
     ParentCtl3D = False
-    TabOrder = 8
+    TabOrder = 0
     OnCloseUp = Comb_TypeCloseUp
   end
   object Edit_DataBase: TRzButtonEdit
@@ -230,7 +230,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     FrameVisible = True
     FramingPreference = fpCustomFraming
     ImeName = #20013#25991'('#31616#20307') - '#26497#28857#20116#31508
-    TabOrder = 9
+    TabOrder = 5
     OnDblClick = Edit_DataBaseDblClick
     AltBtnKind = bkFolder
     AltBtnWidth = 15
@@ -247,7 +247,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     FrameVisible = True
     FramingPreference = fpCustomFraming
     ParentCtl3D = False
-    TabOrder = 10
+    TabOrder = 7
   end
   object ChkBox_Direct: TRzCheckBox
     Left = 20
@@ -257,7 +257,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     AlignmentVertical = avCenter
     Caption = #30452#32852
     State = cbUnchecked
-    TabOrder = 11
+    TabOrder = 12
   end
   object con1: TUniConnection
     Left = 560

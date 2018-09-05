@@ -734,6 +734,8 @@ begin
   cUniC:=UniConnctEx.GetConnection(FConnectionMark);
   if cUniC=nil then Exit;
 
+  if TKzUtils.WarnBox('ÊÇ·ñÈ·¶¨É¾³ý?') <> Mrok then Exit;
+  
   try
     cUniC.StartTransaction;
 
