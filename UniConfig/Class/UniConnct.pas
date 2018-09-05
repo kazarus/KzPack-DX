@@ -48,6 +48,8 @@ type
     OnUniConfigCustomEncryptEvent        : TUniConfigCustomEncryptEvent;
     OnUniConfigCustomDecryptEvent        : TUniConfigCustomDecryptEnent;
   public
+    function  getConfig(AConnectionMark: string; var aCnfg: TUniConfig): Boolean;
+  public
     function  GetConnection:TUniConnection;overload;
     function  GetConnection(AConnectionMark:string):TUniConnection;overload;
     
@@ -68,10 +70,6 @@ var
     
 implementation
 
-
-
-
-{ TUniConnct }
 
 function TUniConnct.ChkConnection(AConnectionMark: string): Boolean;
 var
@@ -132,6 +130,36 @@ destructor TUniConnct.Destroy;
 begin
 
   inherited;
+end;
+
+function TUniConnct.getConfig(AConnectionMark: string;
+  var aCnfg: TUniConfig): Boolean;
+var
+  cSQL: string;
+  cUniC: TUniConnection;
+begin
+  Result := False;
+  if aCnfg = nil then Exit;
+
+  if ConnctMode = cmbySQL then
+  begin
+    if not Assigned(OnUniConnctCustomConnectionEventBySQL) then raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniConnct.GetConnection] AT [UniConnct.pas]' + #13 + '此函数已被更新或弃用,请向开发人员报告错误场合.');
+    OnUniConnctCustomConnectionEventBySQL(AConnectionMark,cSQL);
+
+    try
+      cUniC:=UniConnctEx.GetConnection;
+      TUniConfig.ReadDB(cSQL,cUniC,TUniEngine(aCnfg));
+    finally
+      FreeAndNil(cUniC);
+    end;
+  end else
+  if ConnctMode = cmByOBJ then
+  begin
+    if not Assigned(OnUniConnctCustomConnectionEventByOBJ) then raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniConnct.GetConnection] AT [UniConnct.pas]' + #13 + '此函数已被更新或弃用,请向开发人员报告错误场合.');
+    OnUniConnctCustomConnectionEventByOBJ(AConnectionMark, aCnfg);
+  end;
+
+  Result := True;
 end;
 
 function TUniConnct.GetConnection(AUniConfig: TUniConfig): TUniConnection;
@@ -205,28 +233,28 @@ end;
 
 function TUniConnct.GetConnection(AConnectionMark: string): TUniConnection;
 var
-  AObj:TUniConfig;
+  uCnfg: TUniConfig;
 begin
   //YXC_2014_04_28_10_39_37_<
-  if Trim(AConnectionMark)='' then
+  if Trim(AConnectionMark) = '' then
   begin
     //default connect to sqllite
-    Result:=GetConnection;
+    Result := GetConnection;
     Exit;
   end;
   //YXC_2014_04_28_10_39_37_>
 
-  if ConnctMode=cmbySQL then
+  if ConnctMode = cmbySQL then
   begin
-    Result:=GetConnection(0,AConnectionMark);
+    Result := GetConnection(0, AConnectionMark);
   end else
-  if ConnctMode=cmByOBJ then
+  if ConnctMode = cmByOBJ then
   begin
-    if not Assigned(OnUniConnctCustomConnectionEventByOBJ) then raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniConnct.GetConnection] AT [UniConnct.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
-    AObj:=TUniConfig.Create;
-    OnUniConnctCustomConnectionEventByOBJ(AConnectionMark,AObj);
-    Result:=GetConnection(AObj);
-    FreeAndNil(AObj);
+    if not Assigned(OnUniConnctCustomConnectionEventByOBJ) then raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniConnct.GetConnection] AT [UniConnct.pas]' + #13 + '此函数已被更新或弃用,请向开发人员报告错误场合.');
+    uCnfg := TUniConfig.Create;
+    OnUniConnctCustomConnectionEventByOBJ(AConnectionMark, uCnfg);
+    Result := GetConnection(uCnfg);
+    FreeAndNil(uCnfg);
   end;
 end;
 
