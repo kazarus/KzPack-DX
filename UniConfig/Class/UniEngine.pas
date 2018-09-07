@@ -153,11 +153,11 @@ type
     class function  ExistConst(aConstraintType,aConstraintName:string;aUniConnection:TUniConnection):Boolean;
     class function  ExistIndex(aIndexName:string;aUniConnection:TUniConnection):Boolean;
 
-    class function  ExistInKey(aConstraintType,aField,aTable:string;aUniConnection:TUniConnection):Boolean;
-    class function  AlterField(aTable,aField:string;length:Integer;aUniConnection:TUniConnection):Boolean;
+    class function  ExistInKey(aConstraintType, aField, aTable: string; aUniConnection: TUniConnection): Boolean;
+    class function  AlterField(aTable, aField: string; length: Integer; aUniConnection: TUniConnection): Boolean;
 
-    class procedure ExecuteSQL(ASQL:string;aUniConnection:TUniConnection);overload;
-    class procedure ExecuteSQL(ASQL:string);overload;
+    class procedure ExecuteSQL(ASQL: string; aUniConnection: TUniConnection; aUpperCase: Boolean = False); overload;
+    class procedure ExecuteSQL(ASQL: string); overload;
   end;
 
 implementation
@@ -279,20 +279,30 @@ begin
 end;
 
 class procedure TUniEngine.ExecuteSQL(ASQL: string;
-  aUniConnection: TUniConnection);
+  aUniConnection: TUniConnection; aUpperCase: Boolean);
 var
   UniSQL:TUniSQL;
 begin
-  if Trim(ASQL)='' then Exit;
+  if Trim(ASQL) = '' then Exit;
+
   try
     UniSQL:=TUniSQL.Create(nil);
-    UniSQL.Connection:=aUniConnection;
-    UniSQL.SQL.Text  :=ASQL;
+    UniSQL.Connection := aUniConnection;
+    if aUpperCase then
+    begin
+      UniSQL.SQL.Text := UpperCase(ASQL);
+    end else
+    begin
+      UniSQL.SQL.Text := ASQL;
+    end;
+
+
     UniSQL.Execute;
   finally
     FreeAndNil(UniSQL);
   end;
 end;
+
 
 function TUniEngine.GetUniSQL: TUniSQL;
 begin

@@ -26,7 +26,7 @@ type
 implementation
 
 
-function THelprUniEngine.ToJson(doFormat:Boolean): string;
+function THelprUniEngine.ToJSON(doFormat:Boolean): string;
 var
   JSON:TQJson;
 begin
