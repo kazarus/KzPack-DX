@@ -1,9 +1,10 @@
 ﻿unit Class_UiUtils;
-//YXC_2012_11_21_10_19_57
+//#
 
 interface
 uses
-  Classes,SysUtils,AdvGrid,frxClass,ElTree,Math,Graphics,RzBtnEdt,IniFiles;
+  Classes, SysUtils, AdvGrid, frxClass, ElTree, Math, Graphics, RzBtnEdt,
+  IniFiles, Forms;
 
 type
   TUiUtils=class(TObject)
@@ -18,6 +19,8 @@ type
   public
     //rz
     class procedure WhenEditExit(Sender:TObject);
+  public
+    class procedure ToScrennCenter(aForm:TForm);
   public
     //grid
     class function  GetCheckBoxState(aGrid:TAdvStringGrid;ACol,ARow:Integer):Integer;
@@ -730,6 +733,18 @@ begin
     end;
     Items.EndUpdate;
   end;  
+end;
+
+class procedure TUiUtils.ToScrennCenter(aForm: TForm);
+var
+  nTop: Integer;
+  nLeft: Integer;
+begin
+  nTop := (Screen.Height - aForm.Height) div 2;
+  nLeft := (Screen.Width - aForm.Width) div 2;
+
+  aForm.Top := nTop;
+  aForm.Left := nLeft;
 end;
 
 class procedure TUiUtils.TreeIndex(aTree: TElTree);
