@@ -16,7 +16,7 @@ type
   TDialogEditUniConfig = class(TDialogView)
     Btnx_Mrok: TButton;
     Btnx_Quit: TButton;
-    Btnx_Test: TButton;
+    Btnv_Mock: TButton;
     lbl1: TLabel;
     lbl2: TLabel;
     lbl3: TLabel;
@@ -40,7 +40,7 @@ type
     procedure Btnx_MrokClick(Sender: TObject);
     procedure Edit_DataBaseDblClick(Sender: TObject);
     procedure Edit_DataBaseButtonClick(Sender: TObject);
-    procedure Btnx_TestClick(Sender: TObject);
+    procedure Btnv_MockClick(Sender: TObject);
     procedure Edit_UnicSrvrDblClick(Sender: TObject);
     procedure Comb_TypeCloseUp(Sender: TObject);
     procedure Edit_DataBaseAltBtnClick(Sender: TObject);
@@ -375,9 +375,8 @@ begin
   ViewPath;
 end;
 
-procedure TDialogEditUniConfig.Btnx_TestClick(Sender: TObject);
+procedure TDialogEditUniConfig.Btnv_MockClick(Sender: TObject);
 var
-  DateA:TDateTime;
   CnfgA:TUniConfig;
 begin
   inherited;
@@ -385,42 +384,32 @@ begin
 
   try
     CnfgA:=TUniConfig.Create;
-    CnfgA.UnicType:=Comb_Type.Text;
-    CnfgA.UnicUser:=Edit_UnicUser.Text;
+    CnfgA.UnicType := Comb_Type.Text;
+    CnfgA.UnicUser := Edit_UnicUser.Text;
 
     if FEditMode = deuemEdit then
     begin
-      CnfgA.UnicPswd:=FRealPswd;
+      CnfgA.UnicPswd := FRealPswd;
     end else
     begin
-      CnfgA.UnicPswd:=Edit_UnicPswd.Text;
+      CnfgA.UnicPswd := Edit_UnicPswd.Text;
     end;
 
-    CnfgA.UnicSrvr:=Edit_UnicSrvr.Text;
+    CnfgA.UnicSrvr := Edit_UnicSrvr.Text;
+    CnfgA.DataBase := Comb_DataBase.Text;
+    CnfgA.UnicPort := Edit_UnicPort.Text;
+    CnfgA.UnicYear := StrToIntDef(Edit_UnicYear.Text, 0);
+    CnfgA.UnicMark := Comb_Mark.Text;
 
-    //YXC_2012_12_04_09_36_39_<
-    if (CnfgA.UnicType=CONST_PROVIDER_SQLSRV) or (CnfgA.UnicType=CONST_PROVIDER_MYSQLX) or (CnfgA.UnicType=CONST_PROVIDER_POSTGR) then
-    begin
-      CnfgA.DataBase:=Comb_DataBase.Text;
-    end else
-    begin
-      CnfgA.DataBase:=Edit_DataBase.Text;
-    end;
-    //YXC_2012_12_04_09_36_46_>
-    
-    CnfgA.UnicPort:=Edit_UnicPort.Text;
-    CnfgA.UnicYear:=StrToIntDef(Edit_UnicYear.Text,0);
-    CnfgA.UnicMark:=Comb_Mark.Text;
-    
-    CnfgA.IsDirect:=0;
+    CnfgA.IsDirect := 0;
     if ChkBox_Direct.Checked then
     begin
-      CnfgA.IsDirect:=1;
+      CnfgA.IsDirect := 1;
     end;
 
     if not CnfgA.TstConnection(CnfgA) then  Exit;
 
-    ShowMessage('该数据库连接有效.');
+    TKzUtils.ShowMsg('该数据库连接有效.');
   finally
     FreeAndNil(CnfgA);
   end;

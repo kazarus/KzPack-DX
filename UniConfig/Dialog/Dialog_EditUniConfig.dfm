@@ -148,14 +148,14 @@ object DialogEditUniConfig: TDialogEditUniConfig
     TabOrder = 11
     OnClick = Btnx_QuitClick
   end
-  object Btnx_Test: TButton
+  object Btnv_Mock: TButton
     Left = 178
     Top = 222
     Width = 75
     Height = 25
     Caption = #27979#35797
     TabOrder = 9
-    OnClick = Btnx_TestClick
+    OnClick = Btnv_MockClick
   end
   object Edit_UnicUser: TRzEdit
     Left = 83
