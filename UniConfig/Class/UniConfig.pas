@@ -452,11 +452,11 @@ end;
 
 function TUniConfig.GetUNICSTAT: string;
 begin
-  Result:='挂起';
-  if UNICSTAT=1 then
+  Result := '挂起';
+  if UNICSTAT = 1 then
   begin
-    Result:='活动';
-  end;  
+    Result := '活动';
+  end;
 end;
 
 function TUniConfig.GetActvStat: string;
