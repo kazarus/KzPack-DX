@@ -82,31 +82,31 @@ type
   public
     property UniSQL:TUniSQL read GetUniSQL;
   public
-    class function  CopyIt(aUniEngine:TUniEngine):TUniEngine;overload;virtual;abstract;
-    class procedure CopyIt(aUniEngine:TUniEngine;var Result:TUniEngine);overload;virtual;abstract;
+    class function  CopyIt(aUniEngine: TUniEngine): TUniEngine; overload; virtual; abstract;
+    class procedure CopyIt(aUniEngine: TUniEngine; var Result: TUniEngine); overload; virtual; abstract;
 
     class function  ReadDS(AUniQuery: TUniQuery): TUniEngine;overload;virtual;abstract;
-    class procedure ReadDS(AUniQuery: TUniQuery;var Result:TUniEngine);overload;virtual;abstract;
+    class procedure ReadDS(AUniQuery: TUniQuery; var Result: TUniEngine); overload; virtual; abstract;
 
-    class function  ReadDB(aSQL:string;aUniConnection:TUniConnection):TUniEngine;overload;virtual;
-    class function  ReadDB(aSQL:string):TUniEngine;overload;virtual;
-    class procedure ReadDB(aSQL:string;aUniConnection:TUniConnection;var Result:TUniEngine);overload;virtual;
+    class function  ReadDB(aSQL: string; aUniConnection: TUniConnection): TUniEngine; overload; virtual;
+    class function  ReadDB(aSQL: string): TUniEngine; overload; virtual;
+    class procedure ReadDB(aSQL: string; aUniConnection: TUniConnection; var Result: TUniEngine); overload; virtual;
 
-    class function  StrsDB(aSQL:string;aUniConnection:TUniConnection;withSorted:Boolean=False):TStringList;overload;virtual;
-    class function  StrsDB(aSQL:string;withSorted:Boolean=False):TStringList;overload;virtual;
+    class function  StrsDB(aSQL: string; aUniConnection: TUniConnection; withSorted: Boolean = False): TStringList; overload; virtual;
+    class function  StrsDB(aSQL: string; withSorted: Boolean = False): TStringList; overload; virtual;
 
-    class function  StrsDB(aSQL:string;Fields:array of string;aUniConnection:TUniConnection;withSorted:Boolean=False):TStringList;overload;virtual;
-    class function  StrsDB(aSQL:string;Fields:array of string;withSorted:Boolean=False):TStringList;overload;virtual;
+    class function  StrsDB(aSQL: string; Fields: array of string; aUniConnection: TUniConnection; withSorted: Boolean = False): TStringList; overload; virtual;
+    class function  StrsDB(aSQL: string; Fields: array of string; withSorted: Boolean = False): TStringList; overload; virtual;
 
-    class function  ListDB(aSQL:string;aUniConnection:TUniConnection;withSorted:Boolean=False):TStringList;overload;virtual;
-    class function  ListDB(aSQL:string;withSorted:Boolean=True):TStringList;overload;virtual;
+    class function  ListDB(aSQL: string; aUniConnection: TUniConnection; withSorted: Boolean = False): TStringList; overload; virtual;
+    class function  ListDB(aSQL: string; withSorted: Boolean = True): TStringList; overload; virtual;
 
-    class function  ListDB(aSQL:string;Fields:array of string;aUniConnection:TUniConnection;withSorted:Boolean=False):TStringList;overload;virtual;
-    class function  ListDB(aSQL:string;Fields:array of string;withSorted:Boolean=False):TStringList;overload;virtual;
+    class function  ListDB(aSQL: string; Fields: array of string; aUniConnection: TUniConnection; withSorted: Boolean = False): TStringList; overload; virtual;
+    class function  ListDB(aSQL: string; Fields: array of string; withSorted: Boolean = False): TStringList; overload; virtual;
 
-    class procedure ListDB(aSQL:string;aUniConnection:TUniConnection;var Result:TStringList;withSorted:Boolean=False);overload;virtual;
-    class procedure ListDB(aSQL:string;aUniConnection:TUniConnection;var Result:TCollection;withSorted:Boolean=False);overload;virtual;
-    class procedure ListDB(aSQL:string;Fields:array of string;aUniConnection:TUniConnection;var Result:TStringList;withSorted:Boolean=False);overload;virtual;
+    class procedure ListDB(aSQL: string; aUniConnection: TUniConnection; var Result: TStringList; withSorted: Boolean = False); overload; virtual;
+    class procedure ListDB(aSQL: string; aUniConnection: TUniConnection; var Result: TCollection; withSorted: Boolean = False); overload; virtual;
+    class procedure ListDB(aSQL: string; Fields: array of string; aUniConnection: TUniConnection; var Result: TStringList; withSorted: Boolean = False); overload; virtual;
 
 
     //@replace with qjson
@@ -116,10 +116,9 @@ type
     //#class procedure INJSON(AValue:string;AClass:TUniEngineClass;var AObjt:TUniEngine;ACleanList:Boolean=True);overload;
 
 
-    class procedure STRIDX(Args:array of string;aList:TStringList;aSeparator:string='-';withQuoted:Boolean=False);overload;
-    class function  STRDIY(Args:array of string;aList:TStringList;aSeparator:string=',';withQuoted:Boolean=False):string;overload;
-    class function  STRDIY(Args:array of string;aList:TCollection;aSeparator:string=',';bSeparator:string='-';withQuoted:Boolean=False):string;overload;
-
+    class procedure STRIDX(Args: array of string; aList: TStringList; aSeparator: string = '-'; withQuoted: Boolean = False); overload;
+    class function  STRDIY(Args: array of string; aList: TStringList; aSeparator: string = ','; withQuoted: Boolean = False): string; overload;
+    class function  STRDIY(Args: array of string; aList: TCollection; aSeparator: string = ','; bSeparator: string = '-'; withQuoted: Boolean = False): string; overload;
 
     //#s:source;t:target
     //#tstringlist->
@@ -130,12 +129,12 @@ type
     class procedure CopyIt(sList:TCollection;var tList:TStringList;aClass:TUniEngineClass);overload;
 
 
-    class function  GetUniQuery(aSQL: string; aUniConnection: TUniConnection; aFetchAll: Boolean = True): TUniQuery; overload;
+    class function  GetUniQuery(aSQL: string; aUniConnection: TUniConnection; aFetchAll: Boolean = False): TUniQuery; overload;
     class function  GetUniQuery(aSQL: string): TUniQuery; overload;
 
-    class function  GetDataSet(aSQL: string; aUniConnection: TUniConnection; aFetchAll: Boolean = True): TUniQuery; overload;
+    class function  GetDataSet(aSQL: string; aUniConnection: TUniConnection; aFetchAll: Boolean = False): TUniQuery; overload;
     class function  GetDataSet(aSQL: string): TUniQuery; overload;
-    class procedure GetDataSet(aSQL: string; Fields: array of string; aUniConnection: TUniConnection; var Result: TStringList; aSeparator: string = ','; aFetchAll: Boolean = True); overload;
+    class procedure GetDataSet(aSQL: string; Fields: array of string; aUniConnection: TUniConnection; var Result: TStringList; aSeparator: string = ','; aFetchAll: Boolean = False); overload;
 
     class function  GetServDat(aUniConnection:TUniConnection):TDateTime;
 
