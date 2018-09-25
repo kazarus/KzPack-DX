@@ -122,11 +122,11 @@ type
 
     //#s:source;t:target
     //#tstringlist->
-    class procedure CopyIt(sList:TStringList;var tList:TCollection);overload;
-    class procedure CopyIt(sList:TStringList;var tList:TStringList;aClass:TUniEngineClass);overload;
+    class procedure CopyIt(sList: TStringList; var tList: TCollection); overload;
+    class procedure CopyIt(sList: TStringList; var tList: TStringList; aClass: TUniEngineClass); overload;
     //#tcollection->
-    class procedure CopyIt(sList:TCollection;var tList:TCollection);overload;
-    class procedure CopyIt(sList:TCollection;var tList:TStringList;aClass:TUniEngineClass);overload;
+    class procedure CopyIt(sList: TCollection; var tList: TCollection); overload;
+    class procedure CopyIt(sList: TCollection; var tList: TStringList; aClass: TUniEngineClass); overload;
 
 
     class function  GetUniQuery(aSQL: string; aUniConnection: TUniConnection; aFetchAll: Boolean = False): TUniQuery; overload;
@@ -136,21 +136,21 @@ type
     class function  GetDataSet(aSQL: string): TUniQuery; overload;
     class procedure GetDataSet(aSQL: string; Fields: array of string; aUniConnection: TUniConnection; var Result: TStringList; aSeparator: string = ','; aFetchAll: Boolean = False); overload;
 
-    class function  GetServDat(aUniConnection:TUniConnection):TDateTime;
+    class function  GetServDat(aUniConnection: TUniConnection): TDateTime;
 
-    class function  CheckExist(aTable:string;Args:array of Variant):Boolean;overload;
-    class function  CheckField(aField,aTable:string;Args:array of Variant):Integer;overload;
+    class function  CheckExist(aTable: string; Args: array of Variant): Boolean; overload;
+    class function  CheckField(aField, aTable: string; Args: array of Variant): Integer; overload;
 
-    class function  CheckExist(aTable:string;Args:array of Variant;aUniConnection:TUniConnection;aSQLAddition:string=''):Boolean;overload;
-    class function  CheckField(aField,aTable:string;Args:array of Variant;aUniConnection:TUniConnection;aSQLAddition:string=''):Integer;overload;
-    class function  CheckCount(aField,aTable:string;Args:array of Variant;aUniConnection:TUniConnection;aSQLAddition:string=''):Integer;overload;
-    class function  CheckField(aSQL:string;AAsField:string;aUniConnection:TUniConnection):Variant;overload;
+    class function  CheckExist(aTable: string; Args: array of Variant; aUniConnection: TUniConnection; aSQLAddition: string = ''): Boolean; overload;
+    class function  CheckField(aField, aTable: string; Args: array of Variant; aUniConnection: TUniConnection; aSQLAddition: string = ''): Integer; overload;
+    class function  CheckCount(aField, aTable: string; Args: array of Variant; aUniConnection: TUniConnection; aSQLAddition: string = ''): Integer; overload;
+    class function  CheckField(aSQL: string; AAsField: string; aUniConnection: TUniConnection): Variant; overload;
 
-    class function  ExistTable(aTable:string;aUniConnection:TUniConnection):Boolean;
-    class function  ExistField(aTable,aField:string;aUniConnection:TUniConnection):Boolean;
-    class function  ExistFieldInOracle(aTable,aField:string;aUniConnection:TUniConnection):Boolean;
-    class function  ExistConst(aConstraintType,aConstraintName:string;aUniConnection:TUniConnection):Boolean;
-    class function  ExistIndex(aIndexName:string;aUniConnection:TUniConnection):Boolean;
+    class function  ExistTable(aTable: string; aUniConnection: TUniConnection): Boolean;
+    class function  ExistField(aTable, aField: string; aUniConnection: TUniConnection): Boolean;
+    class function  ExistFieldInOracle(aTable, aField: string; aUniConnection: TUniConnection): Boolean;
+    class function  ExistConst(aConstraintType, aConstraintName: string; aUniConnection: TUniConnection): Boolean;
+    class function  ExistIndex(aIndexName: string; aUniConnection: TUniConnection): Boolean;
 
     class function  ExistInKey(aConstraintType, aField, aTable: string; aUniConnection: TUniConnection): Boolean;
     class function  AlterField(aTable, aField: string; length: Integer; aUniConnection: TUniConnection): Boolean;
