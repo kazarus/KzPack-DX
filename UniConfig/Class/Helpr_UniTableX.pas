@@ -86,7 +86,7 @@ begin
 
     cList.Add('BEGIN');
 
-    cList.Add(Format('CREATE TABLE %S (',[self.TABLNAME]));
+    cList.Add(Format('CREATE TABLE [%S] (',[self.TABLNAME]));
     if (self.FListCols <> nil) and (self.FListCols.Count>0) then
     begin
       for I := 0 to self.FListCols.Count-1 do

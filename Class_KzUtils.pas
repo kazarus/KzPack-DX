@@ -124,6 +124,8 @@ type
   public
     //CreateDir
     class function  CreateDirEx(const aPath:string;aSeparator:Char='\';aRootPath:string=''):Boolean;
+  public
+    class function  getLength(aLevel:Integer;aCodeRule:string):Integer;
   end;
 
 
@@ -1332,6 +1334,18 @@ var
 begin
   SysUtils.CreateGUID(GUID);
   Result:=GUIDToString(GUID);
+end;
+
+class function TKzUtils.getLength(aLevel: Integer; aCodeRule: string): Integer;
+var
+  I:Integer;
+begin
+  Result := 0;
+  for I := 1 to aLevel do
+  begin
+    Result := Result + StrToIntDef(aCodeRule[I],0);
+    if aLevel = I then Exit;
+  end;
 end;
 
 class function TKzUtils.DateToInt(aValue: TDateTime;short:Boolean): Integer;

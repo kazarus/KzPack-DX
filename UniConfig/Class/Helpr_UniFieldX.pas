@@ -34,7 +34,7 @@ begin
     end;
 
     cList.Add('BEGIN');
-    sText := 'ALTER TABLE %s ADD %s %s NULL;';
+    sText := 'ALTER TABLE [%s] ADD %s %s NULL;';
     sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
     cList.Add(sText);
     cList.Add(Format('PRINT %s',[QuotedStr(Format('添加字段:%S.%S',[self.TABLNAME,self.COLVNAME]))]));
@@ -66,7 +66,7 @@ begin
       if self.IsKey then
       begin
         cList.Add('--主键字段,需要手工更新');
-        sText := '--ALTER TABLE %s ALTER COLUMN %s %s NULL';
+        sText := '--ALTER TABLE [%s] ALTER COLUMN %s %s NULL';
         sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
         cList.Add(sText);
         cList.Add(Format('PRINT %s',[QuotedStr(Format('主键字段,需要手工更新:%S.%S',[self.TABLNAME,self.COLVNAME]))]));
@@ -74,14 +74,14 @@ begin
       if self.IsRef then
       begin
         cList.Add('--外键字段,需要手工更新');
-        sText := '--ALTER TABLE %s ALTER COLUMN %s %s NULL';
+        sText := '--ALTER TABLE [%s] ALTER COLUMN %s %s NULL';
         sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
         cList.Add(sText);
         cList.Add(Format('PRINT %s',[QuotedStr(Format('外键字段,需要手工更新:%S.%S',[self.TABLNAME,self.COLVNAME]))]));
       end;
     end else
     begin
-      sText := 'ALTER TABLE %s ALTER COLUMN %s %s NULL';
+      sText := 'ALTER TABLE [%s] ALTER COLUMN %s %s NULL';
       sText := Format(sText,[self.TABLNAME,self.COLVNAME,self.ToScript]);
 
       cList.Add(sText);
