@@ -184,7 +184,7 @@ object DialogListUniConfig: TDialogListUniConfig
     object Btnv_Mrok: TRzToolButton
       Left = 4
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 5
       Layout = blGlyphTop
@@ -192,9 +192,9 @@ object DialogListUniConfig: TDialogListUniConfig
       OnClick = Btnv_MrokClick
     end
     object Btnv_Quit: TRzToolButton
-      Left = 44
+      Left = 54
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 3
       Layout = blGlyphTop
@@ -202,9 +202,9 @@ object DialogListUniConfig: TDialogListUniConfig
       OnClick = Btnv_QuitClick
     end
     object Btnv_AddvCnfg: TRzToolButton
-      Left = 92
+      Left = 112
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 0
       Layout = blGlyphTop
@@ -212,9 +212,9 @@ object DialogListUniConfig: TDialogListUniConfig
       OnClick = Btnv_AddvCnfgClick
     end
     object Btnv_DeltCnfg: TRzToolButton
-      Left = 132
+      Left = 162
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 1
       Layout = blGlyphTop
@@ -222,9 +222,9 @@ object DialogListUniConfig: TDialogListUniConfig
       OnClick = Btnv_DeltCnfgClick
     end
     object Btnv_EditCnfg: TRzToolButton
-      Left = 172
+      Left = 212
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 2
       Layout = blGlyphTop
@@ -232,9 +232,9 @@ object DialogListUniConfig: TDialogListUniConfig
       OnClick = Btnv_EditCnfgClick
     end
     object Btnv_CopyCnfg: TRzToolButton
-      Left = 212
+      Left = 262
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 4
       Layout = blGlyphTop
@@ -242,9 +242,9 @@ object DialogListUniConfig: TDialogListUniConfig
       OnClick = Btnv_CopyCnfgClick
     end
     object Btnv_ActvCnfg: TRzToolButton
-      Left = 252
+      Left = 312
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 6
       Layout = blGlyphTop
@@ -252,9 +252,9 @@ object DialogListUniConfig: TDialogListUniConfig
       OnClick = Btnv_ActvCnfgClick
     end
     object Btnv_OrdrCnfg: TRzToolButton
-      Left = 292
+      Left = 362
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 8
       Layout = blGlyphTop
@@ -262,9 +262,9 @@ object DialogListUniConfig: TDialogListUniConfig
       OnClick = Btnv_OrdrCnfgClick
     end
     object Btnv_TestCnfg: TRzToolButton
-      Left = 332
+      Left = 412
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 9
       Layout = blGlyphTop
@@ -272,12 +272,12 @@ object DialogListUniConfig: TDialogListUniConfig
       OnClick = Btnv_TestCnfgClick
     end
     object Line_1: TRzSpacer
-      Left = 84
+      Left = 104
       Top = 10
       Grooved = True
     end
     object Comb_UnixMark: TRzComboBox
-      Left = 372
+      Left = 462
       Top = 12
       Width = 100
       Height = 21
@@ -288,7 +288,7 @@ object DialogListUniConfig: TDialogListUniConfig
       TabOrder = 0
     end
     object Comb_UnixType: TRzComboBox
-      Left = 472
+      Left = 562
       Top = 12
       Width = 100
       Height = 21
@@ -334,7 +334,7 @@ object DialogListUniConfig: TDialogListUniConfig
     Left = 480
     Top = 380
     Bitmap = {
-      494C01010A0018002C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010A001800300010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
