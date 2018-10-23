@@ -98,15 +98,10 @@ implementation
 uses
   Variants;
 
-
-{ TUniFieldX }
-
 function TUniFieldX.CheckExist(AUniConnection: TUniConnection): Boolean;
 begin
 
 end;
-
-
 
 class function TUniFieldX.ExpSqlInSQLSRV(aTabl: string): string;
 begin
@@ -680,7 +675,7 @@ end;
 
 function TIdentity.GetStrsIndex: string;
 begin
-  Result:=Name;
+  Result := Name;
 end;
 
 class function TIdentity.ReadDS(AUniQuery: TUniQuery): TUniEngine;
