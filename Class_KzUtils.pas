@@ -108,22 +108,22 @@ type
     class function  StrxCutZero(Source:string):string;
     class function  StrxCutMark(Source:string):string;
 
-    class function  TryFormatCode(aValue,ALength:Integer;const AText:string):string;overload;
-    class function  FormatCode(aValue,ALength:Integer):string;overload;
+    class function  TryFormatCode(aValue, ALength: Integer; const AText: string): string; overload;
+    class function  FormatCode(aValue, ALength: Integer): string; overload;
 
-    class function  TryFormatCode(ALength,aBoolBack:Integer;const AStrSub,ASource:string):string;overload;
-    class function  FormatCode(aValue:string;ALength:Integer;AStrSub:string):string;overload;
+    class function  TryFormatCode(ALength, aBoolBack: Integer; const AStrSub, ASource: string): string; overload;
+    class function  FormatCode(aValue: string; ALength: Integer; AStrSub: string): string; overload;
   public
     //PerlRegEx
-    class function  StrsStrCutted(const Source:string;ATag:string):TStrings;
-    class procedure ListStrCutted(const Source:string;ATag:string;var Result:TStrings);
-    class procedure ListMatchText(const Source:string;ATag:string;var Result:TStrings);
-    class function  StrsStrMatchx(const Source:string;ATag:string):TStrings;
-    class function  BoolStrMatchx(const Source:string;ATag:string;var aValue:string):Boolean;
-    class function  RegReplaceAll(const Source:string;ATag:string;AReplacement:string):string;
+    class function  StrsStrCutted(const Source: string; ATag: string): TStrings;
+    class procedure ListStrCutted(const Source: string; ATag: string; var Result: TStrings);
+    class procedure ListMatchText(const Source: string; ATag: string; var Result: TStrings);
+    class function  StrsStrMatchx(const Source: string; ATag: string): TStrings;
+    class function  BoolStrMatchx(const Source: string; ATag: string; var aValue: string): Boolean;
+    class function  RegReplaceAll(const Source: string; ATag: string; AReplacement: string): string;
   public
     //CreateDir
-    class function  CreateDirEx(const aPath:string;aSeparator:Char='\';aRootPath:string=''):Boolean;
+    class function  CreateDirEx(const aPath: string; aSeparator: Char = '\'; aRootPath: string = ''): Boolean;
   public
     class function  getLength(aLevel: Integer; aCodeRule: string): Integer;
     class procedure getParent(aCodeFull: string; aCodeRule: string; var aList: TStringList);
@@ -1216,8 +1216,7 @@ begin
   end;
 end;
 
-class procedure TKzUtils.ListMatchText(const Source: string; ATag: string;
-  var Result: TStrings);
+class procedure TKzUtils.ListMatchText(const Source: string; ATag: string; var Result: TStrings);
 var
   PerlA:TPerlRegEx;
 begin
@@ -1346,10 +1345,10 @@ end;
 
 class function TKzUtils.GetGUID: string;
 var
-  GUID:TGUID;
+  GUID: TGUID;
 begin
   SysUtils.CreateGUID(GUID);
-  Result:=GUIDToString(GUID);
+  Result := GUIDToString(GUID);
 end;
 
 class function TKzUtils.getLength(aLevel: Integer; aCodeRule: string): Integer;
@@ -1368,25 +1367,24 @@ class function TKzUtils.DateToInt(aValue: TDateTime;short:Boolean): Integer;
 begin
   if short then
   begin
-    Result:=StrToIntDef(FormatDateTime('YYYYMM',aValue),189912);
+    Result := StrToIntDef(FormatDateTime('YYYYMM', aValue), 189912);
   end else
   begin
-    Result:=StrToIntDef(FormatDateTime('YYYYMMDD',aValue),18991230);
+    Result := StrToIntDef(FormatDateTime('YYYYMMDD', aValue), 18991230);
   end;
 end;
 
 
 {$IFDEF MSWINDOWS}
-class function TKzUtils.StringToColorDef(const aValue,
-  ADef: string): TColor;
+class function TKzUtils.StringToColorDef(const aValue, aDef: string): TColor;
 begin
-  Result:=clWhite;
-  if Trim(aValue)='' then
+  Result := clWhite;
+  if Trim(aValue) = '' then
   begin
-    Result:=StringToColor(ADef);
+    Result := StringToColor(aDef);
   end else
   begin
-    Result:=StringToColor(Trim(aValue));
+    Result := StringToColor(Trim(aValue));
   end;
 end;
 {$ENDIF}
