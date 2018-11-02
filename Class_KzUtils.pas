@@ -754,6 +754,11 @@ begin
   begin
     cSize := getLength(I,aCodeRule);
     aList.Add(Copy(aCodeFull,1,cSize));
+
+    if cSize = Length(aCodeFull) then
+    begin
+      Exit;
+    end;
   end;
 end;
 
