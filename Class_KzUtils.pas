@@ -125,7 +125,8 @@ type
     //CreateDir
     class function  CreateDirEx(const aPath:string;aSeparator:Char='\';aRootPath:string=''):Boolean;
   public
-    class function  getLength(aLevel:Integer;aCodeRule:string):Integer;
+    class function  getLength(aLevel: Integer; aCodeRule: string): Integer;
+    class procedure getParent(aCodeFull: string; aCodeRule: string; var aList: TStringList);
   end;
 
 
@@ -739,6 +740,21 @@ end;
 class function TKzUtils.GetOrd(aChar: Char): Integer;
 begin
   Result:=Ord(UpCase(aChar))-64;
+end;
+
+class procedure TKzUtils.getParent(aCodeFull, aCodeRule: string;
+  var aList: TStringList);
+var
+  I: Integer;
+  cSize: Integer;
+begin
+  if aList = nil then Exit;
+
+  for I := 1 to Length(aCodeRule) do
+  begin
+    cSize := getLength(I,aCodeRule);
+    aList.Add(Copy(aCodeFull,1,cSize));
+  end;
 end;
 
 class function TKzUtils.getPath(dirName: string): string;
