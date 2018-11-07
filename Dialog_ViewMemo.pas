@@ -18,10 +18,9 @@ type
     Btnv_Quit: TRzToolButton;
     Btnv_Expt: TRzToolButton;
     ImageList1: TImageList;
-    procedure Btnx_ExptClick(Sender: TObject);
     procedure Btnv_MrokClick(Sender: TObject);
-    procedure Btnv_ExptClick(Sender: TObject);
     procedure Btnv_QuitClick(Sender: TObject);
+    procedure Btnv_ExptClick(Sender: TObject);
   private
     FTitl: string;
     FMemo: string;
@@ -40,38 +39,39 @@ type
 var
   DialogViewMemo: TDialogViewMemo;
 
-function ViewMemo(ATitl: string; AMemo: string; AMrokLabl: string = ''; AQuitLabl: string = ''): Integer;
-function EditMemo(ATitl: string; AMemo: string; var AText: string; AMrokLabl: string = ''; AQuitLabl: string = ''): Integer;
+function ViewMemo(aTitl: string; aMemo: string; aMrokLabl: string = ''; aQuitLabl: string = ''): Integer;
+function EditMemo(aTitl: string; aMemo: string; var AText: string; aMrokLabl: string = ''; aQuitLabl: string = ''): Integer;
 
 implementation
 
 {$R *.dfm}
-function ViewMemo(ATitl:string;AMemo:string;AMrokLabl:string='';AQuitLabl:string=''):Integer;
+
+function ViewMemo(aTitl: string; aMemo: string; aMrokLabl: string = ''; aQuitLabl: string = ''): Integer;
 begin
   try
-    DialogViewMemo:=TDialogViewMemo.Create(nil);
-    DialogViewMemo.FTitl:=ATitl;
-    DialogViewMemo.FMemo:=AMemo;
-    DialogViewMemo.FMrokLabl:=AMrokLabl;
-    DialogViewMemo.FQuitLabl:=AQuitLabl;
-    Result:=DialogViewMemo.ShowModal;
+    DialogViewMemo := TDialogViewMemo.Create(nil);
+    DialogViewMemo.FTitl := aTitl;
+    DialogViewMemo.FMemo := aMemo;
+    DialogViewMemo.FMrokLabl := aMrokLabl;
+    DialogViewMemo.FQuitLabl := aQuitLabl;
+    Result := DialogViewMemo.ShowModal;
   finally
     FreeAndNil(DialogViewMemo);
   end;
-end;      
+end;
 
-function EditMemo(ATitl:string;AMemo:string;var AText:string;AMrokLabl:string='';AQuitLabl:string=''):Integer;
+function EditMemo(aTitl: string; aMemo: string; var AText: string; aMrokLabl: string = ''; aQuitLabl: string = ''): Integer;
 begin
   try
-    DialogViewMemo:=TDialogViewMemo.Create(nil);
-    DialogViewMemo.FTitl:=ATitl;
-    DialogViewMemo.FMemo:=AMemo;
-    DialogViewMemo.FMrokLabl:=AMrokLabl;
-    DialogViewMemo.FQuitLabl:=AQuitLabl;
-    Result:=DialogViewMemo.ShowModal;
-    if Result=Mrok then
+    DialogViewMemo := TDialogViewMemo.Create(nil);
+    DialogViewMemo.FTitl := aTitl;
+    DialogViewMemo.FMemo := aMemo;
+    DialogViewMemo.FMrokLabl := aMrokLabl;
+    DialogViewMemo.FQuitLabl := aQuitLabl;
+    Result := DialogViewMemo.ShowModal;
+    if Result = Mrok then
     begin
-      AText:=Trim(DialogViewMemo.Memo_Main.Lines.Text);
+      AText := Trim(DialogViewMemo.Memo_Main.Lines.Text);
     end;
   finally
     FreeAndNil(DialogViewMemo);
@@ -87,7 +87,6 @@ end;
 procedure TDialogViewMemo.SetCommParams;
 begin
   inherited;
-
   Btnv_Mrok.Caption := '确定';
   Btnv_Quit.Caption := '取消';
   Btnv_Expt.Caption := '导出';
@@ -111,8 +110,7 @@ end;
 procedure TDialogViewMemo.SetInitialize;
 begin
   inherited;
-
-  Caption:=FTitl;
+  Caption := FTitl;
   Memo_Main.Lines.Clear;
   Memo_Main.Lines.Add(FMemo);
 end;
@@ -158,11 +156,6 @@ end;
 procedure TDialogViewMemo.Btnv_QuitClick(Sender: TObject);
 begin
   ModalResult := mrCancel;
-end;
-
-procedure TDialogViewMemo.Btnx_ExptClick(Sender: TObject);
-begin
-  ExptText;
 end;
 
 end.

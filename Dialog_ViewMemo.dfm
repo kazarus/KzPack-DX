@@ -224,8 +224,6 @@ object DialogViewMemo: TDialogViewMemo
     TabOrder = 0
     FrameVisible = True
     FramingPreference = fpCustomFraming
-    ExplicitWidth = 643
-    ExplicitHeight = 312
   end
   object Tool_Main: TRzToolbar
     Left = 0
@@ -246,7 +244,6 @@ object DialogViewMemo: TDialogViewMemo
     BorderWidth = 0
     TabOrder = 1
     VisualStyle = vsClassic
-    ExplicitWidth = 643
     ToolbarControls = (
       Btnv_Mrok
       Btnv_Expt
@@ -293,8 +290,6 @@ object DialogViewMemo: TDialogViewMemo
     BorderWidth = 0
     TabOrder = 2
     VisualStyle = vsClassic
-    ExplicitTop = 356
-    ExplicitWidth = 643
     object Panl_Text: TRzStatusPane
       Left = 0
       Top = 0
