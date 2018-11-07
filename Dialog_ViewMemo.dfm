@@ -2,8 +2,8 @@ object DialogViewMemo: TDialogViewMemo
   Left = 220
   Top = 234
   Caption = 'DialogViewMemo'
-  ClientHeight = 375
-  ClientWidth = 643
+  ClientHeight = 402
+  ClientWidth = 704
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
   Font.Color = clWindowText
@@ -16,8 +16,8 @@ object DialogViewMemo: TDialogViewMemo
   object Memo_Main: TRzMemo
     Left = 0
     Top = 44
-    Width = 643
-    Height = 312
+    Width = 704
+    Height = 339
     Align = alClient
     Lines.Strings = (
       ''
@@ -224,11 +224,13 @@ object DialogViewMemo: TDialogViewMemo
     TabOrder = 0
     FrameVisible = True
     FramingPreference = fpCustomFraming
+    ExplicitWidth = 643
+    ExplicitHeight = 312
   end
   object Tool_Main: TRzToolbar
     Left = 0
     Top = 0
-    Width = 643
+    Width = 704
     Height = 44
     AutoStyle = False
     Images = ImageList1
@@ -244,6 +246,7 @@ object DialogViewMemo: TDialogViewMemo
     BorderWidth = 0
     TabOrder = 1
     VisualStyle = vsClassic
+    ExplicitWidth = 643
     ToolbarControls = (
       Btnv_Mrok
       Btnv_Expt
@@ -251,7 +254,7 @@ object DialogViewMemo: TDialogViewMemo
     object Btnv_Mrok: TRzToolButton
       Left = 4
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 4
       Layout = blGlyphTop
@@ -259,9 +262,9 @@ object DialogViewMemo: TDialogViewMemo
       OnClick = Btnv_MrokClick
     end
     object Btnv_Quit: TRzToolButton
-      Left = 84
+      Left = 104
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 0
       Layout = blGlyphTop
@@ -269,9 +272,9 @@ object DialogViewMemo: TDialogViewMemo
       OnClick = Btnv_QuitClick
     end
     object Btnv_Expt: TRzToolButton
-      Left = 44
+      Left = 54
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 2
       Layout = blGlyphTop
@@ -281,8 +284,8 @@ object DialogViewMemo: TDialogViewMemo
   end
   object RzStatusBar1: TRzStatusBar
     Left = 0
-    Top = 356
-    Width = 643
+    Top = 383
+    Width = 704
     Height = 19
     BorderInner = fsNone
     BorderOuter = fsNone
@@ -290,10 +293,12 @@ object DialogViewMemo: TDialogViewMemo
     BorderWidth = 0
     TabOrder = 2
     VisualStyle = vsClassic
+    ExplicitTop = 356
+    ExplicitWidth = 643
     object Panl_Text: TRzStatusPane
       Left = 0
       Top = 0
-      Width = 643
+      Width = 704
       Height = 19
       Align = alClient
       Caption = ''
@@ -306,7 +311,7 @@ object DialogViewMemo: TDialogViewMemo
     Left = 296
     Top = 216
     Bitmap = {
-      494C0101060008000C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106000800100010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

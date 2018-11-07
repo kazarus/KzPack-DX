@@ -1,5 +1,6 @@
 unit Dialog_ViewMemo;
 
+
 interface
 
 uses
@@ -22,10 +23,10 @@ type
     procedure Btnv_ExptClick(Sender: TObject);
     procedure Btnv_QuitClick(Sender: TObject);
   private
-    FTitl:string;
-    FMemo:string;
-    FMrokLabl:string;
-    FQuitLabl:string;
+    FTitl: string;
+    FMemo: string;
+    FMrokLabl: string;
+    FQuitLabl: string;
   protected
     procedure SetInitialize;override;
     procedure SetCommParams;override;
@@ -39,8 +40,8 @@ type
 var
   DialogViewMemo: TDialogViewMemo;
 
-function ViewMemo(ATitl:string;AMemo:string;AMrokLabl:string='';AQuitLabl:string=''):Integer;
-function EditMemo(ATitl:string;AMemo:string;var AText:string;AMrokLabl:string='';AQuitLabl:string=''):Integer;
+function ViewMemo(ATitl: string; AMemo: string; AMrokLabl: string = ''; AQuitLabl: string = ''): Integer;
+function EditMemo(ATitl: string; AMemo: string; var AText: string; AMrokLabl: string = ''; AQuitLabl: string = ''): Integer;
 
 implementation
 
