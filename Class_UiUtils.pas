@@ -84,6 +84,10 @@ const
   CONST_COLOR_LOCKED = clInfoBk;
   CONST_COLOR_EDITED = $00D0FFD0;
 
+const
+  CONST_COL_OBJECT_ID = 0;
+  CONST_COL_CHECK_BOX = 1;
+
 implementation
 
 uses
