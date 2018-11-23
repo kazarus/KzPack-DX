@@ -106,10 +106,10 @@ begin
 
         if I = self.FListCols.Count-1 then
         begin
-          cList.Add(Format('%S %S %S' ,[cField.COLVNAME,cField.ToScript,sText]));
+          cList.Add(Format('[%S] %S %S' ,[cField.COLVNAME,cField.ToScript,sText]));
         end else
         begin
-          cList.Add(Format('%S %S %S,',[cField.COLVNAME,cField.ToScript,sText]));
+          cList.Add(Format('[%S] %S %S,',[cField.COLVNAME,cField.ToScript,sText]));
         end;
       end;
     end;
@@ -118,10 +118,10 @@ begin
     //#是否存在主
     if KeyExist(kText) then
     begin
-      cList.Add(Format('ALTER TABLE %S ADD CONSTRAINT PK_%S PRIMARY KEY (%S);',[self.TABLNAME,self.TABLNAME,kText]));
+      cList.Add(Format('ALTER TABLE [%S] ADD CONSTRAINT PK_%S PRIMARY KEY (%S);',[self.TABLNAME,self.TABLNAME,kText]));
     end;
 
-    cList.Add(Format('PRINT %s',[QuotedStr(Format('添加新表:%S',[self.TABLNAME]))]));
+    cList.Add(Format('PRINT %s',[QuotedStr(Format('添加新表:[%S]',[self.TABLNAME]))]));
     cList.Add('END;');
 
     Result := cList.Text;
