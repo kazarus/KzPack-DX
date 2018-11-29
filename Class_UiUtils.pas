@@ -78,6 +78,9 @@ type
   public
     //frxreport
     class function  GetfrxReportPage(Afrxreport:TfrxReport):string;
+  public
+    class procedure FillDATA(aIndx: Integer; aData: TObject; aGrid: TAdvStringGrid; iCheckEd: Boolean = False);
+    class procedure TreeDATA(aCodeRule: string; aList: TCollection; aTree: TElTree; iCheckEd: Boolean = False; aRoot: TElTreeItem = nil; aRootName: string = ''); overload;
   end;
 
 const
@@ -227,6 +230,12 @@ begin
     RowFontColor[ARow] := clWhite;
     EndUpdate;
   end;
+end;
+
+class procedure TUiUtils.FillDATA(aIndx: Integer; aData: TObject;
+  aGrid: TAdvStringGrid; iCheckEd: Boolean);
+begin
+
 end;
 
 class function TUiUtils.GetCellTextAlign(aGrid: TAdvStringGrid; ACol,
@@ -749,6 +758,12 @@ begin
 
   aForm.Top := nTop;
   aForm.Left := nLeft;
+end;
+
+class procedure TUiUtils.TreeDATA(aCodeRule: string; aList: TCollection;
+  aTree: TElTree; iCheckEd: Boolean; aRoot: TElTreeItem; aRootName: string);
+begin
+
 end;
 
 class procedure TUiUtils.TreeIndex(aTree: TElTree);
