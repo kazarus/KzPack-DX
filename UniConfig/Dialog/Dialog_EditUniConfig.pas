@@ -50,6 +50,7 @@ type
     FRealPswd: string;
     FEditMode: TDialogEditUniConfigEditMode;
     FLoadLast: Boolean;          //是否记忆上次配置
+    FDefaultExt: string;
     FConnectionMark:string;
   protected
     procedure SetInitialize;override;
@@ -72,8 +73,8 @@ type
 var
   DialogEditUniConfig: TDialogEditUniConfig;
 
-function ViewEditCnfg(aEditMode: TDialogEditUniConfigEditMode; aCnfg: TUniConfig; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
-function ViewCnfgCnfg(aEditMode: TDialogEditUniConfigEditMode; var aCnfg: TUniConfig; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
+function ViewEditCnfg(aEditMode: TDialogEditUniConfigEditMode; aCnfg: TUniConfig; aConnectionMark: string = ''; aLoadLast: Boolean = False; aDefaultExt: string = '*.bac|*.bac|*.mdb|*.mdb'): Integer; overload;
+function ViewCnfgCnfg(aEditMode: TDialogEditUniConfigEditMode; var aCnfg: TUniConfig; aConnectionMark: string = ''; aLoadLast: Boolean = False; aDefaultExt: string = '*.bac|*.bac|*.mdb|*.mdb'): Integer; overload;
 
 implementation
 uses
@@ -83,13 +84,14 @@ uses
 {$R *.dfm}
 
 
-function ViewEditCnfg(aEditMode: TDialogEditUniConfigEditMode; aCnfg: TUniConfig; aConnectionMark: string; aLoadLast: Boolean): Integer;
+function ViewEditCnfg(aEditMode: TDialogEditUniConfigEditMode; aCnfg: TUniConfig; aConnectionMark: string; aLoadLast: Boolean; aDefaultExt: string): Integer;
 begin
   try
     DialogEditUniConfig := TDialogEditUniConfig.Create(nil);
     DialogEditUniConfig.FEditMode := aEditMode;
     DialogEditUniConfig.FRealCnfg := aCnfg;
     DialogEditUniConfig.FLoadLast := aLoadLast;
+    DialogEditUniConfig.FDefaultExt := aDefaultExt;
     DialogEditUniConfig.FConnectionMark := aConnectionMark;
     DialogEditUniConfig.BorderStyle := bsSizeable;
     Result := DialogEditUniConfig.ShowModal;
@@ -98,14 +100,17 @@ begin
   end;
 end;
 
-function ViewCnfgCnfg(aEditMode: TDialogEditUniConfigEditMode; var aCnfg: TUniConfig; aConnectionMark: string; aLoadLast: Boolean): Integer; overload;
+function ViewCnfgCnfg(aEditMode: TDialogEditUniConfigEditMode; var aCnfg: TUniConfig; aConnectionMark: string; aLoadLast: Boolean; aDefaultExt: string): Integer; overload;
 begin
   try
     DialogEditUniConfig:=TDialogEditUniConfig.Create(nil);
     DialogEditUniConfig.FEditMode:=deuemCnfg;
     DialogEditUniConfig.FRealCnfg:=aCnfg;
+    DialogEditUniConfig.FLoadLast := aLoadLast;
+    DialogEditUniConfig.FDefaultExt := aDefaultExt;
     DialogEditUniConfig.FConnectionMark:=aConnectionMark;
-        
+    DialogEditUniConfig.BorderStyle := bsSizeable;
+
     Result:=DialogEditUniConfig.ShowModal;
     if Result=Mrok then
     begin
@@ -352,7 +357,15 @@ begin
   if Trim(Comb_Type.Text) = CONST_PROVIDER_ACCESS then
   begin
     OD := TOpenDialog.Create(nil);
-    OD.Filter := '*.mdb|*.mdb|*.bac|*.bac';
+
+    if FDefaultExt <> '' then
+    begin
+      OD.Filter := FDefaultExt;
+    end else
+    begin
+      OD.Filter := '*.mdb|*.mdb|*.bac|*.bac';
+    end;
+
 
     cRoot := Trim(Comb_DataBase.Text);
     if (cRoot <> '') and (Pos('\\', cRoot) < 0) then
