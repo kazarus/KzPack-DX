@@ -21,9 +21,12 @@ type
     procedure Btnv_MrokClick(Sender: TObject);
     procedure Btnv_QuitClick(Sender: TObject);
     procedure Btnv_ExptClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormActivate(Sender: TObject);
   private
-    FTitl: string;
-    FMemo: string;
+    FTitlText: string;
+    FMemoText: string;
     FMrokLabl: string;
     FQuitLabl: string;
   protected
@@ -39,19 +42,22 @@ type
 var
   DialogViewMemo: TDialogViewMemo;
 
-function ViewMemo(aTitl: string; aMemo: string; aMrokLabl: string = ''; aQuitLabl: string = ''): Integer;
-function EditMemo(aTitl: string; aMemo: string; var AText: string; aMrokLabl: string = ''; aQuitLabl: string = ''): Integer;
+function ViewMemo(aTitlText: string; aMemoText: string; aMrokLabl: string = ''; aQuitLabl: string = ''): Integer;
+function EditMemo(aTitlText: string; aMemoText: string; var aTextEdit: string; aMrokLabl: string = ''; aQuitLabl: string = ''): Integer;
 
 implementation
 
+uses
+  StylManager;
+
 {$R *.dfm}
 
-function ViewMemo(aTitl: string; aMemo: string; aMrokLabl: string = ''; aQuitLabl: string = ''): Integer;
+function ViewMemo(aTitlText: string; aMemoText: string; aMrokLabl: string = ''; aQuitLabl: string = ''): Integer;
 begin
   try
     DialogViewMemo := TDialogViewMemo.Create(nil);
-    DialogViewMemo.FTitl := aTitl;
-    DialogViewMemo.FMemo := aMemo;
+    DialogViewMemo.FTitlText := aTitlText;
+    DialogViewMemo.FMemoText := aMemoText;
     DialogViewMemo.FMrokLabl := aMrokLabl;
     DialogViewMemo.FQuitLabl := aQuitLabl;
     Result := DialogViewMemo.ShowModal;
@@ -60,18 +66,18 @@ begin
   end;
 end;
 
-function EditMemo(aTitl: string; aMemo: string; var AText: string; aMrokLabl: string = ''; aQuitLabl: string = ''): Integer;
+function EditMemo(aTitlText: string; aMemoText: string; var aTextEdit: string; aMrokLabl: string = ''; aQuitLabl: string = ''): Integer;
 begin
   try
     DialogViewMemo := TDialogViewMemo.Create(nil);
-    DialogViewMemo.FTitl := aTitl;
-    DialogViewMemo.FMemo := aMemo;
+    DialogViewMemo.FTitlText := aTitlText;
+    DialogViewMemo.FMemoText := aMemoText;
     DialogViewMemo.FMrokLabl := aMrokLabl;
     DialogViewMemo.FQuitLabl := aQuitLabl;
     Result := DialogViewMemo.ShowModal;
     if Result = Mrok then
     begin
-      AText := Trim(DialogViewMemo.Memo_Main.Lines.Text);
+      aTextEdit := Trim(DialogViewMemo.Memo_Main.Lines.Text);
     end;
   finally
     FreeAndNil(DialogViewMemo);
@@ -110,9 +116,9 @@ end;
 procedure TDialogViewMemo.SetInitialize;
 begin
   inherited;
-  Caption := FTitl;
+  Caption := FTitlText;
   Memo_Main.Lines.Clear;
-  Memo_Main.Lines.Add(FMemo);
+  Memo_Main.Lines.Add(FMemoText);
 end;
 
 procedure TDialogViewMemo.TryFreeAndNil;
@@ -141,6 +147,21 @@ begin
   finally
     FreeAndNil(SD);
   end;
+end;
+
+procedure TDialogViewMemo.FormActivate(Sender: TObject);
+begin
+  TStylManager.InitFormSize(self.ClassName,self);
+end;
+
+procedure TDialogViewMemo.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  TStylManager.SaveFormSize(self.ClassName,self);
+end;
+
+procedure TDialogViewMemo.FormCreate(Sender: TObject);
+begin
+  self.BorderStyle := bsSizeable;
 end;
 
 procedure TDialogViewMemo.Btnv_ExptClick(Sender: TObject);
