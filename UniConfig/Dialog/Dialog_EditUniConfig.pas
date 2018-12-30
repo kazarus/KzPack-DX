@@ -527,6 +527,14 @@ begin
     FRealCnfg.IsDirect := 1;
   end;
   FRealCnfg.UnicOrdr := FRealCnfg.UnicIndx;
+
+  if FLoadLast then
+  begin
+    if FRealCnfg <> nil then
+    begin
+      FRealCnfg.ToFILE(TKzUtils.ExePath+Format('config-default-%s.json',[LowerCase(FRealCnfg.UnicType)]));
+    end;
+  end;
 end;
 
 function TDialogEditUniConfig.ChkValid: Boolean;

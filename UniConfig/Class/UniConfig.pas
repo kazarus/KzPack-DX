@@ -55,8 +55,8 @@ type
     function  GetNextIdex(AUniConnection:TUniConnection):Integer;overload;
     function  GetIsDirect:string;
     function  GetUNICSTAT:string;
-    function  GetActvStat:string;overload;
-    function  GetActvStat(AValue:string):string;overload;
+    function  GetActvStat: string; overload;
+    function  GetActvStat(Value: string): string; overload;
   public
     function  CheckExist(AUniConnection:TUniConnection):Boolean;override;
     function  toLittle:TLitConfig;
@@ -461,34 +461,34 @@ end;
 
 function TUniConfig.GetActvStat: string;
 begin
-  if UNICTYPE=CONST_PROVIDER_ACCESS then
+  if UNICTYPE = CONST_PROVIDER_ACCESS then
   begin
-    Result:=Format('当前连接:%S',[UpperCase(DataBase)]);
+    Result := Format('当前连接:%S', [UpperCase(DataBase)]);
   end else
-  if UNICTYPE=CONST_PROVIDER_SQLSRV then
+  if UNICTYPE = CONST_PROVIDER_SQLSRV then
   begin
-    Result:=Format('当前连接:%S.%S',[UpperCase(UNICSRVR),UpperCase(DataBase)]);
+    Result := Format('当前连接:%S.%S', [UpperCase(UNICSRVR), UpperCase(DataBase)]);
   end else
-  if UNICTYPE=CONST_PROVIDER_ORACLE then
+  if UNICTYPE = CONST_PROVIDER_ORACLE then
   begin
-    Result:=Format('当前连接:%S',[UpperCase(UNICSRVR)]);
-  end;    
+    Result := Format('当前连接:%S', [UpperCase(UNICSRVR)]);
+  end;
 end;
 
-function TUniConfig.GetActvStat(AValue: string): string;
+function TUniConfig.GetActvStat(Value: string): string;
 begin
-  if UNICTYPE=CONST_PROVIDER_ACCESS then
+  if UNICTYPE = CONST_PROVIDER_ACCESS then
   begin
-    Result:=Format('%S:%S',[AValue,UpperCase(DataBase)]);
+    Result := Format('%S:%S', [Value, UpperCase(DataBase)]);
   end else
-  if UNICTYPE=CONST_PROVIDER_SQLSRV then
+  if UNICTYPE = CONST_PROVIDER_SQLSRV then
   begin
-    Result:=Format('%S:%S.%S',[AValue,UpperCase(UNICSRVR),UpperCase(DataBase)]);
+    Result := Format('%S:%S.%S', [Value, UpperCase(UNICSRVR), UpperCase(DataBase)]);
   end else
-  if UNICTYPE=CONST_PROVIDER_ORACLE then
+   if UNICTYPE = CONST_PROVIDER_ORACLE then
   begin
-    Result:=Format('%S:%S',[AValue,UpperCase(UNICSRVR)]);
-  end;    
+    Result := Format('%S:%S', [Value, UpperCase(UNICSRVR)]);
+  end;
 end;
 
 constructor TUniConfig.Create;
