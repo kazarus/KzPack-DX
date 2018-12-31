@@ -24,6 +24,13 @@ type
     property UnicPswd : string read FUnicPswd  write FUnicPswd;
   end;
 
+  TDataBase = class(TUniEngine)
+  private
+    FDataBase:string;
+  published
+    property DataBase:string read FDataBase write FDataBase;
+  end;
+
   TUniConfig=class(TUniEngine)
   public
     FUnicIndx: Integer;   //ÅäÖÃÐòÁÐ
@@ -42,8 +49,10 @@ type
     FUnicMemo: string;    //±¸×¢
     FWhoBuild: Integer;   //»úÆ÷Âë
   public
-    IsDecrypt:Boolean;    //
-    IsEncrypt:Boolean;    //
+    IsDecrypt: Boolean;    //
+    IsEncrypt: Boolean;    //
+  public
+    FListData: TCollection;//*list of *tdatabase;
   protected
     procedure SetParameters;override;
     function  GetStrInsert:string;override;
@@ -63,6 +72,8 @@ type
     function  toAccess:string;
   public
     function  TstConnection(uCnfg:TUniConfig):Boolean;
+  protected
+    function GetLISTDATA:TCollection;
   public
     constructor Create;
     destructor Destroy; override;
@@ -81,6 +92,8 @@ type
     property UnicOrdr : Integer read FUnicOrdr  write FUnicOrdr;
     property UnicMemo : string read FUnicMemo  write FUnicMemo;
     property WhoBuild : Integer read FWhoBuild write FWhoBuild;
+  published
+    property ListDATA : TCollection read GetLISTDATA write FListData;
   public
     class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
     class procedure ReadDS(AUniQuery: TUniQuery;var Result:TUniEngine);override;
@@ -113,7 +126,7 @@ const
 implementation
 
 uses
-  Helpr_UniEngine;
+  Helpr_UniEngine,Class_KzUtils;
 
 function TUniConfig.CheckExist(AUniConnection: TUniConnection): Boolean;
 begin
@@ -334,6 +347,16 @@ begin
   end;  
 end;
 
+function TUniConfig.GetLISTDATA: TCollection;
+begin
+  if FLISTDATA = nil then
+  begin
+    FLISTDATA := TCollection.Create(TDataBase);
+  end;
+
+  Result:=FLISTDATA;
+end;
+
 class function TUniConfig.CopyIt(uCnfg: TUniConfig): TUniConfig;
 begin
   Result:=TUniConfig.Create;
@@ -493,14 +516,15 @@ end;
 
 constructor TUniConfig.Create;
 begin
-  UNICINDX :=-1;
+  UNICINDX := -1;
   WHOBUILD := 1;
-  IsDecrypt:=False;
-  IsEncrypt:=False;
+  IsDecrypt := False;
+  IsEncrypt := False;
 end;
 
 destructor TUniConfig.Destroy;
 begin
+  if FListData <> nil then TKzUtils.TryFreeAndNil(FListData);
 
   inherited;
 end;

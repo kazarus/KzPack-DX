@@ -506,6 +506,9 @@ begin
 end;
 
 procedure TDialogEditUniConfig.ReadCnfg;
+var
+  I: Integer;
+  DataBase: TDataBase;
 begin
   if FRealCnfg = nil then
   begin
@@ -532,6 +535,22 @@ begin
   begin
     if FRealCnfg <> nil then
     begin
+      //
+      if FRealCnfg.ListDATA = nil then
+      begin
+        FRealCnfg.ListDATA := TCollection.Create(TDataBase);
+      end;
+      TKzUtils.JustCleanList(FRealCnfg.FListDATA);
+
+      if (Comb_DataBase.Items.Count > 0) then
+      begin
+        for I := 0 to Comb_DataBase.Items.Count-1 do
+        begin
+          DataBase := TDataBase(FRealCnfg.ListDATA.Add);
+          DataBase.DataBase := Comb_DataBase.Items.Strings[I];
+        end;
+      end;
+
       FRealCnfg.ToFILE(TKzUtils.ExePath+Format('config-default-%s.json',[LowerCase(FRealCnfg.UnicType)]));
     end;
   end;
