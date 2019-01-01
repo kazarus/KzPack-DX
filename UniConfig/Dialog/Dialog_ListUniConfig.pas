@@ -356,8 +356,16 @@ begin
 end;
 
 procedure TDialogListUniConfig.AddvCnfg;
+var
+  uCnfg: TUniConfig;
 begin
-  if ViewEditCnfg(deuemAddv, nil, FConnectionMark, FLoadLast) <> Mrok then  Exit;
+  try
+    uCnfg := TUniConfig.Create;
+    if ViewEditCnfg(deuemAddv, uCnfg, FConnectionMark, FLoadLast) <> Mrok then  Exit;
+  finally
+    FreeAndNil(uCnfg);
+  end;
+
   InitCnfg;
 end;
 

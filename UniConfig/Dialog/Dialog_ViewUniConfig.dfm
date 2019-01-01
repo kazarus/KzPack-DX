@@ -48,10 +48,6 @@ object DialogViewUniConfig: TDialogViewUniConfig
     VertScrollBarStyles.ShowTrackHint = True
     VertScrollBarStyles.Width = 17
     OnDblClick = Tree_ViewDblClick
-    ExplicitLeft = 112
-    ExplicitTop = 160
-    ExplicitWidth = 200
-    ExplicitHeight = 100
   end
   object Panel1: TPanel
     Left = 0

@@ -26,13 +26,13 @@ type
   private
     FFileName: string;
     FLastText: string;
-    FDBCONFIG: TUniConfig;
+    FDbConfig: TUniConfig; //*
   public
     procedure ViewLast(Value:string);
   public
     procedure ReadCnfg(var uCnfg:TUniConfig);
     procedure TreeData;
-    procedure InitDB;
+    procedure InitData;
   end;
 
 var
@@ -85,7 +85,7 @@ end;
 procedure TDialogViewUniConfig.SetInitialize;
 begin
   inherited;
-  InitDB;
+  InitData;
 end;
 
 procedure TDialogViewUniConfig.TreeData;
@@ -97,16 +97,16 @@ var
 begin
   Tree_View.Items.Clear;
 
-  if (FDBCONFIG.FListData = nil) or (FDBCONFIG.FListData.Count = 0) then Exit;
+  if (FDbConfig.FListData = nil) or (FDbConfig.FListData.Count = 0) then Exit;
 
   with Tree_View do
   begin
     Items.BeginUpdate;
-    Root := Items.Add(nil,FDBCONFIG.UnicSrvr);
+    Root := Items.Add(nil,FDbConfig.UnicSrvr);
 
-    for I := 0 to FDBCONFIG.FListData.Count-1 do
+    for I := 0 to FDbConfig.FListData.Count-1 do
     begin
-      cData := TDataBase(FDBCONFIG.FListData.Items[I]);
+      cData := TDataBase(FDbConfig.FListData.Items[I]);
       if cData = nil then Continue;
 
       cItem := Items.AddChildObject(Root,cData.DataBase,cData);
@@ -125,16 +125,16 @@ end;
 procedure TDialogViewUniConfig.TryFreeAndNil;
 begin
   inherited;
-  if FDBCONFIG <> nil then TKzUtils.TryFreeAndNil(FDBCONFIG);
+  if FDbConfig <> nil then TKzUtils.TryFreeAndNil(FDbConfig);
 
 end;
 
 procedure TDialogViewUniConfig.ViewLast(Value: string);
 var
-  I:Integer;
-  cData:TDataBase;
-  cItem:TElTreeItem;
-  dItem:TElTreeItem;
+  I: Integer;
+  cData: TDataBase;
+  cItem: TElTreeItem;
+  dItem: TElTreeItem;
 begin
   if Value = '' then Exit;
 
@@ -179,11 +179,13 @@ begin
   ModalResult := mrOk;
 end;
 
-procedure TDialogViewUniConfig.InitDB;
+procedure TDialogViewUniConfig.InitData;
 begin
-  FDBCONFIG := TUniConfig.Create;
-  FDBCONFIG.InFILE(TKzUtils.ExePath + FFileName);
+  FDbConfig := TUniConfig.Create;
+  FDbConfig.InFILE(TKzUtils.ExePath + FFileName);
+
   TreeData;
+
   if FLastText <> '' then
   begin
     ViewLast(FLastText);
@@ -192,7 +194,7 @@ end;
 
 procedure TDialogViewUniConfig.ReadCnfg(var uCnfg: TUniConfig);
 var
-  cData:TDataBase;
+  cData: TDataBase;
 begin
   with Tree_View do
   begin
@@ -202,7 +204,7 @@ begin
     cData := TDataBase(Selected.Data);
     if cData = nil then Exit;
 
-    TUniConfig.CopyIt(FDBCONFIG,uCnfg);
+    TUniConfig.CopyIt(FDbConfig,uCnfg);
     uCnfg.DataBase:= cData.DataBase;
   end;
 end;

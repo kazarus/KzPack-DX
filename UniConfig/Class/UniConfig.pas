@@ -37,7 +37,6 @@ type
     FUnicStat: Integer;   //配置状态
     FUnicYear: Integer;   //配置年度
     FUnicMark: string;    //配置代号
-
     FUnicType: string;    //*驱动类型
     FUnicPswd: string;    //*密码
     FUnicUser: string;    //*用户
@@ -78,31 +77,31 @@ type
     constructor Create;
     destructor Destroy; override;
   published
-    property UnicIndx : Integer read FUnicIndx  write FUnicIndx;
-    property UnicStat : Integer read FUnicStat  write FUnicStat;
-    property UnicYear : Integer read FUnicYear  write FUnicYear;
-    property UnicMark : string read FUnicMark  write FUnicMark;
-    property UnicType : string read FUnicType  write FUnicType;
-    property UnicPswd : string read FUnicPswd  write FUnicPswd;
-    property UnicUser : string read FUnicUser  write FUnicUser;
-    property UnicSrvr : string read FUnicSrvr  write FUnicSrvr;
-    property DataBase : string read FDataBase  write FDataBase;
-    property UnicPort : string read FUnicPort  write FUnicPort;
-    property IsDirect : Integer read FIsDirect  write FIsDirect;
-    property UnicOrdr : Integer read FUnicOrdr  write FUnicOrdr;
-    property UnicMemo : string read FUnicMemo  write FUnicMemo;
-    property WhoBuild : Integer read FWhoBuild write FWhoBuild;
+    property UnicIndx: Integer read FUnicIndx write FUnicIndx;
+    property UnicStat: Integer read FUnicStat write FUnicStat;
+    property UnicYear: Integer read FUnicYear write FUnicYear;
+    property UnicMark: string read FUnicMark write FUnicMark;
+    property UnicType: string read FUnicType write FUnicType;
+    property UnicPswd: string read FUnicPswd write FUnicPswd;
+    property UnicUser: string read FUnicUser write FUnicUser;
+    property UnicSrvr: string read FUnicSrvr write FUnicSrvr;
+    property DataBase: string read FDataBase write FDataBase;
+    property UnicPort: string read FUnicPort write FUnicPort;
+    property IsDirect: Integer read FIsDirect write FIsDirect;
+    property UnicOrdr: Integer read FUnicOrdr write FUnicOrdr;
+    property UnicMemo: string read FUnicMemo write FUnicMemo;
+    property WhoBuild: Integer read FWhoBuild write FWhoBuild;
   published
-    property ListDATA : TCollection read GetLISTDATA write FListData;
+    property ListDATA: TCollection read GetLISTDATA write FListData;
   public
-    class function  ReadDS(AUniQuery:TUniQuery):TUniEngine;override;
-    class procedure ReadDS(AUniQuery: TUniQuery;var Result:TUniEngine);override;
-    
-    class function  CopyIt(uCnfg:TUniConfig):TUniConfig;overload;
-    class procedure CopyIt(uCnfg:TUniConfig;var Result:TUniConfig);overload;
+    class function  ReadDS(AUniQuery: TUniQuery): TUniEngine; override;
+    class procedure ReadDS(AUniQuery: TUniQuery; var Result: TUniEngine); override;
 
-    class function  CopyIt(aUniEngine:TUniEngine):TUniEngine;overload;override;
-    class procedure CopyIt(aUniEngine:TUniEngine;var Result:TUniEngine)overload;override;
+    class function  CopyIt(uCnfg: TUniConfig): TUniConfig; overload;
+    class procedure CopyIt(uCnfg: TUniConfig; var Result: TUniConfig); overload;
+
+    class function  CopyIt(aUniEngine: TUniEngine): TUniEngine; overload; override;
+    class procedure CopyIt(aUniEngine: TUniEngine; var Result: TUniEngine)overload; override;
   public
     class procedure Initialize(ADataBase:string='-1');
     class function  ADD_TBL_UNICNFG:string;

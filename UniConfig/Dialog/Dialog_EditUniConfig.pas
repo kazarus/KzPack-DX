@@ -1,6 +1,6 @@
 unit Dialog_EditUniConfig;
 //编辑数据库配置
-//YXC_2012_09_05_14_25_21_setcomboitems.
+//#Edit_UnicSrvr
 
 
 interface
@@ -11,7 +11,7 @@ uses
   RzBtnEdt, RzButton, RzRadChk,DateUtils,StrUtils,Class_FilX, Data.DB, DBAccess;
 
 type
-  TDialogEditUniConfigEditMode=(deuemAddv,deuemEdit,deuemCnfg);
+  TDialogEditUniConfigEditMode = (deuemADDV, deuemEDIT, deuemCNFG);
 
   TDialogEditUniConfig = class(TDialogView)
     Btnx_Mrok: TButton;
@@ -46,7 +46,7 @@ type
     procedure Edit_DataBaseAltBtnClick(Sender: TObject);
     procedure Edit_UnicPswdExit(Sender: TObject);
   private
-    FRealCnfg: TUniConfig;        //*
+    FRealCnfg: TUniConfig;        //&
     FRealPswd: string;
     FEditMode: TDialogEditUniConfigEditMode;
     FLoadLast: Boolean;          //是否记忆上次配置
@@ -65,16 +65,17 @@ type
   public
     procedure InsertDB;
     procedure UpdateDB;
-    procedure ReadCnfg;
     procedure InitCnfg;
-    procedure ImptCnfg(var aCnfg:TUniConfig);
+  public
+    procedure ReadCnfg;
+    procedure ImptCnfg(var aRealCnfg:TUniConfig);
   end;
 
 var
   DialogEditUniConfig: TDialogEditUniConfig;
 
-function ViewEditCnfg(aEditMode: TDialogEditUniConfigEditMode; aCnfg: TUniConfig; aConnectionMark: string = ''; aLoadLast: Boolean = False; aDefaultExt: string = '*.bac|*.bac|*.mdb|*.mdb'): Integer; overload;
-function ViewCnfgCnfg(aEditMode: TDialogEditUniConfigEditMode; var aCnfg: TUniConfig; aConnectionMark: string = ''; aLoadLast: Boolean = False; aDefaultExt: string = '*.bac|*.bac|*.mdb|*.mdb'): Integer; overload;
+function ViewEditCnfg(aEditMode: TDialogEditUniConfigEditMode; var aRealCnfg: TUniConfig; aConnectionMark: string = ''; aLoadLast: Boolean = False; aDefaultExt: string = '*.bac|*.bac|*.mdb|*.mdb'): Integer; overload;
+function ViewCnfgCnfg(aEditMode: TDialogEditUniConfigEditMode; var aRealCnfg: TUniConfig; aConnectionMark: string = ''; aLoadLast: Boolean = False; aDefaultExt: string = '*.bac|*.bac|*.mdb|*.mdb'): Integer; overload;
 
 implementation
 uses
@@ -84,37 +85,40 @@ uses
 {$R *.dfm}
 
 
-function ViewEditCnfg(aEditMode: TDialogEditUniConfigEditMode; aCnfg: TUniConfig; aConnectionMark: string; aLoadLast: Boolean; aDefaultExt: string): Integer;
+function ViewEditCnfg(aEditMode: TDialogEditUniConfigEditMode; var aRealCnfg: TUniConfig; aConnectionMark: string; aLoadLast: Boolean; aDefaultExt: string): Integer;
 begin
   try
     DialogEditUniConfig := TDialogEditUniConfig.Create(nil);
     DialogEditUniConfig.FEditMode := aEditMode;
-    DialogEditUniConfig.FRealCnfg := aCnfg;
+    DialogEditUniConfig.FRealCnfg := aRealCnfg;
     DialogEditUniConfig.FLoadLast := aLoadLast;
+
+    DialogEditUniConfig.BorderStyle := bsSizeable;
     DialogEditUniConfig.FDefaultExt := aDefaultExt;
     DialogEditUniConfig.FConnectionMark := aConnectionMark;
-    DialogEditUniConfig.BorderStyle := bsSizeable;
+
     Result := DialogEditUniConfig.ShowModal;
   finally
     FreeAndNil(DialogEditUniConfig);
   end;
 end;
 
-function ViewCnfgCnfg(aEditMode: TDialogEditUniConfigEditMode; var aCnfg: TUniConfig; aConnectionMark: string; aLoadLast: Boolean; aDefaultExt: string): Integer; overload;
+function ViewCnfgCnfg(aEditMode: TDialogEditUniConfigEditMode; var aRealCnfg: TUniConfig; aConnectionMark: string; aLoadLast: Boolean; aDefaultExt: string): Integer; overload;
 begin
   try
     DialogEditUniConfig:=TDialogEditUniConfig.Create(nil);
-    DialogEditUniConfig.FEditMode:=deuemCnfg;
-    DialogEditUniConfig.FRealCnfg:=aCnfg;
+    DialogEditUniConfig.FEditMode := deuemCnfg;
+    DialogEditUniConfig.FRealCnfg := aRealCnfg;
     DialogEditUniConfig.FLoadLast := aLoadLast;
+
     DialogEditUniConfig.FDefaultExt := aDefaultExt;
-    DialogEditUniConfig.FConnectionMark:=aConnectionMark;
     DialogEditUniConfig.BorderStyle := bsSizeable;
+    DialogEditUniConfig.FConnectionMark := aConnectionMark;
 
     Result:=DialogEditUniConfig.ShowModal;
     if Result=Mrok then
     begin
-      DialogEditUniConfig.ImptCnfg(aCnfg);
+      DialogEditUniConfig.ImptCnfg(aRealCnfg);
     end;  
   finally
     FreeAndNil(DialogEditUniConfig);
@@ -156,10 +160,7 @@ begin
   try
     cUniC:=UniConnctEx.GetConnection(FConnectionMark);
 
-    if FRealCnfg = nil then
-    begin
-      FRealCnfg := TUniConfig.Create;
-    end;
+    if FRealCnfg = nil then Exit;
 
     FRealCnfg.UnicIndx := FRealCnfg.GetNextIdex(cUniC);
     FRealCnfg.UnicType := Comb_Type.Text;
@@ -199,23 +200,22 @@ begin
     end;
   finally
     FreeAndNil(cUniC);
-    FreeAndNil(FRealCnfg);
   end;
 end;
 
 procedure TDialogEditUniConfig.SetCommParams;
 begin
   inherited;
-  Caption:='数据连接';
-  Edit_UnicPswd.PasswordChar:='*';
-  Edit_UnicYear.Text:=IntToStr(YearOf(Now));
+  Caption := '数据连接';
+  Edit_UnicPswd.PasswordChar := '*';
+  Edit_UnicYear.Text := IntToStr(YearOf(Now));
 
   if FEditMode=deuemCnfg then
   begin
     Edit_UnicYear.Clear;
-    Edit_UnicYear.Enabled:=False;
-    Comb_Mark.Enabled:=False;
-  end;  
+    Edit_UnicYear.Enabled := False;
+    Comb_Mark.Enabled := False;
+  end;
 end;
 
 procedure TDialogEditUniConfig.SetGridParams;
@@ -317,10 +317,10 @@ procedure TDialogEditUniConfig.InitCnfg;
 begin
   if FRealCnfg = nil then Exit;
 
-  Comb_Type.ItemIndex:=Comb_Type.Items.IndexOf(FRealCnfg.UnicType);
-  //#Comb_TypeCloseUp(Comb_Type);
+  Comb_Type.ItemIndex := Comb_Type.Items.IndexOf(FRealCnfg.UnicType);
+  Comb_TypeCloseUp(Comb_Type);
 
-  Edit_UnicYear.Text := IntToStr(FRealCnfg.UnicYear);
+  Edit_UnicYear.Text := Format('%D',[FRealCnfg.UnicYear]);
   Edit_UnicUser.Text := FRealCnfg.UnicUser;
 
   if Assigned(UniConnctEx.OnUniConfigCustomDecryptEvent) then
@@ -497,12 +497,12 @@ begin
   end;}
 end;
 
-procedure TDialogEditUniConfig.ImptCnfg(var aCnfg: TUniConfig);
+procedure TDialogEditUniConfig.ImptCnfg(var aRealCnfg: TUniConfig);
 begin
-  if aCnfg    =nil then Exit;
-  if FRealCnfg=nil then Exit;
+  if aRealCnfg = nil then Exit;
+  if FRealCnfg = nil then Exit;
 
-  TUniConfig.CopyIt(FRealCnfg,aCnfg);
+  TUniConfig.CopyIt(FRealCnfg,aRealCnfg);
 end;
 
 procedure TDialogEditUniConfig.ReadCnfg;
@@ -575,59 +575,64 @@ end;
 procedure TDialogEditUniConfig.Comb_TypeCloseUp(Sender: TObject);
 begin
   inherited;
-  Edit_UnicYear.Enabled:=True;
-  Edit_UnicUser.Enabled:=True;
-  Edit_UnicPswd.Enabled:=True;
-  Edit_UnicSrvr.Enabled:=True;
-  Edit_UnicPort.Enabled:=True;
-  Edit_UnicPort.Enabled:=True;
-  Edit_DataBase.Enabled:=True;
+  Edit_UnicYear.Enabled := True;
+  Edit_UnicUser.Enabled := True;
+  Edit_UnicPswd.Enabled := True;
+  Edit_UnicSrvr.Enabled := True;
+  Edit_UnicPort.Enabled := True;
+  Edit_UnicPort.Enabled := True;
+  Edit_DataBase.Enabled := True;
 
-  ChkBox_Direct.Checked:=False;
-  ChkBox_Direct.Visible:=False;
+  ChkBox_Direct.Checked := False;
+  ChkBox_Direct.Visible := False;
 
-  if (Trim(Comb_Type.Text)=CONST_PROVIDER_ACCESS) OR (Trim(Comb_Type.Text)=CONST_PROVIDER_SQLITE) then
+  if (Trim(Comb_Type.Text) = CONST_PROVIDER_ACCESS) or (Trim(Comb_Type.Text) = CONST_PROVIDER_SQLITE) then
   begin
     Caption:='数据连接';
       
-    Edit_UnicUser.Enabled:=False;
+    Edit_UnicUser.Enabled := False;
     Edit_UnicUser.Clear;
-    Edit_UnicPswd.Enabled:=False;
+    Edit_UnicPswd.Enabled := False;
     Edit_UnicPswd.Clear;
-    Edit_UnicSrvr.Enabled:=False;
+    Edit_UnicSrvr.Enabled := False;
     Edit_UnicSrvr.Clear;
-    Edit_UnicPort.Enabled:=False;
+    Edit_UnicPort.Enabled := False;
     Edit_UnicPort.Clear;
+
   end else
   if Trim(Comb_Type.Text)=CONST_PROVIDER_SQLSRV then
   begin
     Caption:='提示:双击服务器框,加载服务器.';
-      
-    Edit_UnicUser.Text:='sa';
-    Edit_UnicPswd.Text:='sa';
-    Edit_UnicSrvr.Text:='.';
-    Edit_UnicPort.Text:='1433';
-    {if FEditMode=deuemAddx then
+
+    if FileExists(TKzUtils.ExePath+'kazarus') then
     begin
-      ViewDataBase;
-    end;}
+      Edit_UnicUser.Text := 'sa';
+      Edit_UnicPswd.Text := 'sa@nbyt';
+      Edit_UnicSrvr.Text := '.';
+      Edit_UnicPort.Text := '1433';
+    end;
+
   end else
   if Trim(Comb_Type.Text)=CONST_PROVIDER_POSTGR then
   begin
     Caption:='提示:双击服务器框,加载服务器.';
 
-    Edit_UnicUser.Text:='postgres';
-    Edit_UnicPswd.Text:='root';
-    Edit_UnicSrvr.Text:='localhost';
-    Edit_UnicPort.Text:='5432';
+    if FileExists(TKzUtils.ExePath+'kazarus') then
+    begin
+      Edit_UnicUser.Text := 'postgres';
+      Edit_UnicPswd.Text := 'root';
+      Edit_UnicSrvr.Text := 'localhost';
+      Edit_UnicPort.Text := '5432';
+    end;
+
   end else
   if Trim(Comb_Type.Text)=CONST_PROVIDER_ORACLE then
   begin
     Caption:='直联示例:IP地址:端口:实例名';
     
-    Edit_UnicPort.Text   :='1521';
-    ChkBox_Direct.Visible:=True;
-    ChkBox_Direct.Checked:=True;
+    Edit_UnicPort.Text := '1521';
+    ChkBox_Direct.Visible := True;
+    ChkBox_Direct.Checked := True;
 
     Edit_UnicUser.Clear;
     Edit_UnicPswd.Clear;
