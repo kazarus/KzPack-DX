@@ -93,9 +93,11 @@ end;
 procedure TDialogViewMemo.SetCommParams;
 begin
   inherited;
+  Font.Name := '微软雅黑';
   Btnv_Mrok.Caption := '确定';
   Btnv_Quit.Caption := '取消';
   Btnv_Expt.Caption := '导出';
+
 
   if Trim(FMrokLabl)<>'' then
   begin
