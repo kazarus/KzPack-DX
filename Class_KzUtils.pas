@@ -742,8 +742,7 @@ begin
   Result:=Ord(UpCase(aChar))-64;
 end;
 
-class procedure TKzUtils.getParent(aCodeFull, aCodeRule: string;
-  var aList: TStringList);
+class procedure TKzUtils.getParent(aCodeFull, aCodeRule: string; var aList: TStringList);
 var
   I: Integer;
   cSize: Integer;

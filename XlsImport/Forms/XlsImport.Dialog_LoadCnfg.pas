@@ -138,11 +138,11 @@ begin
 
   if FLoadCnfg.ROWTITLE = 0 then
   begin
-    FLoadCnfg.ROWTITLE := 3;
+    FLoadCnfg.ROWTITLE := FRowTitle;
   end;
   if FLoadCnfg.ROWSTART = 0 then
   begin
-    FLoadCnfg.ROWSTART := 4;
+    FLoadCnfg.ROWSTART := FRowStart;
   end;
 
   Edit_RowTitle.Text := Format('%D', [FLoadCnfg.ROWTITLE]);

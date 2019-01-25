@@ -207,34 +207,34 @@ object FormListLoad: TFormListLoad
     object Btnv_Cnfg: TRzToolButton
       Left = 4
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 0
       Layout = blGlyphTop
       UseToolbarButtonSize = False
-      Caption = #36873#39033
+      Caption = 'ca'
       OnClick = Btnv_CnfgClick
     end
     object Btnv_Mrok: TRzToolButton
-      Left = 44
+      Left = 54
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 2
       Layout = blGlyphTop
       UseToolbarButtonSize = False
-      Caption = #30830#23450
+      Caption = 'ca'
       OnClick = Btnv_MrokClick
     end
     object Btnv_Quit: TRzToolButton
-      Left = 84
+      Left = 104
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 1
       Layout = blGlyphTop
       UseToolbarButtonSize = False
-      Caption = #21462#28040
+      Caption = 'ca'
       OnClick = Btnv_QuitClick
     end
   end
@@ -242,7 +242,7 @@ object FormListLoad: TFormListLoad
     Left = 184
     Top = 157
     Bitmap = {
-      494C010103000800680010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101030008006C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

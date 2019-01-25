@@ -137,7 +137,7 @@ begin
     FLoadCnfg.InFILE(cPath);
   end;
 
-  if ViewLoadCnfg(YearOf(Now),FLoadCnfg,False,cPath,FPromptTx,FKeyWords)<>Mrok then Exit;
+  if ViewLoadCnfg(YearOf(Now), FLoadCnfg, False, cPath, FPromptTx, FKeyWords, FRowTitle, FRowStart) <> Mrok then Exit;
 
   //#Panl_Text.Caption:=Format('导入期间:%D',[FLoadCnfg.KJNDKJQJ]);
 
@@ -682,6 +682,12 @@ procedure TFormListLoad.SetCommParams;
 begin
   inherited;
   Caption := '数据导入';
+  Font.Name := '微软雅黑';
+  Btnv_Cnfg.Caption := '选项';
+  Btnv_Mrok.Caption := '确定';
+  Btnv_Quit.Caption := '关闭';
+
+
   if FPromptTx <> '' then
   begin
     Caption := Format('数据导入:%S',[FPromptTx]);
