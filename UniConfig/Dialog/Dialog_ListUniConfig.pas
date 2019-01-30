@@ -80,7 +80,7 @@ type
     procedure FillCnfg(AList: TStringList); overload;
     procedure FillCnfg(aIndx: Integer; aCnfg: TUniConfig); overload;
   public
-    function ExptCnfg: TUniConfig; overload;
+    function  ExptCnfg: TUniConfig; overload;
     procedure ExptCnfg(var aCnfg: TUniConfig); overload;
   public
     procedure FreeAndNilList(AList: TStringList);
@@ -145,8 +145,7 @@ begin
       if IsCreate then
       begin
         aCnfg := DialogListUniConfig.ExptCnfg;
-      end
-      else
+      end else
       begin
         DialogListUniConfig.ExptCnfg(aCnfg);
       end;
@@ -240,52 +239,50 @@ end;
 procedure TDialogListUniConfig.FillCnfg(AList: TStringList);
 var
   I: Integer;
-  IdexA: Integer;
+  cIndx: Integer;
   UniConfig: TUniConfig;
 begin
   with Grid_Cnfg do
   begin
     ClearGrid(Grid_Cnfg, 1);
-    if (AList = nil) or (AList.Count = 0) then
-      Exit;
+    if (AList = nil) or (AList.Count = 0) then Exit;
     ClearGrid(Grid_Cnfg, AList.Count);
 
     BeginUpdate;
     for I := 0 to AList.Count - 1 do
     begin
-      IdexA := I + 1;
+      cIndx := I + 1;
 
       UniConfig := TUniConfig(AList.Objects[I]);
-      if UniConfig = nil then
-        Continue;
+      if UniConfig = nil then Continue;
 
-      Ints[0, IdexA] := IdexA;
-      Objects[0, IdexA] := UniConfig;
+      Ints[0, cIndx] := cIndx;
+      Objects[0, cIndx] := UniConfig;
 
-      AddCheckBox(1, IdexA, False, False);
+      AddCheckBox(1, cIndx, False, False);
 
-      Cells[2, IdexA] := IntToStr(UniConfig.UnicYear);
-      Cells[3, IdexA] := UniConfig.UnicMark;
-      Alignments[2, IdexA] := taCenter;
-      Alignments[3, IdexA] := taCenter;
-      Cells[4, IdexA] := UniConfig.UnicType;
-      Alignments[4, IdexA] := taCenter;
-      Cells[5, IdexA] := UniConfig.UnicUser;
-      Alignments[5, IdexA] := taCenter;
-      Cells[6, IdexA] := '**';
-      Alignments[6, IdexA] := taCenter;
-      Cells[7, IdexA] := UniConfig.UnicSrvr;
-      Cells[8, IdexA] := UniConfig.DataBase;
-      Cells[9, IdexA] := UniConfig.UnicPort;
-      Alignments[9, IdexA] := taCenter;
-      Cells[10, IdexA] := UniConfig.GetIsDirect;
-      Cells[11, IdexA] := UniConfig.GetUnicStat;
+      Cells[2, cIndx] := IntToStr(UniConfig.UnicYear);
+      Cells[3, cIndx] := UniConfig.UnicMark;
+      Alignments[2, cIndx] := taCenter;
+      Alignments[3, cIndx] := taCenter;
+      Cells[4, cIndx] := UniConfig.UnicType;
+      Alignments[4, cIndx] := taCenter;
+      Cells[5, cIndx] := UniConfig.UnicUser;
+      Alignments[5, cIndx] := taCenter;
+      Cells[6, cIndx] := '**';
+      Alignments[6, cIndx] := taCenter;
+      Cells[7, cIndx] := UniConfig.UnicSrvr;
+      Cells[8, cIndx] := UniConfig.DataBase;
+      Cells[9, cIndx] := UniConfig.UnicPort;
+      Alignments[9, cIndx] := taCenter;
+      Cells[10, cIndx] := UniConfig.GetIsDirect;
+      Cells[11, cIndx] := UniConfig.GetUnicStat;
       if UniConfig.UnicStat = 1 then
       begin
-        FontColors[11, IdexA] := clGreen;
+        FontColors[11, cIndx] := clGreen;
       end;
-      Alignments[10, IdexA] := taCenter;
-      Alignments[11, IdexA] := taCenter;
+      Alignments[10, cIndx] := taCenter;
+      Alignments[11, cIndx] := taCenter;
 
     end;
     EndUpdate;
@@ -315,8 +312,7 @@ begin
 
     FListCnfg := TUniConfig.StrsDB(cSQL, cUniC);
   finally
-    if cUniC <> nil then
-      FreeAndNil(cUniC);
+    if cUniC <> nil then FreeAndNil(cUniC);
   end;
 
   FillCnfg(FListCnfg);
@@ -361,8 +357,8 @@ begin
   if FEditMode = dlucemEdit then
   begin
     EditCnfg;
-  end
-  else if FEditMode = dlucemView then
+  end else
+  if FEditMode = dlucemView then
   begin
     Btnv_MrokClick(Btnv_Mrok);
   end;
@@ -380,8 +376,7 @@ begin
       TUniConfig.CopyIt(FuDefault, uCnfg);
     end;
 
-    if ViewEditCnfg(deuemAddv, uCnfg, FConnectionMark, FLoadLast) <> Mrok then
-      Exit;
+    if ViewEditCnfg(deuemAddv, uCnfg, FConnectionMark, FLoadLast) <> Mrok then Exit;
   finally
     FreeAndNil(uCnfg);
   end;
@@ -391,51 +386,36 @@ end;
 
 procedure TDialogListUniConfig.EditCnfg;
 var
-  UniConfig: TUniConfig;
+  uCnfg: TUniConfig;
 begin
   inherited;
   with Grid_Cnfg do
   begin
-    UniConfig := nil;
-    UniConfig := TUniConfig(Objects[0, RealRow]);
-    if UniConfig = nil then
-      Exit;
+    uCnfg := TUniConfig(Objects[0, RealRow]);
+    if uCnfg = nil then Exit;
 
-    if ViewEditCnfg(deuemEdit, UniConfig, FConnectionMark) = Mrok then
-    begin
-      InitCnfg;
-      UniConfig := nil;
-    end;
+    if ViewEditCnfg(deuemEdit, uCnfg, FConnectionMark) <> Mrok then Exit;
+
+    InitCnfg;
   end;
 end;
 
 function TDialogListUniConfig.ExptCnfg: TUniConfig;
 begin
   Result := nil;
+
   with Grid_Cnfg do
   begin
-    if Objects[0, RealRow] = nil then
-      Exit;
+    if Objects[0, RealRow] = nil then Exit;
+
     Result := TUniConfig.CopyIt(TUniConfig(Objects[0, RealRow]));
   end;
 end;
 
 procedure TDialogListUniConfig.FormDestroy(Sender: TObject);
-{var
-  I:Integer;}
 begin
   inherited;
-  {if FListCnfg<>nil then
-  begin
-    for I:=0 to FListCnfg.Count-1 do
-    begin
-      FListCnfg.Objects[I].Free;
-      FListCnfg.Objects[I]:=nil;
-    end;
-    FListCnfg.Clear;
-    FreeAndNil(FListCnfg);
-  end;}
-  FreeAndNilList(FListCnfg);
+  TKzUtils.TryFreeAndNil(FListCnfg);
 end;
 
 procedure TDialogListUniConfig.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -454,8 +434,7 @@ procedure TDialogListUniConfig.FreeAndNilList(AList: TStringList);
 var
   I: Integer;
 begin
-  if (AList = nil) or (AList.Count = 0) then
-    Exit;
+  if (AList = nil) or (AList.Count = 0) then Exit;
   for I := 0 to AList.Count - 1 do
   begin
     if AList.Objects[I] <> nil then
