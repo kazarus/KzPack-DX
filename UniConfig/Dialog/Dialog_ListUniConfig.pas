@@ -310,7 +310,7 @@ begin
     end;
     cSQL := cSQL + '    ORDER BY UNIX_TYPE,UNIX_ORDR';
 
-    FListCnfg := TUniConfig.StrsDB(cSQL, cUniC);
+    TUniConfig.ListDB(cSQL,cUniC,FListCnfg);
   finally
     if cUniC <> nil then FreeAndNil(cUniC);
   end;
@@ -415,7 +415,8 @@ end;
 procedure TDialogListUniConfig.FormDestroy(Sender: TObject);
 begin
   inherited;
-  TKzUtils.TryFreeAndNil(FListCnfg);
+  if FuDefault <> nil then FreeAndNil(FuDefault);
+  if FListCnfg <> nil then TKzUtils.TryFreeAndNil(FListCnfg);
 end;
 
 procedure TDialogListUniConfig.FormClose(Sender: TObject; var Action: TCloseAction);
