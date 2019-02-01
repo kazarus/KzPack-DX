@@ -95,12 +95,11 @@ begin
     end;
 
     //YXC_2014_03_21_15_37_59_<
-    if UniConfig<>nil then
+    if UniConfig = nil then raise Exception.Create('没有设置为[活动]的数据链接.请检查配置.');
+
+    if Assigned(OnUniConfigCustomDecryptEvent) then
     begin
-      if Assigned(OnUniConfigCustomDecryptEvent) then
-      begin
-        OnUniConfigCustomDecryptEvent(UniConfig,UniConfig);
-      end;
+      OnUniConfigCustomDecryptEvent(UniConfig,UniConfig);
     end;
     //YXC_2014_03_21_15_37_59_>
   end else
@@ -111,10 +110,10 @@ begin
     OnUniConnctCustomConnectionEventByOBJ(AConnectionMark,UniConfig);
   end;
 
-  Result:=UniConfig<>nil;
-  if UniConfig<>nil then
+  Result := UniConfig <> nil;
+  if UniConfig <> nil then
   begin
-    Result:=TstConnection(UniConfig);
+    Result := TstConnection(UniConfig);
   end;
 
   FreeAndNil(UniConfig);
