@@ -657,7 +657,7 @@ begin
     if FileExists(TKzUtils.ExePath+Format('config-default-%s.json',[LowerCase(Comb_Type.Text)])) then
     begin
       FRealCnfg.InFILE(TKzUtils.ExePath+Format('config-default-%s.json',[LowerCase(Comb_Type.Text)]));
-      InitCnfg;
+      //@InitCnfg;
     end;
   end;
 end;
