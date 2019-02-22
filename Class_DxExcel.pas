@@ -4,8 +4,9 @@ unit Class_DxExcel;
 //uses:Class_DxExcel,dxSpreadSheetTypes,dxSpreadSheetGraphics;
 interface
 uses
-  System.Classes,System.SysUtils,Vcl.Graphics,Vcl.Dialogs,cxGraphics,
-  dxSpreadSheet,dxSpreadSheetCore,dxSpreadSheetGraphics,dxSpreadSheetTypes;
+  System.Classes, System.SysUtils, Vcl.Graphics, Vcl.Dialogs, Vcl.Controls,
+  cxGraphics, dxSpreadSheet, dxSpreadSheetCore, dxSpreadSheetGraphics,
+  dxSpreadSheetTypes;
 
 type
   TDxCellStyl=class;
@@ -279,8 +280,8 @@ end;
 
 function TDxExcel.SaveXLS(aFileName:string): Boolean;
 var
-  SD:TSaveDialog;
-  FileName:string;
+  SD: TSaveDialog;
+  FileName: string;
 begin
   Result := False;
 
@@ -291,9 +292,14 @@ begin
     if not SD.Execute then Exit;
 
     FileName:=SD.FileName;
-    if ExtractFileExt(FileName)='' then
+    if ExtractFileExt(FileName) = '' then
     begin
-      FileName:=Format('%S.xlsx',[FileName]);
+      FileName := Format('%S.xlsx', [FileName]);
+    end;
+
+    if FileExists(FileName) then
+    begin
+      if TKzUtils.ShowFmt('文件名[%S]已经存在'+#13+'是否覆盖?',[FileName]) <> Mrok then Exit;
     end;
 
     FDxExcel.ActiveSheet.SpreadSheet.SaveToFile(FileName);
