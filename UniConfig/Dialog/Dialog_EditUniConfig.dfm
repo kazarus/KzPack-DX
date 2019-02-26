@@ -128,6 +128,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     FrameVisible = True
     FramingPreference = fpCustomFraming
     ParentCtl3D = False
+    TabOnEnter = True
     TabOrder = 4
   end
   object Btnx_Mrok: TButton
@@ -165,6 +166,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
+    TabOnEnter = True
     TabOrder = 1
   end
   object Edit_UnicPswd: TRzEdit
@@ -175,6 +177,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
+    TabOnEnter = True
     TabOrder = 2
     OnExit = Edit_UnicPswdExit
   end
@@ -186,6 +189,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
+    TabOnEnter = True
     TabOrder = 3
     OnDblClick = Edit_UnicSrvrDblClick
   end
@@ -197,6 +201,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
+    TabOnEnter = True
     TabOrder = 6
   end
   object Edit_UnicYear: TRzEdit
@@ -207,6 +212,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
+    TabOnEnter = True
     TabOrder = 8
   end
   object Comb_Type: TRzComboBox
