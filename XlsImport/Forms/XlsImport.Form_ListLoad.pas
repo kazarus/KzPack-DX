@@ -92,7 +92,7 @@ function ViewListLoad(aClasName: string; aCellHead: TStringList; var Value: stri
 implementation
 
 uses
-  Class_KzUtils,Class_UiUtils,Helpr_UniEngine,XlsImport.Dialog_LoadCnfg,XlsImport.Dialog_CellHead;
+  Class_KzUtils,Class_UiUtils,Helpr_UniEngine,XlsImport.Dialog_LoadCnfg,XlsImport.Dialog_CellHead,Class_KzDebug;
 
 {$R *.dfm}
 
@@ -119,7 +119,7 @@ end;
 
 procedure TFormListLoad.Btnv_CnfgClick(Sender: TObject);
 var
-  cPath:string;
+  cPath: string;
 begin
   if FLoadCnfg = nil then
   begin
@@ -284,8 +284,8 @@ end;
 procedure TFormListLoad.CopyHead(aCellHead: TStringList);
 var
   I: Integer;
-  cHead:TCellHead;
-  xHead:TCellHead;
+  cHead: TCellHead;
+  xHead: TCellHead;
 begin
   if FCellHead=nil then
   begin
@@ -299,7 +299,6 @@ begin
     if cHead=nil then Continue;
 
     xHead:=TCellHead.CopyIt(cHead);
-
     FCellHead.AddObject(xHead.HeadName,xHead);
   end;
 end;
@@ -428,7 +427,7 @@ begin
 
     for I := 0 to aList.Count - 1 do
     begin
-      cIndx:=I+2;
+      cIndx := I + 2;
       if Grid_Data.ColCount-1 < cIndx then
       begin
         AddColumn;
