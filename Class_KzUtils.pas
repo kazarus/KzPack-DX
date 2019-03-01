@@ -66,7 +66,7 @@ type
     class procedure WritLog(aValue:Variant);
     class procedure WritFmt(const Msg: string; Params: array of const);
 
-    class procedure FileFind(aPath:string;var Result:THashedStringList;untilFind:string='';findExt:string='*.*');
+    class procedure FileFind(aPath: string; var Result: THashedStringList; untilFind: string = ''; findExt: string = '*.*');
 
     class function  jsencode(const aValue: Widestring): Widestring;
     class function  jsdecode(const aValue: Widestring): Widestring;
@@ -167,8 +167,7 @@ begin
   {$ENDIF}
 end;
 
-class procedure TKzUtils.FileFind(aPath: string; var Result: THashedStringList;
-  untilFind, findExt: string);
+class procedure TKzUtils.FileFind(aPath: string; var Result: THashedStringList; untilFind, findExt: string);
 var
   F: TSearchRec;
 begin
@@ -383,26 +382,26 @@ begin
 end;
 
 
-class function TKzUtils.CreateDirEx(const aPath: string;aSeparator:Char;aRootPath:string): Boolean;
+class function TKzUtils.CreateDirEx(const aPath: string; aSeparator: Char; aRootPath: string): Boolean;
 var
-  I:Integer;
-  cList:TStrings;
-  cTemp:string;
+  I: Integer;
+  cTemp: string;
+  cList: TStrings;
 begin
   Result := False;
 
   if Trim(aPath)='' then Exit;
 
-  if aRootPath <> '' then
+  if aRootPath = '' then
   begin
     aRootPath := ExePath;
   end;
 
   try
     cList := TStringList.Create;
-    ListStrCutted(ExtractFilePath(aPath),'\'+aSeparator,cList);
+    ListStrCutted(ExtractFilePath(aPath), '\' + aSeparator, cList);
 
-    for I:=0  to cList.Count-1 do
+    for I := 0 to cList.Count - 1 do
     begin
       cTemp := cTemp + cList.Strings[I]+'\';
 

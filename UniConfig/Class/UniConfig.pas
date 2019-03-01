@@ -339,11 +339,11 @@ end;
 
 function TUniConfig.GetIsDirect: string;
 begin
-  Result:='·ñ';
-  if IsDirect=1 then
+  Result := '·ñ';
+  if IsDirect = 1 then
   begin
-    Result:='ÊÇ';
-  end;  
+    Result := 'ÊÇ';
+  end;
 end;
 
 function TUniConfig.GetLISTDATA: TCollection;

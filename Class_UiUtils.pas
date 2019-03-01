@@ -180,6 +180,7 @@ begin
       if I = aDefaultRowCount then
       begin
         ClearRows(I,1);
+        Objects[0,I] := nil;
       end else
       begin
         RemoveRows(I,1);
