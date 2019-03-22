@@ -262,8 +262,7 @@ begin
   end;
 end;
 
-class function TKzUtils.FormatCode(aValue: string; ALength: Integer;
-  AStrSub: string): string;
+class function TKzUtils.FormatCode(aValue: string; ALength: Integer; AStrSub: string): string;
 begin
   Result:=TryFormatCode(ALength,1,AStrSub,aValue);
 end;
@@ -603,8 +602,7 @@ begin
   end;
 end;    
 
-class function TKzUtils.TryFormatCode(ALength, aBoolBack: Integer;
-  const AStrSub, ASource: string): string;
+class function TKzUtils.TryFormatCode(ALength, aBoolBack: Integer; const AStrSub, ASource: string): string;
 var
   ACount:Integer;
 begin

@@ -430,40 +430,41 @@ end;
 
 procedure TDialogEditUniConfig.ViewDataBase(AUnixType:string);
 var
-  ListA:TStringList;
-  UniConnct:TUniConnection;
+  cList: TStringList;
+  cUniC: TUniConnection;
 begin
   inherited;
   Screen.Cursor:=crSQLWait;
   
   Comb_DataBase.Items.Clear;
   try
-    ListA:=TStringList.Create;
+    cList:=TStringList.Create;
 
-    UniConnct:=TUniConnection.Create(nil);
-    UniConnct.LoginPrompt :=False;
+    cUniC:=TUniConnection.Create(nil);
+    cUniC.LoginPrompt :=False;
 
     if Trim(AUnixType)='' then
     begin
-      UniConnct.ProviderName:=CONST_PROVIDER_SQLSRV;
+      cUniC.ProviderName:=CONST_PROVIDER_SQLSRV;
     end else
     begin
-      UniConnct.ProviderName:=AUnixType;
+      cUniC.ProviderName:=AUnixType;
     end;
 
-    UniConnct.Username    :=Trim(Edit_UnicUser.Text);
-    UniConnct.Password    :=Trim(Edit_UnicPswd.Text);
-    UniConnct.Server      :=Trim(Edit_UnicSrvr.Text);
-    UniConnct.Port        :=StrToIntDef(Trim(Edit_UnicPort.Text),0);
+    cUniC.Username    :=Trim(Edit_UnicUser.Text);
+    cUniC.Password    :=Trim(Edit_UnicPswd.Text);
+    cUniC.Server      :=Trim(Edit_UnicSrvr.Text);
+    cUniC.Port        :=StrToIntDef(Trim(Edit_UnicPort.Text),0);
     
-    UniConnct.SpecificOptions.Add('SQL Server.ConnectionTimeout=3');
-    UniConnct.SpecificOptions.Add('SQL Server.OLEDBProvider=prSQL');
+    cUniC.SpecificOptions.Add('SQL Server.ConnectionTimeout=3');
+    cUniC.SpecificOptions.Add('SQL Server.OLEDBProvider=prSQL');
 
     try
-      UniConnct.Connected:=True;
-      UniConnct.GetDatabaseNames(ListA);
+      cUniC.Connected:=True;
+      cUniC.GetDatabaseNames(cList);
 
-      Comb_DataBase.Items.AddStrings(ListA);
+      Comb_DataBase.Items.AddStrings(cList);
+      Comb_DataBase.DropDownCount := cList.Count;
     except
       on E:Exception do
       begin
@@ -471,8 +472,8 @@ begin
       end;
     end;
   finally
-    FreeAndNil(ListA);
-    FreeAndNil(UniConnct);
+    FreeAndNil(cList);
+    FreeAndNil(cUniC);
     
     Screen.Cursor:=crDefault;
   end;
