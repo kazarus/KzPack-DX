@@ -202,8 +202,8 @@ function NewDialog(AClass: TFormClass): IDialogBuilder; overload;
 
 function CustomDialog(const ACaption, ATitle, AMessage: string; AButtons: array of string; AIcon: TDialogIcon; AFlags: Integer = 0; const ACustomProps: string = ''): Integer; overload;
 function CustomDialog(const ACaption, ATitle, AMessage: string; AButtons: array of string; AIconResId: Integer; AIconResFile: string; AIconSize: TSize; AFlags: Integer = 0; const ACustomProps: string = ''): Integer; overload;
-function CustomDialog(const ACaption, ATitle, AMessage: string; AButtons: array of string; AIcon: TDialogIcon; var noNext: Boolean): Integer; overload;
-function CustomDialog(const ACaption, ATitle, AMessage: string; AButtons: array of string; AIconResId: Integer; AIconResFile: string; AIconSize: TSize; var noNext: Boolean; AFlags: Integer = 0; const ACustomProps: string = ''): Integer; overload;
+function CustomDialog(const ACaption, ATitle, AMessage: string; AButtons: array of string; AIcon: TDialogIcon; var noNext: Boolean; nextText: string = '不再提示'): Integer; overload;
+function CustomDialog(const ACaption, ATitle, AMessage: string; AButtons: array of string; AIconResId: Integer; AIconResFile: string; AIconSize: TSize; var noNext: Boolean; nextText: string = '不再提示'; AFlags: Integer = 0; const ACustomProps: string = ''): Integer; overload;
 
 
 implementation
@@ -419,7 +419,7 @@ begin
   Result := CustomDialog(ACaption, ATitle, AMessage, AButtons, IconResId[AIcon], user32, AIconSize, AFlags, ACustomProps);
 end;
 
-function CustomDialog(const ACaption, ATitle, AMessage: string; AButtons: array of string; AIcon: TDialogIcon; var noNext: Boolean): Integer; overload;
+function CustomDialog(const ACaption, ATitle, AMessage: string; AButtons: array of string; AIcon: TDialogIcon; var noNext: Boolean; nextText: string): Integer; overload;
 var
   AIconSize: TSize;
 const
@@ -427,7 +427,7 @@ const
 begin
   AIconSize.cx := 32;
   AIconSize.cy := 32;
-  Result := CustomDialog(ACaption, ATitle, AMessage, AButtons, IconResId[AIcon], user32, AIconSize, noNext);
+  Result := CustomDialog(ACaption, ATitle, AMessage, AButtons, IconResId[AIcon], user32, AIconSize, noNext, nextText);
 end;
 
 function CustomDialog(const ACaption, ATitle, AMessage: string; AButtons: array of string; AIconResId: Integer; AIconResFile: string; AIconSize: TSize; AFlags: Integer; const ACustomProps: string): Integer;
@@ -546,7 +546,7 @@ begin
   end
 end;
 
-function CustomDialog(const ACaption, ATitle, AMessage: string; AButtons: array of string; AIconResId: Integer; AIconResFile: string; AIconSize: TSize; var noNext: Boolean; AFlags: Integer; const ACustomProps: string): Integer;
+function CustomDialog(const ACaption, ATitle, AMessage: string; AButtons: array of string; AIconResId: Integer; AIconResFile: string; AIconSize: TSize; var noNext: Boolean; nextText: string; AFlags: Integer; const ACustomProps: string): Integer;
 var
   I: Integer;
   AIcon: TIcon;
@@ -640,7 +640,10 @@ begin
 
       CheckBox := TCheckBox(AddControl(TCheckBox).Control);
       CheckBox.Checked := False;
-      CheckBox.Caption := '不再提示';
+      CheckBox.Caption := nextText;
+      CheckBox.Font.Name := '宋体';
+      CheckBox.Font.Size := 10;
+      CheckBox.Width := 80 + Length(nextText) * 10;
 
       for I := 0 to High(AButtons) do
       begin
