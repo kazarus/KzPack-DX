@@ -115,12 +115,13 @@ type
     class function  FormatCode(aValue: string; ALength: Integer; AStrSub: string): string; overload;
   public
     //PerlRegEx
-    class function  StrsStrCutted(const Source: string; ATag: string): TStrings;
-    class procedure ListStrCutted(const Source: string; ATag: string; var Result: TStrings);
-    class procedure ListMatchText(const Source: string; ATag: string; var Result: TStrings);
-    class function  StrsStrMatchx(const Source: string; ATag: string): TStrings;
-    class function  BoolStrMatchx(const Source: string; ATag: string; var aValue: string): Boolean;
-    class function  RegReplaceAll(const Source: string; ATag: string; AReplacement: string): string;
+    class function  StrsStrCutted(const Source: string; aRegEx: string): TStrings;deprecated;
+    class procedure ListStrCutted(const Source: string; aRegEx: string; var Result: TStrings);
+    class function  StrsStrMatchx(const Source: string; aRegEx: string): TStrings;deprecated;
+    class procedure ListMatchText(const Source: string; aRegEx: string; var Result: TStrings);
+    class function  BoolStrMatchx(const Source: string; aRegEx: string; var aValue: string): Boolean; deprecated;
+    class function  DidStrMatched(const Source: string; aRegEx: string; var aValue: string): Boolean;
+    class function  RegReplaceAll(const Source: string; aRegEx: string; AReplacement: string): string;
   public
     //CreateDir
     class function  CreateDirEx(const aPath: string; aSeparator: Char = '\'; aRootPath: string = ''): Boolean;
@@ -137,26 +138,23 @@ uses
   Vcl.Dialogs,Vcl.StdCtrls,Vcl.Consts,Vcl.Controls,Winapi.ShellAPI;
 {$ENDIF}
 
-class function TKzUtils.BoolStrMatchx(const Source: string;
-  ATag: string;var aValue:string): Boolean;
+class function TKzUtils.BoolStrMatchx(const Source: string; aRegEx: string; var aValue: string): Boolean;
 var
-  PerlA:TPerlRegEx;  
+  PerlRegEx: TPerlRegEx;
 begin
-  Result:=False;
-  aValue:='';
+  Result := False;
+  aValue := '';
   try
-    //PerlA:=TPerlRegEx.Create;
-    PerlA:=TPerlRegEx.Create;
-    PerlA.Subject:=Source;
-    PerlA.RegEx  :=ATag;
-    Result:=PerlA.Match;
+    PerlRegEx := TPerlRegEx.Create;
+    PerlRegEx.Subject := Source;
+    PerlRegEx.RegEx   := aRegEx;
+    Result := PerlRegEx.Match;
     if Result then
     begin
-      aValue:=PerlA.MatchedText;
-      //aValue:=PerlA.MatchedText;
+      aValue := PerlRegEx.MatchedText;
     end;
   finally
-    FreeAndNil(PerlA);
+    FreeAndNil(PerlRegEx);
   end;
 end;
 
@@ -495,41 +493,39 @@ begin
 end;
 
 class function TKzUtils.StrsStrCutted(const Source: string;
-  ATag: string): TStrings;
+  aRegEx: string): TStrings;
 var
-  PerlA:TPerlRegEx;
+  PerlRegEx:TPerlRegEx;
 begin
   try
-    Result:=TStringList.Create;
-    PerlA:=TPerlRegEx.Create;
-    //PerlA:=TPerlRegEx.Create;
-    PerlA.Subject:=Source;
-    PerlA.RegEx  :=ATag;
-    PerlA.Split(Result,MaxInt);
+    Result := TStringList.Create;
+
+    PerlRegEx:=TPerlRegEx.Create;
+    PerlRegEx.Subject:=Source;
+    PerlRegEx.RegEx  :=aRegEx;
+    PerlRegEx.Split(Result,MaxInt);
   finally
-    FreeAndNil(PerlA);
+    FreeAndNil(PerlRegEx);
   end;
 end;
 
 
 class function TKzUtils.StrsStrMatchx(const Source: string;
-  ATag: string): TStrings;
+  aRegEx: string): TStrings;
 var
-  PerlA:TPerlRegEx;
+  PerlRegEx: TPerlRegEx;
 begin
-  Result:=TStringList.Create;
+  Result := TStringList.Create;
   try
-    PerlA:=TPerlRegEx.Create;
-    //PerlA:=TPerlRegEx.Create;
-    PerlA.Subject:=Source;
-    PerlA.RegEx  :=ATag;
-    while PerlA.MatchAgain do
+    PerlRegEx := TPerlRegEx.Create;
+    PerlRegEx.Subject:=Source;
+    PerlRegEx.RegEx  :=aRegEx;
+    while PerlRegEx.MatchAgain do
     begin
-      Result.Add(PerlA.MatchedText);
-      //Result.Add(PerlA.MatchedText);
+      Result.Add(PerlRegEx.MatchedText);
     end;  
   finally
-    FreeAndNil(PerlA);
+    FreeAndNil(PerlRegEx);
   end;
 end;
 
@@ -1197,62 +1193,58 @@ begin
   end;
 end;
 
-class function TKzUtils.RegReplaceAll(const Source: string; ATag,
-  AReplacement: string): string;
+class function TKzUtils.RegReplaceAll(const Source: string; aRegEx, aReplacement: string): string;
 var
-  PerlA:TPerlRegEx;
+  PerlRegEx: TPerlRegEx;
 begin
-  Result:='';
+  Result := '';
   try
-    PerlA:=TPerlRegEx.Create;
-    PerlA.Subject:=Source;
-    PerlA.RegEx  :=ATag;
-    PerlA.Replacement:=AReplacement;
-    if PerlA.ReplaceAll then
+    PerlRegEx := TPerlRegEx.Create;
+    PerlRegEx.Subject := Source;
+    PerlRegEx.RegEx   := aRegEx;
+    PerlRegEx.Replacement := aReplacement;
+    if PerlRegEx.ReplaceAll then
     begin
-      Result:=PerlA.Subject;
+      Result := PerlRegEx.Subject;
     end;
   finally
-    FreeAndNil(PerlA);
+    FreeAndNil(PerlRegEx);
   end;
 end;
 
-class procedure TKzUtils.ListMatchText(const Source: string; ATag: string; var Result: TStrings);
+class procedure TKzUtils.ListMatchText(const Source: string; aRegEx: string; var Result: TStrings);
 var
-  PerlA:TPerlRegEx;
+  PerlRegEx: TPerlRegEx;
 begin
   if Result = nil then Exit;
 
   try
-    PerlA:=TPerlRegEx.Create;
-    //PerlA:=TPerlRegEx.Create;
-    PerlA.Subject:=Source;
-    PerlA.RegEx  :=ATag;
-    while PerlA.MatchAgain do
+    PerlRegEx := TPerlRegEx.Create;
+    PerlRegEx.Subject:=Source;
+    PerlRegEx.RegEx  :=aRegEx;
+    while PerlRegEx.MatchAgain do
     begin
-      Result.Add(PerlA.MatchedText);
-      //Result.Add(PerlA.MatchedText);
+      Result.Add(PerlRegEx.MatchedText);
     end;
   finally
-    FreeAndNil(PerlA);
+    FreeAndNil(PerlRegEx);
   end;
 end;
 
-class procedure TKzUtils.ListStrCutted(const Source: string; ATag: string;
-  var Result: TStrings);
+class procedure TKzUtils.ListStrCutted(const Source: string; aRegEx: string; var Result: TStrings);
 var
-  PerlA:TPerlRegEx;
+  PerlRegEx: TPerlRegEx;
 begin
-  if Result=nil then Exit;
+  if Result = nil then Exit;
   Result.Clear;
-  
+
   try
-    PerlA:=TPerlRegEx.Create;
-    PerlA.Subject:=Source;
-    PerlA.RegEx  :=ATag;
-    PerlA.Split(Result,MaxInt);
+    PerlRegEx := TPerlRegEx.Create;
+    PerlRegEx.Subject := Source;
+    PerlRegEx.RegEx   := aRegEx;
+    PerlRegEx.Split(Result, MaxInt);
   finally
-    FreeAndNil(PerlA);
+    FreeAndNil(PerlRegEx);
   end;
 end;
 
@@ -1375,6 +1367,26 @@ begin
   end;
 end;
 
+
+class function TKzUtils.DidStrMatched(const Source: string; aRegEx: string; var aValue: string): Boolean;
+var
+  PerlRegEx: TPerlRegEx;
+begin
+  Result := False;
+  aValue := '';
+  try
+    PerlRegEx := TPerlRegEx.Create;
+    PerlRegEx.Subject := Source;
+    PerlRegEx.RegEx   := aRegEx;
+    Result := PerlRegEx.Match;
+    if Result then
+    begin
+      aValue := PerlRegEx.MatchedText;
+    end;
+  finally
+    FreeAndNil(PerlRegEx);
+  end;
+end;
 
 {$IFDEF MSWINDOWS}
 class function TKzUtils.StringToColorDef(const aValue, aDef: string): TColor;
