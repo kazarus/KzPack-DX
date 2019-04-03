@@ -464,7 +464,7 @@ begin
       cUniC.GetDatabaseNames(cList);
 
       Comb_DataBase.Items.AddStrings(cList);
-      Comb_DataBase.DropDownCount := cList.Count;
+      Comb_DataBase.DropDownCount := 24;
     except
       on E:Exception do
       begin
