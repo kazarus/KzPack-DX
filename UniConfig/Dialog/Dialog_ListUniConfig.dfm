@@ -286,6 +286,7 @@ object DialogListUniConfig: TDialogListUniConfig
       FramingPreference = fpCustomFraming
       ParentCtl3D = False
       TabOrder = 0
+      Visible = False
     end
     object Comb_UnixType: TRzComboBox
       Left = 562
@@ -297,6 +298,7 @@ object DialogListUniConfig: TDialogListUniConfig
       FramingPreference = fpCustomFraming
       ParentCtl3D = False
       TabOrder = 1
+      Visible = False
       OnCloseUp = Comb_UnixTypeCloseUp
     end
   end
@@ -334,7 +336,7 @@ object DialogListUniConfig: TDialogListUniConfig
     Left = 480
     Top = 380
     Bitmap = {
-      494C01010A001800300010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010A001800380010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

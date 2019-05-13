@@ -159,6 +159,8 @@ procedure TDialogListUniConfig.SetCommParams;
 begin
   inherited;
   Caption := '数据库列表配置';
+  Font.Name := '微软雅黑';
+
   Width := 1024;
   Height := Trunc(1024 * 0.618);
 
@@ -452,8 +454,7 @@ procedure TDialogListUniConfig.ExptCnfg(var aCnfg: TUniConfig);
 begin
   with Grid_Cnfg do
   begin
-    if Objects[0, RealRow] = nil then
-      Exit;
+    if Objects[0, RealRow] = nil then Exit;
     TUniConfig.CopyIt(TUniConfig(Objects[0, RealRow]), aCnfg);
   end;
 end;
@@ -523,24 +524,21 @@ end;
 
 procedure TDialogListUniConfig.Btnv_TestCnfgClick(Sender: TObject);
 var
-  UniConfigA: TUniConfig;
+  uCnfg: TUniConfig;
 begin
   inherited;
   with Grid_Cnfg do
   begin
-    UniConfigA := nil;
-    UniConfigA := TUniConfig(Objects[0, RealRow]);
-    if UniConfigA = nil then
-      Exit;
+    uCnfg := TUniConfig(Objects[0, RealRow]);
+    if uCnfg = nil then Exit;
 
     if Assigned(UniConnctEx.OnUniConfigCustomDecryptEvent) then
     begin
-      UniConnctEx.OnUniConfigCustomDecryptEvent(UniConfigA, UniConfigA);
+      UniConnctEx.OnUniConfigCustomDecryptEvent(uCnfg, uCnfg);
     end;
 
-    if not UniConfigA.TstConnection(UniConfigA) then
-      Exit;
-    ShowMessage('该数据库连接有效.');
+    if not uCnfg.TstConnection(uCnfg) then Exit;
+    TKzUtils.ShowMsg('该数据库连接有效.');
   end;
 end;
 
