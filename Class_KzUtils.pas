@@ -400,7 +400,7 @@ begin
 
     for I := 0 to cList.Count - 1 do
     begin
-      cTemp := cTemp + cList.Strings[I]+'\';
+      cTemp := cTemp + cList.Strings[I] + aSeparator;
 
       if not DirectoryExists(aRootPath + cTemp) then
       begin
