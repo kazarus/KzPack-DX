@@ -25,13 +25,17 @@ type
     Btnv_Mrok: TRzButton;
     Btnv_Quit: TRzButton;
     Chkb_ShowPSWD: TRzCheckBox;
-    RzLabel1: TRzLabel;
-    RzLabel7: TRzLabel;
+    Labl_ChangQD: TRzLabel;
+    Labl_UpdateQD: TRzLabel;
     procedure Btnv_QuitClick(Sender: TObject);
     procedure Btnv_MrokClick(Sender: TObject);
     procedure Chkb_ShowPSWDClick(Sender: TObject);
+    procedure Edit_ChangeMMChange(Sender: TObject);
+    procedure Edit_UpdateMMChange(Sender: TObject);
   private
     FRealUSER: TUSER4PSWD;
+    FMustCount: Integer;
+    FMustLevel: TPasswordStrongLevel;
   protected
     procedure SetInitialize;override;
     procedure SetCommParams;override;
@@ -41,12 +45,14 @@ type
   public
     procedure InitUSER;
     procedure ReadUSER(var aUSER: TUSER4PSWD);
+  public
+    function  ChkValid: Boolean;
   end;
 
 var
   DialogEditPSWD: TDialogEditPSWD;
 
-function ViewEditPSWD(var aUSER: TUSER4PSWD; mustLevel: TPasswordStrongLevel = pslStrong): Integer;
+function ViewEditPSWD(var aUSER: TUSER4PSWD; mustCount: Integer = 0; mustLevel: TPasswordStrongLevel = pslStrong): Integer;
 
 implementation
 
@@ -55,11 +61,13 @@ uses
 
 {$R *.dfm}
 
-function ViewEditPSWD(var aUSER: TUSER4PSWD; mustLevel: TPasswordStrongLevel = pslStrong): Integer;
+function ViewEditPSWD(var aUSER: TUSER4PSWD; mustCount: Integer = 0; mustLevel: TPasswordStrongLevel = pslStrong): Integer;
 begin
   try
     DialogEditPSWD := TDialogEditPSWD.Create(nil);
     DialogEditPSWD.FRealUSER := aUSER;
+    DialogEditPSWD.FMustCount := mustCount;
+    DialogEditPSWD.FMustLevel := mustLevel;
     Result := DialogEditPSWD.ShowModal;
 
     if Result = Mrok then
@@ -73,6 +81,8 @@ end;
 
 procedure TDialogEditPSWD.Btnv_MrokClick(Sender: TObject);
 begin
+  if not ChkValid then Exit;
+  
   ModalResult := mrOk;
 end;
 
@@ -94,6 +104,41 @@ begin
     Edit_ChangeMM.PasswordChar := '*';
     Edit_UpdateMM.PasswordChar := '*';
   end;
+end;
+
+function TDialogEditPSWD.ChkValid: Boolean;
+begin
+  Result := False;
+
+  if Trim(Edit_ChangeMM.Text) <> Trim(Edit_UpdateMM.Text) then
+  begin
+    TKzUtils.WarnFmt('[更换密码]与[确认密码]不一致.',[]);
+    Exit;
+  end;
+
+  if Length(Edit_ChangeMM.Text) < FMustCount then
+  begin
+    TKzUtils.WarnFmt('密码长度不符合要求.长度至少[%D]位,且包含字母和数字.',[self.FMustCount]);
+    Exit;
+  end;
+
+  if Length(Edit_UpdateMM.Text) < FMustCount then
+  begin
+    TKzUtils.WarnFmt('密码长度不符合要求.长度至少[%D]位,且包含字母和数字.',[self.FMustCount]);
+    Exit;
+  end;
+
+  Result := True;
+end;
+
+procedure TDialogEditPSWD.Edit_ChangeMMChange(Sender: TObject);
+begin
+  Labl_ChangQD.Caption := TPswdManager.GetPasswordStrongLevel(TPswdManager.ChkPasswordStrongLevel(TRzButtonEdit(Sender).Text));
+end;
+
+procedure TDialogEditPSWD.Edit_UpdateMMChange(Sender: TObject);
+begin
+  Labl_UpdateQD.Caption := TPswdManager.GetPasswordStrongLevel(TPswdManager.ChkPasswordStrongLevel(TRzButtonEdit(Sender).Text));
 end;
 
 procedure TDialogEditPSWD.InitUSER;

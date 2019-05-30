@@ -27,10 +27,10 @@ var
 begin
   Result := pslNull;
 
-  if Length(aValue) < count then
+  {#if Length(aValue) < count then
   begin
     Exit;
-  end;
+  end;}
 
   Level  := 0;
   //#Êý×Ö
