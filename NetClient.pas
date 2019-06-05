@@ -1,39 +1,40 @@
 unit NetClient;
 
+
 interface
 uses
-  System.Classes,System.SysUtils,System.Net.HttpClient,System.Net.HttpClientComponent,
-  System.Net.URLClient,Class_EROR,System.NetEncoding;
+  System.Classes, System.SysUtils, System.Net.HttpClient, System.Net.HttpClientComponent,
+  System.Net.URLClient, Class_EROR, System.NetEncoding;
 
 type
-  TNetClientResult=(ncrErrorEd,ncrFailure,ncrSuccess);
+  TNetClientResult = (ncrErrorEd, ncrFailure, ncrSuccess);
 
-  TNetClientDataRequestTrueBlock=reference to procedure (Sender:TObject;Value:string);
-  TNetClientDataRequestFailBlock=reference to procedure (Sender:TObject;Value:string);
+  TNetClientDataRequestTrueBlock = reference to procedure(Sender: TObject; Value: string);
+  TNetClientDataRequestFailBlock = reference to procedure(Sender: TObject; Value: string);
 
   TNetClient=class(TObject)
   private
-    FNhClient:TNetHTTPClient;
+    FNhClient: TNetHTTPClient;
   private
-    FSrvrAddr:string;
-    FSrvrPort:string;
+    FSrvrAddr: string;
+    FSrvrPort: string;
 
-    FInUseTLS:Boolean;
-    FInUseZIP:Boolean;
+    FInUseTLS: Boolean;
+    FInUseZIP: Boolean;
   private
-    FValue:string;
-    FError:string;
+    FValue: string;
+    FError: string;
   private
     OnNetClientDataRequestTrueBlock:TNetClientDataRequestTrueBlock;
     OnNetClientDataRequestFailBlock:TNetClientDataRequestFailBlock;
-    procedure OnRequestError(const Sender: TObject;const AError: string);
-    procedure OnValidateServerCertificate(const Sender: TObject;const ARequest: TURLRequest; const Certificate: TCertificate;var Accepted: Boolean);
+    procedure OnRequestError(const Sender: TObject; const AError: string);
+    procedure OnValidateServerCertificate(const Sender: TObject; const ARequest: TURLRequest; const Certificate: TCertificate; var Accepted: Boolean);
   protected
     procedure SetValue(aValue:string);
     procedure SetError(aValue:string);
   public
-    function  Initialize(aSrvrAddr,aSrvrPort:string;InUseZIP:Boolean=False;InUseTLS:Boolean=False):Boolean;
-    procedure setTimeOut(aConnTimeOut:Integer=60000;aRespTimeOut:Integer=60000);
+    function  Initialize(aSrvrAddr, aSrvrPort: string; InUseZIP: Boolean = False; InUseTLS: Boolean = False): Boolean;
+    procedure setTimeOut(aConnTimeOut: Integer = 60000; aRespTimeOut: Integer = 60000);
 
     function  Post(aFileName: string; aUrlParam: array of string): TNetClientResult; overload;
     function  Post(aFileName: string; aUrlParam: array of string; trueBlock: TNetClientDataRequestTrueBlock; failBlock: TNetClientDataRequestFailBlock): TNetClientResult; overload;
@@ -73,8 +74,7 @@ begin
   inherited;
 end;
 
-function  TNetClient.Initialize(aSrvrAddr, aSrvrPort: string; InUseZIP,
-  InUseTLS: Boolean):Boolean;
+function TNetClient.Initialize(aSrvrAddr, aSrvrPort: string; InUseZIP, InUseTLS: Boolean): Boolean;
 begin
   Result:=False;
 
@@ -86,16 +86,14 @@ begin
   Result:=True;
 end;
 
-function TNetClient.Post(aFileName: string; aUrlParam: array of string;
-  trueBlock: TNetClientDataRequestTrueBlock;
-  failBlock: TNetClientDataRequestFailBlock): TNetClientResult;
+function TNetClient.Post(aFileName: string; aUrlParam: array of string; trueBlock: TNetClientDataRequestTrueBlock; failBlock: TNetClientDataRequestFailBlock): TNetClientResult;
 var
-  I:Integer;
-  cCount:Integer;
-  ToUrls:string;
-  Params:TStringList;
+  I: Integer;
+  cCount: Integer;
+  ToUrls: string;
+  Params: TStringList;
 
-  Return:IHTTPResponse;
+  Return: IHTTPResponse;
 begin
   Result:=ncrErrorEd;
 
@@ -188,20 +186,19 @@ begin
   //#FNhClient.ResponseTimeout  :=aRespTimeOut;
 end;
 
-function TNetClient.Post(aFileName: string;
-  aUrlParam: array of string): TNetClientResult;
+function TNetClient.Post(aFileName: string; aUrlParam: array of string): TNetClientResult;
 begin
   Result := Post(aFileName, aUrlParam, nil, nil);
 end;
 
 initialization
 begin
-  NetClientEx:=TNetClient.Create;
+  NetClientEx := TNetClient.Create;
 end;
 
 finalization
 begin
-  if NetClientEx<>nil then FreeAndNil(NetClientEx);
+  if NetClientEx <> nil then FreeAndNil(NetClientEx);
 end;
 
 end.
