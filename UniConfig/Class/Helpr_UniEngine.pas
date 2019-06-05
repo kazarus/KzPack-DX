@@ -160,8 +160,7 @@ begin
   end;
 end;
 
-class procedure THelprUniEngine.InJSON(aValue, AField: string;
-  var aList: TCollection; AIndex: Integer);
+class procedure THelprUniEngine.InJSON(aValue, AField: string; var aList: TCollection; AIndex: Integer);
 var
   JSON:TQJson;
 begin

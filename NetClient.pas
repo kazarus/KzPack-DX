@@ -4,7 +4,7 @@ unit NetClient;
 interface
 uses
   System.Classes, System.SysUtils, System.Net.HttpClient, System.Net.HttpClientComponent,
-  System.Net.URLClient, Class_EROR, System.NetEncoding;
+  System.Net.URLClient, Class_EROR, System.NetEncoding, System.Net.Mime;
 
 type
   TNetClientResult = (ncrErrorEd, ncrFailure, ncrSuccess);
@@ -35,11 +35,14 @@ type
   public
     function  Initialize(aSrvrAddr, aSrvrPort: string; InUseZIP: Boolean = False; InUseTLS: Boolean = False): Boolean;
     procedure setTimeOut(aConnTimeOut: Integer = 60000; aRespTimeOut: Integer = 60000);
-
+  public
     function  Post(aFileName: string; aUrlParam: array of string): TNetClientResult; overload;
     function  Post(aFileName: string; aUrlParam: array of string; trueBlock: TNetClientDataRequestTrueBlock; failBlock: TNetClientDataRequestFailBlock): TNetClientResult; overload;
 
     function  PostFmt(aFileName: string; Params: array of const; aUrlParam: array of string): TNetClientResult; overload;
+  public
+    function  Post(aFileName: string; aMultipartFormData: TMultipartFormData): TNetClientResult; overload;
+    function  Post(aFileName: string; aMultipartFormData: TMultipartFormData; trueBlock: TNetClientDataRequestTrueBlock; failBlock: TNetClientDataRequestFailBlock): TNetClientResult; overload;
   published
     property  Value:string  read FValue write SetValue;
     property  Error:string  read FError write SetError;
@@ -95,10 +98,10 @@ var
 
   Return: IHTTPResponse;
 begin
-  Result:=ncrErrorEd;
+  Result := ncrErrorEd;
 
-  self.OnNetClientDataRequestTrueBlock:=trueBlock;
-  self.OnNetClientDataRequestFailBlock:=failBlock;
+  self.OnNetClientDataRequestTrueBlock := trueBlock;
+  self.OnNetClientDataRequestFailBlock := failBlock;
 
 
   if (Length(aUrlParam) mod 2)<>0 then
@@ -108,14 +111,14 @@ begin
 
   if FInUseTLS then
   begin
-    ToUrls:=Format('https://%S:%S%S',[FSrvrAddr,FSrvrPort,aFileName]);
+    ToUrls := Format('https://%S:%S%S', [FSrvrAddr, FSrvrPort, aFileName]);
   end else
   begin
-    ToUrls:=Format('http://%S:%S%S',[FSrvrAddr,FSrvrPort,aFileName]);
+    ToUrls := Format('http://%S:%S%S', [FSrvrAddr, FSrvrPort, aFileName]);
   end;
 
   try
-    Params:=TStringList.Create;
+    Params := TStringList.Create;
 
     cCount:=Length(aUrlParam) div 2;
     for I := 1 to cCount do
@@ -124,27 +127,28 @@ begin
       Params.Add(Format('%S=%S',[aUrlParam[I*2-2],System.NetEncoding.TNetEncoding.URL.Encode(aUrlParam[I*2-1])]));
     end;
 
-
     KzDebug.FileFmt('%S:%S',[self.ClassName,params.Text]);
-    Result:=ncrErrorEd;
+    Result := ncrErrorEd;
+
     try
-      Return:=self.FNhClient.Post(ToUrls,Params);
+      Return := self.FNhClient.Post(ToUrls, Params);
     except
       on E:Exception do
       begin
         Error := E.Message;
       end;
     end;
-    if Return<>nil then
+
+    if Return <> nil then
     begin
-      FValue:=Return.ContentAsString;
+      FValue := Return.ContentAsString;
       if TEROR.IsTRUE(FValue) then
       begin
-        Result:=ncrSuccess;
+        Result := ncrSuccess;
       end else
       begin
-        FError:=TEROR.erMemo(FValue);
-        Result:=ncrFailure;
+        FError := TEROR.erMemo(FValue);
+        Result := ncrFailure;
       end;
     end;
   finally
@@ -152,8 +156,79 @@ begin
   end;
 end;
 
-function TNetClient.PostFmt(aFileName: string; Params: array of const;
-  aUrlParam: array of string): TNetClientResult;
+function TNetClient.Post(aFileName: string; aMultipartFormData: TMultipartFormData; trueBlock: TNetClientDataRequestTrueBlock; failBlock: TNetClientDataRequestFailBlock): TNetClientResult;
+var
+  //#I: Integer;
+  //#cCount: Integer;
+  ToUrls: string;
+  //#Params: TStringList;
+
+  Return: IHTTPResponse;
+begin
+  Result := ncrErrorEd;
+
+  self.OnNetClientDataRequestTrueBlock := trueBlock;
+  self.OnNetClientDataRequestFailBlock := failBlock;
+
+
+  {if (Length(aUrlParam) mod 2)<>0 then
+  begin
+    raise Exception.Create('函数调用出错,[Length(aUrlParam) Mod 2 <> 0]');
+  end;}
+
+  if FInUseTLS then
+  begin
+    ToUrls := Format('https://%S:%S%S', [FSrvrAddr, FSrvrPort, aFileName]);
+  end else
+  begin
+    ToUrls := Format('http://%S:%S%S', [FSrvrAddr, FSrvrPort, aFileName]);
+  end;
+
+  try
+    {Params := TStringList.Create;
+
+    cCount:=Length(aUrlParam) div 2;
+    for I := 1 to cCount do
+    begin
+      //#Params.Add(Format('%S=%S',[aUrlParam[I*2-2],aUrlParam[I*2-1]]));
+      Params.Add(Format('%S=%S',[aUrlParam[I*2-2],System.NetEncoding.TNetEncoding.URL.Encode(aUrlParam[I*2-1])]));
+    end;
+    KzDebug.FileFmt('%S:%S',[self.ClassName,params.Text]);}
+
+    Result := ncrErrorEd;
+
+    try
+      Return := self.FNhClient.Post(ToUrls, aMultipartFormData);
+    except
+      on E:Exception do
+      begin
+        Error := E.Message;
+      end;
+    end;
+
+    if Return <> nil then
+    begin
+      FValue := Return.ContentAsString;
+      if TEROR.IsTRUE(FValue) then
+      begin
+        Result := ncrSuccess;
+      end else
+      begin
+        FError := TEROR.erMemo(FValue);
+        Result := ncrFailure;
+      end;
+    end;
+  finally
+    //#FreeAndNil(Params);
+  end;
+end;
+
+function TNetClient.Post(aFileName: string; aMultipartFormData: TMultipartFormData): TNetClientResult;
+begin
+  Result := Post(aFileName, aMultipartFormData, nil, nil);
+end;
+
+function TNetClient.PostFmt(aFileName: string; Params: array of const; aUrlParam: array of string): TNetClientResult;
 begin
   Result := Post(Format(aFileName,Params), aUrlParam, nil, nil);
 end;
