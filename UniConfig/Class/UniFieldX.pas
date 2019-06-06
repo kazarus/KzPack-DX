@@ -335,6 +335,10 @@ begin
   begin
     Result:='Integer';
   end else
+  if AValue='INT8' then
+  begin
+    Result:='Int64';
+  end else
   if AValue='INT' then
   begin
     Result:='Integer';
