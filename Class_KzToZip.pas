@@ -47,8 +47,6 @@ begin
 end;
 
 
-
-
 function THelprString.kzUseZip: string;
 var
   nVAL:Integer;
@@ -106,12 +104,12 @@ end;
 
 function THelprString.ToUseZip: string;
 var
-  nVAL:Integer;
-  nBYT:TBytes;
-  mBYT:TBytes;
-  intStream:TMemoryStream;
-  outStream:TMemoryStream;
-  cCompress:TCompressionStream;
+  nVAL: Integer;
+  nBYT: TBytes;
+  mBYT: TBytes;
+  intStream: TMemoryStream;
+  outStream: TMemoryStream;
+  cCompress: TCompressionStream;
 begin
   try
     nBYT:=TEncoding.UTF8.GetBytes(Self);
@@ -158,11 +156,11 @@ end;
 
 function THelprString.UnUseZip: string;
 var
-  nRead:Integer;
-  Buffer:array[0..1023] of Char;
-  bytStream:TBytesStream;
-  dCompress:TDecompressionStream;
-  outStream:TStringStream;
+  nRead: Integer;
+  Buffer: array[0..1023] of Char;
+  bytStream: TBytesStream;
+  dCompress: TDecompressionStream;
+  outStream: TStringStream;
 begin
   try
     bytStream:=TBytesStream.Create(TNetEncoding.Base64.DecodeStringToBytes(Self));
@@ -182,9 +180,6 @@ begin
     FreeAndNil(outStream);
   end;
 end;
-
-{ TKzUseZip }
-
 
 class procedure TKzToZip.Base64toFile(aFnBase64: string;
   var msStream: TMemoryStream);

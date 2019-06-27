@@ -235,14 +235,12 @@ end;
 
 procedure TNetClient.OnRequestError(const Sender: TObject; const AError: string);
 begin
-  FError:=Format('OnRequestError:%s',[aError]);
+  FError := Format('OnRequestError:%s', [AError]);
 end;
 
-procedure TNetClient.OnValidateServerCertificate(const Sender: TObject;
-  const ARequest: TURLRequest; const Certificate: TCertificate;
-  var Accepted: Boolean);
+procedure TNetClient.OnValidateServerCertificate(const Sender: TObject; const ARequest: TURLRequest; const Certificate: TCertificate; var Accepted: Boolean);
 begin
-  Accepted:=True;
+  Accepted := True;
 end;
 
 procedure TNetClient.SetError(aValue: string);

@@ -2,128 +2,126 @@ object DialogEditUniConfig: TDialogEditUniConfig
   Left = 361
   Top = 275
   Caption = 'DialogEditUniConfig'
-  ClientHeight = 263
-  ClientWidth = 431
+  ClientHeight = 290
+  ClientWidth = 420
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
   Font.Color = clWindowText
-  Font.Height = -13
-  Font.Name = #23435#20307
+  Font.Height = -12
+  Font.Name = #24494#36719#38597#40657
   Font.Style = []
   OldCreateOrder = False
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 17
   object lbl1: TLabel
     Left = 20
-    Top = 17
-    Width = 59
-    Height = 13
-    AutoSize = False
+    Top = 28
+    Width = 51
+    Height = 17
     Caption = #39537#21160#31867#22411':'
     Font.Charset = GB2312_CHARSET
     Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = #23435#20307
+    Font.Height = -12
+    Font.Name = #24494#36719#38597#40657
     Font.Style = []
     ParentFont = False
   end
   object lbl2: TLabel
     Left = 20
-    Top = 42
-    Width = 59
-    Height = 13
+    Top = 57
+    Width = 51
+    Height = 17
     Caption = #30331#24405#29992#25143':'
     Font.Charset = GB2312_CHARSET
     Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = #23435#20307
+    Font.Height = -12
+    Font.Name = #24494#36719#38597#40657
     Font.Style = []
     ParentFont = False
   end
   object lbl3: TLabel
     Left = 20
-    Top = 67
-    Width = 59
-    Height = 13
+    Top = 86
+    Width = 51
+    Height = 17
     Caption = #30331#24405#23494#30721':'
     Font.Charset = GB2312_CHARSET
     Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = #23435#20307
+    Font.Height = -12
+    Font.Name = #24494#36719#38597#40657
     Font.Style = []
     ParentFont = False
   end
   object lbl4: TLabel
-    Left = 33
-    Top = 92
-    Width = 46
-    Height = 13
+    Left = 20
+    Top = 115
+    Width = 39
+    Height = 17
     Caption = #26381#21153#22120':'
     Font.Charset = GB2312_CHARSET
     Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = #23435#20307
+    Font.Height = -12
+    Font.Name = #24494#36719#38597#40657
     Font.Style = []
     ParentFont = False
   end
   object lbl5: TLabel
-    Left = 33
-    Top = 117
-    Width = 46
-    Height = 13
-    AutoSize = False
+    Left = 20
+    Top = 144
+    Width = 39
+    Height = 17
     Caption = #25968#25454#24211':'
     Font.Charset = GB2312_CHARSET
     Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = #23435#20307
+    Font.Height = -12
+    Font.Name = #24494#36719#38597#40657
     Font.Style = []
     ParentFont = False
   end
   object lbl6: TLabel
-    Left = 33
-    Top = 142
-    Width = 46
-    Height = 13
+    Left = 20
+    Top = 173
+    Width = 39
+    Height = 17
     Caption = #31471#21475#21495':'
     Font.Charset = GB2312_CHARSET
     Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = #23435#20307
+    Font.Height = -12
+    Font.Name = #24494#36719#38597#40657
     Font.Style = []
     ParentFont = False
   end
   object lbl7: TLabel
     Left = 20
-    Top = 167
-    Width = 59
-    Height = 13
+    Top = 202
+    Width = 51
+    Height = 17
     Caption = #36830#25509#26631#35782':'
     Font.Charset = GB2312_CHARSET
     Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = #23435#20307
+    Font.Height = -12
+    Font.Name = #24494#36719#38597#40657
     Font.Style = []
     ParentFont = False
   end
   object lbl8: TLabel
     Left = 20
-    Top = 192
-    Width = 59
-    Height = 13
+    Top = 231
+    Width = 51
+    Height = 17
     Caption = #25351#23450#24180#24230':'
     Font.Charset = GB2312_CHARSET
     Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = #23435#20307
+    Font.Height = -12
+    Font.Name = #24494#36719#38597#40657
     Font.Style = []
     ParentFont = False
   end
   object Comb_DataBase: TRzComboBox
     Left = 83
-    Top = 113
+    Top = 140
     Width = 301
-    Height = 21
+    Height = 25
     Ctl3D = False
     FrameVisible = True
     FramingPreference = fpCustomFraming
@@ -133,7 +131,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   end
   object Btnx_Mrok: TButton
     Left = 253
-    Top = 222
+    Top = 258
     Width = 75
     Height = 25
     Caption = #30830#23450
@@ -142,7 +140,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   end
   object Btnx_Quit: TButton
     Left = 328
-    Top = 222
+    Top = 258
     Width = 75
     Height = 25
     Caption = #21462#28040
@@ -151,7 +149,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   end
   object Btnv_Mock: TButton
     Left = 178
-    Top = 222
+    Top = 258
     Width = 75
     Height = 25
     Caption = #27979#35797
@@ -160,9 +158,9 @@ object DialogEditUniConfig: TDialogEditUniConfig
   end
   object Edit_UnicUser: TRzEdit
     Left = 83
-    Top = 38
+    Top = 53
     Width = 320
-    Height = 21
+    Height = 25
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
@@ -171,9 +169,9 @@ object DialogEditUniConfig: TDialogEditUniConfig
   end
   object Edit_UnicPswd: TRzEdit
     Left = 83
-    Top = 63
+    Top = 82
     Width = 320
-    Height = 21
+    Height = 25
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
@@ -183,9 +181,9 @@ object DialogEditUniConfig: TDialogEditUniConfig
   end
   object Edit_UnicSrvr: TRzEdit
     Left = 83
-    Top = 88
+    Top = 111
     Width = 320
-    Height = 21
+    Height = 25
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
@@ -195,9 +193,9 @@ object DialogEditUniConfig: TDialogEditUniConfig
   end
   object Edit_UnicPort: TRzEdit
     Left = 83
-    Top = 138
+    Top = 169
     Width = 320
-    Height = 21
+    Height = 25
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
@@ -206,9 +204,9 @@ object DialogEditUniConfig: TDialogEditUniConfig
   end
   object Edit_UnicYear: TRzEdit
     Left = 83
-    Top = 188
+    Top = 227
     Width = 320
-    Height = 21
+    Height = 25
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
@@ -217,9 +215,9 @@ object DialogEditUniConfig: TDialogEditUniConfig
   end
   object Comb_Type: TRzComboBox
     Left = 83
-    Top = 13
+    Top = 24
     Width = 320
-    Height = 21
+    Height = 25
     Ctl3D = False
     FrameVisible = True
     FramingPreference = fpCustomFraming
@@ -229,9 +227,9 @@ object DialogEditUniConfig: TDialogEditUniConfig
   end
   object Edit_DataBase: TRzButtonEdit
     Left = 384
-    Top = 113
+    Top = 140
     Width = 19
-    Height = 21
+    Height = 25
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
@@ -246,9 +244,9 @@ object DialogEditUniConfig: TDialogEditUniConfig
   end
   object Comb_Mark: TRzComboBox
     Left = 83
-    Top = 163
+    Top = 198
     Width = 320
-    Height = 21
+    Height = 25
     Ctl3D = False
     FrameVisible = True
     FramingPreference = fpCustomFraming
@@ -257,9 +255,9 @@ object DialogEditUniConfig: TDialogEditUniConfig
   end
   object ChkBox_Direct: TRzCheckBox
     Left = 20
-    Top = 227
-    Width = 45
-    Height = 15
+    Top = 260
+    Width = 43
+    Height = 19
     AlignmentVertical = avCenter
     Caption = #30452#32852
     State = cbUnchecked

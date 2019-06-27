@@ -6,7 +6,7 @@ uses
   Classes,SysUtils,DB,Uni,UniEngine;
 
 type
-  TUniObject=class(TUniEngine)
+  TUniObject = class(TUniEngine)
   private
     FUNIFIELD : string;
     FUNIVALUE : string;

@@ -67,8 +67,8 @@ type
     procedure UpdateDB;
     procedure InitCnfg;
   public
-    procedure ReadCnfg;
-    procedure ImptCnfg(var aRealCnfg:TUniConfig);
+    procedure ReadCnfg; overload;
+    procedure ReadCnfg(var aRealCnfg: TUniConfig); overload;
   end;
 
 var
@@ -118,7 +118,7 @@ begin
     Result:=DialogEditUniConfig.ShowModal;
     if Result=Mrok then
     begin
-      DialogEditUniConfig.ImptCnfg(aRealCnfg);
+      DialogEditUniConfig.ReadCnfg(aRealCnfg);
     end;  
   finally
     FreeAndNil(DialogEditUniConfig);
@@ -207,6 +207,9 @@ procedure TDialogEditUniConfig.SetCommParams;
 begin
   inherited;
   Caption := '数据连接';
+  Font.Size := 9;
+  Font.Name := '微软雅黑';
+
   Edit_UnicPswd.PasswordChar := '*';
   Edit_UnicYear.Text := IntToStr(YearOf(Now));
 
@@ -498,7 +501,7 @@ begin
   end;}
 end;
 
-procedure TDialogEditUniConfig.ImptCnfg(var aRealCnfg: TUniConfig);
+procedure TDialogEditUniConfig.ReadCnfg(var aRealCnfg: TUniConfig);
 begin
   if aRealCnfg = nil then Exit;
   if FRealCnfg = nil then Exit;

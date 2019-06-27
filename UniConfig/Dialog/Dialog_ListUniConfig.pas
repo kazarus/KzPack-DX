@@ -160,6 +160,7 @@ begin
   inherited;
   Caption := 'Êı¾İ¿âÁĞ±íÅäÖÃ';
   Font.Name := 'Î¢ÈíÑÅºÚ';
+  Font.Size := 9;
 
   Width := 1024;
   Height := Trunc(1024 * 0.618);
@@ -198,6 +199,12 @@ begin
 
     FixedFont.Size := 10;
     FixedFont.Name := 'ËÎÌå';
+
+    Font.Size := 9;
+    Font.Name := 'Î¢ÈíÑÅºÚ';
+
+    FixedFont.Size := 9;
+    FixedFont.Name := 'Î¢ÈíÑÅºÚ';
 
     with ColumnHeaders do
     begin

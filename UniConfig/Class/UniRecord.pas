@@ -6,9 +6,9 @@ uses
   Classes,SysUtils,DB,Uni,UniEngine;
 
 type
-  TUniRecord=class(TUniEngine)
+  TUniRecord = class(TUniEngine)
   private
-    FLineData: TCollection;
+    FLineData: TCollection;     //*list of *tuniobject;
   protected
     procedure SetParameters;override;
     function  GetStrInsert:string;override;
@@ -21,13 +21,17 @@ type
     //#function  GetNextIndx(aUniConnection:TUniConnection):Integer;overload;
   public
     function  CheckExist(aUniConnection:TUniConnection):Boolean;override;
+  protected
+    function getListDATA: TCollection;
   public
     destructor  Destroy; override;
     constructor Create;
   public
     procedure Initialize;
+  public
+    function GetUniValue(aUniField: string): string;
   published
-    property LINEDATA: TCollection read FLineData write FLineData;
+    property LINEDATA: TCollection read getListDATA write FLineData;
   public
     class function  ReadDS(aUniQuery:TUniQuery):TUniEngine;override;
     class procedure ReadDS(aUniQuery:TUniQuery;var Result:TUniEngine);override;
@@ -85,6 +89,28 @@ function TUniRecord.GetStrUpdate: string;
 begin
 end;
 
+function TUniRecord.GetUniValue(aUniField: string): string;
+var
+  I: Integer;
+  UniObject: TUniObject;
+begin
+  Result := '';
+
+  if FLineData = nil then Exit;
+
+  for I := 0 to FLineData.Count - 1 do
+  begin
+    UniObject := TUniObject(FLineData.Items[I]);
+    if UniObject = nil then Continue;
+
+    if UniObject.UNIFIELD = aUniField then
+    begin
+      Result := UniObject.UNIVALUE;
+      Exit;
+    end;
+  end;
+end;
+
 procedure TUniRecord.Initialize;
 begin
   if FLineData = nil then
@@ -104,6 +130,15 @@ begin
   if FLineData <> nil then TKzUtils.TryFreeAndNil(FLineData);
   
   inherited;
+end;
+
+function TUniRecord.getListDATA: TCollection;
+begin
+  if FLineData = nil then
+  begin
+    FLineData := TCollection.Create(TUniObject);
+  end;
+  Result := FLineData;
 end;
 
 class function TUniRecord.ReadDS(aUniQuery: TUniQuery): TUniEngine;
