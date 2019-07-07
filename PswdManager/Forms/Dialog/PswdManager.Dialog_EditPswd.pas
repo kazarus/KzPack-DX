@@ -27,6 +27,8 @@ type
     Chkb_ShowPSWD: TRzCheckBox;
     Labl_ChangQD: TRzLabel;
     Labl_UpdateQD: TRzLabel;
+    RzLabel1: TRzLabel;
+    Edit_PSWDMUST: TRzButtonEdit;
     procedure Btnv_QuitClick(Sender: TObject);
     procedure Btnv_MrokClick(Sender: TObject);
     procedure Chkb_ShowPSWDClick(Sender: TObject);
@@ -107,6 +109,8 @@ begin
 end;
 
 function TDialogEditPSWD.ChkValid: Boolean;
+var
+  sText: string;
 begin
   Result := False;
 
@@ -122,15 +126,15 @@ begin
     Exit;
   end;
 
-  if Length(Edit_ChangeMM.Text) < FMustCount then
+  if (Length(Edit_ChangeMM.Text) < FMustCount) or (Length(Edit_UpdateMM.Text) < FMustCount) then
   begin
-    TKzUtils.WarnFmt('密码长度不符合要求.长度至少[%D]位,且包含字母和数字.',[self.FMustCount]);
-    Exit;
-  end;
+    sText := Format('密码长度不符合要求.长度至少[%D]位',[self.FMustCount]);
+    if Integer(FMustLevel) > 1 then
+    begin
+      sText := sText + ',且包含字母和数字';
+    end;
 
-  if Length(Edit_UpdateMM.Text) < FMustCount then
-  begin
-    TKzUtils.WarnFmt('密码长度不符合要求.长度至少[%D]位,且包含字母和数字.',[self.FMustCount]);
+    TKzUtils.WarnFmt('%S.',[sText]);
     Exit;
   end;
 
@@ -149,6 +153,7 @@ end;
 
 procedure TDialogEditPSWD.InitUSER;
 begin
+  Edit_PSWDMUST.Text := Format('长度至少%D位',[self.FMustCount]);
   Edit_UserName.Text := FRealUSER.UserName;
   Edit_UserCode.Text := FRealUSER.UserCode;
   Edit_PassWord.Text := FRealUSER.PassWord;
