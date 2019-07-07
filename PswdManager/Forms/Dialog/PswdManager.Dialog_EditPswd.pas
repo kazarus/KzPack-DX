@@ -110,6 +110,12 @@ function TDialogEditPSWD.ChkValid: Boolean;
 begin
   Result := False;
 
+  if Integer(TPswdManager.ChkPasswordStrongLevel(Trim(Edit_ChangeMM.Text))) < Integer(FMustLevel) then
+  begin
+    TKzUtils.WarnFmt('您的密码过于简单,请重新修改密码.',[]);
+    Exit;
+  end;
+
   if Trim(Edit_ChangeMM.Text) <> Trim(Edit_UpdateMM.Text) then
   begin
     TKzUtils.WarnFmt('[更换密码]与[确认密码]不一致.',[]);
