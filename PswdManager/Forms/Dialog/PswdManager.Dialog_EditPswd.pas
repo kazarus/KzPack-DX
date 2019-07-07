@@ -181,6 +181,7 @@ begin
   self.Color := clWhite;
   self.Panl_Main.Color := clWhite;
 
+  Edit_PSWDMUST.ReadOnly := True;
   Edit_UserName.ReadOnly := True;
   Edit_UserCode.ReadOnly := True;
   Edit_PassWord.ReadOnly := True;

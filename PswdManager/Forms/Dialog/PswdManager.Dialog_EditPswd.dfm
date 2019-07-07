@@ -139,7 +139,6 @@ object DialogEditPswd: TDialogEditPswd
     Align = alBottom
     BorderOuter = fsNone
     TabOrder = 5
-    ExplicitTop = 202
     object Btnv_Mrok: TRzButton
       Left = 249
       Top = 5
