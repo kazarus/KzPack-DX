@@ -22,7 +22,7 @@ type
     procedure Btnx_MrokClick(Sender: TObject);
     procedure Btnx_QuitClick(Sender: TObject);
   private
-    FRealCnfg:TAppCnfg;
+    FRealCnfg: TAppCnfg;   //*
   protected
     procedure SetInitialize;override;
     procedure SetCommParams;override;
@@ -37,10 +37,10 @@ type
   end;
 
 const
-  CONST_MARK_NULL='NULL';
+  CONST_MARK_NULL = 'NULL';
 
 const
-  CONST_CONFIG_JSON='config.json';
+  CONST_CONFIG_JSON = 'config.json';
 
 
 var

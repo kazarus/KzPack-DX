@@ -1,17 +1,18 @@
 unit Class_EROR;
 
+
 interface
 uses
-  System.Classes,System.SysUtils,UniEngine,Helpr_UniEngine,QJSON;
+  System.Classes, System.SysUtils, UniEngine, Helpr_UniEngine, QJSON;
 
 type
-  TEROR=class(TUniEngine)
+  TEROR = class(TUniEngine)
   private
-    FERORCODE:string;
-    FERORMEMO:string;
-    FLASTDATE:Integer;
-    FLASTTIME:Integer;
-    FLISTDATA:TCollection;
+    FERORCODE: string;
+    FERORMEMO: string;
+    FLASTDATE: Integer;
+    FLASTTIME: Integer;
+    FLISTDATA: TCollection;
   public
     function  IsTRUE:Boolean;overload;
   public

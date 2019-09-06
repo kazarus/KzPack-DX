@@ -427,6 +427,10 @@ begin
   begin
     Result:='TStringStream';
   end else
+  if AValue='BIGINT' then
+  begin
+    Result:='Int64';
+  end else
   begin
     Result:=Format('<unkown>:%S',[AValue]);
   end;
