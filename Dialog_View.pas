@@ -11,7 +11,7 @@ uses
 type
   TDialogViewEditMode = (dvemNULL, dvemADDV, dvemEDIT, dvemVIEW, dvemCOPY, dvemFIND);
   TDialogViewViewMode = (dvvmNULL, dvvmSingle, dvvmCouple);
-  TDialogViewDoneMode = (dvdmNULL, dvdmCancel, dvdmCommit);
+  TDialogViewDoneMode = (dvdmNULL, dvdmCancel, dvdmCommit, dvdmReload);
 
   TDialogView = class(TForm)
     procedure FormShow(Sender: TObject);
