@@ -11,6 +11,7 @@ object DialogEditUniConfig: TDialogEditUniConfig
   Font.Name = #24494#36719#38597#40657
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 17
   object lbl1: TLabel

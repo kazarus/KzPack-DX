@@ -45,6 +45,7 @@ type
     procedure Comb_TypeCloseUp(Sender: TObject);
     procedure Edit_DataBaseAltBtnClick(Sender: TObject);
     procedure Edit_UnicPswdExit(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     FRealCnfg: TUniConfig;        //&
     FRealPswd: string;
@@ -79,7 +80,7 @@ function ViewCnfgCnfg(aEditMode: TDialogEditUniConfigEditMode; var aRealCnfg: TU
 
 implementation
 uses
-  Class_KzUtils,Helpr_UniEngine;
+  Class_KzUtils, Helpr_UniEngine, StylManager;
 
 
 {$R *.dfm}
@@ -244,6 +245,8 @@ begin
   end;
 
   InitCnfg;
+
+  TStylManager.InitFormSize(self.ClassName,self);
 end;
 
 procedure TDialogEditUniConfig.UpdateDB;
@@ -486,6 +489,12 @@ procedure TDialogEditUniConfig.Edit_UnicSrvrDblClick(Sender: TObject);
 begin
   inherited;
   ViewDataBase(Comb_Type.Text);
+end;
+
+procedure TDialogEditUniConfig.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  TStylManager.SaveFormSize(self.ClassName,self);
 end;
 
 procedure TDialogEditUniConfig.TryFreeAndNil;
