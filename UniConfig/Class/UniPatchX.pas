@@ -345,7 +345,7 @@ end;
 procedure TListPatch.AddPatch(aVersion, aConnctMark: string;
   aObject: TProcPatch);
 var
-  OncePatch:TOncePatch;
+  OncePatch: TOncePatch;
 begin
   OncePatch := TOncePatch.Create;
   OncePatch.VersionNow := aVersion;
@@ -357,7 +357,7 @@ end;
 
 initialization
 begin
-  UniPatchxEx:=TUniPatchX.Create;
+  UniPatchxEx := TUniPatchX.Create;
 end;
 
 finalization
