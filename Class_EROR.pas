@@ -10,6 +10,7 @@ type
   private
     FERORCODE: string;
     FERORMEMO: string;
+    FONSTATUS: Boolean;
     FLASTDATE: Integer;
     FLASTTIME: Integer;
     FLISTDATA: TCollection;
@@ -19,7 +20,7 @@ type
     class function  ToTRUE(AValue:TCollection):string;
     class function  ToEROR(AMemo:string='NOT FOUND'):string;
 
-    class function  ToData(ACode,AMemo:string;AValue:TCollection):string;overload;
+    class function  ToData(ACode, AMemo: string; onStatus: Boolean; AValue: TCollection): string; overload;
     class function  IsTRUE(AValue:string):Boolean;overload;
     class function  erCode(aValue:string):string;
     class function  erMemo(aValue:string):string;
@@ -29,11 +30,12 @@ type
   public
     constructor Create;
   published
-    property ERORCODE :string      read FERORCODE write FERORCODE;
-    property ERORMEMO :string      read FERORMEMO write FERORMEMO;
-    property LASTDATE :Integer     read FLASTDATE write FLASTDATE;
-    property LASTTIME :Integer     read FLASTTIME write FLASTTIME;
-    property LISTDATA :TCollection read FListData write FListData;
+    property ERORCODE: string  read FERORCODE write FERORCODE;
+    property ERORMEMO: string  read FERORMEMO write FERORMEMO;
+    property ONSTATUS: Boolean read FONSTATUS write FONSTATUS;
+    property LASTDATE: Integer read FLASTDATE write FLASTDATE;
+    property LASTTIME: Integer read FLASTTIME write FLASTTIME;
+    property LISTDATA: TCollection read FListData write FListData;
   end;
 
 const
@@ -129,20 +131,21 @@ end;
 
 function TEROR.IsTRUE: Boolean;
 begin
-  Result:=ERORCODE=CONST_MARK_TRUE;
+  Result := ERORCODE = CONST_MARK_TRUE;
 end;
 
-class function TEROR.ToData(ACode, AMemo: string; AValue: TCollection): string;
+class function TEROR.ToData(ACode, AMemo: string; onStatus: Boolean; AValue: TCollection): string;
 var
   EROR:TEROR;
 begin
   try
-    EROR:=TEROR.Create;
-    EROR.ERORCODE:=ACode;
-    EROR.ERORMEMO:=AMemo;
-    EROR.ListData:=AValue;
+    EROR := TEROR.Create;
+    EROR.ONSTATUS := onStatus;
+    EROR.ERORCODE := ACode;
+    EROR.ERORMEMO := AMemo;
+    EROR.ListData := AValue;
 
-    Result:=EROR.ToJSON;
+    Result := EROR.ToJSON;
   finally
     FreeAndNil(EROR);
   end;
@@ -150,12 +153,12 @@ end;
 
 class function TEROR.ToEROR(AMemo: string): string;
 begin
-  Result:=TEROR.ToData(CONST_MARK_EROR,AMemo,nil);
+  Result := TEROR.ToData(CONST_MARK_EROR, AMemo, False, nil);
 end;
 
 class function TEROR.ToTRUE(AValue: TCollection): string;
 begin
-  Result:=TEROR.ToData(CONST_MARK_TRUE,CONST_MARK_TRUE,AValue);
+  Result := TEROR.ToData(CONST_MARK_TRUE, CONST_MARK_TRUE, True, AValue);
 end;
 
 end.
