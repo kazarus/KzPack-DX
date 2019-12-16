@@ -259,8 +259,12 @@ begin
   begin
     Caption := Format('导入参数:%S',[FPromptTx]);
   end;
+
   Btnv_Quit.Caption:='取消';
   Btnv_Mrok.Caption:='确定';
+
+  Font.Name := '微软雅黑';
+  Font.Size := 9;
   
   Edit_FilePath.ReadOnly:=True;
   Edit_FilePath.HideButtonsOnReadOnly:=False;
