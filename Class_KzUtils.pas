@@ -128,6 +128,8 @@ type
   public
     class function  getLength(aLevel: Integer; aCodeRule: string): Integer;
     class procedure getParent(aCodeFull: string; aCodeRule: string; var aList: TStringList);
+  public
+    class function  getDivide(aValue: string; var aDivideOne: string; var aDivideTwo: string): Boolean;
   end;
 
 
@@ -1273,6 +1275,30 @@ begin
     end;
     Result:=Format('%S%S',[R,S]);
   end;
+end;
+
+class function TKzUtils.getDivide(aValue: string; var aDivideOne,
+  aDivideTwo: string): Boolean;
+var
+  cList: TStringList;
+begin
+  Result := False;
+
+  try
+    cList := TStringList.Create;
+    cList.Delimiter := ':';
+    cList.DelimitedText := aValue;
+
+    if cList.Count > 1 then
+    begin
+      aDivideOne := Trim(cList.Strings[0]);
+      aDivideTwo := Trim(cList.Strings[1]);
+    end;
+  finally
+    FreeAndNil(cList);
+  end;
+
+  Result := True;
 end;
 
 class function TKzUtils.StrToDateX(aValue: string): Integer;
