@@ -480,8 +480,9 @@ begin
         PropType := PPropInfo(PropInfo)^.PropType^;
 
         case PropType^.Kind of
-          tkFloat:aNode.AddChild(PropInfo.Name).Text             :=FloatToStr(GetFloatProp(self,PropInfo));
-          tkString, tkLString:aNode.AddChild(PropInfo.Name).Text :=GetStrProp(self, PropInfo);
+          tkFloat:            aNode.AddChild(PropInfo.Name).Text := FloatToStr(GetFloatProp(self,PropInfo));
+          tkString, tkLString:aNode.AddChild(PropInfo.Name).Text := GetStrProp(self, PropInfo);
+          tkUString:          aNode.AddChild(PropInfo.Name).Text := GetStrProp(self, PropInfo);
         else ;
           raise Exception.CreateFmt('NO MATCH PROPTYPE',[]);
         end;
