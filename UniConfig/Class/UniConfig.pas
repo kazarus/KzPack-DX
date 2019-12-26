@@ -6,22 +6,22 @@ unit UniConfig;
 
 interface
 uses
-  Classes,SysUtils,Uni,UniEngine;
+  Classes, SysUtils, Uni, UniEngine, DB;
 
 type
   TLitConfig = class(TUniEngine)
   private
-    FUnicType: string;    //*驱动类型
-    FDataBase: string;    //*数据库
-    FUnicUser: string;    //*用户
-    FUnicSrvr: string;    //*服务器
-    FUnicPswd: string;    //*密码
+    FUNICTYPE: string;    //*驱动类型
+    FDATABASE: string;    //*数据库
+    FUNICUSER: string;    //*用户
+    FUNICSRVR: string;    //*服务器
+    FUNICPSWD: string;    //*密码
   published
-    property UnicType : string read FUnicType  write FUnicType;
-    property DataBase : string read FDataBase  write FDataBase;
-    property UnicUser : string read FUnicUser  write FUnicUser;
-    property UnicSrvr : string read FUnicSrvr  write FUnicSrvr;
-    property UnicPswd : string read FUnicPswd  write FUnicPswd;
+    property UNICTYPE : string READ FUNICTYPE  WRITE FUNICTYPE;
+    property DATABASE : string READ FDATABASE  WRITE FDATABASE;
+    property UNICUSER : string READ FUNICUSER  WRITE FUNICUSER;
+    property UNICSRVR : string READ FUNICSRVR  WRITE FUNICSRVR;
+    property UNICPSWD : string READ FUNICPSWD  WRITE FUNICPSWD;
   end;
 
   TDataBase = class(TUniEngine)
@@ -33,20 +33,20 @@ type
 
   TUniConfig=class(TUniEngine)
   public
-    FUnicIndx: Integer;   //配置序列
-    FUnicStat: Integer;   //配置状态
-    FUnicYear: Integer;   //配置年度
-    FUnicMark: string;    //配置代号
-    FUnicType: string;    //*驱动类型
-    FUnicPswd: string;    //*密码
-    FUnicUser: string;    //*用户
-    FUnicSrvr: string;    //*服务器
-    FDataBase: string;    //*数据库
-    FUnicPort: string;    //*端口号
-    FIsDirect: Integer;   //*是否直联
-    FUnicOrdr: Integer;   //排序
-    FUnicMemo: string;    //备注
-    FWhoBuild: Integer;   //机器码
+    FUNICINDX: integer;   //配置序列
+    FUNICSTAT: integer;   //配置状态
+    FUNICYEAR: integer;   //配置年度
+    FUNICMARK: string;    //配置代号
+    FUNICTYPE: string;    //*驱动类型
+    FUNICPSWD: string;    //*密码
+    FUNICUSER: string;    //*用户
+    FUNICSRVR: string;    //*服务器
+    FDATABASE: string;    //*数据库
+    FUNICPORT: string;    //*端口号
+    FISDIRECT: integer;   //*是否直联
+    FUNICORDR: integer;   //排序
+    FUNICMEMO: string;    //备注
+    FWHOBUILD: integer;   //机器码
   public
     IsDecrypt: Boolean;    //
     IsEncrypt: Boolean;    //
@@ -59,8 +59,8 @@ type
     function  GetStrDelete:string;override;
     function  GetStrsIndex:string;override;
   public
-    function  GetNextIdex:Integer;overload;
-    function  GetNextIdex(AUniConnection:TUniConnection):Integer;overload;
+    function  GetNextIdex:integer;overload;
+    function  GetNextIdex(AUniConnection:TUniConnection):integer;overload;
     function  GetIsDirect:string;
     function  GetUNICSTAT:string;
     function  GetActvStat: string; overload;
@@ -72,25 +72,25 @@ type
   public
     function  TstConnection(uCnfg:TUniConfig):Boolean;
   protected
-    function GetLISTDATA:TCollection;
+    function  GetLISTDATA:TCollection;
   public
     constructor Create;
     destructor Destroy; override;
   published
-    property UnicIndx: Integer read FUnicIndx write FUnicIndx;
-    property UnicStat: Integer read FUnicStat write FUnicStat;
-    property UnicYear: Integer read FUnicYear write FUnicYear;
-    property UnicMark: string read FUnicMark write FUnicMark;
-    property UnicType: string read FUnicType write FUnicType;
-    property UnicPswd: string read FUnicPswd write FUnicPswd;
-    property UnicUser: string read FUnicUser write FUnicUser;
-    property UnicSrvr: string read FUnicSrvr write FUnicSrvr;
-    property DataBase: string read FDataBase write FDataBase;
-    property UnicPort: string read FUnicPort write FUnicPort;
-    property IsDirect: Integer read FIsDirect write FIsDirect;
-    property UnicOrdr: Integer read FUnicOrdr write FUnicOrdr;
-    property UnicMemo: string read FUnicMemo write FUnicMemo;
-    property WhoBuild: Integer read FWhoBuild write FWhoBuild;
+    property UNICINDX: integer READ FUNICINDX WRITE FUNICINDX;
+    property UNICSTAT: integer READ FUNICSTAT WRITE FUNICSTAT;
+    property UNICYEAR: integer READ FUNICYEAR WRITE FUNICYEAR;
+    property UNICMARK: string READ FUNICMARK WRITE FUNICMARK;
+    property UNICTYPE: string READ FUNICTYPE WRITE FUNICTYPE;
+    property UNICPSWD: string READ FUNICPSWD WRITE FUNICPSWD;
+    property UNICUSER: string READ FUNICUSER WRITE FUNICUSER;
+    property UNICSRVR: string READ FUNICSRVR WRITE FUNICSRVR;
+    property DATABASE: string READ FDATABASE WRITE FDATABASE;
+    property UNICPORT: string READ FUNICPORT WRITE FUNICPORT;
+    property ISDIRECT: integer READ FISDIRECT WRITE FISDIRECT;
+    property UNICORDR: integer READ FUNICORDR WRITE FUNICORDR;
+    property UNICMEMO: string READ FUNICMEMO WRITE FUNICMEMO;
+    property WHOBUILD: integer READ FWHOBUILD WRITE FWHOBUILD;
   published
     property ListDATA: TCollection read GetLISTDATA write FListData;
   public
@@ -132,13 +132,13 @@ begin
 
 end;
 
-function TUniConfig.GetNextIdex: Integer;
+function TUniConfig.GetNextIdex: integer;
 begin
 
 end;
 
 
-function TUniConfig.GetNextIdex(AUniConnection: TUniConnection): Integer;
+function TUniConfig.GetNextIdex(AUniConnection: TUniConnection): integer;
 var
   TempA:string;
   UniQuery:TUniQuery;
@@ -151,7 +151,7 @@ begin
     UniQuery.Open;
 
     if UniQuery.RecordCount=0 then Exit;
-    TempA:=Trim(UniQuery.FieldByName('MAX').AsString);
+    TempA:=Trim(UniQuery.FieldByName('MAX').Asstring);
     if TempA='' then Exit;
     Result:=StrToIntDef(TempA,1);
   finally
@@ -243,27 +243,8 @@ end;
 
 class function TUniConfig.ReadDS(AUniQuery: TUniQuery): TUniEngine;
 begin
-  Result:=TUniConfig.Create;
-  with TUniConfig(Result) do
-  begin
-    UNICINDX := AUniQuery.FieldByName('UNIX_IDEX').AsInteger;
-    UNICSTAT := AUniQuery.FieldByName('UNIX_STAT').AsInteger;
-    UNICYEAR := AUniQuery.FieldByName('UNIX_YEAR').AsInteger;
-    UNICMARK := Trim(AUniQuery.FieldByName('UNIX_MARK').AsString);
-    UNICTYPE := Trim(AUniQuery.FieldByName('UNIX_TYPE').AsString);
-    UNICPSWD := Trim(AUniQuery.FieldByName('UNIX_PSWD').AsString);
-    UNICUSER := Trim(AUniQuery.FieldByName('UNIX_USER').AsString);
-    UNICSRVR := Trim(AUniQuery.FieldByName('UNIX_SERV').AsString);
-    DATABASE := Trim(AUniQuery.FieldByName('DATA_BASE').AsString);
-    UNICPORT := Trim(AUniQuery.FieldByName('UNIX_PORT').AsString);
-    ISDIRECT := AUniQuery.FieldByName('IS_DIRECT').AsInteger;
-    UNICORDR := AUniQuery.FieldByName('UNIX_ORDR').AsInteger;
-    
-    if AUniQuery.FindField('UNIX_MEMO')<>nil then
-    begin
-      UNICMEMO := AUniQuery.FieldByName('UNIX_MEMO').AsString;
-    end;
-  end;
+  Result := TUniConfig.Create;
+  ReadDS(AUniQuery, Result);
 end;
 
 
@@ -530,28 +511,72 @@ end;
 
 class procedure TUniConfig.ReadDS(AUniQuery: TUniQuery;
   var Result: TUniEngine);
+var
+  I: integer;
+  Field: TField;
+  FieldName: string;
 begin
-  inherited;
-  if Result=nil then Exit;
+  if Result = nil then Exit;
 
   with TUniConfig(Result) do
   begin
-    UNICINDX := AUniQuery.FieldByName('UNIX_IDEX').AsInteger;
-    UNICSTAT := AUniQuery.FieldByName('UNIX_STAT').AsInteger;
-    UNICYEAR := AUniQuery.FieldByName('UNIX_YEAR').AsInteger;
-    UNICMARK := Trim(AUniQuery.FieldByName('UNIX_MARK').AsString);
-    UNICTYPE := Trim(AUniQuery.FieldByName('UNIX_TYPE').AsString);
-    UNICPSWD := Trim(AUniQuery.FieldByName('UNIX_PSWD').AsString);
-    UNICUSER := Trim(AUniQuery.FieldByName('UNIX_USER').AsString);
-    UNICSRVR := Trim(AUniQuery.FieldByName('UNIX_SERV').AsString);
-    DATABASE := Trim(AUniQuery.FieldByName('DATA_BASE').AsString);
-    UNICPORT := Trim(AUniQuery.FieldByName('UNIX_PORT').AsString);
-    ISDIRECT := AUniQuery.FieldByName('IS_DIRECT').AsInteger;
-    UNICORDR := AUniQuery.FieldByName('UNIX_ORDR').AsInteger;
-    
-    if AUniQuery.FindField('UNIX_MEMO')<>nil then
+    for I:=0 to aUniQuery.Fields.Count-1 do
     begin
-      UNICMEMO := AUniQuery.FieldByName('UNIX_MEMO').AsString;
+      Field := aUniQuery.Fields.Fields[I];
+      //if field.fieldname is not all uppercase,please use uppercase().
+      FieldName := UpperCase(Field.FieldName);
+      if FieldName = 'UNIX_IDEX' then
+      begin
+        UNICINDX  := Field.AsInteger;
+      end else
+      if FieldName = 'UNIX_STAT' then
+      begin
+        UNICSTAT  := Field.AsInteger;
+      end else
+      if FieldName = 'UNIX_YEAR' then
+      begin
+        UNICYEAR  := Field.AsInteger;
+      end else
+      if FieldName = 'UNIX_MARK' then
+      begin
+        UNICMARK  := Field.AsString;
+      end else
+      if FieldName = 'UNIX_TYPE' then
+      begin
+        UNICTYPE  := Field.AsString;
+      end else
+      if FieldName = 'UNIX_PSWD' then
+      begin
+        UNICPSWD  := Field.AsString;
+      end else
+      if FieldName = 'UNIX_USER' then
+      begin
+        UNICUSER  := Field.AsString;
+      end else
+      if FieldName = 'UNIX_SERV' then
+      begin
+        UNICSRVR  := Field.AsString;
+      end else
+      if FieldName = 'DATA_BASE' then
+      begin
+        DATABASE  := Field.AsString;
+      end else
+      if FieldName = 'UNIX_PORT' then
+      begin
+        UNICPORT  := Field.AsString;
+      end else
+      if FieldName = 'IS_DIRECT' then
+      begin
+        ISDIRECT  := Field.AsInteger;
+      end else
+      if FieldName = 'UNIX_ORDR' then
+      begin
+        UNICORDR  := Field.AsInteger;
+      end else
+      if FieldName = 'UNIX_MEMO' then
+      begin
+        UNICMEMO  := Field.AsString;
+      end;
     end;
   end;
 end;
