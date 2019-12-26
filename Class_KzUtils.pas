@@ -128,6 +128,7 @@ type
   public
     class function  getLength(aLevel: Integer; aCodeRule: string): Integer;
     class procedure getParent(aCodeFull: string; aCodeRule: string; var aList: TStringList);
+    class procedure toCascade(aCodeFull: string; aCodeRule: string; var aList: TStringList);
   public
     class function  getDivide(aValue: string; var aDivideOne: string; var aDivideTwo: string): Boolean;
   end;
@@ -599,6 +600,35 @@ begin
     raise Exception.CreateFmt('%s:is not valid float string.',[aValue]);
   end;
 end;    
+
+class procedure TKzUtils.toCascade(aCodeFull, aCodeRule: string;
+  var aList: TStringList);
+var
+  I: Integer;
+  cSize: Integer;
+  xSize: Integer;
+begin
+  if aList = nil then Exit;
+
+  for I := 1 to Length(aCodeRule) do
+  begin
+    if I = 1 then
+    begin
+      cSize := getLength(I, aCodeRule);
+      aList.Add(Copy(aCodeFull, 1, StrToIntDef(aCodeRule[I], 0)));
+    end else
+    begin
+      cSize := getLength(I, aCodeRule);
+      xSize := getLength(I - 1, aCodeRule);
+      aList.Add(Copy(aCodeFull, xSize + 1, StrToIntDef(aCodeRule[I], 0)));
+    end;
+
+    if cSize = Length(aCodeFull) then
+    begin
+      Exit;
+    end;
+  end;
+end;
 
 class function TKzUtils.TryFormatCode(ALength, aBoolBack: Integer; const AStrSub, ASource: string): string;
 var
