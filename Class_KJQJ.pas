@@ -29,7 +29,8 @@ type
     function  GetKJQJNEXT:Integer;   //#value=201701,result=201702
     function  GetKJQJHEAD:Integer;   //#value=201701,result=201612
 
-    function  GetKJQJTEXT:string;overload;
+    function  GetKJQJTEXT: string; overload;
+    function  getKJNDTEXT: string; overload;
 
     procedure impKJNDKJQJ(aValue:integer);
     function  expKJNDKJQJ():Integer;
@@ -158,6 +159,11 @@ end;
 class function TKJQJ.GetKJNDKJQJ(aKJND, aKJQJ: Integer): Integer;
 begin
   Result :=aKJND * 100 + aKJQJ;
+end;
+
+function TKJQJ.getKJNDTEXT: string;
+begin
+  Result:= Format('%DÄê',[self.KJND]);
 end;
 
 function TKJQJ.GetNextKJND: Integer;
