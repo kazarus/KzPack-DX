@@ -2,7 +2,7 @@ unit UniConnct;
 //YXC_2012_07_28_15_10_27_Add_Method_ChkConnection
 //YXC_2012_08_02_08_37_01_uniconnctentity->uniconnctex
 //YXC_2012_08_03_15_20_00_add_connctmode
-//YXC_2012_08_03_15_20_18_add_GetConnection(ANull:Integer;AConnectionMark:string)
+//YXC_2012_08_03_15_20_18_add_GetConnection(aNull:Integer;aConnectionMark:string)
 //YXC_2012_09_05_14_25_43_add_ConnctMark
 //YXC_2013_07_31_11_18_37_add_ActiveHint
 
@@ -12,16 +12,16 @@ uses
   
 type
   TConnctMode=(cmBySQL,cmByOBJ);
-  TUniConnctCustomConnectionEventBySQL=procedure (AConnectionMark:string;var SQLA:string) of object;
-  TUniConnctCustomConnectionEventByOBJ=procedure (AConnectionMark:string;var OBJA:TUniConfig) of object;
+  TUniConnctCustomConnectionEventBySQL=procedure (aConnectionMark:string;var SQLA:string) of object;
+  TUniConnctCustomConnectionEventByOBJ=procedure (aConnectionMark:string;var OBJA:TUniConfig) of object;
 
   //供Dialig_ListUniConfig调用
   TDialogListUniConfigCustomStyleEvent=procedure (Sender:TObject) of object;
   //供Dialig_EditUniConfig调用  
   TUniConfigCustomGetUnixMemo         =procedure (Sender:TObject;var AUnixMemo:string) of object;    
 
-  TUniConfigCustomEncryptEvent        =procedure (Sender:TObject;var AUniConfig:TUniConfig) of object;
-  TUniConfigCustomDecryptEnent        =procedure (Sender:TObject;var AUniConfig:TUniConfig) of object;
+  TUniConfigCustomEncryptEvent        =procedure (Sender:TObject;var aUniConfig:TUniConfig) of object;
+  TUniConfigCustomDecryptEnent        =procedure (Sender:TObject;var aUniConfig:TUniConfig) of object;
 
 
 
@@ -48,18 +48,18 @@ type
     OnUniConfigCustomEncryptEvent        : TUniConfigCustomEncryptEvent;
     OnUniConfigCustomDecryptEvent        : TUniConfigCustomDecryptEnent;
   public
-    function  getConfig(AConnectionMark: string; var aCnfg: TUniConfig): Boolean;
+    function  getConfig(aConnectionMark: string; var aCnfg: TUniConfig): Boolean;
   public
     function  GetConnection:TUniConnection;overload;
-    function  GetConnection(AConnectionMark:string):TUniConnection;overload;
+    function  GetConnection(aConnectionMark:string):TUniConnection;overload;
     
-    function  GetConnection(ANull:Integer;AConnectionMark:string):TUniConnection;overload;
-    function  GetConnection(AUniConfig:TUniConfig):TUniConnection;overload;
-    
-    function  TstConnection(AUniConfig:TUniConfig):Boolean;
-    function  ChkConnection(AConnectionMark:string):Boolean;
+    function  GetConnection(aNull:Integer;aConnectionMark:string):TUniConnection;overload;
+    function  GetConnection(aUniConfig: TUniConfig; aTimeOut: Integer = 30): TUniConnection; overload;
+
+    function  TstConnection(aUniConfig:TUniConfig):Boolean;
+    function  ChkConnection(aConnectionMark:string):Boolean;
   public
-    procedure UniConnctCustomConnectionEventBySQL(AConnectionMark:string;var SQLA:string);
+    procedure UniConnctCustomConnectionEventBySQL(aConnectionMark:string;var SQLA:string);
   public
     constructor Create;
     destructor Destroy; override;      
@@ -71,7 +71,7 @@ var
 implementation
 
 
-function TUniConnct.ChkConnection(AConnectionMark: string): Boolean;
+function TUniConnct.ChkConnection(aConnectionMark: string): Boolean;
 var
   SQLA:string;
   UniConfig:TUniConfig;
@@ -82,7 +82,7 @@ begin
   if ConnctMode=cmbySQL then
   begin
     if not Assigned(OnUniConnctCustomConnectionEventBySQL) then raise Exception.Create('You should be implementation method [OnUniConnctCustomConnectionEventBySQL]');
-    OnUniConnctCustomConnectionEventBySQL(AConnectionMark,SQLA);
+    OnUniConnctCustomConnectionEventBySQL(aConnectionMark,SQLA);
 
     if SQLA='' then Exit;
 
@@ -107,7 +107,7 @@ begin
   begin
     if not Assigned(OnUniConnctCustomConnectionEventByOBJ) then raise Exception.Create('You should be implementation method [OnUniConnctCustomConnectionEventByOBJ]');
     UniConfig:=TUniConfig.Create;
-    OnUniConnctCustomConnectionEventByOBJ(AConnectionMark,UniConfig);
+    OnUniConnctCustomConnectionEventByOBJ(aConnectionMark,UniConfig);
   end;
 
   Result := UniConfig <> nil;
@@ -131,7 +131,7 @@ begin
   inherited;
 end;
 
-function TUniConnct.getConfig(AConnectionMark: string;
+function TUniConnct.getConfig(aConnectionMark: string;
   var aCnfg: TUniConfig): Boolean;
 var
   cSQL: string;
@@ -143,7 +143,7 @@ begin
   if ConnctMode = cmbySQL then
   begin
     if not Assigned(OnUniConnctCustomConnectionEventBySQL) then raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniConnct.GetConnection] AT [UniConnct.pas]' + #13 + '此函数已被更新或弃用,请向开发人员报告错误场合.');
-    OnUniConnctCustomConnectionEventBySQL(AConnectionMark,cSQL);
+    OnUniConnctCustomConnectionEventBySQL(aConnectionMark,cSQL);
 
     try
       cUniC:=UniConnctEx.GetConnection;
@@ -155,52 +155,52 @@ begin
   if ConnctMode = cmByOBJ then
   begin
     if not Assigned(OnUniConnctCustomConnectionEventByOBJ) then raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniConnct.GetConnection] AT [UniConnct.pas]' + #13 + '此函数已被更新或弃用,请向开发人员报告错误场合.');
-    OnUniConnctCustomConnectionEventByOBJ(AConnectionMark, aCnfg);
+    OnUniConnctCustomConnectionEventByOBJ(aConnectionMark, aCnfg);
   end;
 
   Result := True;
 end;
 
-function TUniConnct.GetConnection(AUniConfig: TUniConfig): TUniConnection;
+function TUniConnct.GetConnection(aUniConfig: TUniConfig; aTimeOut: Integer): TUniConnection;
 begin
   Result:=nil;
-  if AUniConfig=nil then raise Exception.CreateFmt('连接配置对象为空!',[]);
+  if aUniConfig=nil then raise Exception.CreateFmt('连接配置对象为空!',[]);
 
-  if AUniConfig.UnicType='' then raise Exception.CreateFmt('AUniConfig.UnicType=nil',[]);
+  if aUniConfig.UnicType='' then raise Exception.CreateFmt('aUniConfig.UnicType=nil',[]);
 
-  if AUniConfig.UnicType=CONST_PROVIDER_ORACLE then
+  if aUniConfig.UnicType=CONST_PROVIDER_ORACLE then
   begin
-    if AUniConfig.UnicUser='' then raise Exception.CreateFmt('AUniConfig.UnicUser=nil',[]);
-    //#if AUniConfig.UNICPSWD='' then raise Exception.CreateFmt('AUniConfig.UNICPSWD=nil',[]);
-    if AUniConfig.UnicSrvr='' then raise Exception.CreateFmt('AUniConfig.UnicSrvr=nil',[]);
+    if aUniConfig.UnicUser='' then raise Exception.CreateFmt('aUniConfig.UnicUser=nil',[]);
+    //#if aUniConfig.UNICPSWD='' then raise Exception.CreateFmt('aUniConfig.UNICPSWD=nil',[]);
+    if aUniConfig.UnicSrvr='' then raise Exception.CreateFmt('aUniConfig.UnicSrvr=nil',[]);
   end else
-  if AUniConfig.UnicType=CONST_PROVIDER_SQLSRV then
+  if aUniConfig.UnicType=CONST_PROVIDER_SQLSRV then
   begin
-    if AUniConfig.DataBase='' then raise Exception.CreateFmt('AUniConfig.DataBase=nil',[]);
-    if AUniConfig.UnicUser='' then raise Exception.CreateFmt('AUniConfig.UnicUser=nil',[]);
-    //#if AUniConfig.UNICPSWD='' then raise Exception.CreateFmt('AUniConfig.UNICPSWD=nil',[]);
-    if AUniConfig.UnicSrvr='' then raise Exception.CreateFmt('AUniConfig.UnicSrvr=nil',[]);
+    if aUniConfig.DataBase='' then raise Exception.CreateFmt('aUniConfig.DataBase=nil',[]);
+    if aUniConfig.UnicUser='' then raise Exception.CreateFmt('aUniConfig.UnicUser=nil',[]);
+    //#if aUniConfig.UNICPSWD='' then raise Exception.CreateFmt('aUniConfig.UNICPSWD=nil',[]);
+    if aUniConfig.UnicSrvr='' then raise Exception.CreateFmt('aUniConfig.UnicSrvr=nil',[]);
   end else
-  if AUniConfig.UnicType=CONST_PROVIDER_ACCESS then
+  if aUniConfig.UnicType=CONST_PROVIDER_ACCESS then
   begin
-    if AUniConfig.DataBase='' then raise Exception.CreateFmt('AUniConfig.DataBase=nil',[]);
+    if aUniConfig.DataBase='' then raise Exception.CreateFmt('aUniConfig.DataBase=nil',[]);
   end;  
 
   //YXC_2013_08_14_10_00_01
-  ActiveCnfg:=AUniConfig.GetActvStat('当前连接');  
+  ActiveCnfg:=aUniConfig.GetActvStat('当前连接');
 
   Result:=TUniConnection.Create(nil);
   Result.LoginPrompt:=False;
-  Result.ProviderName:=AUniConfig.UnicType;
-  Result.Username    :=AUniConfig.UnicUser;
-  Result.Password    :=AUniConfig.UNICPSWD;
-  Result.Database    :=AUniConfig.DataBase;
-  Result.Server      :=AUniConfig.UnicSrvr;
-  Result.Port        :=StrToIntDef(AUniConfig.UNICPORT,0);
+  Result.ProviderName:=aUniConfig.UnicType;
+  Result.Username    :=aUniConfig.UnicUser;
+  Result.Password    :=aUniConfig.UNICPSWD;
+  Result.Database    :=aUniConfig.DataBase;
+  Result.Server      :=aUniConfig.UnicSrvr;
+  Result.Port        :=StrToIntDef(aUniConfig.UNICPORT,0);
 
   if Result.ProviderName=CONST_PROVIDER_ORACLE then
   begin
-    if AUniConfig.IsDirect=1 then
+    if aUniConfig.IsDirect=1 then
     begin
      //Result.SpecificOptions.Clear;
       Result.SpecificOptions.Add('Oracle.Direct=True');
@@ -212,7 +212,7 @@ begin
   end else
   if Result.ProviderName=CONST_PROVIDER_SQLSRV then
   begin
-    Result.SpecificOptions.Add('SQL Server.ConnectionTimeout=30');
+    Result.SpecificOptions.Add(Format('SQL Server.ConnectionTimeout=%d',[aTimeOut]));
     Result.SpecificOptions.Add('SQL Server.OLEDBProvider=prSQL');
   end else
   if Result.ProviderName=CONST_PROVIDER_MYSQLX then
@@ -230,12 +230,12 @@ begin
   end;
 end;
 
-function TUniConnct.GetConnection(AConnectionMark: string): TUniConnection;
+function TUniConnct.GetConnection(aConnectionMark: string): TUniConnection;
 var
   uCnfg: TUniConfig;
 begin
   //YXC_2014_04_28_10_39_37_<
-  if Trim(AConnectionMark) = '' then
+  if Trim(aConnectionMark) = '' then
   begin
     //default connect to sqllite
     Result := GetConnection;
@@ -245,13 +245,13 @@ begin
 
   if ConnctMode = cmbySQL then
   begin
-    Result := GetConnection(0, AConnectionMark);
+    Result := GetConnection(0, aConnectionMark);
   end else
   if ConnctMode = cmByOBJ then
   begin
     if not Assigned(OnUniConnctCustomConnectionEventByOBJ) then raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniConnct.GetConnection] AT [UniConnct.pas]' + #13 + '此函数已被更新或弃用,请向开发人员报告错误场合.');
     uCnfg := TUniConfig.Create;
-    OnUniConnctCustomConnectionEventByOBJ(AConnectionMark, uCnfg);
+    OnUniConnctCustomConnectionEventByOBJ(aConnectionMark, uCnfg);
     Result := GetConnection(uCnfg);
     FreeAndNil(uCnfg);
   end;
@@ -274,8 +274,8 @@ begin
   Result.Connected   :=True;
 end;
 
-function TUniConnct.GetConnection(ANull: Integer;
-  AConnectionMark: string): TUniConnection;
+function TUniConnct.GetConnection(aNull: Integer;
+  aConnectionMark: string): TUniConnection;
 var
   SQLA:string;
   UniConfig:TUniConfig;
@@ -284,7 +284,7 @@ begin
   Result:=nil;
   if not Assigned(OnUniConnctCustomConnectionEventBySQL) then raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniConfig.GetConnection] AT [UniConfig.pas]');
 
-  OnUniConnctCustomConnectionEventBySQL(AConnectionMark,SQLA);
+  OnUniConnctCustomConnectionEventBySQL(aConnectionMark,SQLA);
 
   UniConfig:=nil;
   try
@@ -296,10 +296,10 @@ begin
 
   if UniConfig=nil then
   begin
-    raise Exception.CreateFmt('未发现:%S的配置值',[AConnectionMark]);
+    raise Exception.CreateFmt('未发现:%S的配置值',[aConnectionMark]);
     Exit;
   end;
-  //if UniConfig=nil then raise Exception.CreateFmt('未发现:%S的配置值',[AConnectionMark]);
+  //if UniConfig=nil then raise Exception.CreateFmt('未发现:%S的配置值',[aConnectionMark]);
 
   if Assigned(OnUniConfigCustomDecryptEvent) then
   begin
@@ -352,25 +352,25 @@ begin
   FreeAndNil(UniConfig);
 end;
 
-function TUniConnct.TstConnection(AUniConfig: TUniConfig): Boolean;
+function TUniConnct.TstConnection(aUniConfig: TUniConfig): Boolean;
 var
   UniConnectionA:TUniConnection;
 begin
   Result:=False;
-  if AUniConfig=nil then raise Exception.CreateFmt('连接配置对象为空!',[]);
+  if aUniConfig=nil then raise Exception.CreateFmt('连接配置对象为空!',[]);
 
   UniConnectionA:=TUniConnection.Create(nil);
   UniConnectionA.LoginPrompt:=False;
-  UniConnectionA.ProviderName:=AUniConfig.UnicType;
-  UniConnectionA.Username    :=AUniConfig.UnicUser;
-  UniConnectionA.Password    :=AUniConfig.UNICPSWD;
-  UniConnectionA.Database    :=AUniConfig.DataBase;
-  UniConnectionA.Server      :=AUniConfig.UnicSrvr;
-  UniConnectionA.Port        :=StrToIntDef(AUniConfig.UNICPORT,0);
+  UniConnectionA.ProviderName:=aUniConfig.UnicType;
+  UniConnectionA.Username    :=aUniConfig.UnicUser;
+  UniConnectionA.Password    :=aUniConfig.UNICPSWD;
+  UniConnectionA.Database    :=aUniConfig.DataBase;
+  UniConnectionA.Server      :=aUniConfig.UnicSrvr;
+  UniConnectionA.Port        :=StrToIntDef(aUniConfig.UNICPORT,0);
 
   if UniConnectionA.ProviderName=CONST_PROVIDER_ORACLE then
   begin
-    if AUniConfig.IsDirect=1 then
+    if aUniConfig.IsDirect=1 then
     begin
      //UniConnectionA.SpecificOptions.Clear;
       UniConnectionA.SpecificOptions.Add('Oracle.Direct=True');
@@ -399,7 +399,7 @@ begin
 end;
 
 procedure TUniConnct.UniConnctCustomConnectionEventBySQL(
-  AConnectionMark: string; var SQLA: string);
+  aConnectionMark: string; var SQLA: string);
 begin
 
 end;
@@ -412,10 +412,7 @@ end;
 
 finalization
 begin
-  if UniConnctEx<>nil then
-  begin
-    FreeAndNil(UniConnctEx);
-  end;
+  if UniConnctEx <> nil then FreeAndNil(UniConnctEx);
 end;
 
 end.
@@ -428,7 +425,7 @@ end.
   UniConnct:TUniConnection;
 begin
   if not Assigned(OnUniConnctCustomConnectionEvent) then raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniConfig.GetConnection] AT [UniConfig.pas]');
-  OnUniConnctCustomConnectionEvent(AConnectionMark,SQLA);
+  OnUniConnctCustomConnectionEvent(aConnectionMark,SQLA);
 
   UniConfig:=nil;
   try
@@ -438,7 +435,7 @@ begin
     FreeAndNil(UniConnct);
   end;
 
-  if UniConfig=nil then raise Exception.CreateFmt('未发现:%S的配置值',[AConnectionMark]);
+  if UniConfig=nil then raise Exception.CreateFmt('未发现:%S的配置值',[aConnectionMark]);
 
   Result:=TUniConnection.Create(nil);
   Result.LoginPrompt:=False;
