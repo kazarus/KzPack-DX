@@ -71,6 +71,7 @@ type
     class function  jsencode(const aValue: Widestring): Widestring;
     class function  jsdecode(const aValue: Widestring): Widestring;
     class function  HashCode(const aValue: string):Integer;
+    class function  WordNull(const aValue:Integer; Target:string): string;
 
     class procedure TryFreeAndNil(var AObject);
     class procedure JustCleanList(var AObject);
@@ -1148,6 +1149,11 @@ begin
   {$IFDEF MSWINDOWS}
   Application.MessageBox(Pchar(Format(Msg,Params)),'ÌבÊ¾',MB_OK+MB_ICONWARNING);
   {$ENDIF}
+end;
+
+class function TKzUtils.WordNull(const aValue: Integer; Target: string): string;
+begin
+  Result := DupeString(Target, aValue);
 end;
 
 class function TKzUtils.jsdecode(const aValue: Widestring): Widestring;
