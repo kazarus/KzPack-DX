@@ -49,6 +49,7 @@ type
     CellSpanX: Integer;
     CellSpanY: Integer;
     AddBorder: Boolean;
+    FormatCode: string;
   protected
     procedure Initialize;
   public
@@ -206,7 +207,14 @@ begin
             cdtBoolean: ;
             cdtError: ;
             cdtCurrency :Cell.AsCurrency := TKzUtils.TextToFloat(Styl.CellText);
-            cdtFloat    :Cell.AsFloat    := TKzUtils.TextToFloat(Styl.CellText);
+            cdtFloat    :
+            begin
+              Cell.AsFloat    := TKzUtils.TextToFloat(Styl.CellText);
+              if Styl.FormatCode <> '' then
+              begin
+                Cell.Style.DataFormat.FormatCode := Styl.FormatCode;
+              end;
+            end;
             cdtDateTime :;
             cdtInteger  :Cell.AsInteger  := StrToIntDef(Styl.CellText,0);
             cdtString   :Cell.AsString   := Styl.CellText;
