@@ -144,7 +144,8 @@ type
     class function  CheckExist(aTable: string; Args: array of Variant; aUniConnection: TUniConnection; aSQLAddition: string = ''): Boolean; overload;
     class function  CheckField(aField, aTable: string; Args: array of Variant; aUniConnection: TUniConnection; aSQLAddition: string = ''): Integer; overload;
     class function  CheckCount(aField, aTable: string; Args: array of Variant; aUniConnection: TUniConnection; aSQLAddition: string = ''): Integer; overload;
-    class function  CheckField(aSQL: string; AAsField: string; aUniConnection: TUniConnection): Variant; overload;
+    class function  CheckField(aSQL: string; aAsField: string; aUniConnection: TUniConnection): Variant; overload;
+    class function  CheckField(aSQL: string; aAsField: string; aUniConnection: TUniConnection; aDefault: Variant): Variant; overload;
 
     class function  ExistTable(aTable: string; aUniConnection: TUniConnection): Boolean;
     class function  ExistField(aTable, aField: string; aUniConnection: TUniConnection): Boolean;
@@ -855,22 +856,23 @@ begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.GetDataSet] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
 
-class function TUniEngine.CheckField(aSQL, AAsField: string;
-  aUniConnection: TUniConnection):Variant;
+class function TUniEngine.CheckField(aSQL, AAsField: string; aUniConnection: TUniConnection): Variant;
 var
-  ADataSet:TUniQuery;  
+  aDataSet: TUniQuery;
 begin
   Result := 0;
+
   try
-    ADataSet:=GetDataSet(aSQL,aUniConnection);
-    if ADataSet.RecordCount=0 then Exit;
-    Result:=ADataSet.FieldByName(AAsField).AsVariant;
+    aDataSet := GetDataSet(aSQL, aUniConnection);
+    if aDataSet.RecordCount = 0 then Exit;
+
+    Result := aDataSet.FieldByName(AAsField).AsVariant;
     if VarIsNull(Result) then
     begin
       Result := 0;
     end;  
   finally
-    FreeAndNil(ADataSet);
+    FreeAndNil(aDataSet);
   end;
 end;
 
@@ -1701,6 +1703,25 @@ begin
     xObject :=  aClass.Create;
     xObject.CopyIt(cObject,xObject);
     tList.AddObject(xObject.GetStrsIndex,xObject);
+  end;
+end;
+
+class function TUniEngine.CheckField(aSQL, aAsField: string; aUniConnection: TUniConnection; aDefault: Variant): Variant;
+var
+  aDataSet: TUniQuery;
+begin
+  Result := aDefault;
+
+  try
+    aDataSet := GetDataSet(aSQL, aUniConnection);
+    if aDataSet.RecordCount = 0 then Exit;
+    Result := aDataSet.FieldByName(AAsField).AsVariant;
+    if VarIsNull(Result) then
+    begin
+      Result := aDefault;
+    end;
+  finally
+    FreeAndNil(aDataSet);
   end;
 end;
 
