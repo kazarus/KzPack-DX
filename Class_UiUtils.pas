@@ -40,14 +40,14 @@ type
     class function  GetSizeCellChked(aGrid: TAdvStringGrid; aCol: Integer): Integer;
     class procedure SetGridCellChked(aGrid: TAdvStringGrid; aCol: Integer; AValue: Boolean);
 
-    class procedure ClearGrid(aGrid: TAdvStringGrid; ARowCount: Integer; ADefaultRowCount: Integer = 2);
+    class procedure ClearGrid(aGrid: TAdvStringGrid; aRowCount: Integer; aDefaultRowCount: Integer = 2);
     class procedure CleanGrid(aGrid: TAdvStringGrid; aDefaultRowCount: Integer = 1);
     class procedure CellIndex(aGrid: TAdvStringGrid; aCol: Integer = 0; aRowStart: Integer = 1; aRowEndEd: Integer = -1);
 
-    class procedure HeadIndex(aGrid:TAdvStringGrid;ARow:Integer=0);
+    class procedure HeadIndex(aGrid: TAdvStringGrid; ARow: Integer = 0);
 
-    class function  GridCheck(aGrid:TAdvStringGrid;aCol:Integer=1;aRowStart:Integer=1;aRowEndEd:Integer=-1):TStringList;
-    class procedure CellCheck(aGrid:TAdvStringGrid;AValue:Boolean;aCol:Integer=1;aRowStart:Integer=1;aRowEndEd:Integer=-1);
+    class function  GridCheck(aGrid: TAdvStringGrid; aCol: Integer = 1; aRowStart: Integer = 1; aRowEndEd: Integer = -1): TStringList;
+    class procedure CellCheck(aGrid: TAdvStringGrid; AValue: Boolean; aCol: Integer = 1; aRowStart: Integer = 1; aRowEndEd: Integer = -1);
     class procedure CellClick(Sender: TObject; ARow, aCol: Integer; aCheckBoxCol: Integer = 1);
     class procedure WordWarps(aGrid: TAdvStringGrid; aStartCol: Integer = 0; aStartRow: Integer = 1);
 
@@ -65,19 +65,19 @@ type
         TUiUtils.SetItemPrevChecked(TElTree(Sender),Item,False);
       end;
     end;}
-    class procedure SetItemNextChecked(aTree:TElTree;aItem:TElTreeItem;AStat:Boolean);
-    class procedure SetItemPrevChecked(aTree:TElTree;aItem:TElTreeItem;AStat:Boolean);
+    class procedure SetItemNextChecked(aTree: TElTree; aItem: TElTreeItem; AStat: Boolean);
+    class procedure SetItemPrevChecked(aTree: TElTree; aItem: TElTreeItem; AStat: Boolean);
     //eltree.common
-    class function  GetSizeItemChked(aTree:TElTree;ACheckChild:Boolean=False):Integer;
-    class procedure SetTreeItemChked(Value,IncludeLast:Boolean;aTree:TElTree);
-    class function  GetMaxLevelInTreeView(aTree:TElTree):Integer;
-    class procedure TreeIndex(aTree:TElTree);
-    class procedure TreeInit(aTree:TElTree);
-    class function  GetNamePath(aNameDash:string;aItem:TElTreeItem;aTree:TElTree):string;
-    class procedure GetCodePath(aCodeRule:string;aCodeDash:string;aTree:TElTree;var aHash:THashedStringList);
+    class function  GetSizeItemChked(aTree: TElTree; aCheckChild: Boolean = False): Integer;
+    class procedure SetTreeItemChked(Value, IncludeLast: Boolean; aTree: TElTree);
+    class function  GetMaxLevelInTreeView(aTree: TElTree): Integer;
+    class procedure TreeIndex(aTree: TElTree);
+    class procedure TreeInit(aTree: TElTree);
+    class function  GetNamePath(aNameDash: string; aItem: TElTreeItem; aTree: TElTree): string;
+    class procedure GetCodePath(aCodeRule: string; aCodeDash: string; aTree: TElTree; var aHash: THashedStringList);
   public
     //frxreport
-    class function  GetfrxReportPage(Afrxreport:TfrxReport):string;
+    class function  GetfrxReportPage(aFrxReport: TfrxReport): string;
   public
     class procedure FillDATA(aIndx: Integer; aData: TObject; aGrid: TAdvStringGrid; iCheckEd: Boolean = False);
     class procedure TreeDATA(aCodeRule: string; aList: TCollection; aTree: TElTree; iCheckEd: Boolean = False; aRoot: TElTreeItem = nil; aRootName: string = ''); overload;
@@ -167,16 +167,13 @@ begin
   end;  
 end;
 
-class procedure TUiUtils.CleanGrid(aGrid: TAdvStringGrid;
-  aDefaultRowCount: Integer);
-var
-  I: Integer;
+class procedure TUiUtils.CleanGrid(aGrid: TAdvStringGrid; aDefaultRowCount: Integer);
 begin
   with aGrid do
   begin
     BeginUpdate;
 
-    for I := RowCount -1 downto aDefaultRowCount do
+    {@for I := RowCount -1 downto aDefaultRowCount do
     begin
       if I = aDefaultRowCount then
       begin
@@ -186,14 +183,21 @@ begin
       begin
         RemoveRows(I,1);
       end;
+    end;}
+
+    if aDefaultRowCount = 1  then
+    begin
+      aDefaultRowCount := 2;
     end;
+    RemoveRows(aDefaultRowCount - 1, RowCount - aDefaultRowCount);
+    ClearRows(aDefaultRowCount - 1, 1);
 
     EndUpdate;
   end;
 end;
 
-class procedure TUiUtils.ClearGrid(aGrid: TAdvStringGrid; ARowCount,
-  ADefaultRowCount: Integer);
+class procedure TUiUtils.ClearGrid(aGrid: TAdvStringGrid; aRowCount,
+  aDefaultRowCount: Integer);
 begin
   with aGrid do
   begin
@@ -207,12 +211,12 @@ begin
     ClearRows(1, RowCount - 1);
     RemoveRows(2, RowCount - 2);
 
-    if ARowCount > 1 then
+    if aRowCount > 1 then
     begin
-      RowCount := ARowCount + 1;
+      RowCount := aRowCount + 1;
     end else
     begin
-      RowCount := ADefaultRowCount;
+      RowCount := aDefaultRowCount;
     end;
 
     EndUpdate;
@@ -455,7 +459,7 @@ begin
       Result:=I;
       Break;
     end;  
-  end;  
+  end;
 end;
 
 class function TUiUtils.GetRuleNumb(aCodeRule: string; aLevl: Integer; aWithDash: Boolean): Integer;
@@ -666,7 +670,7 @@ begin
 end;
 
 class function TUiUtils.GetSizeItemChked(aTree: TElTree;
-  ACheckChild: Boolean): Integer;
+  aCheckChild: Boolean): Integer;
 var
   I:Integer;
   ItemA:TElTreeItem;
@@ -679,7 +683,7 @@ begin
       ItemA:=aTree.Items.Item[I];
       if (ItemA.ShowCheckBox) and (ItemA.Checked) then
       begin
-        if ACheckChild then
+        if aCheckChild then
         begin
           if not ItemA.HasChildren then
           begin
