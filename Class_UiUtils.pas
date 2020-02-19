@@ -41,7 +41,9 @@ type
     class procedure SetGridCellChked(aGrid: TAdvStringGrid; aCol: Integer; AValue: Boolean);
 
     class procedure ClearGrid(aGrid: TAdvStringGrid; aRowCount: Integer; aDefaultRowCount: Integer = 2);
-    class procedure CleanGrid(aGrid: TAdvStringGrid; aDefaultRowCount: Integer = 1);
+    class procedure CleanGrid(aGrid: TAdvStringGrid; aDefaultRowCount: Integer = 1); deprecated;//#逐条清空,性能较差.以零计数.
+    class procedure BatchGrid(aGrid: TAdvStringGrid; aDefaultRowHeadCount: Integer = 1); //#批量清空,性能要比CleanGrid好.
+
     class procedure CellIndex(aGrid: TAdvStringGrid; aCol: Integer = 0; aRowStart: Integer = 1; aRowEndEd: Integer = -1);
 
     class procedure HeadIndex(aGrid: TAdvStringGrid; ARow: Integer = 0);
@@ -96,6 +98,20 @@ implementation
 uses
   Class_KzUtils,PerlRegEx;
 
+
+class procedure TUiUtils.BatchGrid(aGrid: TAdvStringGrid; aDefaultRowHeadCount: Integer);
+begin
+  with aGrid do
+  begin
+    BeginUpdate;
+
+    aDefaultRowHeadCount := aDefaultRowHeadCount + 1;
+    RemoveRows(aDefaultRowHeadCount - 1, RowCount - aDefaultRowHeadCount);
+    ClearRows(aDefaultRowHeadCount - 1, 1);
+
+    EndUpdate;
+  end;
+end;
 
 class procedure TUiUtils.CellCheck(aGrid: TAdvStringGrid; AValue: Boolean;
   aCol, aRowStart, aRowEndEd: Integer);
@@ -168,12 +184,14 @@ begin
 end;
 
 class procedure TUiUtils.CleanGrid(aGrid: TAdvStringGrid; aDefaultRowCount: Integer);
+var
+  I: Integer;
 begin
   with aGrid do
   begin
     BeginUpdate;
 
-    {@for I := RowCount -1 downto aDefaultRowCount do
+    for I := RowCount -1 downto aDefaultRowCount do
     begin
       if I = aDefaultRowCount then
       begin
@@ -183,14 +201,11 @@ begin
       begin
         RemoveRows(I,1);
       end;
-    end;}
-
-    if aDefaultRowCount = 1  then
-    begin
-      aDefaultRowCount := 2;
     end;
+
+    {@aDefaultRowCount := aDefaultRowCount + 1;
     RemoveRows(aDefaultRowCount - 1, RowCount - aDefaultRowCount);
-    ClearRows(aDefaultRowCount - 1, 1);
+    ClearRows(aDefaultRowCount - 1, 1);}
 
     EndUpdate;
   end;
