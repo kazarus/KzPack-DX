@@ -475,6 +475,10 @@ begin
   if UNICTYPE = CONST_PROVIDER_ORACLE then
   begin
     Result := Format('当前连接:%S', [UpperCase(UNICSRVR)]);
+  end else
+  if UNICTYPE = CONST_PROVIDER_POSTGR then
+  begin
+    Result := Format('当前连接:%S.%S', [UpperCase(UNICSRVR), UpperCase(DataBase)]);
   end;
 end;
 
@@ -488,9 +492,13 @@ begin
   begin
     Result := Format('%S:%S.%S', [Value, UpperCase(UNICSRVR), UpperCase(DataBase)]);
   end else
-   if UNICTYPE = CONST_PROVIDER_ORACLE then
+  if UNICTYPE = CONST_PROVIDER_ORACLE then
   begin
     Result := Format('%S:%S', [Value, UpperCase(UNICSRVR)]);
+  end else
+  if UNICTYPE = CONST_PROVIDER_POSTGR then
+  begin
+    Result := Format('%S:%S.%S', [Value, UpperCase(UNICSRVR), UpperCase(DataBase)]);
   end;
 end;
 
