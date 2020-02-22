@@ -156,6 +156,7 @@ type
     class function  ExistInKey(aConstraintType, aField, aTable: string; aUniConnection: TUniConnection): Boolean;
     class function  AlterField(aTable, aField: string; length: Integer; aUniConnection: TUniConnection): Boolean;
 
+    class procedure toDropView(aSQL: string; aUniConnection: TUniConnection; aUpperCase: Boolean = False); overload;
     class procedure ExecuteSQL(aSQL: string; aUniConnection: TUniConnection; aUpperCase: Boolean = False); overload;
     class procedure ExecuteSQL(aSQL: string); overload;
   end;
@@ -463,6 +464,17 @@ begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.StrsDB] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
 
+
+class procedure TUniEngine.toDropView(aSQL: string; aUniConnection: TUniConnection; aUpperCase: Boolean);
+begin
+  if aUniConnection.ProviderName = UniConfig.CONST_PROVIDER_POSTGR then
+  begin
+    ExecuteSQL(Format('%S CASCADE',[aSQL]), aUniConnection, aUpperCase);
+  end else
+  begin
+    ExecuteSQL(aSQL, aUniConnection, aUpperCase);
+  end;
+end;
 
 procedure TUniEngine.TONODE(aNode: IXMLNode);
 var
