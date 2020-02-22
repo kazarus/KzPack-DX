@@ -122,19 +122,19 @@ end;
 
 procedure TUniPatchX.Connect(aTargetMark: string);
 var
-  cIndx:Integer;
-  UniConnctA:TUniConnection;
+  cIndx: Integer;
+  cUniC: TUniConnection;
 begin
-  cIndx:=FListConnct.IndexOf(aTargetMark);
-  if cIndx=-1 then
+  cIndx := FListConnct.IndexOf(aTargetMark);
+  if cIndx = -1 then
   begin
-    UniConnctA:=UniConnctEx.GetConnection(aTargetMark);
-    UniConnctA.StartTransaction;
-    FListConnct.AddObject(aTargetMark,UniConnctA);
-    FUniConnct:=UniConnctA;
+    cUniC := UniConnctEx.GetConnection(aTargetMark);
+    cUniC.StartTransaction;
+    FListConnct.AddObject(aTargetMark, cUniC);
+    FUniConnct := cUniC;
   end else
   begin
-    FUniConnct:=TUniConnection(FListConnct.Objects[cIndx]);
+    FUniConnct := TUniConnection(FListConnct.Objects[cIndx]);
   end;
 end;
 

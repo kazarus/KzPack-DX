@@ -163,7 +163,7 @@ type
 implementation
 
 uses
-  UniConfig;
+  UniConfig, Class_KzDebug;
 
 
 class function TUniEngine.CheckExist(aTable: string;
@@ -288,6 +288,7 @@ begin
   try
     UniSQL:=TUniSQL.Create(nil);
     UniSQL.Connection := aUniConnection;
+
     if aUpperCase then
     begin
       UniSQL.SQL.Text := UpperCase(aSQL);
@@ -296,8 +297,14 @@ begin
       UniSQL.SQL.Text := aSQL;
     end;
 
-
-    UniSQL.Execute;
+    try
+      UniSQL.Execute;
+    except
+      on E:Exception do
+      begin
+        KzDebug.FileFmt('%S:%S',[self.ClassName, E.Message]);
+      end;
+    end;
   finally
     FreeAndNil(UniSQL);
   end;
