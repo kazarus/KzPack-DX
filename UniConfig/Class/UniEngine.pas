@@ -278,8 +278,7 @@ begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.ExecuteSQL] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
 
-class procedure TUniEngine.ExecuteSQL(aSQL: string;
-  aUniConnection: TUniConnection; aUpperCase: Boolean);
+class procedure TUniEngine.ExecuteSQL(aSQL: string; aUniConnection: TUniConnection; aUpperCase: Boolean);
 var
   UniSQL:TUniSQL;
 begin
@@ -310,14 +309,13 @@ begin
   end;
 end;
 
-
 function TUniEngine.GetUniSQL: TUniSQL;
 begin
-  if FUniSQL=nil then
+  if FUniSQL = nil then
   begin
-    FUniSQL:=TUniSQL.Create(nil);
+    FUniSQL := TUniSQL.Create(nil);
   end;
-  Result:=FUniSQL;
+  Result := FUniSQL;
 end;
 
 class function TUniEngine.GetUniQuery(aSQL: string): TUniQuery;
