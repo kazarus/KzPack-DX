@@ -111,8 +111,8 @@ begin
     case FPickType of
       fpnptNode:
       begin
-        TNodeManager.ReadNode(Excl_Main,xList);
-        //#TCellNode.CopyIt()
+        TNodeManager.ReadNode(Excl_Main, xList);
+        TCellNode.CopyIt(xList, aList);
       end;
       fpnptExpt:
       begin
