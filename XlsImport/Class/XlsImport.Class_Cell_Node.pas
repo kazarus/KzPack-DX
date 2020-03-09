@@ -8,7 +8,7 @@ uses
 type
   TCellNode = class(TUniEngine)
   public
-    FDataINDX: Integer;
+    FDataIndx: Integer;
     FParentID: Integer;
   public
     FCol: Integer;
@@ -24,7 +24,7 @@ type
     FFontSize: Integer;
     FAlign: Integer;
   published
-    property DataINDX: Integer read FDataINDX write FDataINDX;
+    property DataIndx: Integer read FDataIndx write FDataIndx;
     property ParentID: Integer read FParentID write FParentID;
   published
     property Col: Integer read FCol write FCol;
@@ -56,7 +56,7 @@ end;
 
 class procedure TCellNode.CopyIt(aCellNode: TCellNode; var Result: TCellNode);
 begin
-  Result.DataINDX := aCellNode.DataINDX;
+  Result.DataIndx := aCellNode.DataIndx;
   Result.ParentID := aCellNode.ParentID;
 
   Result.Col := aCellNode.Col;

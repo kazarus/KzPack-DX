@@ -210,15 +210,15 @@ var
     for I := 0 to aList.Count-1  do
     begin
       xNode := TCellNode(aList.Objects[I]);
-      if xNode.DataINDX = aNode.DataINDX then Continue;                         //如果是自已,拉倒.
+      if xNode.DataIndx = aNode.DataIndx then Continue;                         //如果是自已,拉倒.
 
-      if cNode.Top-1 = xNode.Bottom then
+      if cNode.Top - 1 <= xNode.Bottom then
       begin
         if TKzUtils.NumbInRect(cNode.Left,xNode.Left,xNode.Right) then
         begin
           if TKzUtils.NumbInRect(cNode.Right,xNode.Left,xNode.Right) then
           begin
-            Result := xNode.DataINDX;
+            Result := xNode.DataIndx;
             Break;
           end;
         end;
@@ -281,8 +281,10 @@ begin
         end;
         cNode.Left := cItem.Area.Left;
         cNode.Right := cItem.Area.Right;
-        cNode.Top := Selection.Area.top-cItem.Area.Top;
-        cNode.Bottom := Selection.Area.Bottom-cItem.Area.Bottom;
+        //@cNode.Top := Selection.Area.Top - cItem.Area.Top;
+        //@cNode.Bottom := Selection.Area.Bottom - cItem.Area.Bottom;
+        cNode.Top := Selection.Area.Top;
+        cNode.Bottom := Selection.Area.Bottom;
       end;
 
       cIndx := aList.IndexOf(Format('%D-%D',[cNode.Col,cNode.Row]));
@@ -303,14 +305,14 @@ begin
   begin
     cNode := TCellNode(aList.Objects[I]);
     if cNode = nil then Continue;
-    cNode.DataINDX := I+1;
+    cNode.DataIndx := I+1;
   end;
 
   for I := 0 to aList.Count-1 do
   begin
     cNode := TCellNode(aList.Objects[I]);
     if cNode = nil then Continue;
-    cNode.DataINDX := I+1;
+    cNode.DataIndx := I+1;
     cNode.ParentID := FindNext(cNode);
   end;
 
