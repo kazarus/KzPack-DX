@@ -211,8 +211,7 @@ begin
   end;
 end;
 
-class procedure TUiUtils.ClearGrid(aGrid: TAdvStringGrid; aRowCount,
-  aDefaultRowCount: Integer);
+class procedure TUiUtils.ClearGrid(aGrid: TAdvStringGrid; aRowCount, aDefaultRowCount: Integer);
 begin
   with aGrid do
   begin
