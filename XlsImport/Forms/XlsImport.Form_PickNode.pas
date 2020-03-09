@@ -40,22 +40,39 @@ type
   public
     procedure ViewPath;
   public
-    procedure ReadNode(var aList:TStringList);
+    procedure ReadNode(var aList: TStringList); overload;
+    procedure ReadNode(var aList: TCollection); overload;
   end;
 
 var
   FormPickNode: TFormPickNode;
 
-function ViewPickNode(var aList:TStringList;aPickType : TFormPickNodePickType = fpnptNode):Integer;
+function ViewPickNode(var aList: TStringList; aPickType: TFormPickNodePickType = fpnptNode): Integer; overload;
+function ViewPickNode(var aList: TCollection; aPickType: TFormPickNodePickType = fpnptNode): Integer; overload;
 
 implementation
 
 uses
-  XlsImport.NodeManager;
+  XlsImport.NodeManager, Class_KzUtils, XlsImport.Class_Cell_Node;
 
 {$R *.dfm}
 
-function ViewPickNode(var aList:TStringList;aPickType : TFormPickNodePickType):Integer;
+function ViewPickNode(var aList: TStringList; aPickType: TFormPickNodePickType): Integer;
+begin
+  try
+    FormPickNode:=TFormPickNode.Create(nil);
+    FormPickNode.FPickType := aPickType;
+    Result:=FormPickNode.ShowModal;
+    if Result = Mrok then
+    begin
+      FormPickNode.ReadNode(aList);
+    end;
+  finally
+    FreeAndNil(FormPickNode);
+  end;
+end;
+
+function ViewPickNode(var aList: TCollection; aPickType: TFormPickNodePickType): Integer;
 begin
   try
     FormPickNode:=TFormPickNode.Create(nil);
@@ -85,6 +102,28 @@ begin
   ViewPath;
 end;
 
+procedure TFormPickNode.ReadNode(var aList: TCollection);
+var
+  xList: TStringList;
+begin
+  try
+    xList := TStringList.Create;
+    case FPickType of
+      fpnptNode:
+      begin
+        TNodeManager.ReadNode(Excl_Main,xList);
+        //#TCellNode.CopyIt()
+      end;
+      fpnptExpt:
+      begin
+        TNodeManager.ReadExpt(Excl_Main,xList);
+      end;
+    end;
+  finally
+    TKzUtils.TryFreeAndNil(xList);
+  end;
+end;
+
 procedure TFormPickNode.ReadNode(var aList: TStringList);
 begin
   case FPickType of
@@ -112,6 +151,9 @@ begin
   Btnv_Quit.Caption := '退出';
   Btnv_View.Caption := '文件';
   Btnv_Mrok.Caption := '确定';
+
+  Font.Name := '微软雅黑';
+  Font.Size := 10;
 end;
 
 procedure TFormPickNode.SetGridParams;

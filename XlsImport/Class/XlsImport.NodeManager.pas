@@ -1,5 +1,7 @@
 unit XlsImport.NodeManager;
 
+
+
 interface
 uses
   SysUtils, Classes, cxGraphics, cxControls, cxLookAndFeels,
@@ -13,8 +15,8 @@ uses
 type
   TNodeManager = class(TObject)
   public
-    class function ReadNode(aSpreadSheet:TdxSpreadSheet;var aList:TStringList):Boolean;
-    class function ReadExpt(aSpreadSheet:TdxSpreadSheet;var aList:TStringList):Boolean;
+    class function ReadNode(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean; overload;
+    class function ReadExpt(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean; overload;
   end;
 
 implementation
@@ -23,8 +25,7 @@ uses
   XlsImport.Class_Cell_Node,Class_KzDebug,Class_KzUtils;
 
 
-class function TNodeManager.ReadExpt(aSpreadSheet: TdxSpreadSheet;
-  var aList: TStringList): Boolean;
+class function TNodeManager.ReadExpt(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean;
 var
   I,C,R:Integer;
   ColEnded:Integer;
@@ -184,23 +185,21 @@ begin
   Result := True;
 end;
 
-class function TNodeManager.ReadNode(aSpreadSheet: TdxSpreadSheet;
-  var aList: TStringList): Boolean;
+class function TNodeManager.ReadNode(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean;
 var
-  I,C,R:Integer;
-  ColEnded:Integer;
-  ColStart:Integer;
-  RowStart:Integer;
-  RowEnded:Integer;
+  I, C, R: Integer;
+  ColEnded: Integer;
+  ColStart: Integer;
+  RowStart: Integer;
+  RowEnded: Integer;
 
-  cItem:TdxSpreadSheetMergedCell;
-  cCell:TdxSpreadSheetCell;
+  cItem: TdxSpreadSheetMergedCell;
+  cCell: TdxSpreadSheetCell;
 
-
-  cIndx:Integer;
-  cList:TStringList;
-  cNode:TCellNode;
-  xNode:TCellNode;
+  cIndx: Integer;
+  cList: TStringList;
+  cNode: TCellNode;
+  xNode: TCellNode;
 
   function FindNext(aNode:TCellNode):Integer;
   var
@@ -268,8 +267,8 @@ begin
 
     for I := 0 to MergedCells.Count-1 do
     begin
-      cItem:=MergedCells.Items[I];
-      if cItem=nil then Continue;
+      cItem := MergedCells.Items[I];
+      if cItem = nil then Continue;
 
       with cItem.Area do
       begin

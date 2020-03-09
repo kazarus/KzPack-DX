@@ -72,7 +72,7 @@ object FormPickNode: TFormPickNode
     object Btnv_View: TRzToolButton
       Left = 4
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 1
       Layout = blGlyphTop
@@ -80,9 +80,9 @@ object FormPickNode: TFormPickNode
       OnClick = Btnv_ViewClick
     end
     object Btnv_Quit: TRzToolButton
-      Left = 84
+      Left = 104
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 0
       Layout = blGlyphTop
@@ -90,9 +90,9 @@ object FormPickNode: TFormPickNode
       OnClick = Btnv_QuitClick
     end
     object Btnv_Mrok: TRzToolButton
-      Left = 44
+      Left = 54
       Top = 2
-      Width = 40
+      Width = 50
       Height = 40
       ImageIndex = 2
       Layout = blGlyphTop
@@ -128,7 +128,7 @@ object FormPickNode: TFormPickNode
     Left = 264
     Top = 144
     Bitmap = {
-      494C010103000800100010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800140010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000E2EFF100000000000000000000000000000000000000
