@@ -212,7 +212,7 @@ var
       xNode := TCellNode(aList.Objects[I]);
       if xNode.DataIndx = aNode.DataIndx then Continue;                         //如果是自已,拉倒.
 
-      if cNode.Top - 1 <= xNode.Bottom then
+      if cNode.Top = xNode.Bottom then
       begin
         if TKzUtils.NumbInRect(cNode.Left,xNode.Left,xNode.Right) then
         begin

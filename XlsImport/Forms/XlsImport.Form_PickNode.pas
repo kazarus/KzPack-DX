@@ -176,14 +176,13 @@ end;
 
 procedure TFormPickNode.ViewPath;
 var
-  OD:TOpenDialog;
+  OD: TOpenDialog;
 begin
   try
-    OD:=TOpenDialog.Create(nil);
-    if OD.Execute then
-    begin
-      Excl_Main.LoadFromFile(OD.FileName);
-    end;
+    OD := TOpenDialog.Create(nil);
+    OD.Filter := '*.xls|*.xls|*.xlsx|*.xlsx';
+    if not OD.Execute then Exit;
+    Excl_Main.LoadFromFile(OD.FileName);
   finally
     FreeAndNil(OD);
   end;
