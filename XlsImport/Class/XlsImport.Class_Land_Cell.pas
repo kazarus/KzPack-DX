@@ -1,19 +1,28 @@
 unit XlsImport.Class_Land_Cell;
 
+
 interface
 uses
-  Classes,SysUtils;
+  Classes, SysUtils, UniEngine;
 
 type
-  TLandCell=class(TObject)
+  TLandCell=class(TUniEngine)
+  private
+    FCol: Integer;
+    FRow: Integer;
+    FText: string;
+    FSpanX: Integer;
+    FSpanY: Integer;
+    FIsLasted: Boolean;
   public
-    Col: Integer;
-    Row: Integer;
-    SpanX: Integer;
-    SpanY: Integer;
-    Text: string;
     Data: Pointer;
-    IsLasted: Boolean;
+  published
+    property Col: Integer read FCol write FCol;
+    property Row: Integer read FRow write FRow;
+    property Text: string read FText write FText;
+    property SpanX: Integer read FSpanX write FSpanX;
+    property SpanY: Integer read FSpanY write FSpanY;
+    property IsLasted: Boolean read FIsLasted write FIsLasted;
   public
     constructor Create;
   end;
@@ -22,8 +31,8 @@ implementation
 
 constructor TLandCell.Create;
 begin
-  SpanX := 1;
-  SpanY := 1;
+  FSpanY := 1;
+  FSpanX := 1;
 end;
 
 end.

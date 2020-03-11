@@ -3,40 +3,41 @@ unit XlsImport.Class_Land_View;
 
 interface
 uses
-  Classes, SysUtils, ElXPThemedControl, ElTreeInplaceEditors, ElTree, UniEngine;
+  Classes, SysUtils, ElXPThemedControl, ElTreeInplaceEditors, ElTree, UniEngine,
+  XlsImport.Class_Land_Cell;
 
 type
-  TLandView=class(TUniEngine)
+  TLandView = class(TUniEngine)
   private
     FiReadiEd: Boolean;
     FColTotal: Integer;
-    FListCell: TStringList;
+    FListCell: TCollection;  //*list of *xlsimport.tlandcell;
   published
     property iReadiEd: Boolean read FiReadiEd write FiReadiEd;
     property ColTotal: Integer read FColTotal write FColTotal;
-    property ListCell: TStringList read FListCell write FListCell;
+    property ListCell: TCollection read FListCell write FListCell;
   public
     procedure Initialize;
   public
     constructor Create;
     destructor Destroy; override;
   public
-    class function ReadView(aMaxLevel:Integer;aTree:TElTree;var aLandView:TLandView):Boolean;
+    class function ReadViewH(aMaxLevel: Integer; aTree: TElTree; var aLandView: TLandView): Boolean;
   end;
 
 implementation
 
 uses
-  Class_KzUtils,XlsImport.Class_Land_Cell,Class_KzDebug;
+  Class_KzUtils, Class_KzDebug;
 
 constructor TLandView.Create;
 begin
-  FListCell := TStringList.Create;
+  FListCell := TCollection.Create(XlsImport.Class_Land_Cell.TLandCell);
 end;
 
 destructor TLandView.Destroy;
 begin
-  if FListCell<>nil then TKzUtils.TryFreeAndNil(FListCell);
+  if FListCell <> nil then TKzUtils.TryFreeAndNil(FListCell);
   inherited;
 end;
 
@@ -48,14 +49,14 @@ begin
 end;
 
 
-class function TLandView.ReadView(aMaxLevel:Integer;aTree: TElTree;var aLandView: TLandView): Boolean;
+class function TLandView.ReadViewH(aMaxLevel: Integer; aTree: TElTree; var aLandView: TLandView): Boolean;
 var
   I, M: Integer;
   cIndx: Integer;
-  cItem: TElTreeItem;
+  cITEM: TElTreeItem;
   dItem: TElTreeItem;
-  cCell: TLandCell;
-  dCell: TLandCell;
+  cCELL: TLandCELL;
+  xCELL: TLandCELL;
 
   function GetSpanX(aItem:TEltreeItem):Integer;
   var
@@ -85,25 +86,23 @@ begin
   begin
     for I:=0 to Items.Count-1 do
     begin
-      cItem:=Items.Item[I];
-      if cItem = nil then Continue;
+      cITEM:=Items.Item[I];
+      if cITEM = nil then Continue;
 
-      cCell := TLandCell.Create;
-      cCell.Col := cIndx;
-      cCell.Row := cItem.Level;
-      cCell.SpanX := GetSpanX(cItem);
-      cCell.SpanY := 1;
-      if not cItem.HasChildren then
+      cCELL := TLandCELL(aLandView.ListCell.Add);
+      cCELL.Col := cIndx;
+      cCELL.Row := cITEM.Level;
+      cCELL.SpanX := GetSpanX(cITEM);
+      cCELL.SpanY := 1;
+      if not cITEM.HasChildren then
       begin
-        cCell.SpanY := aMaxLevel - cItem.Level;
-        cCell.IsLasted := True;
+        cCELL.SpanY := aMaxLevel - cITEM.Level;
+        cCELL.IsLasted := True;
 
         Inc(cIndx);
       end;
-      cCell.Data := cItem.Data;
-      cCell.Text := cItem.Text;
-
-      aLandView.ListCell.AddObject('',cCell);
+      cCELL.Data := cITEM.Data;
+      cCELL.Text := cITEM.Text;
     end;
 
     aLandView.ColTotal := cIndx;
@@ -118,7 +117,7 @@ end.
 var
   I:Integer;
   Path:string;
-  cItem:TElTreeItem;
+  cITEM:TElTreeItem;
   pItem:TElTreeItem;
   cIndx:Integer;
   sIndx:string;
@@ -147,28 +146,28 @@ begin
   begin
     for I := 0 to Items.Count-1 do
     begin
-      cItem := Items.Item[I];
-      cItem.Tag := I;
+      cITEM := Items.Item[I];
+      cITEM.Tag := I;
 
 
       pIndx := 0;
-      if cItem.Parent <> nil then
+      if cITEM.Parent <> nil then
       begin
-        pIndx := cItem.Parent.Tag;
+        pIndx := cITEM.Parent.Tag;
       end;
 
-      sIndx := Format('%D-%D',[pIndx,cItem.Level]);
+      sIndx := Format('%D-%D',[pIndx,cITEM.Level]);
 
       cIndx := cHash.IndexOfName(sIndx);
       if cIndx = -1 then
       begin
         cHash.Add(Format('%S=%D',[sIndx,1]));
-        cItem.Text := TKzUtils.FormatCode(1,2);
+        cITEM.Text := TKzUtils.FormatCode(1,2);
       end else
       begin
         Value := StrToInt(cHash.Values[sIndx]);
         Inc(Value);
-        cItem.Text := TKzUtils.FormatCode(Value,2);
+        cITEM.Text := TKzUtils.FormatCode(Value,2);
         cHash.Values[sIndx]:=IntToStr(Value);
       end;
     end;
