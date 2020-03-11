@@ -15,8 +15,9 @@ uses
 type
   TNodeManager = class(TObject)
   public
-    class function ReadNode(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean; overload;
-    class function ReadExpt(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean; overload;
+    class function ReadNodeH(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean; overload;
+    class function ReadNodeV(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean; overload;
+    //@class function ReadExpt(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean; overload;
   end;
 
 implementation
@@ -25,7 +26,7 @@ uses
   XlsImport.Class_Cell_Node,Class_KzDebug,Class_KzUtils;
 
 
-class function TNodeManager.ReadExpt(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean;
+{@class function TNodeManager.ReadExpt(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean;
 var
   I,C,R:Integer;
   ColEnded:Integer;
@@ -33,13 +34,13 @@ var
   RowStart:Integer;
   RowEnded:Integer;
 
-  cItem:TdxSpreadSheetMergedCell;
+  cITEM:TdxSpreadSheetMergedCell;
   cCell:TdxSpreadSheetCell;
 
 
   cIndx:Integer;
   cList:TStringList;
-  cNode:TCellNode;
+  cNODE:TCellNode;
   xNode:TCellNode;
 
   function FindNext(aNode:TCellNode):Integer;
@@ -53,11 +54,11 @@ var
       xNode := TCellNode(aList.Objects[I]);
       if xNode.DataINDX = aNode.DataINDX then Continue;                         //如果是自已,拉倒.
 
-      if cNode.Top-1 = xNode.Bottom then
+      if cNODE.Top-1 = xNode.Bottom then
       begin
-        if TKzUtils.NumbInRect(cNode.Left,xNode.Left,xNode.Right) then
+        if TKzUtils.NumbInRect(cNODE.Left,xNode.Left,xNode.Right) then
         begin
-          if TKzUtils.NumbInRect(cNode.Right,xNode.Left,xNode.Right) then
+          if TKzUtils.NumbInRect(cNODE.Right,xNode.Left,xNode.Right) then
           begin
             Result := xNode.DataINDX;
             Break;
@@ -88,20 +89,20 @@ begin
         begin
           if Trim(cCell.DisplayText)='' then Continue;
 
-          cNode := TCellNode.Create;
-          cNode.Col := C;
-          cNode.Row := R;
-          cNode.Left := C-ColStart;      //->tgzjgexpt
-          cNode.Top := R-RowStart;
-          cNode.Right := C-ColStart;
-          cNode.Bottom := R-RowStart;
+          cNODE := TCellNode.Create;
+          cNODE.Col := C;
+          cNODE.Row := R;
+          cNODE.Left := C-ColStart;      //->tgzjgexpt
+          cNODE.Top := R-RowStart;
+          cNODE.Right := C-ColStart;
+          cNODE.Bottom := R-RowStart;
 
-          cNode.Text := Trim(cCell.DisplayText);
+          cNODE.Text := Trim(cCell.DisplayText);
 
 
-          with cNode do
+          with cNODE do
           begin
-            aList.AddObject(Format('%D-%D',[cNode.Col,cNode.Row]),cNode);
+            aList.AddObject(Format('%D-%D',[cNODE.Col,cNODE.Row]),cNODE);
           end;
         end;
       end;
@@ -109,83 +110,83 @@ begin
 
     for I := 0 to MergedCells.Count-1 do
     begin
-      cItem:=MergedCells.Items[I];
-      if cItem=nil then Continue;
+      cITEM:=MergedCells.Items[I];
+      if cITEM=nil then Continue;
 
-      with cItem.Area do
+      with cITEM.Area do
       begin
-        cNode := TCellNode.Create;
-        cNode.Col := cItem.Area.Left;
-        cNode.Row := cItem.Area.Top;
-        if cItem.ActiveCell <> nil then
+        cNODE := TCellNode.Create;
+        cNODE.Col := cITEM.Area.Left;
+        cNODE.Row := cITEM.Area.Top;
+        if cITEM.ActiveCell <> nil then
         begin
-          if Trim(cItem.ActiveCell.DisplayText) <> '' then
+          if Trim(cITEM.ActiveCell.DisplayText) <> '' then
           begin
-            cNode.Text := Trim(cItem.ActiveCell.DisplayText);
+            cNODE.Text := Trim(cITEM.ActiveCell.DisplayText);
           end;
 
-          cNode.FontSize := cItem.ActiveCell.Style.Font.Size;
+          cNODE.FontSize := cITEM.ActiveCell.Style.Font.Size;
 
-          case cItem.ActiveCell.Style.AlignHorz of
+          case cITEM.ActiveCell.Style.AlignHorz of
             ssahGeneral,ssahLeft:
             begin
-              cNode.Align :=1;
+              cNODE.Align :=1;
             end;
             ssahCenter:
             begin
-              cNode.Align :=2;
+              cNODE.Align :=2;
             end;
             ssahRight:
             begin
-              cNode.Align :=3;
+              cNODE.Align :=3;
             end;
           end;
         end;
 
-        cNode.Left := cItem.Area.Left-Selection.Area.Left;
-        cNode.Right := cItem.Area.right-ColStart;
-        cNode.Top := cItem.Area.Top-Selection.Area.Top;
-        cNode.Bottom := cItem.Area.Bottom-RowStart;
-        if cItem.Area.Right = ColEnded  then
+        cNODE.Left := cITEM.Area.Left-Selection.Area.Left;
+        cNODE.Right := cITEM.Area.right-ColStart;
+        cNODE.Top := cITEM.Area.Top-Selection.Area.Top;
+        cNODE.Bottom := cITEM.Area.Bottom-RowStart;
+        if cITEM.Area.Right = ColEnded  then
         begin
-          cNode.Right:=-1;
+          cNODE.Right:=-1;
           //tgzjgexpt.EXPTMERGECOLEND :=-1;
         end;
       end;
 
-      cIndx := aList.IndexOf(Format('%D-%D',[cNode.Col,cNode.Row]));
+      cIndx := aList.IndexOf(Format('%D-%D',[cNODE.Col,cNODE.Row]));
       if cIndx <> -1 then
       begin
         xNode := TCellNode(aList.Objects[cIndx]);
         if xNode <> nil then
         begin
-          TCellNode.CopyIt(cNode,xNode);
+          TCellNode.CopyIt(cNODE,xNode);
         end;
       end;
 
-      FreeAndNil(cNode);
+      FreeAndNil(cNODE);
     end;
   end;
 
   for I := 0 to aList.Count-1 do
   begin
-    cNode := TCellNode(aList.Objects[I]);
-    if cNode = nil then Continue;
-    cNode.DataINDX := I+1;
+    cNODE := TCellNode(aList.Objects[I]);
+    if cNODE = nil then Continue;
+    cNODE.DataINDX := I+1;
   end;
 
   for I := 0 to aList.Count-1 do
   begin
-    cNode := TCellNode(aList.Objects[I]);
-    if cNode = nil then Continue;
-    cNode.DataINDX := I+1;
-    cNode.ParentID := FindNext(cNode);
+    cNODE := TCellNode(aList.Objects[I]);
+    if cNODE = nil then Continue;
+    cNODE.DataINDX := I+1;
+    cNODE.ParentID := FindNext(cNODE);
   end;
 
   Result := True;
-end;
+end;}
 
-class function TNodeManager.ReadNode(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean;
+class function TNodeManager.ReadNodeH(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean;
 var
   I, C, R: Integer;
   ColEnded: Integer;
@@ -193,12 +194,12 @@ var
   RowStart: Integer;
   RowEnded: Integer;
 
-  cItem: TdxSpreadSheetMergedCell;
+  cITEM: TdxSpreadSheetMergedCell;
   cCell: TdxSpreadSheetCell;
 
   cIndx: Integer;
   cList: TStringList;
-  cNode: TCellNode;
+  cNODE: TCellNode;
   xNode: TCellNode;
 
   function FindNext(aNode:TCellNode):Integer;
@@ -210,13 +211,13 @@ var
     for I := 0 to aList.Count-1  do
     begin
       xNode := TCellNode(aList.Objects[I]);
-      if xNode.DataIndx = aNode.DataIndx then Continue;                         //如果是自已,拉倒.
+      if xNode.DataIndx = aNode.DataIndx then Continue;                         //#如果是自已,拉倒.
 
-      if cNode.Top = xNode.Bottom then
+      if cNODE.Top - 1 = xNode.Bottom then
       begin
-        if TKzUtils.NumbInRect(cNode.Left,xNode.Left,xNode.Right) then
+        if TKzUtils.NumbInRect(cNODE.Left,xNode.Left,xNode.Right) then
         begin
-          if TKzUtils.NumbInRect(cNode.Right,xNode.Left,xNode.Right) then
+          if TKzUtils.NumbInRect(cNODE.Right,xNode.Left,xNode.Right) then
           begin
             Result := xNode.DataIndx;
             Break;
@@ -247,19 +248,19 @@ begin
         begin
           if Trim(cCell.DisplayText)='' then Continue;
 
-          cNode := TCellNode.Create;
-          cNode.Col := C;
-          cNode.Row := R;
-          cNode.Left := C;
-          cNode.Top := R;
-          cNode.Right := C;
-          cNode.Bottom := R;
+          cNODE := TCellNode.Create;
+          cNODE.Col := C;
+          cNODE.Row := R;
+          cNODE.Left := C;
+          cNODE.Top := R;
+          cNODE.Right := C;
+          cNODE.Bottom := R;
 
-          cNode.Text := Trim(cCell.DisplayText);
+          cNODE.Text := Trim(cCell.DisplayText);
 
-          with cNode do
+          with cNODE do
           begin
-            aList.AddObject(Format('%D-%D',[cNode.Col,cNode.Row]),cNode);
+            aList.AddObject(Format('%D-%D',[cNODE.Col,cNODE.Row]),cNODE);
           end;
         end;
       end;
@@ -267,53 +268,198 @@ begin
 
     for I := 0 to MergedCells.Count-1 do
     begin
-      cItem := MergedCells.Items[I];
-      if cItem = nil then Continue;
+      cITEM := MergedCells.Items[I];
+      if cITEM = nil then Continue;
 
-      with cItem.Area do
+      with cITEM.Area do
       begin
-        cNode := TCellNode.Create;
-        cNode.Col := cItem.Area.Left;
-        cNode.Row := cItem.Area.Top;
-        if cItem.ActiveCell <> nil then
+        cNODE := TCellNode.Create;
+        cNODE.Col := cITEM.Area.Left;
+        cNODE.Row := cITEM.Area.Top;
+        if cITEM.ActiveCell <> nil then
         begin
-          cNode.Text := Trim(cItem.ActiveCell.DisplayText);
+          cNODE.Text := Trim(cITEM.ActiveCell.DisplayText);
         end;
-        cNode.Left := cItem.Area.Left;
-        cNode.Right := cItem.Area.Right;
-        //@cNode.Top := Selection.Area.Top - cItem.Area.Top;
-        //@cNode.Bottom := Selection.Area.Bottom - cItem.Area.Bottom;
-        cNode.Top := Selection.Area.Top;
-        cNode.Bottom := Selection.Area.Bottom;
+        cNODE.Left := cITEM.Area.Left;
+        cNODE.Right := cITEM.Area.Right;
+        cNODE.Top  := cITEM.Area.Top;
+        cNODE.Bottom := cITEM.Area.Bottom;
+        KzDebug.FileFmt('%S:%D:%D:%D:%D',[cNODE.Text,cNODE.Left,cNODE.Right,cNODE.Top,cNODE.Bottom]);
+
+        //@cNODE.Top := Selection.Area.Top - cITEM.Area.Top;
+        //@cNODE.Bottom := Selection.Area.Bottom - cITEM.Area.Bottom;
+        //@cNODE.Top := Selection.Area.Top;
+        //@cNODE.Bottom := Selection.Area.Bottom;
       end;
 
-      cIndx := aList.IndexOf(Format('%D-%D',[cNode.Col,cNode.Row]));
+      cIndx := aList.IndexOf(Format('%D-%D',[cNODE.Col,cNODE.Row]));
       if cIndx <> -1 then
       begin
         xNode := TCellNode(aList.Objects[cIndx]);
         if xNode <> nil then
         begin
-          TCellNode.CopyIt(cNode,xNode);
+          cNODE.Top := xNode.Top;
+          cNODE.Bottom := xNode.Bottom;
+          TCellNode.CopyIt(cNODE,xNode);
         end;
       end;
 
-      FreeAndNil(cNode);
+      FreeAndNil(cNODE);
     end;
   end;
 
   for I := 0 to aList.Count-1 do
   begin
-    cNode := TCellNode(aList.Objects[I]);
-    if cNode = nil then Continue;
-    cNode.DataIndx := I+1;
+    cNODE := TCellNode(aList.Objects[I]);
+    if cNODE = nil then Continue;
+    cNODE.DataIndx := I+1;
   end;
 
   for I := 0 to aList.Count-1 do
   begin
-    cNode := TCellNode(aList.Objects[I]);
-    if cNode = nil then Continue;
-    cNode.DataIndx := I+1;
-    cNode.ParentID := FindNext(cNode);
+    cNODE := TCellNode(aList.Objects[I]);
+    if cNODE = nil then Continue;
+    cNODE.DataIndx := I+1;
+    cNODE.ParentID := FindNext(cNODE);
+  end;
+
+  Result := True;
+end;
+
+class function TNodeManager.ReadNodeV(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean;
+var
+  I, C, R: Integer;
+  ColEnded: Integer;
+  ColStart: Integer;
+  RowStart: Integer;
+  RowEnded: Integer;
+
+  cITEM: TdxSpreadSheetMergedCell;
+  cCell: TdxSpreadSheetCell;
+
+  cIndx: Integer;
+  cList: TStringList;
+  cNODE: TCellNode;
+  xNode: TCellNode;
+
+  function FindNext(aNode:TCellNode):Integer;
+  var
+    I:Integer;
+  begin
+    Result := 0;
+
+    for I := 0 to aList.Count-1  do
+    begin
+      xNode := TCellNode(aList.Objects[I]);
+      if xNode.DataIndx = aNode.DataIndx then Continue;                         //#如果是自已,拉倒.
+
+      if cNODE.Left - 1 = xNode.Right then
+      begin
+        if TKzUtils.NumbInRect(cNODE.Top,xNode.Top,xNode.Bottom) then
+        begin
+          if TKzUtils.NumbInRect(cNODE.Bottom, xNode.Top, xNode.Bottom) then
+          begin
+            Result := xNode.DataIndx;
+            Break;
+          end;
+        end;
+      end;
+    end;
+  end;
+begin
+  Result := False;
+
+  if aList = nil then Exit;
+  TKzUtils.JustCleanList(aList);
+
+  with aSpreadSheet.ActiveSheetAsTable do
+  begin
+    ColStart := Selection.Area.Left;
+    ColEnded := Selection.Area.Right;
+    RowStart := Selection.Area.Top;
+    RowEnded := Selection.Area.Bottom;
+
+    for C := ColStart to ColEnded do
+    begin
+      for R := RowStart to RowEnded do
+      begin
+        cCell := Cells[R,C];
+        if cCell <> nil then
+        begin
+          if Trim(cCell.DisplayText)='' then Continue;
+
+          cNODE := TCellNode.Create;
+          cNODE.Col := C;
+          cNODE.Row := R;
+          cNODE.Left := C;
+          cNODE.Top := R;
+          cNODE.Right := C;
+          cNODE.Bottom := R;
+
+          cNODE.Text := Trim(cCell.DisplayText);
+
+          with cNODE do
+          begin
+            aList.AddObject(Format('%D-%D',[cNODE.Col,cNODE.Row]),cNODE);
+          end;
+        end;
+      end;
+    end;
+
+    for I := 0 to MergedCells.Count-1 do
+    begin
+      cITEM := MergedCells.Items[I];
+      if cITEM = nil then Continue;
+
+      with cITEM.Area do
+      begin
+        cNODE := TCellNode.Create;
+        cNODE.Col := cITEM.Area.Left;
+        cNODE.Row := cITEM.Area.Top;
+        if cITEM.ActiveCell <> nil then
+        begin
+          cNODE.Text := Trim(cITEM.ActiveCell.DisplayText);
+        end;
+        cNODE.Left := cITEM.Area.Left;
+        cNODE.Right := cITEM.Area.Right;
+        cNODE.Top  := cITEM.Area.Top;
+        cNODE.Bottom := cITEM.Area.Bottom;
+
+        //@cNODE.Top := Selection.Area.Top - cITEM.Area.Top;
+        //@cNODE.Bottom := Selection.Area.Bottom - cITEM.Area.Bottom;
+        //@cNODE.Top := Selection.Area.Top;
+        //@cNODE.Bottom := Selection.Area.Bottom;
+      end;
+
+      cIndx := aList.IndexOf(Format('%D-%D',[cNODE.Col,cNODE.Row]));
+      if cIndx <> -1 then
+      begin
+        xNode := TCellNode(aList.Objects[cIndx]);
+        if xNode <> nil then
+        begin
+          xNode.Left := cNODE.Left;
+          xNode.Right := cNODE.Right;
+          TCellNode.CopyIt(cNODE,xNode);
+        end;
+      end;
+
+      FreeAndNil(cNODE);
+    end;
+  end;
+
+  for I := 0 to aList.Count-1 do
+  begin
+    cNODE := TCellNode(aList.Objects[I]);
+    if cNODE = nil then Continue;
+    cNODE.DataIndx := I+1;
+  end;
+
+  for I := 0 to aList.Count-1 do
+  begin
+    cNODE := TCellNode(aList.Objects[I]);
+    if cNODE = nil then Continue;
+    cNODE.DataIndx := I+1;
+    cNODE.ParentID := FindNext(cNODE);
   end;
 
   Result := True;

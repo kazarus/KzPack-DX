@@ -1,15 +1,20 @@
 unit XlsImport.Class_Land_View;
 
+
 interface
 uses
-  Classes,SysUtils,ElXPThemedControl, ElTreeInplaceEditors,ElTree;
+  Classes, SysUtils, ElXPThemedControl, ElTreeInplaceEditors, ElTree, UniEngine;
 
 type
-  TLandView=class(TObject)
-  public
-    iReadied: Boolean;
-    ColTotal: Integer;
-    ListCell: TStringList;
+  TLandView=class(TUniEngine)
+  private
+    FiReadiEd: Boolean;
+    FColTotal: Integer;
+    FListCell: TStringList;
+  published
+    property iReadiEd: Boolean read FiReadiEd write FiReadiEd;
+    property ColTotal: Integer read FColTotal write FColTotal;
+    property ListCell: TStringList read FListCell write FListCell;
   public
     procedure Initialize;
   public
@@ -26,12 +31,12 @@ uses
 
 constructor TLandView.Create;
 begin
-  ListCell := TStringList.Create;
+  FListCell := TStringList.Create;
 end;
 
 destructor TLandView.Destroy;
 begin
-  TKzUtils.TryFreeAndNil(ListCell);
+  if FListCell<>nil then TKzUtils.TryFreeAndNil(FListCell);
   inherited;
 end;
 
@@ -39,7 +44,7 @@ procedure TLandView.Initialize;
 begin
   ColTotal := 0;
   iReadied := False;
-  TKzUtils.JustCleanList(ListCell);
+  TKzUtils.JustCleanList(FListCell);
 end;
 
 

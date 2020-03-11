@@ -1,20 +1,22 @@
 unit XlsImport.Form_PickNode;
 
+
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, FormEx_View, cxGraphics,
-  cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxCore, dxCoreClasses,
-  dxHashUtils, dxSpreadSheetCore, dxSpreadSheetCoreHistory,
-  dxSpreadSheetConditionalFormatting, dxSpreadSheetConditionalFormattingRules,
-  dxSpreadSheetClasses, dxSpreadSheetContainers, dxSpreadSheetFormulas,
-  dxSpreadSheetHyperlinks, dxSpreadSheetFunctions, dxSpreadSheetGraphics,
-  dxSpreadSheetPrinting, dxSpreadSheetTypes, dxSpreadSheetUtils, dxSpreadSheet,
-  RzButton, RzPanel, RzStatus, Vcl.ExtCtrls, System.ImageList, Vcl.ImgList;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  FormEx_View, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
+  dxCore, dxCoreClasses, dxHashUtils, dxSpreadSheetCore,
+  dxSpreadSheetCoreHistory, dxSpreadSheetConditionalFormatting,
+  dxSpreadSheetConditionalFormattingRules, dxSpreadSheetClasses,
+  dxSpreadSheetContainers, dxSpreadSheetFormulas, dxSpreadSheetHyperlinks,
+  dxSpreadSheetFunctions, dxSpreadSheetGraphics, dxSpreadSheetPrinting,
+  dxSpreadSheetTypes, dxSpreadSheetUtils, dxSpreadSheet, RzButton, RzPanel,
+  RzStatus, Vcl.ExtCtrls, System.ImageList, Vcl.ImgList;
 
 type
-  TFormPickNodePickType = (fpnptNull,fpnptNode,fpnptExpt);
+  TFormPickNodePickType = (fpnptNull, fpnptNodeH, fpnptNodeV, fpnptExpt);
 
   TFormPickNode = class(TFormExView)
     Panl_1: TRzStatusBar;
@@ -47,8 +49,8 @@ type
 var
   FormPickNode: TFormPickNode;
 
-function ViewPickNode(var aList: TStringList; aPickType: TFormPickNodePickType = fpnptNode): Integer; overload;
-function ViewPickNode(var aList: TCollection; aPickType: TFormPickNodePickType = fpnptNode): Integer; overload;
+function ViewPickNode(var aList: TStringList; aPickType: TFormPickNodePickType = fpnptNodeH): Integer; overload;
+function ViewPickNode(var aList: TCollection; aPickType: TFormPickNodePickType = fpnptNodeH): Integer; overload;
 
 implementation
 
@@ -109,15 +111,20 @@ begin
   try
     xList := TStringList.Create;
     case FPickType of
-      fpnptNode:
+      fpnptNodeH:
       begin
-        TNodeManager.ReadNode(Excl_Main, xList);
+        TNodeManager.ReadNodeH(Excl_Main, xList);
         TCellNode.CopyIt(xList, aList);
       end;
-      fpnptExpt:
+      fpnptNodeV:
+      begin
+        TNodeManager.ReadNodeV(Excl_Main, xList);
+        TCellNode.CopyIt(xList, aList);
+      end;
+      {fpnptExpt:
       begin
         TNodeManager.ReadExpt(Excl_Main,xList);
-      end;
+      end;}
     end;
   finally
     TKzUtils.TryFreeAndNil(xList);
@@ -127,14 +134,18 @@ end;
 procedure TFormPickNode.ReadNode(var aList: TStringList);
 begin
   case FPickType of
-    fpnptNode:
+    fpnptNodeH:
     begin
-      TNodeManager.ReadNode(Excl_Main,aList);
+      TNodeManager.ReadNodeH(Excl_Main,aList);
     end;
-    fpnptExpt:
+    fpnptNodeV:
+    begin
+      TNodeManager.ReadNodeV(Excl_Main,aList);
+    end;
+    {@fpnptExpt:
     begin
       TNodeManager.ReadExpt(Excl_Main,aList);
-    end;
+    end;}
   end;
 end;
 
