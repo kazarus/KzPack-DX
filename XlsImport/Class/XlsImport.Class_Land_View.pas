@@ -10,11 +10,11 @@ type
   TLandView = class(TUniEngine)
   private
     FiReadiEd: Boolean;
-    FColTotal: Integer;
+    FCntTotal: Integer;
     FListCell: TCollection;  //*list of *xlsimport.tlandcell;
   published
     property iReadiEd: Boolean read FiReadiEd write FiReadiEd;
-    property ColTotal: Integer read FColTotal write FColTotal;
+    property CntTotal: Integer read FCntTotal write FCntTotal;
     property ListCell: TCollection read FListCell write FListCell;
   public
     procedure Initialize;
@@ -23,6 +23,7 @@ type
     destructor Destroy; override;
   public
     class function ReadViewH(aMaxLevel: Integer; aTree: TElTree; var aLandView: TLandView): Boolean;
+    class function ReadViewV(aMaxLevel: Integer; aTree: TElTree; var aLandView: TLandView): Boolean;
   end;
 
 implementation
@@ -43,8 +44,8 @@ end;
 
 procedure TLandView.Initialize;
 begin
-  ColTotal := 0;
-  iReadied := False;
+  FCntTotal := 0;
+  FiReadiEd := False;
   TKzUtils.JustCleanList(FListCell);
 end;
 
@@ -62,15 +63,16 @@ var
   var
     X:Integer;
   begin
-    Result:=1;
+    Result := 1;
+
     if not aItem.HasChildren then Exit;
 
-    Result:=0;
-    for X:=0 to aItem.Count-1 do
+    Result := 0;
+    for X := 0 to aItem.Count - 1 do
     begin
       if aItem.Item[X].HasChildren then
       begin
-        Result:=Result+GetSpanX(aItem.Item[X]);
+        Result := Result + GetSpanX(aItem.Item[X]);
       end else
       begin
         Inc(Result);
@@ -78,15 +80,15 @@ var
     end;
   end;
 begin
-  if aLandView=nil then Exit;
+  if aLandView = nil then Exit;
 
-  cIndx:=0;
+  cIndx := 0;
 
   with aTree do
   begin
-    for I:=0 to Items.Count-1 do
+    for I := 0 to Items.Count - 1 do
     begin
-      cITEM:=Items.Item[I];
+      cITEM := Items.Item[I];
       if cITEM = nil then Continue;
 
       cCELL := TLandCELL(aLandView.ListCell.Add);
@@ -97,7 +99,7 @@ begin
       if not cITEM.HasChildren then
       begin
         cCELL.SpanY := aMaxLevel - cITEM.Level;
-        cCELL.IsLasted := True;
+        cCELL.IsLastEd := True;
 
         Inc(cIndx);
       end;
@@ -105,7 +107,71 @@ begin
       cCELL.Text := cITEM.Text;
     end;
 
-    aLandView.ColTotal := cIndx;
+    aLandView.CntTotal := cIndx;
+  end;
+
+  aLandView.iReadied := True;
+end;
+
+class function TLandView.ReadViewV(aMaxLevel: Integer; aTree: TElTree; var aLandView: TLandView): Boolean;
+var
+  I, M: Integer;
+  cIndx: Integer;
+  cITEM: TElTreeItem;
+  dItem: TElTreeItem;
+  cCELL: TLandCELL;
+  xCELL: TLandCELL;
+
+  function GetSpanY(aITEM:TEltreeItem):Integer;
+  var
+    X:Integer;
+  begin
+    Result := 1;
+
+    if not aITEM.HasChildren then Exit;
+
+    Result := 0;
+    for X := 0 to aITEM.Count - 1 do
+    begin
+      if aITEM.Item[X].HasChildren then
+      begin
+        Result := Result + GetSpanY(aITEM.Item[X]);
+      end else
+      begin
+        Inc(Result);
+      end;
+    end;
+  end;
+begin
+  if aLandView = nil then Exit;
+
+  cIndx := 0;
+
+  with aTree do
+  begin
+    for I := 0 to Items.Count - 1 do
+    begin
+      cITEM := Items.Item[I];
+      if cITEM = nil then Continue;
+
+      cCELL := TLandCELL(aLandView.ListCell.Add);
+      cCELL.Col := cITEM.Level;
+      cCELL.Row := cIndx;
+      cCELL.SpanY := GetSpanY(cITEM);
+      cCELL.SpanX := 1;
+
+      if not cITEM.HasChildren then
+      begin
+        cCELL.SpanX := aMaxLevel - cITEM.Level;
+        cCELL.IsLastEd := True;
+
+        Inc(cIndx);
+      end;
+      cCELL.Data := cITEM.Data;
+      cCELL.Text := cITEM.Text;
+    end;
+
+    aLandView.CntTotal := cIndx;
   end;
 
   aLandView.iReadied := True;

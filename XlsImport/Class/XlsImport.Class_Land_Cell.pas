@@ -13,7 +13,7 @@ type
     FText: string;
     FSpanX: Integer;
     FSpanY: Integer;
-    FIsLasted: Boolean;
+    FIsLastEd: Boolean;
   public
     Data: Pointer;
   published
@@ -22,7 +22,7 @@ type
     property Text: string read FText write FText;
     property SpanX: Integer read FSpanX write FSpanX;
     property SpanY: Integer read FSpanY write FSpanY;
-    property IsLasted: Boolean read FIsLasted write FIsLasted;
+    property IsLastEd: Boolean read FIsLastEd write FIsLastEd;
   public
     constructor Create;
   end;
