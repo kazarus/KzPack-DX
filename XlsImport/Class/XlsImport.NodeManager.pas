@@ -15,8 +15,8 @@ uses
 type
   TNodeManager = class(TObject)
   public
-    class function ReadNodeH(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean; overload;
-    class function ReadNodeV(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean; overload;
+    class function ReadNodeH(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean; overload;//#横向栏目
+    class function ReadNodeV(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean; overload;//#纵向栏目
     //@class function ReadExpt(aSpreadSheet: TdxSpreadSheet; var aList: TStringList): Boolean; overload;
   end;
 
@@ -396,7 +396,8 @@ begin
           cNODE.Right := C;
           cNODE.Bottom := R;
 
-          cNODE.Text := Trim(cCell.DisplayText);
+          //#cNODE.Text := Trim(cCell.DisplayText);
+          cNODE.Text := cCell.DisplayText;
 
           with cNODE do
           begin
@@ -418,7 +419,8 @@ begin
         cNODE.Row := cITEM.Area.Top;
         if cITEM.ActiveCell <> nil then
         begin
-          cNODE.Text := Trim(cITEM.ActiveCell.DisplayText);
+          //#cNODE.Text := Trim(cITEM.ActiveCell.DisplayText);
+          cNODE.Text := cITEM.ActiveCell.DisplayText;
         end;
         cNODE.Left := cITEM.Area.Left;
         cNODE.Right := cITEM.Area.Right;
