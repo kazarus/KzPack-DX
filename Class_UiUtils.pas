@@ -53,7 +53,8 @@ type
     class procedure CellClick(Sender: TObject; ARow, aCol: Integer; aCheckBoxCol: Integer = 1);
     class procedure WordWarps(aGrid: TAdvStringGrid; aStartCol: Integer = 0; aStartRow: Integer = 1);
 
-    class procedure SelectArea(aGrid:TAdvStringGrid;aCol:Integer=1;aValue:Boolean=True);
+    class procedure SelectArea(aGrid: TAdvStringGrid; aCol: Integer = 1; aValue: Boolean = True);
+    class procedure RemoveRows(aGrid: TAdvStringGrid; aList: TStringList);
 
     class procedure DblClickCell(aGrid: TAdvStringGrid; aRow: Integer);
   public
@@ -585,6 +586,33 @@ begin
   end;  
 end; 
 
+
+class procedure TUiUtils.RemoveRows(aGrid: TAdvStringGrid; aList: TStringList);
+var
+  I: Integer;
+  cIndx: Integer;
+begin
+  with aGrid do
+  begin
+    BeginUpdate;
+
+    for I := aList.Count-1 downto 0 do
+    begin
+      cIndx := StrToIntDef(aList.Strings[I],-1);
+      if cIndx = -1 then Continue;
+
+      if RowCount = 2 then
+      begin
+        ClearRows(1,1);
+      end else
+      begin
+        RemoveRows(cIndx,1);
+      end;
+    end;
+
+    EndUpdate;
+  end;
+end;
 
 class procedure TUiUtils.SelectArea(aGrid: TAdvStringGrid;aCol:Integer;aValue:Boolean);
 var
