@@ -5,20 +5,19 @@ unit Class_KJQJ;
 
 interface
 uses
-  Classes,SysUtils,DB,Uni,UniEngine;
+  Classes, SysUtils, DB, Uni, UniEngine, RzCmboBx;
 
 type
-  TKJQJ=class(TUniEngine)
+  TKJQJ = class(TUniEngine)
   public
-    FKJND:Integer;
-    FKJQJ:Integer;
+    FKJND: Integer;
+    FKJQJ: Integer;
   public
     function  GetStrsIndex:string;override;  
   public
     procedure SetInitialize;
-    
-    procedure SetItemParams(aValue:Integer);overload;
-    procedure SetItemParams(aKJND,aKJQJ:Integer);overload;
+    procedure SetItemParams(aValue: Integer); overload;
+    procedure SetItemParams(aKJND, aKJQJ: Integer); overload;
   public
     function  GetNextKJND:Integer;   //下一个会计年度
     function  GetNextKJQJ:Integer;   //下一个会计期间
@@ -35,12 +34,12 @@ type
     procedure impKJNDKJQJ(aValue:integer);
     function  expKJNDKJQJ():Integer;
     
-    function  GetKJNDKJQJ:Integer;overload;                 //取得整型期间
-    function  GetKJNDKJQJ(aValue:Integer):Integer;overload; //取得整型期间
+    function  GetKJNDKJQJ: Integer; overload;                  //取得整型期间
+    function  GetKJNDKJQJ(aValue: Integer): Integer; overload; //取得整型期间
   published
-    property KJND:Integer read FKJND write FKJND;
-    property KJQJ:Integer read FKJQJ write FKJQJ;
-    property KJNDKJQJ:Integer read expKJNDKJQJ write impKJNDKJQJ;
+    property KJND: Integer read FKJND write FKJND;
+    property KJQJ: Integer read FKJQJ write FKJQJ;
+    property KJNDKJQJ: Integer read expKJNDKJQJ write impKJNDKJQJ;
   public
     constructor Create;overload;
     constructor Create(aKJND,aKJQJ:Integer);overload;
@@ -56,13 +55,16 @@ type
     class function  ReadDB(ASQL:string;AUniConnection:TUniConnection):TKJQJ;overload;
     class procedure ReadDB(ASQL:string;AUniConnection:TUniConnection;var aKJQJ:TKJQJ);overload;
   public
-    class function  GetKJQJTEXT(aValue:Integer):string;overload;
-    class function  GetKJNDKJQJ(aKJND,aKJQJ:Integer):Integer;overload;
+    class function  GetKJQJTEXT(aValue: Integer): string; overload;
+    class function  GetKJNDKJQJ(aKJND, aKJQJ: Integer): Integer; overload;
 
-    class function  ExpListKJQJ(aStartKJQJ,aEndedKJQJ:TKJQJ):TStringList;overload;deprecated;
-    class procedure ExpListKJQJ(aStartKJQJ,aEndedKJQJ:TKJQJ;var Result:TStringList);overload;
-    class procedure ExpListKJQJ(aKJND,aStartKJQJ,aEndedKJQJ:Integer;var Result:TStringList);overload;
-    class procedure ExpListKJQJ(aStartKJQJ:Integer;aEndedKJQJ:Integer;var Result:TStringList);overload;
+    class function  ExpListKJQJ(aStartKJQJ, aEndedKJQJ: TKJQJ): TStringList; overload; deprecated;
+    class procedure ExpListKJQJ(aStartKJQJ, aEndedKJQJ: TKJQJ; var Result: TStringList); overload;
+    class procedure ExpListKJQJ(aKJND, aStartKJQJ, aEndedKJQJ: Integer; var Result: TStringList); overload;
+    class procedure ExpListKJQJ(aStartKJQJ: Integer; aEndedKJQJ: Integer; var Result: TStringList); overload;
+  public
+    class function  getSOURCEND(Sender: TRzComboBox): Integer;
+    class function  getSOURCEQJ(Sender: TRzComboBox): Integer;
   end;
 
 implementation
@@ -202,6 +204,46 @@ begin
   if Result =0 then
   begin
     Result:=12;
+  end;
+end;
+
+class function TKJQJ.getSOURCEND(Sender: TRzComboBox): Integer;
+var
+  I: Integer;
+  xKJQJ: TKJQJ;
+begin
+  Result := 0;
+  if Sender = nil then Exit;
+  if Sender.Items.Count = 0 then Exit;
+  if Sender.ItemIndex = -1 then Exit;
+
+
+  with Sender do
+  begin
+    xKJQJ := TKJQJ(Sender.Items.Objects[Sender.ItemIndex]);
+    if xKJQJ = nil then Exit;
+
+    Result := xKJQJ.KJND;
+  end;
+end;
+
+class function TKJQJ.getSOURCEQJ(Sender: TRzComboBox): Integer;
+var
+  I: Integer;
+  xKJQJ: TKJQJ;
+begin
+  Result := 0;
+  if Sender = nil then Exit;
+  if Sender.Items.Count = 0 then Exit;
+  if Sender.ItemIndex = -1 then Exit;
+
+
+  with Sender do
+  begin
+    xKJQJ := TKJQJ(Sender.Items.Objects[Sender.ItemIndex]);
+    if xKJQJ = nil then Exit;
+
+    Result := xKJQJ.KJQJ;
   end;
 end;
 
@@ -455,8 +497,7 @@ begin
   Result := GetKJNDKJQJ; 
 end;
 
-class procedure TKJQJ.ExpListKJQJ(aStartKJQJ, aEndedKJQJ: Integer;
-  var Result: TStringList);
+class procedure TKJQJ.ExpListKJQJ(aStartKJQJ, aEndedKJQJ: Integer; var Result: TStringList);
 var
   sKJQJ:TKJQJ;
   eKJQJ:TKJQJ;
