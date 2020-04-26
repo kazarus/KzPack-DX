@@ -1,25 +1,34 @@
 unit XlsImport.Class_Cell_Rows;
 //#XlsImport
 
+
 interface
 uses
-  Classes,SysUtils;
+  Classes, SysUtils, UniEngine;
 
 type
-  TCellRows=class(TObject)
-  public
-    RowIndex:Integer;
-    ListData:TStringList;//*list of *tcelldata
+  TCellRows = class(TUniEngine)
+  private
+    FRowIndex: Integer;
+    FListData: TCollection; //*list of *tcelldata
+  published
+    property RowIndex: Integer read FRowIndex write FRowIndex;
+    property ListData: TCollection read FListData write FListData;
   public
     destructor Destroy; override;
   end;
 
-  TCellData=class(TObject)
-  public
-    ColIndex:Integer;
-    RowIndex:Integer;
-    CellData:string;
-    HeadName:string;
+  TCellData = class(TUniEngine)
+  private
+    FColIndex: Integer;
+    FRowIndex: Integer;
+    FCellData: string;
+    FHeadName: string;
+  published
+    property ColIndex: Integer read FColIndex write FColIndex;
+    property RowIndex: Integer read FRowIndex write FRowIndex;
+    property CellData: string read FCellData write FCellData;
+    property HeadName: string read FHeadName write FHeadName;
   end;
 
 implementation
@@ -30,7 +39,8 @@ uses
 
 destructor TCellRows.Destroy;
 begin
-  if ListData<>nil then TKzUtils.TryFreeAndNil(ListData);
+  if FListData <> nil then TKzUtils.TryFreeAndNil(FListData);
+
   inherited;
 end;
 

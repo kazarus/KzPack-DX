@@ -2,8 +2,8 @@ object DialogLoadCnfg: TDialogLoadCnfg
   Left = 270
   Top = 256
   Caption = 'DialogLoadCnfg'
-  ClientHeight = 208
-  ClientWidth = 404
+  ClientHeight = 200
+  ClientWidth = 464
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
   Font.Color = clWindowText
@@ -14,28 +14,28 @@ object DialogLoadCnfg: TDialogLoadCnfg
   PixelsPerInch = 96
   TextHeight = 17
   object Labl_1: TRzLabel
-    Left = 18
+    Left = 24
     Top = 86
     Width = 39
     Height = 17
     Caption = #26631#39064#34892':'
   end
   object Labl_2: TRzLabel
-    Left = 18
+    Left = 24
     Top = 115
     Width = 39
     Height = 17
     Caption = #36215#22987#34892':'
   end
   object Labl_3: TRzLabel
-    Left = 18
+    Left = 24
     Top = 28
     Width = 51
     Height = 17
     Caption = #25991#20214#36335#24452':'
   end
   object Labl_4: TRzLabel
-    Left = 18
+    Left = 24
     Top = 144
     Width = 51
     Height = 17
@@ -43,16 +43,16 @@ object DialogLoadCnfg: TDialogLoadCnfg
     Visible = False
   end
   object Labl_5: TRzLabel
-    Left = 18
+    Left = 24
     Top = 57
     Width = 39
     Height = 17
     Caption = #26631#31614#39029':'
   end
   object Edit_RowTitle: TRzButtonEdit
-    Left = 70
+    Left = 87
     Top = 82
-    Width = 320
+    Width = 360
     Height = 25
     Text = '5'
     Alignment = taCenter
@@ -63,9 +63,9 @@ object DialogLoadCnfg: TDialogLoadCnfg
     ButtonWidth = 15
   end
   object Edit_RowStart: TRzButtonEdit
-    Left = 70
+    Left = 87
     Top = 111
-    Width = 320
+    Width = 360
     Height = 25
     Text = '6'
     Alignment = taCenter
@@ -76,9 +76,9 @@ object DialogLoadCnfg: TDialogLoadCnfg
     ButtonWidth = 15
   end
   object Edit_FilePath: TRzButtonEdit
-    Left = 70
+    Left = 87
     Top = 24
-    Width = 320
+    Width = 360
     Height = 25
     Text = ''
     FrameVisible = True
@@ -89,8 +89,8 @@ object DialogLoadCnfg: TDialogLoadCnfg
     OnButtonClick = Edit_FilePathButtonClick
   end
   object Btnv_Mrok: TButton
-    Left = 240
-    Top = 173
+    Left = 297
+    Top = 170
     Width = 75
     Height = 25
     Caption = 'Btnv_Mrok'
@@ -98,8 +98,8 @@ object DialogLoadCnfg: TDialogLoadCnfg
     OnClick = Btnv_MrokClick
   end
   object Btnv_Quit: TButton
-    Left = 315
-    Top = 173
+    Left = 372
+    Top = 170
     Width = 75
     Height = 25
     Caption = 'Btnv_1'
@@ -107,9 +107,9 @@ object DialogLoadCnfg: TDialogLoadCnfg
     OnClick = Btnv_QuitClick
   end
   object Comb_KJQJ: TRzComboBox
-    Left = 70
+    Left = 87
     Top = 140
-    Width = 320
+    Width = 360
     Height = 25
     Ctl3D = False
     FrameVisible = True
@@ -119,9 +119,9 @@ object DialogLoadCnfg: TDialogLoadCnfg
     Visible = False
   end
   object Comb_RealPage: TRzComboBox
-    Left = 70
+    Left = 87
     Top = 53
-    Width = 320
+    Width = 360
     Height = 25
     Ctl3D = False
     FrameVisible = True
@@ -130,7 +130,7 @@ object DialogLoadCnfg: TDialogLoadCnfg
     TabOrder = 6
   end
   object Chkb_FileHead: TRzCheckBox
-    Left = 18
+    Left = 24
     Top = 173
     Width = 103
     Height = 19
@@ -144,6 +144,6 @@ object DialogLoadCnfg: TDialogLoadCnfg
     DirectRead = False
     DirectWrite = False
     Left = 160
-    Top = 192
+    Top = 176
   end
 end

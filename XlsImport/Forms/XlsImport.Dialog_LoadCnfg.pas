@@ -192,8 +192,8 @@ end;
 
 function TDialogLoadCnfg.ReadPage(aFilePath:string;var aList:TStringList):Boolean;
 var
-  I:Integer;
-  cPage:TLoadPage;
+  I: Integer;
+  cPage: TLoadPage;
 begin
   Result := False;
 

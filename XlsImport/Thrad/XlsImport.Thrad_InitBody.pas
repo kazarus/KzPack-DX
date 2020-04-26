@@ -8,10 +8,10 @@ uses
 type
   TThradInitBody = class(TKzThrad)
   public
-    FRealGrid:TAdvStringGrid;//&
-    FListBody:TStringList;   //&
-    FBodySize:Integer;       //&
-    FHashHead:THashedStringList;//&
+    FRealGrid: TAdvStringGrid; //&
+    FListBody: TCollection;   //&
+    FBodySize: Integer;       //&
+    FHashHead: THashedStringList; //&
   public
     procedure Initialize;
   protected
@@ -71,7 +71,7 @@ begin
       begin
         GetOneProgress(I+1);
 
-        CellRows:=TCellRows(FListBody.Objects[I]);
+        CellRows:=TCellRows(FListBody.Items[I]);
 
         AddRow;
 
@@ -80,7 +80,7 @@ begin
 
         for M:=0 to CellRows.ListData.Count-1 do
         begin
-          CellData := TCellData(CellRows.ListData.Objects[M]);
+          CellData := TCellData(CellRows.ListData.Items[M]);
           if CellData = nil then Continue;
 
           cIDX := FHashHead.IndexOfName(CellData.HeadName);

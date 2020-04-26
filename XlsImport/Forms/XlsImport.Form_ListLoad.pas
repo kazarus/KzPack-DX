@@ -48,13 +48,13 @@ type
     FRowTitle: Integer;   //标题行
     FRowStart: Integer;   //起始行
     FLoadCnfg: TLoadCnfg; //*
-
+  private
     FListHead: TStringList; //*list of string
-    FListBody: TStringList; //*list of string
-
+    FListBody: TCollection; //*list of *tcellrows
+  private
     FCellHead: TStringList; //*list of *tcellhead
     FListGrab: TStringList; //*list of *tobject
-
+  private
     FHashHead: THashedStringList; //*list of string(%s=%d)
   protected
     procedure SetInitialize;override;
@@ -67,10 +67,11 @@ type
     procedure PushGrab(aObject:TObject);
   public
     function  ReadHead(var aList:TStringList):Boolean;
-    procedure ReadBody(var aList:TStringList);
+    procedure ReadBody(var aList: TCollection);
     procedure InitHead(aList:TStringList);
-
-    procedure ImptData(var Value:string);
+  public
+    procedure Get4Data(var Value:string);
+    procedure Get4Body(var aList:TStringList);
   public
     function  ChkValid:Boolean;
   public
@@ -87,7 +88,8 @@ type
 var
   FormListLoad: TFormListLoad;
 
-function ViewListLoad(aClasName: string; aCellHead: TStringList; var Value: string; aPromptTx: string = ''; aKeyWords: string = ''; aRowTitle: Integer = 0; aRowStart: Integer = 0): Integer;
+function ViewListBody(aClasName: string; var aListData: TCollection; aPromptTx: string = ''; aKeyWords: string = ''; aRowTitle: Integer = 0; aRowStart: Integer = 0): Integer; overload;
+function ViewListLoad(aClasName: string; aCellHead: TStringList; var Value: string; aPromptTx: string = ''; aKeyWords: string = ''; aRowTitle: Integer = 0; aRowStart: Integer = 0): Integer; overload;
 
 implementation
 
@@ -95,6 +97,27 @@ uses
   Class_KzUtils,Class_UiUtils,Helpr_UniEngine,XlsImport.Dialog_LoadCnfg,XlsImport.Dialog_CellHead,Class_KzDebug;
 
 {$R *.dfm}
+
+function ViewListBody(aClasName: string; var aListData: TCollection; aPromptTx: string = ''; aKeyWords: string = ''; aRowTitle: Integer = 0; aRowStart: Integer = 0): Integer;
+begin
+  try
+    FormListLoad:=TFormListLoad.Create(nil);
+    FormListLoad.FClasName := aClasName;
+    FormListLoad.FPromptTx := aPromptTx;
+    FormListLoad.FKeyWords := aKeyWords;
+    FormListLoad.FRowTitle := aRowTitle;
+    FormListLoad.FRowStart := aRowStart;
+
+    //@FormListLoad.CopyHead(aCellHead);
+    Result:=FormListLoad.ShowModal;
+    if Result=Mrok then
+    begin
+      //#FormListLoad.Get4Body(aListData);
+    end;
+  finally
+    FreeAndNil(FormListLoad);
+  end;
+end;
 
 function ViewListLoad(aClasName: string; aCellHead: TStringList; var Value: string; aPromptTx: string = ''; aKeyWords: string = ''; aRowTitle: Integer = 0; aRowStart: Integer = 0): Integer;
 begin
@@ -110,7 +133,7 @@ begin
     Result:=FormListLoad.ShowModal;
     if Result=Mrok then
     begin
-      FormListLoad.ImptData(Value);
+      FormListLoad.Get4Data(Value);
     end;
   finally
     FreeAndNil(FormListLoad);
@@ -178,12 +201,12 @@ end;
 
 procedure TFormListLoad.CallThradInitBody;
 var
-  cThrad:TThradInitBody;
+  cThrad: TThradInitBody;
 begin
-  cThrad:=TThradInitBody.Create(True);
-  cThrad.FRealGrid:=self.Grid_Data;
-  cThrad.FListBody:=self.FListBody;
-  cThrad.FHashHead:=self.FHashHead;
+  cThrad := TThradInitBody.Create(True);
+  cThrad.FRealGrid := self.Grid_Data;
+  cThrad.FListBody := self.FListBody;
+  cThrad.FHashHead := self.FHashHead;
 
   cThrad.OnKzThradGetMaxProgress:=OnKzThradGetMaxProgress;
   cThrad.OnKzThradGetOneProgress:=OnKzThradGetOneProgress;
@@ -354,7 +377,12 @@ begin
   end;
 end;
 
-procedure TFormListLoad.ImptData(var Value: string);
+procedure TFormListLoad.Get4Body(var aList: TStringList);
+begin
+
+end;
+
+procedure TFormListLoad.Get4Data(var Value: string);
 var
   I,M :Integer;
   cSTAT:Boolean;
@@ -587,7 +615,7 @@ begin
   FListGrab.AddObject('',aObject);
 end;
 
-procedure TFormListLoad.ReadBody(var aList: TStringList);
+procedure TFormListLoad.ReadBody(var aList: TCollection);
 var
   I,C,R:Integer;
 
@@ -599,35 +627,35 @@ var
   function TryFormat(aCol,ARow:Integer):string;
   begin
     try
-      Result:=Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[aCol,aRow]);
+      Result := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[aCol, ARow]);
       //Result:=FormatDateTime('YYYY-MM-DD',XLSReadWriteII51[0].AsDateTime[aCol,aRow]);
     except
-      Result:=FloatToStr(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFloat[aCol,aRow]);
+      Result := FloatToStr(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFloat[aCol, ARow]);
     end;
   end;
 begin
-  if FListBody=nil then
+  if FListBody = nil then
   begin
-    FListBody:=TStringList.Create;
+    FListBody := TCollection.Create(XlsImport.Class_Cell_Rows.TCellRows);
   end;
   TKzUtils.JustCleanList(FListBody);
 
 
-  for R := FLoadCnfg.ROWSTART-1 to XLSReadWriteII51[FLoadCnfg.PAGEINDX].LastRow do
+  for R := FLoadCnfg.ROWSTART - 1 to XLSReadWriteII51[FLoadCnfg.PAGEINDX].LastRow do
   begin
-    CellRows:=TCellRows.Create;
-    CellRows.RowIndex:=R;
-    CellRows.ListData:=TStringList.Create;
+    CellRows := TCellRows(FListBody.Add);
+    CellRows.RowIndex := R;
+    CellRows.ListData := TCollection.Create(XlsImport.Class_Cell_Rows.TCellData);
 
     for C := XLSReadWriteII51[0].FirstCol to XLSReadWriteII51[FLoadCnfg.PAGEINDX].LastCol do
     begin
       CellType := XLSReadWriteII51[FLoadCnfg.PAGEINDX].CellType[C,R];
       if CellType = xctNone then Continue;
 
-      CellData:=TCellData.Create;
-      CellData.RowIndex:=R;
-      CellData.ColIndex:=C;
-      CellData.CellData:=Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[C,R]);
+      CellData := TCellData(CellRows.ListData.Add);
+      CellData.RowIndex := R;
+      CellData.ColIndex := C;
+      CellData.CellData := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[C, R]);
 
       if FLoadCnfg.FILEHEAD then
       begin
@@ -637,16 +665,16 @@ begin
         CellData.HeadName:=Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsString[C,FLoadCnfg.RowTitle-1]);
       end;
 
-      CellRows.ListData.AddObject('',CellData);
+      //@CellRows.ListData.AddObject('',CellData);
     end;
 
-    FListBody.AddObject(Format('%D',[CellRows.RowIndex]),CellRows);
+    //@FListBody.AddObject(Format('%D', [CellRows.RowIndex]), CellRows);
   end;
 end;
 
 function TFormListLoad.ReadHead(var aList: TStringList): Boolean;
 var
-  I,C,R:Integer;
+  I, C, R: Integer;
   CellType: TXLSCellType;
 begin
   Result:=False;
@@ -681,11 +709,13 @@ procedure TFormListLoad.SetCommParams;
 begin
   inherited;
   Caption := '数据导入';
+
+  Font.Size := 10;
   Font.Name := '微软雅黑';
+
   Btnv_Cnfg.Caption := '选项';
   Btnv_Mrok.Caption := '确定';
   Btnv_Quit.Caption := '关闭';
-
 
   if FPromptTx <> '' then
   begin
