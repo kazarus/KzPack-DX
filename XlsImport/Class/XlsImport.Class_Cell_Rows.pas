@@ -13,6 +13,8 @@ type
     FListData: TCollection; //*list of *tcelldata
   protected
     function  getListData: TCollection;
+  public
+    function  getColValue(aColIndex: Integer): string;
   published
     property RowIndex: Integer read FRowIndex write FRowIndex;
     property ListData: TCollection read getListData write FListData;
@@ -87,6 +89,32 @@ begin
   if FListData <> nil then TKzUtils.TryFreeAndNil(FListData);
 
   inherited;
+end;
+
+function TCellRows.getColValue(aColIndex: Integer): string;
+var
+  I: Integer;
+  CellData: TCellData;
+begin
+  Result := '';
+
+  if self.FListData = nil then Exit;
+  if self.FListData.Count = 0 then Exit;
+
+  for I := 0 to self.FListData.Count-1 do
+  begin
+    CellData := TCellData(self.FListData.Items[I]);
+    if CellData = nil then Continue;
+
+    if CellData.ColIndex = aColIndex then
+    begin
+      if CellData.CellData <> '#DIV/0!' then
+      begin
+        Result := CellData.CellData;
+      end;
+      Break;
+    end;
+  end;
 end;
 
 function TCellRows.getListData: TCollection;
