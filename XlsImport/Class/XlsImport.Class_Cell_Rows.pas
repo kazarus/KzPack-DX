@@ -59,6 +59,7 @@ begin
 
   if (aCellRows.ListData <> nil) and (aCellRows.ListData.Count > 0) then
   begin
+    Result.ListData;
     TCellData.CopyIt(aCellRows.ListData, Result.FListData);
   end;
 end;

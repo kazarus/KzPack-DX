@@ -303,12 +303,13 @@ end;
 procedure TDialogLoadCnfg.ViewPath;
 var
   I: Integer;
-  OD:TOpenDialog;
-
-  cList:TStringList;
+  OD: TOpenDialog;
+  cList: TStringList;
 begin
   try
-    OD:=TOpenDialog.Create(nil);
+    OD := TOpenDialog.Create(nil);
+    OD.Filter := '*.xlsx|*.xlsx|*.xls|*.xls';
+
     if (Edit_FilePath.Text <> '') then
     begin
       if Pos('\\',Edit_FilePath.Text) < 0 then

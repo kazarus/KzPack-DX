@@ -385,7 +385,8 @@ end;
 
 procedure TFormListLoad.Get4Body(var aList: TCollection);
 begin
-
+  if aList = nil then Exit;
+  XlsImport.Class_Cell_Rows.TCellRows.CopyIt(self.FListBody, aList);
 end;
 
 procedure TFormListLoad.Get4Data(var Value: string);
