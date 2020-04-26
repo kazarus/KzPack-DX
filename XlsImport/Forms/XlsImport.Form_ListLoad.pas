@@ -43,11 +43,11 @@ type
     procedure N3Click(Sender: TObject);
   private
     FClasName: string;
-    FPromptTx: string;    //提示文本;
-    FKeyWords: string;    //关键词组;
-    FRowTitle: Integer;   //标题行
-    FRowStart: Integer;   //起始行
-    FLoadCnfg: TLoadCnfg; //*
+    FPromptTx: string;      //提示文本;
+    FKeyWords: string;      //关键词组;
+    FRowTitle: Integer;     //标题行
+    FRowStart: Integer;     //起始行
+    FLoadCnfg: TLoadCnfg;   //*
   private
     FListHead: TStringList; //*list of string
     FListBody: TCollection; //*list of *tcellrows
@@ -57,21 +57,21 @@ type
   private
     FHashHead: THashedStringList; //*list of string(%s=%d)
   protected
-    procedure SetInitialize;override;
-    procedure SetCommParams;override;
-    procedure SetGridParams;override;
-    procedure SetComboItems;override;
-    procedure TryFreeAndNil;override;
+    procedure SetInitialize; override;
+    procedure SetCommParams; override;
+    procedure SetGridParams; override;
+    procedure SetComboItems; override;
+    procedure TryFreeAndNil; override;
   protected
-    procedure CopyHead(aCellHead:TStringList);
-    procedure PushGrab(aObject:TObject);
+    procedure CopyHead(aCellHead: TStringList);
+    procedure PushGrab(aObject: TObject);
   public
     function  ReadHead(var aList:TStringList):Boolean;
     procedure ReadBody(var aList: TCollection);
     procedure InitHead(aList:TStringList);
   public
-    procedure Get4Data(var Value:string);
-    procedure Get4Body(var aList:TStringList);
+    procedure Get4Data(var Value: string);
+    procedure Get4Body(var aList: TCollection);
   public
     function  ChkValid:Boolean;
   public
@@ -112,7 +112,7 @@ begin
     Result:=FormListLoad.ShowModal;
     if Result=Mrok then
     begin
-      //#FormListLoad.Get4Body(aListData);
+      FormListLoad.Get4Body(aListData);
     end;
   finally
     FreeAndNil(FormListLoad);
@@ -154,7 +154,7 @@ begin
   end;
   TKzUtils.JustCleanList(FLoadCnfg.FCOLMATCH);
 
-  cPath:=FLoadCnfg.GetFilePath(FClasName);
+  cPath := FLoadCnfg.GetFilePath(FClasName);
   if FileExists(cPath) then
   begin
     FLoadCnfg.InFILE(cPath);
@@ -189,8 +189,14 @@ end;
 
 procedure TFormListLoad.Btnv_MrokClick(Sender: TObject);
 begin
-  if not ChkValid then Exit;
-  
+  if self.FLoadCnfg <> nil then
+  begin
+    if not self.FLoadCnfg.FILEHEAD then
+    begin
+      if not ChkValid then Exit;
+    end;
+  end;
+
   ModalResult:=mrOk;
 end;
 
@@ -377,7 +383,7 @@ begin
   end;
 end;
 
-procedure TFormListLoad.Get4Body(var aList: TStringList);
+procedure TFormListLoad.Get4Body(var aList: TCollection);
 begin
 
 end;

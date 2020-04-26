@@ -11,9 +11,17 @@ type
   private
     FRowIndex: Integer;
     FListData: TCollection; //*list of *tcelldata
+  protected
+    function  getListData: TCollection;
   published
     property RowIndex: Integer read FRowIndex write FRowIndex;
-    property ListData: TCollection read FListData write FListData;
+    property ListData: TCollection read getListData write FListData;
+  public
+    class function  CopyIt(aCellRows: TCellRows): TCellRows; overload;
+    class procedure CopyIt(aCellRows: TCellRows; var Result: TCellRows); overload;
+
+    class function  CopyIt(aUniEngine: TUniEngine): TUniEngine; overload; override;
+    class procedure CopyIt(aUniEngine: TUniEngine; var Result: TUniEngine)overload; override;
   public
     destructor Destroy; override;
   end;
@@ -29,6 +37,12 @@ type
     property RowIndex: Integer read FRowIndex write FRowIndex;
     property CellData: string read FCellData write FCellData;
     property HeadName: string read FHeadName write FHeadName;
+  public
+    class function  CopyIt(aCellData: TCellData): TCellData; overload;
+    class procedure CopyIt(aCellData: TCellData; var Result: TCellData); overload;
+
+    class function  CopyIt(aUniEngine: TUniEngine): TUniEngine; overload; override;
+    class procedure CopyIt(aUniEngine: TUniEngine; var Result: TUniEngine)overload; override;
   end;
 
 implementation
@@ -37,11 +51,82 @@ uses
   Class_KzUtils;
 
 
+class procedure TCellRows.CopyIt(aCellRows: TCellRows; var Result: TCellRows);
+begin
+  if Result = nil then Exit;
+
+  Result.RowIndex := aCellRows.RowIndex;
+
+  if (aCellRows.ListData <> nil) and (aCellRows.ListData.Count > 0) then
+  begin
+    TCellData.CopyIt(aCellRows.ListData, Result.FListData);
+  end;
+end;
+
+class function TCellRows.CopyIt(aCellRows: TCellRows): TCellRows;
+begin
+  Result := TCellRows.Create;
+  TCellRows.CopyIt(aCellRows, Result)
+end;
+
+class procedure TCellRows.CopyIt(aUniEngine: TUniEngine; var Result: TUniEngine);
+begin
+  if Result = nil then Exit;
+  TCellRows.CopyIt(TCellRows(aUniEngine), TCellRows(Result));
+end;
+
+class function TCellRows.CopyIt(aUniEngine: TUniEngine): TUniEngine;
+begin
+  Result := TCellRows.Create;
+  TUniEngine.CopyIt(aUniEngine,Result);
+end;
+
 destructor TCellRows.Destroy;
 begin
   if FListData <> nil then TKzUtils.TryFreeAndNil(FListData);
 
   inherited;
+end;
+
+function TCellRows.getListData: TCollection;
+begin
+  if FListData = nil then
+  begin
+    FListData := TCollection.Create(TCellData);
+  end;
+
+  Result := FListData;
+end;
+
+
+{ TCellData }
+
+class procedure TCellData.CopyIt(aCellData: TCellData; var Result: TCellData);
+begin
+  if Result = nil then Exit;
+
+  Result.ColIndex := aCellData.ColIndex;
+  Result.RowIndex := aCellData.RowIndex;
+  Result.CellData := aCellData.CellData;
+  Result.HeadName := aCellData.HeadName;
+end;
+
+class function TCellData.CopyIt(aCellData: TCellData): TCellData;
+begin
+  Result := TCellData.Create;
+  TCellData.CopyIt(aCellData, Result)
+end;
+
+class procedure TCellData.CopyIt(aUniEngine: TUniEngine; var Result: TUniEngine);
+begin
+  if Result = nil then Exit;
+  TCellData.CopyIt(TCellData(aUniEngine), TCellData(Result));
+end;
+
+class function TCellData.CopyIt(aUniEngine: TUniEngine): TUniEngine;
+begin
+  Result := TCellData.Create;
+  TUniEngine.CopyIt(aUniEngine,Result);
 end;
 
 end.
