@@ -132,6 +132,8 @@ type
     class procedure toCascade(aCodeFull: string; aCodeRule: string; var aList: TStringList);
   public
     class function  getDivide(aValue: string; var aDivideOne: string; var aDivideTwo: string): Boolean;
+  public
+    class function  charToInt(aValue: string):Integer;
   end;
 
 
@@ -366,13 +368,54 @@ begin
 end;
 {$ENDIF}
 
-class function  TKzUtils.CompareTextLike(APart,ALong:string):Boolean;
+class function TKzUtils.charToInt(aValue: string): Integer;
+var
+  I: Integer;
+  cList: TStringList;
+  CharA: Char;
+  Value: Integer;
+begin
+  Result := -1;
+
+  //#Excel栏目转成数字.没有见过AAA,ABC,这样的excel栏目;
+  try
+    cList := TStringList.Create;
+
+    for I := 1 to Length(aValue) do
+    begin
+      CharA := aValue[I];
+      Value := Ord(CharA) - 64;
+
+      cList.Add(Format('%D',[Value]));
+    end;
+
+    //#这里就不用StrToIntDef了,格式不对,直接报错.
+    if cList.Count = 1 then
+    begin
+      Result := StrToInt(cList.Strings[0]);
+      Exit;
+    end;
+
+    if cList.Count = 2 then
+    begin
+      Result := StrToInt(cList.Strings[0]) * 26 + StrToInt(cList.Strings[1]);
+      Exit;
+    end;
+
+    raise Exception.Create('ERROR:Class_KzUtils.pas.TKzUtils.charToInt.LINE:1513.INFO:aListTABL = NIL');
+  finally
+    FreeAndNil(cList);
+  end;
+end;
+
+class function TKzUtils.CompareTextLike(APart, ALong: string): Boolean;
 var
   NumbA:Integer;
   TMPA:string;
 begin
-  Result:=False;
-  Result:=Pos(APart,ALong)=1;
+  Result := False;
+  Result := Pos(APart, ALong) = 1;
+
   {Result:=False;
   NumbA:=Length(APart);
   TMPA:=Copy(ALong,1,NumbA);
@@ -910,6 +953,10 @@ begin
   end;
 
   xText := Format('%s-%s-%s', [Copy(cText, 1, 4), Copy(cText, 5, 2), Copy(cText, 7, 2)]);
+  if xText = '2019-02-29' then
+  begin
+    xText := '2019-02-28';
+  end;
 
   try
     //#DateSeparator:='-';

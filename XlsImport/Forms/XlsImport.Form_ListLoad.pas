@@ -663,6 +663,8 @@ begin
       CellData.RowIndex := R;
       CellData.ColIndex := C;
       CellData.CellData := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[C, R]);
+      CellData.kFormula := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFormula[C, R]);
+      KzDebug.FileFmt('%S:%S',[self.ClassName,CellData.kFormula]);
 
       if FLoadCnfg.FILEHEAD then
       begin

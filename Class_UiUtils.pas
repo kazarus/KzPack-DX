@@ -538,37 +538,39 @@ end;
 
 class procedure TUiUtils.HeadIndex(aGrid: TAdvStringGrid; ARow: Integer);
 var
-  I,X,Y:Integer;
-  R,S  :string;
+  I: Integer;
+  X, Y: Integer;
+  R, S: string;
 begin
   inherited;
+  //#把数字转换成EXCEL栏目
   with aGrid do
   begin
-    for I:=1 to ColCount-1 do
+    for I := 1 to ColCount - 1 do
     begin
-      X:=I div 26;
-      Y:=I mod 26;
+      X := I div 26;
+      Y := I mod 26;
 
-      if I<=26 then
+      if I <= 26 then
       begin
-        Cells[I,ARow]:=Format('%S',[Chr(I+64)]);
+        Cells[I, ARow] := Format('%S', [Chr(I + 64)]);
       end else
       begin
-        R:=Chr(X+64);
-        if Y=0 then
+        R := Chr(X + 64);
+        if Y = 0 then
         begin
-          R:=Chr(X-1+64);
-          S:=Chr(26+64);
+          R := Chr(X - 1 + 64);
+          S := Chr(26 + 64);
         end else
         begin
-          S:=Chr(Y+64);
+          S := Chr(Y + 64);
         end;
-        Cells[I,ARow]:=Format('%S%S',[R,S]);
+        Cells[I, ARow] := Format('%S%S', [R, S]);
       end;
-      Alignments[I,ARow]:=taCenter;          
+      Alignments[I, ARow] := taCenter;
     end;
-  end;  
-end; 
+  end;
+end;
 
 
 class procedure TUiUtils.RemoveRows(aGrid: TAdvStringGrid; aList: TStringList);
@@ -600,9 +602,9 @@ end;
 
 class procedure TUiUtils.SelectArea(aGrid: TAdvStringGrid;aCol:Integer;aValue:Boolean);
 var
-  I:Integer;
-  Start:Integer;
-  Right:Integer;
+  I: Integer;
+  Start: Integer;
+  Right: Integer;
 begin
   with aGrid do
   begin
@@ -611,10 +613,12 @@ begin
 
 
     BeginUpdate;
+
     for I := Start to Right do
     begin
       SetCheckBoxState(aCol,I,aValue);
     end;
+
     EndUpdate;
   end;
 end;

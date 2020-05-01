@@ -34,10 +34,12 @@ type
     FRowIndex: Integer;
     FCellData: string;
     FHeadName: string;
+    FkFormula: string;
   published
     property ColIndex: Integer read FColIndex write FColIndex;
     property RowIndex: Integer read FRowIndex write FRowIndex;
     property CellData: string read FCellData write FCellData;
+    property kFormula: string read FkFormula write FkFormula;
     property HeadName: string read FHeadName write FHeadName;
   public
     class function  CopyIt(aCellData: TCellData): TCellData; overload;
