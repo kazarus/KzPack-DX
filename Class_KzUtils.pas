@@ -230,34 +230,34 @@ begin
   end;
 end;
 
-class function TKzUtils.FloatToText(aValue: Extended; Zero: Boolean;
-  Digits: Integer;AFormat:TFloatFormat): string;
+class function TKzUtils.FloatToText(aValue: Extended; Zero: Boolean; Digits: Integer; AFormat: TFloatFormat): string;
 begin
-  if (aValue <>0) or Zero then
-    Result:= FloatToStrF(aValue, AFormat, 18, Digits)
-  else
-    Result:= '';
+  Result:= '';
+
+  if (aValue <> 0) or Zero then
+  begin
+    Result := FloatToStrF(aValue, AFormat, 18, Digits)
+  end;
 end;
 
 class function TKzUtils.FloatToTime(aValue: Extended): TDateTime;
 var
-  cTMP:string;
-  dTMP:string;
+  cText: string;
+  xText: string;
 begin
-  Result:=Unassigned;
-  if aValue=0 then Exit;
-  cTMP:=FloatToStr(aValue);
+  Result := Unassigned;
+  if aValue = 0 then Exit;
+  cText := FloatToStr(aValue);
   //20170303213256->2017-03-07 21:32:56
-  dTMP:=Format('%s-%s-%s %s:%s:%s',[Copy(cTMP,1,4),Copy(cTMP,5,2),Copy(cTMP,7,2),Copy(cTMP,9,2),Copy(cTMP,11,2),Copy(cTMP,13,2)]);
-
+  xText := Format('%s-%s-%s %s:%s:%s', [Copy(cText, 1, 4), Copy(cText, 5, 2), Copy(cText, 7, 2), Copy(cText, 9, 2), Copy(cText, 11, 2), Copy(cText, 13, 2)]);
 
   try
     //#DateSeparator:='-';
-    FormatSettings.DateSeparator:='-';
-    FormatSettings.TimeSeparator:=':';
-    FormatSettings.LongDateFormat:='yyyy-MM-dd';
-    FormatSettings.LongTimeFormat:='hh:mm:ss';
-    Result:=StrToDateTime(dTMP);
+    FormatSettings.DateSeparator := '-';
+    FormatSettings.TimeSeparator := ':';
+    FormatSettings.LongDateFormat := 'yyyy-MM-dd';
+    FormatSettings.LongTimeFormat := 'hh:mm:ss';
+    Result := StrToDateTime(xText);
   except
     on E:Exception do
     begin
@@ -268,17 +268,16 @@ end;
 
 class function TKzUtils.FormatCode(aValue: string; ALength: Integer; AStrSub: string): string;
 begin
-  Result:=TryFormatCode(ALength,1,AStrSub,aValue);
+  Result := TryFormatCode(ALength, 1, AStrSub, aValue);
 end;
 
 class function TKzUtils.FormatCode(aValue, ALength: Integer): string;
 begin
-  Result:=TryFormatCode(aValue,ALength,'0');
+  Result := TryFormatCode(aValue, ALength, '0');
 end;
 
 {$IFDEF MSWINDOWS}
-class function TKzUtils.InputQueryEx(const ACaption, APrompt: string;
-  var Value: string;IsPassWord:Boolean): Boolean;
+class function TKzUtils.InputQueryEx(const ACaption, APrompt: string; var Value: string; IsPassWord: Boolean): Boolean;
 var
   Form: TForm;
   Prompt: TLabel;
