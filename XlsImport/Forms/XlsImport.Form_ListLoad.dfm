@@ -2,8 +2,8 @@ object FormListLoad: TFormListLoad
   Left = 0
   Top = 0
   Caption = 'FormListLoad'
-  ClientHeight = 289
-  ClientWidth = 472
+  ClientHeight = 559
+  ClientWidth = 974
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
   Font.Color = clWindowText
@@ -14,151 +14,19 @@ object FormListLoad: TFormListLoad
   OnActivate = FormActivate
   PixelsPerInch = 96
   TextHeight = 19
-  object Grid_Data: TAdvStringGrid
-    Left = 0
-    Top = 44
-    Width = 472
-    Height = 226
-    Cursor = crDefault
-    Align = alClient
-    DrawingStyle = gdsClassic
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    PopupMenu = Menu_Main
-    ScrollBars = ssBoth
-    TabOrder = 0
-    HoverRowCells = [hcNormal, hcSelected]
-    OnGetAlignment = Grid_DataGetAlignment
-    OnDblClickCell = Grid_DataDblClickCell
-    OnCanEditCell = Grid_DataCanEditCell
-    OnCheckBoxClick = Grid_DataCheckBoxClick
-    ActiveCellFont.Charset = DEFAULT_CHARSET
-    ActiveCellFont.Color = clWindowText
-    ActiveCellFont.Height = -11
-    ActiveCellFont.Name = 'Tahoma'
-    ActiveCellFont.Style = [fsBold]
-    ControlLook.FixedGradientHoverFrom = clGray
-    ControlLook.FixedGradientHoverTo = clWhite
-    ControlLook.FixedGradientDownFrom = clGray
-    ControlLook.FixedGradientDownTo = clSilver
-    ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
-    ControlLook.DropDownHeader.Font.Color = clWindowText
-    ControlLook.DropDownHeader.Font.Height = -11
-    ControlLook.DropDownHeader.Font.Name = 'Tahoma'
-    ControlLook.DropDownHeader.Font.Style = []
-    ControlLook.DropDownHeader.Visible = True
-    ControlLook.DropDownHeader.Buttons = <>
-    ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
-    ControlLook.DropDownFooter.Font.Color = clWindowText
-    ControlLook.DropDownFooter.Font.Height = -11
-    ControlLook.DropDownFooter.Font.Name = 'Tahoma'
-    ControlLook.DropDownFooter.Font.Style = []
-    ControlLook.DropDownFooter.Visible = True
-    ControlLook.DropDownFooter.Buttons = <>
-    Filter = <>
-    FilterDropDown.Font.Charset = DEFAULT_CHARSET
-    FilterDropDown.Font.Color = clWindowText
-    FilterDropDown.Font.Height = -11
-    FilterDropDown.Font.Name = 'Tahoma'
-    FilterDropDown.Font.Style = []
-    FilterDropDown.TextChecked = 'Checked'
-    FilterDropDown.TextUnChecked = 'Unchecked'
-    FilterDropDownClear = '(All)'
-    FilterEdit.TypeNames.Strings = (
-      'Starts with'
-      'Ends with'
-      'Contains'
-      'Not contains'
-      'Equal'
-      'Not equal'
-      'Larger than'
-      'Smaller than'
-      'Clear')
-    FixedRowHeight = 22
-    FixedFont.Charset = DEFAULT_CHARSET
-    FixedFont.Color = clWindowText
-    FixedFont.Height = -11
-    FixedFont.Name = 'Tahoma'
-    FixedFont.Style = [fsBold]
-    FloatFormat = '%.2f'
-    HoverButtons.Buttons = <>
-    HoverButtons.Position = hbLeftFromColumnLeft
-    HTMLSettings.ImageFolder = 'images'
-    HTMLSettings.ImageBaseName = 'img'
-    Look = glSoft
-    PrintSettings.DateFormat = 'dd/mm/yyyy'
-    PrintSettings.Font.Charset = DEFAULT_CHARSET
-    PrintSettings.Font.Color = clWindowText
-    PrintSettings.Font.Height = -11
-    PrintSettings.Font.Name = 'Tahoma'
-    PrintSettings.Font.Style = []
-    PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
-    PrintSettings.FixedFont.Color = clWindowText
-    PrintSettings.FixedFont.Height = -11
-    PrintSettings.FixedFont.Name = 'Tahoma'
-    PrintSettings.FixedFont.Style = []
-    PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
-    PrintSettings.HeaderFont.Color = clWindowText
-    PrintSettings.HeaderFont.Height = -11
-    PrintSettings.HeaderFont.Name = 'Tahoma'
-    PrintSettings.HeaderFont.Style = []
-    PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
-    PrintSettings.FooterFont.Color = clWindowText
-    PrintSettings.FooterFont.Height = -11
-    PrintSettings.FooterFont.Name = 'Tahoma'
-    PrintSettings.FooterFont.Style = []
-    PrintSettings.PageNumSep = '/'
-    SearchFooter.Color = clBtnFace
-    SearchFooter.FindNextCaption = 'Find &next'
-    SearchFooter.FindPrevCaption = 'Find &previous'
-    SearchFooter.Font.Charset = DEFAULT_CHARSET
-    SearchFooter.Font.Color = clWindowText
-    SearchFooter.Font.Height = -11
-    SearchFooter.Font.Name = 'Tahoma'
-    SearchFooter.Font.Style = []
-    SearchFooter.HighLightCaption = 'Highlight'
-    SearchFooter.HintClose = 'Close'
-    SearchFooter.HintFindNext = 'Find next occurrence'
-    SearchFooter.HintFindPrev = 'Find previous occurrence'
-    SearchFooter.HintHighlight = 'Highlight occurrences'
-    SearchFooter.MatchCaseCaption = 'Match case'
-    SelectionColor = clHighlight
-    SelectionTextColor = clHighlightText
-    SortSettings.DefaultFormat = ssAutomatic
-    Version = '8.1.3.0'
-    ColWidths = (
-      64
-      64
-      64
-      64
-      64)
-    RowHeights = (
-      22
-      22
-      22
-      22
-      22
-      22
-      22
-      22
-      22
-      22)
-  end
   object Panl_1: TRzStatusBar
     Left = 0
-    Top = 270
-    Width = 472
+    Top = 540
+    Width = 974
     Height = 19
     BorderInner = fsNone
     BorderOuter = fsNone
     BorderSides = [sdLeft, sdTop, sdRight, sdBottom]
     BorderWidth = 0
-    TabOrder = 1
+    TabOrder = 0
     VisualStyle = vsClassic
+    ExplicitTop = 270
+    ExplicitWidth = 472
     object Panl_Text: TRzStatusPane
       Left = 0
       Top = 0
@@ -170,7 +38,7 @@ object FormListLoad: TFormListLoad
     object Prog_View: TRzProgressStatus
       Left = 200
       Top = 0
-      Width = 272
+      Width = 774
       Height = 19
       Align = alClient
       ParentShowHint = False
@@ -185,7 +53,7 @@ object FormListLoad: TFormListLoad
   object Tool_1: TRzToolbar
     Left = 0
     Top = 0
-    Width = 472
+    Width = 974
     Height = 44
     Images = il1
     RowHeight = 40
@@ -198,8 +66,9 @@ object FormListLoad: TFormListLoad
     BorderOuter = fsGroove
     BorderSides = [sdTop]
     BorderWidth = 0
-    TabOrder = 2
+    TabOrder = 1
     VisualStyle = vsClassic
+    ExplicitWidth = 472
     ToolbarControls = (
       Btnv_Cnfg
       Btnv_Mrok
@@ -212,7 +81,7 @@ object FormListLoad: TFormListLoad
       ImageIndex = 0
       Layout = blGlyphTop
       UseToolbarButtonSize = False
-      Caption = 'ca'
+      Caption = #26597#30475
       OnClick = Btnv_CnfgClick
     end
     object Btnv_Mrok: TRzToolButton
@@ -223,7 +92,7 @@ object FormListLoad: TFormListLoad
       ImageIndex = 2
       Layout = blGlyphTop
       UseToolbarButtonSize = False
-      Caption = 'ca'
+      Caption = #30830#23450
       OnClick = Btnv_MrokClick
     end
     object Btnv_Quit: TRzToolButton
@@ -234,15 +103,202 @@ object FormListLoad: TFormListLoad
       ImageIndex = 1
       Layout = blGlyphTop
       UseToolbarButtonSize = False
-      Caption = 'ca'
+      Caption = #20851#38381
       OnClick = Btnv_QuitClick
+    end
+  end
+  object Page_MAIN: TRzPageControl
+    Left = 0
+    Top = 44
+    Width = 974
+    Height = 496
+    Hint = ''
+    ActivePage = TabSheet1
+    Align = alClient
+    TabIndex = 0
+    TabOrder = 2
+    TabStyle = tsCutCorner
+    ExplicitLeft = 88
+    ExplicitTop = 140
+    FixedDimension = 26
+    object TabSheet1: TRzTabSheet
+      Caption = 'TabSheet1'
+      ExplicitWidth = 468
+      ExplicitHeight = 196
+      object Grid_Data: TAdvStringGrid
+        Left = 0
+        Top = 0
+        Width = 970
+        Height = 466
+        Cursor = crDefault
+        Align = alClient
+        DrawingStyle = gdsClassic
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        PopupMenu = Menu_Main
+        ScrollBars = ssBoth
+        TabOrder = 0
+        HoverRowCells = [hcNormal, hcSelected]
+        OnGetAlignment = Grid_DataGetAlignment
+        OnDblClickCell = Grid_DataDblClickCell
+        OnCanEditCell = Grid_DataCanEditCell
+        OnCheckBoxClick = Grid_DataCheckBoxClick
+        ActiveCellFont.Charset = DEFAULT_CHARSET
+        ActiveCellFont.Color = clWindowText
+        ActiveCellFont.Height = -11
+        ActiveCellFont.Name = 'Tahoma'
+        ActiveCellFont.Style = [fsBold]
+        ControlLook.FixedGradientHoverFrom = clGray
+        ControlLook.FixedGradientHoverTo = clWhite
+        ControlLook.FixedGradientDownFrom = clGray
+        ControlLook.FixedGradientDownTo = clSilver
+        ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
+        ControlLook.DropDownHeader.Font.Color = clWindowText
+        ControlLook.DropDownHeader.Font.Height = -11
+        ControlLook.DropDownHeader.Font.Name = 'Tahoma'
+        ControlLook.DropDownHeader.Font.Style = []
+        ControlLook.DropDownHeader.Visible = True
+        ControlLook.DropDownHeader.Buttons = <>
+        ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
+        ControlLook.DropDownFooter.Font.Color = clWindowText
+        ControlLook.DropDownFooter.Font.Height = -11
+        ControlLook.DropDownFooter.Font.Name = 'Tahoma'
+        ControlLook.DropDownFooter.Font.Style = []
+        ControlLook.DropDownFooter.Visible = True
+        ControlLook.DropDownFooter.Buttons = <>
+        Filter = <>
+        FilterDropDown.Font.Charset = DEFAULT_CHARSET
+        FilterDropDown.Font.Color = clWindowText
+        FilterDropDown.Font.Height = -11
+        FilterDropDown.Font.Name = 'Tahoma'
+        FilterDropDown.Font.Style = []
+        FilterDropDown.TextChecked = 'Checked'
+        FilterDropDown.TextUnChecked = 'Unchecked'
+        FilterDropDownClear = '(All)'
+        FilterEdit.TypeNames.Strings = (
+          'Starts with'
+          'Ends with'
+          'Contains'
+          'Not contains'
+          'Equal'
+          'Not equal'
+          'Larger than'
+          'Smaller than'
+          'Clear')
+        FixedRowHeight = 22
+        FixedFont.Charset = DEFAULT_CHARSET
+        FixedFont.Color = clWindowText
+        FixedFont.Height = -11
+        FixedFont.Name = 'Tahoma'
+        FixedFont.Style = [fsBold]
+        FloatFormat = '%.2f'
+        HoverButtons.Buttons = <>
+        HoverButtons.Position = hbLeftFromColumnLeft
+        HTMLSettings.ImageFolder = 'images'
+        HTMLSettings.ImageBaseName = 'img'
+        Look = glSoft
+        PrintSettings.DateFormat = 'dd/mm/yyyy'
+        PrintSettings.Font.Charset = DEFAULT_CHARSET
+        PrintSettings.Font.Color = clWindowText
+        PrintSettings.Font.Height = -11
+        PrintSettings.Font.Name = 'Tahoma'
+        PrintSettings.Font.Style = []
+        PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
+        PrintSettings.FixedFont.Color = clWindowText
+        PrintSettings.FixedFont.Height = -11
+        PrintSettings.FixedFont.Name = 'Tahoma'
+        PrintSettings.FixedFont.Style = []
+        PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
+        PrintSettings.HeaderFont.Color = clWindowText
+        PrintSettings.HeaderFont.Height = -11
+        PrintSettings.HeaderFont.Name = 'Tahoma'
+        PrintSettings.HeaderFont.Style = []
+        PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
+        PrintSettings.FooterFont.Color = clWindowText
+        PrintSettings.FooterFont.Height = -11
+        PrintSettings.FooterFont.Name = 'Tahoma'
+        PrintSettings.FooterFont.Style = []
+        PrintSettings.PageNumSep = '/'
+        SearchFooter.Color = clBtnFace
+        SearchFooter.FindNextCaption = 'Find &next'
+        SearchFooter.FindPrevCaption = 'Find &previous'
+        SearchFooter.Font.Charset = DEFAULT_CHARSET
+        SearchFooter.Font.Color = clWindowText
+        SearchFooter.Font.Height = -11
+        SearchFooter.Font.Name = 'Tahoma'
+        SearchFooter.Font.Style = []
+        SearchFooter.HighLightCaption = 'Highlight'
+        SearchFooter.HintClose = 'Close'
+        SearchFooter.HintFindNext = 'Find next occurrence'
+        SearchFooter.HintFindPrev = 'Find previous occurrence'
+        SearchFooter.HintHighlight = 'Highlight occurrences'
+        SearchFooter.MatchCaseCaption = 'Match case'
+        SelectionColor = clHighlight
+        SelectionTextColor = clHighlightText
+        SortSettings.DefaultFormat = ssAutomatic
+        Version = '8.1.3.0'
+        ColWidths = (
+          64
+          64
+          64
+          64
+          64)
+        RowHeights = (
+          22
+          22
+          22
+          22
+          22
+          22
+          22
+          22
+          22
+          22)
+      end
+    end
+    object TabSheet2: TRzTabSheet
+      Caption = 'TabSheet2'
+      ExplicitWidth = 468
+      ExplicitHeight = 196
+      object dxSpreadSheet1: TdxSpreadSheet
+        Left = 0
+        Top = 0
+        Width = 970
+        Height = 466
+        Align = alClient
+        BorderStyle = cxcbsNone
+        ExplicitLeft = 8
+        ExplicitTop = -44
+        ExplicitWidth = 460
+        ExplicitHeight = 240
+        Data = {
+          C601000044585353763242460700000042465320000000000000000001000101
+          01010000000000004246532000000000424653200200000001000000200B0000
+          0007000000430061006C00690062007200690000000000002000000020000000
+          00200000000020000000002000000000200007000000470045004E0045005200
+          41004C0000000000000200000000000000000101000000200B00000007000000
+          430061006C006900620072006900000000000020000000200000000020000000
+          0020000000002000000000200007000000470045004E004500520041004C0000
+          0000000002000000000000000001424653200100000042465320170000005400
+          6400780053007000720065006100640053006800650065007400540061006200
+          6C00650056006900650077000600000053006800650065007400310001FFFFFF
+          FFFFFFFFFF640000000200000002000000020000005500000014000000020000
+          0002000000000200000042465320550000000000000042465320000000004246
+          5320140000000000000042465320000000000000000000000000010000000000
+          0000000000000000000000000000424653200000000000000000000000004246
+          53200000000000000000}
+      end
     end
   end
   object il1: TImageList
     Left = 184
     Top = 157
     Bitmap = {
-      494C010103000800740010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800840010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

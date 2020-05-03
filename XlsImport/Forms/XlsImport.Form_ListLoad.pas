@@ -4,15 +4,23 @@
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RzPanel, RzStatus, Vcl.ExtCtrls,
-  Vcl.Grids, AdvObj, BaseGrid, AdvGrid, System.ImageList, Vcl.ImgList, RzButton,
-  FormEx_View, XlsImport.Class_Load_Cnfg, System.DateUtils, XLSSheetData5,
-  XLSReadWriteII5, Xc12Utils5, System.IniFiles, XlsImport.Class_Cell_Rows,
-  Class_KzThrad, XlsImport.Thrad_InitBody, XlsImport.Class_Cell_Head, qjson,
-  XlsImport.Class_Col_Match, Vcl.Menus;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RzPanel,
+  RzStatus, Vcl.ExtCtrls, Vcl.Grids, AdvObj, BaseGrid, AdvGrid, System.ImageList,
+  Vcl.ImgList, RzButton, FormEx_View, XlsImport.Class_Load_Cnfg,
+  System.DateUtils, XLSSheetData5, XLSReadWriteII5, Xc12Utils5, System.IniFiles,
+  XlsImport.Class_Cell_Rows, Class_KzThrad, XlsImport.Thrad_InitBody,
+  XlsImport.Class_Cell_Head, qjson, XlsImport.Class_Col_Match, Vcl.Menus, RzTabs,
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxCore,
+  dxCoreClasses, dxHashUtils, dxSpreadSheetCore, dxSpreadSheetCoreHistory,
+  dxSpreadSheetConditionalFormatting, dxSpreadSheetConditionalFormattingRules,
+  dxSpreadSheetClasses, dxSpreadSheetContainers, dxSpreadSheetFormulas,
+  dxSpreadSheetHyperlinks, dxSpreadSheetFunctions, dxSpreadSheetGraphics,
+  dxSpreadSheetPrinting, dxSpreadSheetTypes, dxSpreadSheetUtils, dxSpreadSheet;
 
 type
+  TDataFrom = (dfNULL, dfXLSREAD, dfDXEXCEL);
+
   TFormListLoad = class(TFormExView)
     Grid_Data: TAdvStringGrid;
     Panl_1: TRzStatusBar;
@@ -28,6 +36,10 @@ type
     N1: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
+    Page_MAIN: TRzPageControl;
+    TabSheet1: TRzTabSheet;
+    TabSheet2: TRzTabSheet;
+    dxSpreadSheet1: TdxSpreadSheet;
     procedure Btnv_QuitClick(Sender: TObject);
     procedure Btnv_MrokClick(Sender: TObject);
     procedure Btnv_CnfgClick(Sender: TObject);
@@ -48,6 +60,7 @@ type
     FRowTitle: Integer;     //标题行
     FRowStart: Integer;     //起始行
     FLoadCnfg: TLoadCnfg;   //*
+    FDataFrom: TDataFrom;
   private
     FListHead: TStringList; //*list of string
     FListBody: TCollection; //*list of *tcellrows
@@ -107,6 +120,7 @@ begin
     FormListLoad.FKeyWords := aKeyWords;
     FormListLoad.FRowTitle := aRowTitle;
     FormListLoad.FRowStart := aRowStart;
+    FormListLoad.FDataFrom := dfDXEXCEL;
 
     //@FormListLoad.CopyHead(aCellHead);
     Result:=FormListLoad.ShowModal;
@@ -128,6 +142,7 @@ begin
     FormListLoad.FKeyWords := aKeyWords;
     FormListLoad.FRowTitle := aRowTitle;
     FormListLoad.FRowStart := aRowStart;
+    FormListLoad.FDataFrom := dfXLSREAD;
 
     FormListLoad.CopyHead(aCellHead);
     Result:=FormListLoad.ShowModal;
@@ -170,26 +185,44 @@ begin
     Exit;
   end;
 
-  self.XLSReadWriteII51.Filename:=FLoadCnfg.FILEPATH;
-  self.XLSReadWriteII51.Read;
+  case FDataFrom of
+    dfXLSREAD:
+    begin
+      self.XLSReadWriteII51.Filename:=FLoadCnfg.FILEPATH;
+      self.XLSReadWriteII51.Read;
 
-  if FListHead=nil then
-  begin
-    FListHead:=TStringList.Create;
+      if FListHead=nil then
+      begin
+        FListHead:=TStringList.Create;
+      end;
+      TKzUtils.JustCleanList(FListHead);
+
+      if not ReadHead(FListHead) then Exit;
+
+      InitHead(FListHead);
+      ReadBody(FListBody);
+
+      CallThradInitBody;
+    end;
+    dfDXEXCEL:
+    begin
+      try
+        self.dxSpreadSheet1.LoadFromFile(FLoadCnfg.FILEPATH);
+      except
+        on E:Exception do
+        begin
+          KzDebug.FileFmt('%S:%S',[self.ClassName, E.Message]);
+        end;
+      end;
+    end;
   end;
-  TKzUtils.JustCleanList(FListHead);
-
-  if not ReadHead(FListHead) then Exit;
-
-  InitHead(FListHead);
-  ReadBody(FListBody);
-
-  CallThradInitBody;
 end;
 
 procedure TFormListLoad.Btnv_MrokClick(Sender: TObject);
 begin
-  if self.FLoadCnfg <> nil then
+  if self.FLoadCnfg = nil then Exit;
+
+  if FDataFrom = dfXLSREAD then
   begin
     if not self.FLoadCnfg.FILEHEAD then
     begin
@@ -384,21 +417,51 @@ begin
 end;
 
 procedure TFormListLoad.Get4Body(var aList: TCollection);
+var
+  C, R: Integer;
+  cCell: TdxSpreadSheetCell;
+  cRows: TCellRows;
+  cData: TCellData;
 begin
   if aList = nil then Exit;
-  XlsImport.Class_Cell_Rows.TCellRows.CopyIt(self.FListBody, aList);
+
+  with self.dxSpreadSheet1 do
+  begin
+    for R := 0 to ActiveSheetAsTable.Rows.Count - 1 do
+    begin
+      cRows := TCellRows(aList.Add);
+      cRows.RowIndex := R;
+      cRows.getListData;
+
+      for C := 0 to ActiveSheetAsTable.Columns.Count - 1 do
+      begin
+        cCell := TdxSpreadSheetCell(ActiveSheetAsTable.Cells[R,C]);
+        if cCell = nil then Continue;
+
+        cData := TCellData(cRows.ListData.Add);
+        cData.ColIndex := C;
+        cData.RowIndex := R;
+        cData.CellData := cCell.AsString;
+
+        if cCell.AsFormula <> nil then
+        begin
+          cData.kFormula := cCell.AsFormula.AsText;
+        end;
+      end;
+    end;
+  end;
 end;
 
 procedure TFormListLoad.Get4Data(var Value: string);
 var
-  I,M :Integer;
-  cSTAT:Boolean;
-  cHead:TCellHead;
-  JSON1,JSON2,JSON3:TQJson;
+  I, M: Integer;
+  cSTAT: Boolean;
+  cHead: TCellHead;
+  JSON1, JSON2, JSON3: TQJson;
 begin
   JSON1 := TQJson.Create;
   //JSON1.Add('INT_COUNT').AsInteger:=5;
-  JSON2:=JSON1.Add('LISTDATA', jdtArray);
+  JSON2 := JSON1.Add('LISTDATA', jdtArray);
 
   with Grid_Data do
   begin
@@ -664,7 +727,8 @@ begin
       CellData.ColIndex := C;
       CellData.CellData := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[C, R]);
       CellData.kFormula := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFormula[C, R]);
-      KzDebug.FileFmt('%S:%S',[self.ClassName,CellData.kFormula]);
+      CellData.bkColour := XLSReadWriteII51[FLoadCnfg.PAGEINDX].Cell[C,R].CellColorRGB;
+      KzDebug.FileFmt('%S:%D:%D:%S:%D',[self.ClassName,CellData.ColIndex,CellData.RowIndex,CellData.kFormula,CellData.bkColour]);
 
       if FLoadCnfg.FILEHEAD then
       begin
@@ -715,6 +779,8 @@ begin
 end;
 
 procedure TFormListLoad.SetCommParams;
+var
+  I: Integer;
 begin
   inherited;
   Caption := '数据导入';
@@ -729,6 +795,32 @@ begin
   if FPromptTx <> '' then
   begin
     Caption := Format('数据导入:%S',[FPromptTx]);
+  end;
+
+  with Page_MAIN do
+  begin
+    for I := 0 to PageCount-1 do
+    begin
+      Pages[I].TabVisible := False;
+    end;
+
+    ShowCardFrame := False;
+    ShowFullFrame := False;
+
+    case FDataFrom of
+      dfNULL:
+      begin
+
+      end;
+      dfXLSREAD:
+      begin
+        Page_MAIN.ActivePageIndex := 0;
+      end;
+      dfDXEXCEL:
+      begin
+        Page_MAIN.ActivePageIndex := 1;
+      end;
+    end;
   end;
 end;
 

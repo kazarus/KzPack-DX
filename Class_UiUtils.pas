@@ -162,7 +162,7 @@ end;
 
 class procedure TUiUtils.CellIndex(aGrid: TAdvStringGrid; aCol, aRowStart, aRowEndEd: Integer);
 var
-  I,M:Integer;
+  I, M: Integer;
 begin
   if aRowEndEd = -1 then aRowEndEd := aGrid.RowCount - 1;
 
@@ -170,10 +170,10 @@ begin
   begin
     BeginUpdate;
 
-    M:=1;
-    for I:=aRowStart to aRowEndEd do
+    M := 1;
+    for I := aRowStart to aRowEndEd do
     begin
-      Ints[aCol,I]:=M;
+      Ints[aCol, I] := M;
 
       Inc(M);
     end;

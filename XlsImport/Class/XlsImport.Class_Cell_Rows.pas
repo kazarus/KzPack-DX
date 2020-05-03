@@ -11,7 +11,7 @@ type
   private
     FRowIndex: Integer;
     FListData: TCollection; //*list of *tcelldata
-  protected
+  public
     function  getListData: TCollection;
   public
     function  getColValue(aColIndex: Integer): string;
@@ -34,13 +34,17 @@ type
     FRowIndex: Integer;
     FCellData: string;
     FHeadName: string;
+  private
     FkFormula: string;
+    FbkColour: Integer;
   published
     property ColIndex: Integer read FColIndex write FColIndex;
     property RowIndex: Integer read FRowIndex write FRowIndex;
     property CellData: string read FCellData write FCellData;
-    property kFormula: string read FkFormula write FkFormula;
     property HeadName: string read FHeadName write FHeadName;
+  published
+    property kFormula: string read FkFormula write FkFormula;
+    property bkColour: Integer read FbkColour write FbkColour;
   public
     class function  CopyIt(aCellData: TCellData): TCellData; overload;
     class procedure CopyIt(aCellData: TCellData; var Result: TCellData); overload;
@@ -129,9 +133,6 @@ begin
   Result := FListData;
 end;
 
-
-{ TCellData }
-
 class procedure TCellData.CopyIt(aCellData: TCellData; var Result: TCellData);
 begin
   if Result = nil then Exit;
@@ -140,6 +141,9 @@ begin
   Result.RowIndex := aCellData.RowIndex;
   Result.CellData := aCellData.CellData;
   Result.HeadName := aCellData.HeadName;
+
+  Result.kFormula := aCellData.kFormula;
+  Result.bkColour := aCellData.bkColour;
 end;
 
 class function TCellData.CopyIt(aCellData: TCellData): TCellData;
