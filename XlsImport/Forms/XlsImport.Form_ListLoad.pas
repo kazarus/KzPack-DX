@@ -443,6 +443,7 @@ begin
         cData.RowIndex := R;
         cData.CellData := cCell.AsString;
 
+        cData.bkColour := ColorToString(cCell.Style.Brush.BackgroundColor);
         if cCell.AsFormula <> nil then
         begin
           cData.kFormula := cCell.AsFormula.AsText;
@@ -727,7 +728,7 @@ begin
       CellData.ColIndex := C;
       CellData.CellData := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[C, R]);
       CellData.kFormula := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFormula[C, R]);
-      CellData.bkColour := XLSReadWriteII51[FLoadCnfg.PAGEINDX].Cell[C,R].CellColorRGB;
+      //#CellData.bkColour := XLSReadWriteII51[FLoadCnfg.PAGEINDX].Cell[C,R].CellColorRGB;
       KzDebug.FileFmt('%S:%D:%D:%S:%D',[self.ClassName,CellData.ColIndex,CellData.RowIndex,CellData.kFormula,CellData.bkColour]);
 
       if FLoadCnfg.FILEHEAD then

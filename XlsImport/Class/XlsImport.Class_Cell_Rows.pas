@@ -36,7 +36,7 @@ type
     FHeadName: string;
   private
     FkFormula: string;
-    FbkColour: Integer;
+    FbkColour: string;
   published
     property ColIndex: Integer read FColIndex write FColIndex;
     property RowIndex: Integer read FRowIndex write FRowIndex;
@@ -44,7 +44,7 @@ type
     property HeadName: string read FHeadName write FHeadName;
   published
     property kFormula: string read FkFormula write FkFormula;
-    property bkColour: Integer read FbkColour write FbkColour;
+    property bkColour: string read FbkColour write FbkColour;
   public
     class function  CopyIt(aCellData: TCellData): TCellData; overload;
     class procedure CopyIt(aCellData: TCellData; var Result: TCellData); overload;

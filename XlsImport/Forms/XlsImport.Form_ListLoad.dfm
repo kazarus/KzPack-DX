@@ -123,6 +123,8 @@ object FormListLoad: TFormListLoad
     FixedDimension = 26
     object TabSheet1: TRzTabSheet
       Caption = 'TabSheet1'
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 468
       ExplicitHeight = 196
       object Grid_Data: TAdvStringGrid
@@ -262,6 +264,8 @@ object FormListLoad: TFormListLoad
     end
     object TabSheet2: TRzTabSheet
       Caption = 'TabSheet2'
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 468
       ExplicitHeight = 196
       object dxSpreadSheet1: TdxSpreadSheet
@@ -298,7 +302,7 @@ object FormListLoad: TFormListLoad
     Left = 184
     Top = 157
     Bitmap = {
-      494C010103000800840010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800880010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
