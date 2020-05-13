@@ -56,6 +56,7 @@ type
     class procedure SelectArea(aGrid: TAdvStringGrid; aCol: Integer = 1; aValue: Boolean = True);
     class procedure RemoveRows(aGrid: TAdvStringGrid; aList: TStringList);
 
+    class function  didCheck(aGRID: TAdvStringGrid; var aRowIndex: Integer): Boolean;
     class procedure DblClickCell(aGrid: TAdvStringGrid; aRow: Integer);
   public
     {begin
@@ -255,6 +256,24 @@ begin
     RowColor[ARow] := SelectionColor;
     RowFontColor[ARow] := clWhite;
     EndUpdate;
+  end;
+end;
+
+class function TUiUtils.didCheck(aGRID: TAdvStringGrid; var aRowIndex: Integer): Boolean;
+var
+  cList: TStringList;
+begin
+  Result := False;
+
+  try
+    cList := TUiUtils.GetListCellChked(aGRID);
+    Result := cList.Count = 1;
+    if cList.Count > 0 then
+    begin
+      aRowIndex := StrToIntDef(cList.Strings[0], -1);
+    end;
+  finally
+    FreeAndNil(cList);
   end;
 end;
 
