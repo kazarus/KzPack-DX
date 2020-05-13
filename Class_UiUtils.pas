@@ -772,8 +772,7 @@ begin
   end;  
 end;
 
-class procedure TUiUtils.SetItemPrevChecked(aTree: TElTree;
-  aItem: TElTreeItem; AStat: Boolean);
+class procedure TUiUtils.SetItemPrevChecked(aTree: TElTree; aItem: TElTreeItem; AStat: Boolean);
 var
   ItemA:TElTreeItem;
 begin
@@ -785,8 +784,7 @@ begin
   end;
 end;
 
-class procedure TUiUtils.SetTreeItemChked(Value,
-  IncludeLast: Boolean; aTree: TElTree);
+class procedure TUiUtils.SetTreeItemChked(Value, IncludeLast: Boolean; aTree: TElTree);
 var
   I:Integer;
 begin
