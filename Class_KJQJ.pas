@@ -1,7 +1,7 @@
 unit Class_KJQJ;
 //YXC_2012_01_03_13_49_51
 //会计期间
-//等价于Class_XZHZ.TKJQJ
+
 
 interface
 uses
@@ -9,11 +9,11 @@ uses
 
 type
   TKJQJ = class(TUniEngine)
-  public
+  private
     FKJND: Integer;
     FKJQJ: Integer;
   public
-    function  GetStrsIndex:string;override;  
+    function  GetStrsIndex:string;override;
   public
     procedure SetInitialize;
     procedure SetItemParams(aValue: Integer); overload;
@@ -31,15 +31,13 @@ type
     function  GetKJQJTEXT: string; overload;
     function  getKJNDTEXT: string; overload;
 
-    procedure impKJNDKJQJ(aValue:integer);
-    function  expKJNDKJQJ():Integer;
-    
+    procedure setKJNDKJQJ(aValue: Integer);
     function  GetKJNDKJQJ: Integer; overload;                  //取得整型期间
     function  GetKJNDKJQJ(aValue: Integer): Integer; overload; //取得整型期间
   published
     property KJND: Integer read FKJND write FKJND;
     property KJQJ: Integer read FKJQJ write FKJQJ;
-    property KJNDKJQJ: Integer read expKJNDKJQJ write impKJNDKJQJ;
+    property KJNDKJQJ: Integer read GetKJNDKJQJ write setKJNDKJQJ;
   public
     constructor Create;overload;
     constructor Create(aKJND,aKJQJ:Integer);overload;
@@ -63,8 +61,11 @@ type
     class procedure ExpListKJQJ(aKJND, aStartKJQJ, aEndedKJQJ: Integer; var Result: TStringList); overload;
     class procedure ExpListKJQJ(aStartKJQJ: Integer; aEndedKJQJ: Integer; var Result: TStringList); overload;
   public
-    class function  getSOURCEND(Sender: TRzComboBox): Integer;
-    class function  getSOURCEQJ(Sender: TRzComboBox): Integer;
+    class function  getSourceND(Sender: TRzComboBox): Integer;
+    class function  getSourceQJ(Sender: TRzComboBox): Integer;
+  public
+    class procedure setSourceND(Sender: TRzComboBox; aValue: Integer);
+    class procedure setSourceQJ(Sender: TRzComboBox; aValue: Integer);
   end;
 
 implementation
@@ -269,6 +270,54 @@ begin
   KJND:=aKJND;
   KJQJ:=aKJQJ;
 end;
+
+procedure TKJQJ.setKJNDKJQJ(aValue: Integer);
+begin
+
+end;
+
+class procedure TKJQJ.setSourceND(Sender: TRzComboBox; aValue: Integer);
+var
+  I: Integer;
+  cKJQJ: TKJQJ;
+begin
+  with Sender do
+  begin
+    for I := 0 to Items.Count - 1 do
+    begin
+      cKJQJ := TKJQJ(Items.Objects[I]);
+      if cKJQJ = nil then Continue;
+
+      if cKJQJ.KJND = aValue then
+      begin
+        ItemIndex := I;
+        Break;
+      end;
+    end;
+  end;
+end;
+
+class procedure TKJQJ.setSourceQJ(Sender: TRzComboBox; aValue: Integer);
+var
+  I: Integer;
+  cKJQJ: TKJQJ;
+begin
+  with Sender do
+  begin
+    for I := 0 to Items.Count - 1 do
+    begin
+      cKJQJ := TKJQJ(Items.Objects[I]);
+      if cKJQJ = nil then Continue;
+
+      if cKJQJ.KJQJ = aValue then
+      begin
+        ItemIndex := I;
+        Break;
+      end;
+    end;
+  end;
+end;
+
 
 class function TKJQJ.ReadDB(ASQL: string;
   AUniConnection: TUniConnection): TKJQJ;
@@ -485,16 +534,6 @@ begin
       end;
     end;
   end;
-end;
-
-procedure TKJQJ.impKJNDKJQJ(aValue: integer);
-begin
-
-end;
-
-function TKJQJ.expKJNDKJQJ:Integer;
-begin
-  Result := GetKJNDKJQJ; 
 end;
 
 class procedure TKJQJ.ExpListKJQJ(aStartKJQJ, aEndedKJQJ: Integer; var Result: TStringList);
