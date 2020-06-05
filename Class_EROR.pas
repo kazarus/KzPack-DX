@@ -157,13 +157,27 @@ begin
 end;
 
 class function TEROR.ToEFMT(aMemo: string; Params: array of const): string;
+var
+  Value: TCollection;
 begin
-  Result := TEROR.ToData(CONST_MARK_EROR, Format(aMemo,Params), False, nil);
+  try
+    Value := TCollection.Create(TEROR);
+    Result := TEROR.ToData(CONST_MARK_EROR, Format(aMemo,Params), False, Value);
+  finally
+    FreeAndNil(Value);
+  end;
 end;
 
 class function TEROR.ToEROR(aCode, aMemo: string): string;
+var
+  Value: TCollection;
 begin
-  Result := TEROR.ToData(aCode, aMemo, False, nil);
+  try
+    Value := TCollection.Create(TEROR);
+    Result := TEROR.ToData(aCode, aMemo, False, Value);
+  finally
+    FreeAndNil(Value);
+  end;
 end;
 
 class function TEROR.ToEROR(aValue: TCollection): string;
@@ -172,8 +186,15 @@ begin
 end;
 
 class function TEROR.ToEROR(aMemo: string): string;
+var
+  Value: TCollection;
 begin
-  Result := TEROR.ToData(CONST_MARK_EROR, aMemo, False, nil);
+  try
+    Value := TCollection.Create(TEROR);
+    Result := TEROR.ToData(CONST_MARK_EROR, aMemo, False, Value);
+  finally
+    FreeAndNil(Value);
+  end;
 end;
 
 class function TEROR.ToTRUE(aValue: TCollection): string;

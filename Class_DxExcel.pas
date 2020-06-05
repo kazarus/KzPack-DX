@@ -294,12 +294,12 @@ begin
   Result := False;
 
   try
-    SD:=TSaveDialog.Create(nil);
-    SD.Filter:='*.xlsx|*.xlsx|*.xls|*.xls';
-    SD.FileName:=aFileName;
+    SD := TSaveDialog.Create(nil);
+    SD.Filter := '*.xlsx|*.xlsx|*.xls|*.xls';
+    SD.FileName := aFileName;
     if not SD.Execute then Exit;
 
-    FileName:=SD.FileName;
+    FileName := SD.FileName;
     if ExtractFileExt(FileName) = '' then
     begin
       FileName := Format('%S.xlsx', [FileName]);
