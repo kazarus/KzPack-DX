@@ -25,8 +25,6 @@ object FormListLoad: TFormListLoad
     BorderWidth = 0
     TabOrder = 0
     VisualStyle = vsClassic
-    ExplicitTop = 270
-    ExplicitWidth = 472
     object Panl_Text: TRzStatusPane
       Left = 0
       Top = 0
@@ -68,7 +66,6 @@ object FormListLoad: TFormListLoad
     BorderWidth = 0
     TabOrder = 1
     VisualStyle = vsClassic
-    ExplicitWidth = 472
     ToolbarControls = (
       Btnv_Cnfg
       Btnv_Mrok
@@ -118,15 +115,9 @@ object FormListLoad: TFormListLoad
     TabIndex = 0
     TabOrder = 2
     TabStyle = tsCutCorner
-    ExplicitLeft = 88
-    ExplicitTop = 140
     FixedDimension = 26
     object TabSheet1: TRzTabSheet
       Caption = 'TabSheet1'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 468
-      ExplicitHeight = 196
       object Grid_Data: TAdvStringGrid
         Left = 0
         Top = 0
@@ -264,10 +255,6 @@ object FormListLoad: TFormListLoad
     end
     object TabSheet2: TRzTabSheet
       Caption = 'TabSheet2'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 468
-      ExplicitHeight = 196
       object dxSpreadSheet1: TdxSpreadSheet
         Left = 0
         Top = 0
@@ -275,10 +262,6 @@ object FormListLoad: TFormListLoad
         Height = 466
         Align = alClient
         BorderStyle = cxcbsNone
-        ExplicitLeft = 8
-        ExplicitTop = -44
-        ExplicitWidth = 460
-        ExplicitHeight = 240
         Data = {
           C601000044585353763242460700000042465320000000000000000001000101
           01010000000000004246532000000000424653200200000001000000200B0000
@@ -302,7 +285,7 @@ object FormListLoad: TFormListLoad
     Left = 184
     Top = 157
     Bitmap = {
-      494C010103000800900010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800940010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

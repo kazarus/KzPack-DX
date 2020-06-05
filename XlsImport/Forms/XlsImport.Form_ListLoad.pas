@@ -744,7 +744,7 @@ begin
       CellData.CellData := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[C, R]);
       CellData.kFormula := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFormula[C, R]);
       //#CellData.bkColour := XLSReadWriteII51[FLoadCnfg.PAGEINDX].Cell[C,R].CellColorRGB;
-      KzDebug.FileFmt('%S:%D:%D:%S:%D',[self.ClassName,CellData.ColIndex,CellData.RowIndex,CellData.kFormula,CellData.bkColour]);
+      //#KzDebug.FileFmt('%S:%D:%D:%S:%D',[self.ClassName,CellData.ColIndex,CellData.RowIndex,CellData.kFormula,CellData.bkColour]);
 
       if FLoadCnfg.FILEHEAD then
       begin
