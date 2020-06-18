@@ -3,8 +3,9 @@ unit NetClient;
 
 interface
 uses
-  System.Classes, System.SysUtils, System.Net.HttpClient, System.Net.HttpClientComponent,
-  System.Net.URLClient, Class_EROR, System.NetEncoding, System.Net.Mime;
+  System.Classes, System.SysUtils, System.Net.HttpClient,
+  System.Net.HttpClientComponent, System.Net.URLClient, Class_EROR,
+  System.NetEncoding, System.Net.Mime;
 
 type
   TNetClientResult = (ncrErrorEd, ncrFailure, ncrSuccess);
@@ -57,7 +58,7 @@ var
 implementation
 
 uses
-  Class_KzDebug;
+  Class_KzUtils;
 
 
 constructor TNetClient.Create;
@@ -72,26 +73,27 @@ end;
 
 destructor TNetClient.Destroy;
 begin
-  if FNhClient<>nil then FreeAndNil(FNhClient);
+  if FNhClient <> nil then FreeAndNil(FNhClient);
 
   inherited;
 end;
 
 function TNetClient.Initialize(aSrvrAddr, aSrvrPort: string; InUseZIP, InUseTLS: Boolean): Boolean;
 begin
-  Result:=False;
+  Result := False;
 
-  self.FSrvrAddr:=aSrvrAddr;
-  self.FSrvrPort:=aSrvrPort;
-  self.FInUseTLS:=InUseTLS;
-  self.FInUseZIP:=InUseZIP;
+  self.FSrvrAddr := aSrvrAddr;
+  self.FSrvrPort := aSrvrPort;
+  self.FInUseTLS := InUseTLS;
+  self.FInUseZIP := InUseZIP;
 
-  Result:=True;
+  Result := True;
 end;
 
 function TNetClient.Post(aFileName: string; aUrlParam: array of string; trueBlock: TNetClientDataRequestTrueBlock; failBlock: TNetClientDataRequestFailBlock): TNetClientResult;
 var
   I: Integer;
+
   cCount: Integer;
   ToUrls: string;
   Params: TStringList;
@@ -127,7 +129,8 @@ begin
       Params.Add(Format('%S=%S',[aUrlParam[I*2-2],System.NetEncoding.TNetEncoding.URL.Encode(aUrlParam[I*2-1])]));
     end;
 
-    KzDebug.FileFmt('%S:%S',[self.ClassName,params.Text]);
+    //#KzDebug.FileFmt('%S:%S',[self.ClassName,params.Text]);
+    FError := '';
     Result := ncrErrorEd;
 
     try
@@ -135,7 +138,7 @@ begin
     except
       on E:Exception do
       begin
-        Error := E.Message;
+        FError := E.Message;
       end;
     end;
 
@@ -195,6 +198,7 @@ begin
     end;
     KzDebug.FileFmt('%S:%S',[self.ClassName,params.Text]);}
 
+    FError := '';
     Result := ncrErrorEd;
 
     try
