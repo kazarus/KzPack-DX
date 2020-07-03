@@ -31,7 +31,7 @@ uses
   dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
   dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter;
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxBarBuiltInMenu;
 
 type
   TDataFrom = (dfNULL, dfXLSREAD, dfDXEXCEL);
@@ -742,7 +742,7 @@ begin
       CellData.RowIndex := R;
       CellData.ColIndex := C;
       CellData.CellData := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[C, R]);
-      CellData.kFormula := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFormula[C, R]);
+      //CellData.kFormula := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFormula[C, R]);
       //#CellData.bkColour := XLSReadWriteII51[FLoadCnfg.PAGEINDX].Cell[C,R].CellColorRGB;
       //#KzDebug.FileFmt('%S:%D:%D:%S:%D',[self.ClassName,CellData.ColIndex,CellData.RowIndex,CellData.kFormula,CellData.bkColour]);
 

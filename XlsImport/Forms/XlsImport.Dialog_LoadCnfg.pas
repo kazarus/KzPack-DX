@@ -308,7 +308,7 @@ var
 begin
   try
     OD := TOpenDialog.Create(nil);
-    OD.Filter := '*.xlsx|*.xlsx|*.xls|*.xls';
+    OD.Filter := 'È«²¿|*.xls|*.xls|*.xlsx|*.xlsx';
 
     if (Edit_FilePath.Text <> '') then
     begin
