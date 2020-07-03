@@ -19,7 +19,7 @@ type
   public
     function  IsTRUE:Boolean;overload;
   public
-    class function  ToTRUE(aValue:TCollection):string;
+    class function  ToTRUE(aValue: TCollection):string;
     class function  ToEROR(aValue: TCollection): string; overload;
     class function  ToEROR(aMemo: string = 'NOT FOUND'): string; overload;
     class function  ToEROR(aCode: string; aMemo: string): string; overload;
@@ -150,7 +150,7 @@ begin
     EROR.ERORMEMO := aMemo;
     EROR.ListData := aValue;
 
-    Result := EROR.ToJSON;
+    Result := EROR.ToJSON(True);
   finally
     FreeAndNil(EROR);
   end;
