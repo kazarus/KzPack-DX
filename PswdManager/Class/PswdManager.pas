@@ -32,6 +32,12 @@ begin
     Exit;
   end;}
 
+  {#if UpperCase(aValue) = 'A111111' then
+  begin
+    Result := pslWeakly;
+    Exit;
+  end;}
+
   Level  := 0;
   //#Êý×Ö
   if TKzUtils.DidStrMatched(aValue, '\d+', pText) then

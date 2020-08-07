@@ -260,6 +260,8 @@ begin
     Caption := Format('导入参数:%S',[FPromptTx]);
   end;
 
+  self.Color := clWhite;
+
   Btnv_Quit.Caption:='取消';
   Btnv_Mrok.Caption:='确定';
 

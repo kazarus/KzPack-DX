@@ -41,7 +41,7 @@ type
     Panl_1: TRzStatusBar;
     Panl_Text: TRzStatusPane;
     Prog_View: TRzProgressStatus;
-    Tool_1: TRzToolbar;
+    Tool_Main: TRzToolbar;
     Btnv_Cnfg: TRzToolButton;
     il1: TImageList;
     Btnv_Mrok: TRzToolButton;
@@ -714,7 +714,7 @@ var
   begin
     try
       Result := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[aCol, ARow]);
-      //Result:=FormatDateTime('YYYY-MM-DD',XLSReadWriteII51[0].AsDateTime[aCol,aRow]);
+      //#Result:=FormatDateTime('YYYY-MM-DD',XLSReadWriteII51[0].AsDateTime[aCol,aRow]);
     except
       Result := FloatToStr(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFloat[aCol, ARow]);
     end;
@@ -742,7 +742,7 @@ begin
       CellData.RowIndex := R;
       CellData.ColIndex := C;
       CellData.CellData := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFmtString[C, R]);
-      //CellData.kFormula := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFormula[C, R]);
+      //#CellData.kFormula := Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsFormula[C, R]);
       //#CellData.bkColour := XLSReadWriteII51[FLoadCnfg.PAGEINDX].Cell[C,R].CellColorRGB;
       //#KzDebug.FileFmt('%S:%D:%D:%S:%D',[self.ClassName,CellData.ColIndex,CellData.RowIndex,CellData.kFormula,CellData.bkColour]);
 
@@ -753,11 +753,7 @@ begin
       begin
         CellData.HeadName:=Trim(XLSReadWriteII51[FLoadCnfg.PAGEINDX].AsString[C,FLoadCnfg.RowTitle-1]);
       end;
-
-      //@CellRows.ListData.AddObject('',CellData);
     end;
-
-    //@FListBody.AddObject(Format('%D', [CellRows.RowIndex]), CellRows);
   end;
 end;
 
@@ -801,6 +797,8 @@ begin
   inherited;
   Caption := '数据导入';
 
+  self.Color := clWhite;
+
   Font.Size := 10;
   Font.Name := '微软雅黑';
 
@@ -812,6 +810,9 @@ begin
   begin
     Caption := Format('数据导入:%S',[FPromptTx]);
   end;
+
+  Tool_Main.Color := clWhite;
+  Grid_Data.FixedColor := clWhite;
 
   with Page_MAIN do
   begin
