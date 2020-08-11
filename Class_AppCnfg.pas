@@ -3,10 +3,10 @@ unit Class_AppCnfg;
 
 interface
 uses
-  System.Classes,System.SysUtils,UniEngine;
+  System.Classes, System.SysUtils, UniEngine;
 
 type
-  TAppCnfg=class(TUniEngine)
+  TAppCnfg = class(TUniEngine)
   private
     FSrvrAddr: string;
     FSrvrPort: string;
@@ -28,10 +28,9 @@ type
 implementation
 
 
-
 constructor TAppCnfg.Create;
 begin
-  FInUseZIP:=0;
+  FInUseZIP := 0;
 end;
 
 end.

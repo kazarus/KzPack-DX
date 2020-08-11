@@ -172,20 +172,20 @@ begin
   inherited;
 end;
 
-procedure TUniPatchX.Execute(aVersion:Integer);
+procedure TUniPatchX.Execute(aVersion: Integer);
 var
-  I:Integer;
-  SQLA :string;
-  cIndx:Integer; //databaseversion=tbl_dict.code
-  xIndx:Integer; //
-  Patch:TOncePatch;
+  I: Integer;
+  SQLA: string;
+  cIndx: Integer; //databaseversion=tbl_dict.code
+  xIndx: Integer; //
+  Patch: TOncePatch;
 begin
   cIndx := GetDataBaseVersion;
-  if cIndx=-1 then
+  if cIndx = -1 then
   begin
     Connect(TargetMark);
     Execute10001;
-    cIndx:=10001;
+    cIndx := 10001;
   end;
 
 

@@ -1,45 +1,45 @@
-object DialogSrvrCnfg: TDialogSrvrCnfg
+object DialogSrvrCnfg4CORE: TDialogSrvrCnfg4CORE
   Left = 0
   Top = 0
-  Caption = 'DialogSrvrCnfg'
+  Caption = 'DialogSrvrCnfg4CORE'
   ClientHeight = 181
-  ClientWidth = 384
+  ClientWidth = 464
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
   Font.Color = clWindowText
-  Font.Height = -13
-  Font.Name = #23435#20307
+  Font.Height = -12
+  Font.Name = #24494#36719#38597#40657
   Font.Style = []
   OldCreateOrder = False
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 17
   object Labl_1: TRzLabel
     Left = 20
-    Top = 20
-    Width = 59
-    Height = 13
+    Top = 28
+    Width = 51
+    Height = 17
     Caption = #26381#21153#22320#22336':'
     ParentColor = False
   end
   object Labl_2: TRzLabel
     Left = 20
-    Top = 45
-    Width = 59
-    Height = 13
+    Top = 57
+    Width = 51
+    Height = 17
     Caption = #26381#21153#31471#21475':'
   end
   object Labl_3: TRzLabel
     Left = 20
-    Top = 70
-    Width = 59
-    Height = 13
+    Top = 86
+    Width = 51
+    Height = 17
     Caption = #26381#21153#26631#35782':'
   end
   object Edit_SrvrPort: TRzButtonEdit
     Left = 83
-    Top = 41
-    Width = 282
-    Height = 21
+    Top = 53
+    Width = 360
+    Height = 25
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
@@ -49,9 +49,9 @@ object DialogSrvrCnfg: TDialogSrvrCnfg
   end
   object Edit_SrvrAddr: TRzButtonEdit
     Left = 83
-    Top = 16
-    Width = 282
-    Height = 21
+    Top = 24
+    Width = 360
+    Height = 25
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
@@ -60,24 +60,24 @@ object DialogSrvrCnfg: TDialogSrvrCnfg
     ButtonWidth = 15
   end
   object Btnx_Mrok: TRzButton
-    Left = 215
-    Top = 152
+    Left = 293
+    Top = 143
     Caption = 'Btnx_Mrok'
     TabOrder = 2
     OnClick = Btnx_MrokClick
   end
   object Btnx_Quit: TRzButton
-    Left = 290
-    Top = 152
+    Left = 368
+    Top = 143
     Caption = 'Btnx_1'
     TabOrder = 3
     OnClick = Btnx_QuitClick
   end
   object Edit_SrvrMemo: TRzButtonEdit
     Left = 83
-    Top = 66
-    Width = 282
-    Height = 21
+    Top = 82
+    Width = 360
+    Height = 25
     Text = ''
     FrameVisible = True
     FramingPreference = fpCustomFraming
@@ -87,9 +87,9 @@ object DialogSrvrCnfg: TDialogSrvrCnfg
   end
   object Chkb_InUseZIP: TRzCheckBox
     Left = 20
-    Top = 136
-    Width = 75
-    Height = 15
+    Top = 131
+    Width = 69
+    Height = 19
     AlignmentVertical = avCenter
     Caption = 'inUseZIP'
     State = cbUnchecked
@@ -97,9 +97,9 @@ object DialogSrvrCnfg: TDialogSrvrCnfg
   end
   object Chkb_InUseTLS: TRzCheckBox
     Left = 20
-    Top = 157
-    Width = 75
-    Height = 15
+    Top = 146
+    Width = 71
+    Height = 19
     AlignmentVertical = avCenter
     Caption = 'inUseTLS'
     State = cbUnchecked

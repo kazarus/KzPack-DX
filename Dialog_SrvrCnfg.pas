@@ -1,14 +1,16 @@
 unit Dialog_SrvrCnfg;
 
+
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, RzLabel, Vcl.Mask, RzEdit,
-  RzBtnEdt, RzButton, Dialog_View,Class_AppCnfg,Helpr_UniEngine, RzRadChk;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.StdCtrls, RzLabel, Vcl.Mask, RzEdit, RzBtnEdt, RzButton, Dialog_View,
+  Class_AppCnfg, Helpr_UniEngine, RzRadChk;
 
 type
-  TDialogSrvrCnfg = class(TDialogView)
+  TDialogSrvrCnfg4CORE = class(TDialogView)
     Labl_1: TRzLabel;
     Labl_2: TRzLabel;
     Edit_SrvrPort: TRzButtonEdit;
@@ -44,7 +46,7 @@ const
 
 
 var
-  DialogSrvrCnfg: TDialogSrvrCnfg;
+  DialogSrvrCnfg4CORE: TDialogSrvrCnfg4CORE;
 
 function ViewSrvrCnfg(var ACnfg:TAppCnfg):Integer;
 
@@ -58,18 +60,18 @@ uses
 function ViewSrvrCnfg(var ACnfg:TAppCnfg):Integer;
 begin
   try
-    DialogSrvrCnfg:=TDialogSrvrCnfg.Create(nil);
-    Result:=DialogSrvrCnfg.ShowModal;
-    if Result=Mrok then
+    DialogSrvrCnfg4CORE := TDialogSrvrCnfg4CORE.Create(nil);
+    Result := DialogSrvrCnfg4CORE.ShowModal;
+    if Result = Mrok then
     begin
-      DialogSrvrCnfg.ImptCnfg(ACnfg);
+      DialogSrvrCnfg4CORE.ImptCnfg(ACnfg);
     end;
   finally
-    FreeAndNil(DialogSrvrCnfg);
+    FreeAndNil(DialogSrvrCnfg4CORE);
   end;
 end;
 
-procedure TDialogSrvrCnfg.Btnx_MrokClick(Sender: TObject);
+procedure TDialogSrvrCnfg4CORE.Btnx_MrokClick(Sender: TObject);
 begin
   if CheckLicit<>CONST_MARK_NULL then
   begin
@@ -81,12 +83,12 @@ begin
   ModalResult:=mrOk;
 end;
 
-procedure TDialogSrvrCnfg.Btnx_QuitClick(Sender: TObject);
+procedure TDialogSrvrCnfg4CORE.Btnx_QuitClick(Sender: TObject);
 begin
   ModalResult:=mrCancel;
 end;
 
-function TDialogSrvrCnfg.CheckLicit: string;
+function TDialogSrvrCnfg4CORE.CheckLicit: string;
 begin
   Result:='NULL';
 
@@ -101,7 +103,7 @@ begin
   end;
 end;
 
-procedure TDialogSrvrCnfg.ImptCnfg(var ACnfg: TAppCnfg);
+procedure TDialogSrvrCnfg4CORE.ImptCnfg(var ACnfg: TAppCnfg);
 begin
   ACnfg.SrvrAddr:=Trim(Edit_SrvrAddr.Text);
   ACnfg.SrvrPort:=Trim(Edit_SrvrPort.Text);
@@ -111,7 +113,7 @@ begin
   ACnfg.ToFILE(TKzUtils.ExePath+'config.json');
 end;
 
-procedure TDialogSrvrCnfg.InitCnfg;
+procedure TDialogSrvrCnfg4CORE.InitCnfg;
 begin
   if not FileExists(TKzUtils.ExePath+'config.json') then Exit;
 
@@ -128,13 +130,13 @@ begin
   Chkb_InUseTLS.Checked:=FRealCnfg.InUseTLS=1;
 end;
 
-procedure TDialogSrvrCnfg.SetComboItems;
+procedure TDialogSrvrCnfg4CORE.SetComboItems;
 begin
   inherited;
 
 end;
 
-procedure TDialogSrvrCnfg.SetCommParams;
+procedure TDialogSrvrCnfg4CORE.SetCommParams;
 begin
   inherited;
   Caption:='服务配置';
@@ -142,19 +144,19 @@ begin
   Btnx_Quit.Caption:='取消';
 end;
 
-procedure TDialogSrvrCnfg.SetGridParams;
+procedure TDialogSrvrCnfg4CORE.SetGridParams;
 begin
   inherited;
 
 end;
 
-procedure TDialogSrvrCnfg.SetInitialize;
+procedure TDialogSrvrCnfg4CORE.SetInitialize;
 begin
   inherited;
   InitCnfg;
 end;
 
-procedure TDialogSrvrCnfg.TryFreeAndNil;
+procedure TDialogSrvrCnfg4CORE.TryFreeAndNil;
 begin
   inherited;
   if FRealCnfg<>nil then FreeAndNil(FRealCnfg);

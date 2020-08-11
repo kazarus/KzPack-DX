@@ -44,14 +44,14 @@ end;
 
 procedure TDialogView.SetCommParams;
 var
-  I:Integer;
+  I: Integer;
 begin
-  Font.Name:='ËÎÌå';
-  Font.Size:=10;
-  Font.Charset:=GB2312_CHARSET;
+  Font.Name := 'Î¢ÈíÑÅºÚ';
+  Font.Size := 9;
+  Font.Charset := GB2312_CHARSET;
 
   //#È¥µô¶¥À¸
-  for I := 0 to ComponentCount -1 do
+  for I := 0 to ComponentCount - 1 do
   begin
     if Components[I] is TRzToolbar then
     begin
@@ -67,9 +67,9 @@ end;
 
 procedure TDialogView.SetInitialize;
 begin
-  Font.Size:=10;
-  Font.Name:='ËÎÌå';
-  
+  Font.Size := 9;
+  Font.Name := 'Î¢ÈíÑÅºÚ';
+
   SetCommParams;
   SetComboItems;
   SetGridParams;
