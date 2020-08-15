@@ -208,6 +208,8 @@ procedure TDialogEditUniConfig.SetCommParams;
 begin
   inherited;
   Caption := '数据连接';
+  self.Color := clWhite;
+
   Font.Size := 9;
   Font.Name := '微软雅黑';
 

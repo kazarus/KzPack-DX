@@ -8,7 +8,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Dialog_View, Grids, BaseGrid, AdvGrid, StdCtrls, ExtCtrls, Uni,
   UniConfig, UniConnct, RzButton, RzRadChk, AdvObj, RzStatus, RzPanel, RzCmboBx,
-  System.ImageList, Vcl.ImgList;
+  System.ImageList, Vcl.ImgList, AdvUtil;
 
 type
   TDialogListUniConfigEditMode = (dlucemEdit, dlucemView);
@@ -18,9 +18,7 @@ type
     Panl_UnixMemo: TRzStatusPane;
     Panl_DataBase: TRzStatusPane;
     Grid_Cnfg: TAdvStringGrid;
-    Comb_UnixMark: TRzComboBox;
-    Comb_UnixType: TRzComboBox;
-    Tool_1: TRzToolbar;
+    Tool_Main: TRzToolbar;
     Btnv_Mrok: TRzToolButton;
     Btnv_Quit: TRzToolButton;
     Btnv_AddvCnfg: TRzToolButton;
@@ -161,6 +159,10 @@ begin
   Caption := ' ˝æ›ø‚¡–±Ì≈‰÷√';
   Font.Name := 'Œ¢»Ì—≈∫⁄';
   Font.Size := 9;
+
+  self.Color := clWhite;
+  self.Tool_Main.Color := clWhite;
+  self.Grid_Cnfg.FixedColor := clWhite;
 
   Width := 1024;
   Height := Trunc(1024 * 0.618);
@@ -313,10 +315,10 @@ begin
     TKzUtils.JustCleanList(FListCnfg);
 
     cSQL := 'SELECT * FROM TBL_UNICONFIG WHERE 1=1';
-    if Comb_UnixType.ItemIndex <> 0 then
+    {if Comb_UnixType.ItemIndex <> 0 then
     begin
       cSQL := cSQL + Format('    AND  UNIX_TYPE=%S', [QuotedStr(Comb_UnixType.Text)]);
-    end;
+    end;}
     cSQL := cSQL + '    ORDER BY UNIX_TYPE,UNIX_ORDR';
 
     TUniConfig.ListDB(cSQL,cUniC,FListCnfg);
@@ -816,7 +818,7 @@ end;
 procedure TDialogListUniConfig.SetComboItems;
 begin
   inherited;
-  with Comb_UnixMark do
+  {with Comb_UnixMark do
   begin
     Clear;
     Visible := False;
@@ -836,7 +838,7 @@ begin
 
     //YXC_2013_03_26_10_51_37
     ItemIndex := UniConnctEx.ConnctType;
-  end;
+  end;}
 end;
 
 procedure TDialogListUniConfig.Comb_UnixTypeCloseUp(Sender: TObject);

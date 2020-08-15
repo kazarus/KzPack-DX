@@ -150,7 +150,7 @@ object DialogListUniConfig: TDialogListUniConfig
       22
       22)
   end
-  object Tool_1: TRzToolbar
+  object Tool_Main: TRzToolbar
     Left = 0
     Top = 0
     Width = 1008
@@ -178,9 +178,7 @@ object DialogListUniConfig: TDialogListUniConfig
       Btnv_CopyCnfg
       Btnv_ActvCnfg
       Btnv_OrdrCnfg
-      Btnv_TestCnfg
-      Comb_UnixMark
-      Comb_UnixType)
+      Btnv_TestCnfg)
     object Btnv_Mrok: TRzToolButton
       Left = 4
       Top = 2
@@ -276,31 +274,6 @@ object DialogListUniConfig: TDialogListUniConfig
       Top = 10
       Grooved = True
     end
-    object Comb_UnixMark: TRzComboBox
-      Left = 462
-      Top = 12
-      Width = 100
-      Height = 21
-      Ctl3D = False
-      FrameVisible = True
-      FramingPreference = fpCustomFraming
-      ParentCtl3D = False
-      TabOrder = 0
-      Visible = False
-    end
-    object Comb_UnixType: TRzComboBox
-      Left = 562
-      Top = 12
-      Width = 100
-      Height = 21
-      Ctl3D = False
-      FrameVisible = True
-      FramingPreference = fpCustomFraming
-      ParentCtl3D = False
-      TabOrder = 1
-      Visible = False
-      OnCloseUp = Comb_UnixTypeCloseUp
-    end
   end
   object RzStatusBar1: TRzStatusBar
     Left = 0
@@ -336,7 +309,7 @@ object DialogListUniConfig: TDialogListUniConfig
     Left = 480
     Top = 380
     Bitmap = {
-      494C01010A0018003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010A001800440010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
