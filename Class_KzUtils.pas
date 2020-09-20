@@ -1500,7 +1500,7 @@ end;
 class function TKzUtils.StringToColorDef(const aValue, aDef: string): TColor;
 begin
   Result := clWhite;
-  if Trim(aValue) = '' then
+  if (Trim(aValue) = '') or (Trim(aValue) = 'clNone') then
   begin
     Result := StringToColor(aDef);
   end else
