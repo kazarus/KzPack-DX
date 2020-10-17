@@ -255,6 +255,7 @@ procedure TDialogLoadCnfg.SetCommParams;
 begin
   inherited;
   Caption:='导入参数';
+
   if FPromptTx <> '' then
   begin
     Caption := Format('导入参数:%S',[FPromptTx]);

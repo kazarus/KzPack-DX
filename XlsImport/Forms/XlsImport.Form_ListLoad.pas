@@ -1,6 +1,7 @@
 ﻿unit XlsImport.Form_ListLoad;
 //#XlsImport
 
+
 interface
 
 uses
@@ -31,7 +32,7 @@ uses
   dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
   dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter;
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxBarBuiltInMenu;
 
 type
   TDataFrom = (dfNULL, dfXLSREAD, dfDXEXCEL);
@@ -798,6 +799,7 @@ begin
   Caption := '数据导入';
 
   self.Color := clWhite;
+  self.Tool_Main.Color := clWhite;
 
   Font.Size := 10;
   Font.Name := '微软雅黑';
@@ -862,6 +864,14 @@ begin
 
     FixedFont.Size:=10;
     FixedFont.Name:='宋体';
+
+    Font.Size:=10;
+    Font.Name:='微软雅黑';
+
+    FixedFont.Size:=10;
+    FixedFont.Name:='微软雅黑';
+
+    FixedColor := clWhite;
 
     with ColumnHeaders do
     begin
