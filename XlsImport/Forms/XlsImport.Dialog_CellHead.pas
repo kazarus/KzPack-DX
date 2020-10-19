@@ -134,6 +134,13 @@ procedure TDialogCellHead.SetCommParams;
 begin
   inherited;
   Caption:='对象属性';
+
+  self.Color := clWhite;
+  self.Panl_Main.Color := clWhite;
+
+  Font.Name := '微软雅黑';
+  Font.Size := 9;
+
   Btnv_Quit.Caption:='取消';
   Btnv_Mrok.Caption:='确定';
 end;
@@ -143,32 +150,34 @@ begin
   inherited;
   with Grid_Head do
   begin
-    RowCount:=2;
-    ColCount:=20;
-    DefaultColWidth:=100;
-    ColWidths[0]:=40;
-    ShowHint:=True;
-    HintShowCells:=True;
-    HintShowSizing:=True;
+    RowCount := 2;
+    ColCount := 20;
+    DefaultColWidth := 100;
+    ColWidths[0] := 40;
+    ShowHint := True;
+    HintShowCells := True;
+    HintShowSizing := True;
 
-    Options:=Options+[goColSizing];
+    Options := Options + [goColSizing];
 
-    Font.Size:=10;
-    Font.Name:='宋体';
+    Font.Size := 9;
+    Font.Name := '微软雅黑';
 
-    FixedFont.Size:=10;
-    FixedFont.Name:='宋体';
+    FixedFont.Size := 9;
+    FixedFont.Name := '微软雅黑';
+
+    FixedColor := clWhite;
 
     with ColumnHeaders do
     begin
       Clear;
-      Delimiter:=',';
-      DelimitedText:='序号,属性';
+      Delimiter := ',';
+      DelimitedText := '序号,属性';
     end;
 
-    ColCount:=ColumnHeaders.Count;
+    ColCount := ColumnHeaders.Count;
 
-    ColumnSize.Stretch:=True;
+    ColumnSize.Stretch := True;
   end;
 end;
 
