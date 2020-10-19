@@ -311,7 +311,7 @@ var
 begin
   try
     OD := TOpenDialog.Create(nil);
-    OD.Filter := '全部|*.xls|*.xls|*.xlsx|*.xlsx';
+    OD.Filter := '全部|*.*|*.xls|*.xls|*.xlsx|*.xlsx';
 
     if (Edit_FilePath.Text <> '') then
     begin
