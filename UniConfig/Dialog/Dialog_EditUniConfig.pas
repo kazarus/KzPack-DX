@@ -619,26 +619,20 @@ begin
   begin
     Caption:='提示:双击服务器框,加载服务器.';
 
-    if FileExists(TKzUtils.ExePath+'kazarus') then
-    begin
-      Edit_UnicUser.Text := 'sa';
-      Edit_UnicPswd.Text := 'sa@nbyt';
-      Edit_UnicSrvr.Text := '.';
-      Edit_UnicPort.Text := '1433';
-    end;
+    Edit_UnicUser.Text := 'sa';
+    Edit_UnicPswd.Text := 'sa@nbyt';
+    Edit_UnicSrvr.Text := '127.0.0.1';
+    Edit_UnicPort.Text := '1433';
 
   end else
   if Trim(Comb_Type.Text)=CONST_PROVIDER_POSTGR then
   begin
-    Caption:='提示:双击服务器框,加载服务器.';
+    Caption:='数据连接:双击服务器框,加载服务器.';
 
-    if FileExists(TKzUtils.ExePath+'kazarus') then
-    begin
-      Edit_UnicUser.Text := 'postgres';
-      Edit_UnicPswd.Text := 'root';
-      Edit_UnicSrvr.Text := 'localhost';
-      Edit_UnicPort.Text := '5432';
-    end;
+    Edit_UnicUser.Text := 'postgres';
+    Edit_UnicPswd.Text := 'root';
+    Edit_UnicSrvr.Text := 'localhost';
+    Edit_UnicPort.Text := '5432';
 
   end else
   if Trim(Comb_Type.Text)=CONST_PROVIDER_ORACLE then
