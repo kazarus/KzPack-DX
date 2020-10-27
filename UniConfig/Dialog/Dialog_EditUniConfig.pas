@@ -216,7 +216,7 @@ begin
   Edit_UnicPswd.PasswordChar := '*';
   Edit_UnicYear.Text := IntToStr(YearOf(Now));
 
-  if FEditMode=deuemCnfg then
+  if FEditMode = deuemCnfg then
   begin
     Edit_UnicYear.Clear;
     Edit_UnicYear.Enabled := False;

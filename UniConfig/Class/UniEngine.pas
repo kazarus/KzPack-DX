@@ -281,9 +281,24 @@ end;
 
 class procedure TUniEngine.ExecuteSQL(aSQL: string; aUniConnection: TUniConnection; aUpperCase: Boolean);
 var
-  UniSQL:TUniSQL;
+  UniSQL: TUniSQL;
 begin
   if Trim(aSQL) = '' then Exit;
+
+  //#兼容性处理
+  //#ORABLE:不支持BIGINT=NUMBER;
+  //#ORABLE:不支持语句末尾分号;
+  //#ORABLE:不支持ON UPDATE CASCADE;
+  //#ORACLE:不支持TEXT=CLOB;
+  if aUniConnection.ProviderName = UniConfig.CONST_PROVIDER_ORACLE then
+  begin
+    aSQL := LowerCase(aSQL);
+    aSQL := StringReplace(aSQL, 'bigint', 'number', [rfReplaceAll]);
+    aSQL := StringReplace(aSQL, ';', '', [rfReplaceAll]);
+    aSQL := StringReplace(aSQL, 'on update cascade', '', [rfReplaceAll]);
+    //@@aSQL := StringReplace(aSQL, 'text', 'clob', [rfReplaceAll]);
+  end;
+
 
   try
     UniSQL:=TUniSQL.Create(nil);
@@ -297,12 +312,14 @@ begin
       UniSQL.SQL.Text := aSQL;
     end;
 
+    //@KzDebug.FileFmt('%S:%S',['',aSQL]);
     try
       UniSQL.Execute;
     except
       on E:Exception do
       begin
-        KzDebug.FileFmt('%S:%S',[self.ClassName, E.Message]);
+        KzDebug.FileFmt('%S:%S', ['ERROR', aSQL]);
+        KzDebug.FileFmt('%S:%S', ['ERROR', E.Message]);
       end;
     end;
   finally
