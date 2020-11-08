@@ -44,7 +44,8 @@ type
     procedure GetMaxProgress(AMaxProgress:Integer);overload;
     procedure GetOneProgress(AOneProgress:Integer);overload;
     procedure GetTxtProgress(ATxtProgress:string); overload;
-    procedure GetEndProgrees;
+    procedure GetEndProgrees; //#µ•¥ ∆¥¥Ì.ºÊ»›∑Ω∞∏.
+    procedure GetEndProgress;
 
     procedure GetMsgProgress(AMsgProgress:string;AVarProgress:array of Variant);overload;
   protected
@@ -140,6 +141,13 @@ begin
 end;
 
 procedure TKzThrad.GetEndProgrees;
+begin
+  GetMaxProgress(0);
+  GetOneProgress(0);
+  GetTxtProgress('');
+end;
+
+procedure TKzThrad.GetEndProgress;
 begin
   GetMaxProgress(0);
   GetOneProgress(0);
