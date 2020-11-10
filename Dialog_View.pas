@@ -9,7 +9,7 @@ uses
   Dialogs, RzPanel, RzCommon;
 
 type
-  TDialogViewEditMode = (dvemNULL, dvemADDV, dvemEDIT, dvemVIEW, dvemCOPY, dvemFIND, dvemInsert, dvemDelete, dvemUpdate, dvemSelect, dvemAppend, dvemBrowse);
+  TDialogViewEditMode = (dvemNULL, dvemADDV, dvemEDIT, dvemVIEW, dvemCOPY, dvemFIND, dvemInsert, dvemDelete, dvemUpdate, dvemSelect, dvemAppend, dvemBrowse, dvemModify);
   TDialogViewViewMode = (dvvmNULL, dvvmSingle, dvvmCouple);
   TDialogViewDoneMode = (dvdmNULL, dvdmCancel, dvdmCommit, dvdmReload);
 
