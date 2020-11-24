@@ -499,6 +499,10 @@ begin
   if UNICTYPE = CONST_PROVIDER_POSTGR then
   begin
     Result := Format('%S:%S.%S', [Value, UpperCase(UNICSRVR), UpperCase(DataBase)]);
+  end else
+  if UNICTYPE = CONST_PROVIDER_MYSQLX then
+  begin
+    Result := Format('%S:%S.%S', [Value, UpperCase(UNICSRVR), UpperCase(DataBase)]);
   end;
 end;
 
