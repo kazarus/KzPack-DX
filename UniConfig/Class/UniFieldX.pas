@@ -14,8 +14,9 @@ type
     FCOLVNAME: string;  //ETC:UNIT_LINK
     FCOLVTYPE: Integer; //ETC:167
     FTYPENAME: string;  //ETC:VARCHAR,from:type_name
+    FDATALENG: Integer; //ETC:22,from:length
     FDATASIZE: Integer; //ETC:18,from:precision
-    FDATASCAL: Integer; //ETC:4,from:scale
+    FDATASCAL: Integer; //ETC:4, from:scale
   private
     FDATATYPE: string;  //ETC:INTEGER,STRING
     FOBJTNAME: string;  //ETC:UNITLINK
@@ -36,13 +37,14 @@ type
     function  GetAsValue:string;
     function  GetPropName(AValue:string):string;//以'_'为间隔
     function  GetObjtName(AValue:string):string;//没有'_'间隔
-    function  GetDataType(AValue:string):string;
+    class function  GetDataType(AValue:string):string;
   published
     property  COLINDEX:Integer read FCOLINDEX write FCOLINDEX;
     property  TABLNAME:string  read FTABLNAME write FTABLNAME;
     property  COLVNAME:string  read FCOLVNAME write FCOLVNAME;
     property  COLVTYPE:Integer read FCOLVTYPE write FCOLVTYPE;
     property  TYPENAME:string  read FTYPENAME write FTYPENAME;
+    property  DATALENG: Integer read FDATALENG write FDATALENG;
     property  DATASIZE:Integer read FDATASIZE write FDATASIZE;
     property  DATASCAL:Integer read FDATASCAL write FDATASCAL;
   published
@@ -179,7 +181,6 @@ begin
       if FieldName = 'TYPENAME' then
       begin
         TYPENAME  := UpperCase(Field.AsString);
-        DataType  := GetDataType(TypeName);
       end else
       if FieldName = 'DATASIZE' then
       begin
@@ -220,7 +221,9 @@ end;
 class function TUniFieldX.GetListCols(aTabl: string;
   AUniConnection: TUniConnection): TStringList;
 var
-  cSQL:string;
+  I: Integer;
+  cSQL: string;
+  Field: TUniFieldX;
 begin
   if Pos('[',aTabl)>0 then
   begin
@@ -230,7 +233,7 @@ begin
   if Pos(']',aTabl)>0 then
   begin
     aTabl:=StringReplace(aTabl,']','',[rfReplaceAll]);
-  end;  
+  end;
 
   if AUniConnection.ProviderName=CONST_PROVIDER_ACCESS then
   begin
@@ -250,6 +253,27 @@ begin
   end;
 
   Result:=ListDB(cSQL,AUniConnection,False);
+
+  for I := 0 to Result.Count-1 do
+  begin
+    Field := TUniFieldX(Result.Objects[I]);
+    if Field = nil then Continue;
+
+    Field.DATATYPE := GetDataType(Field.TYPENAME);
+
+    if AUniConnection.ProviderName=CONST_PROVIDER_ORACLE then
+    begin
+      if (Field.TYPENAME = 'NUMBER') and (Field.DATASCAL = -1) then
+      begin
+        Field.DATATYPE := 'Int64';
+      end else
+      if (Field.TYPENAME = 'NUMBER') and (Field.DATASCAL = 0) then
+      begin
+        Field.DATATYPE := 'Integer';
+      end;
+    end;
+  end;
+
 end;
 
 function TUniFieldX.GetAsValue: string;
@@ -321,7 +345,7 @@ begin
 end;
 
 
-function TUniFieldX.GetDataType(AValue: string): string;
+class function TUniFieldX.GetDataType(AValue: string): string;
 begin
   if AValue='BINARY' then
   begin
@@ -571,6 +595,7 @@ begin
   Result.ColvName := aUniFieldX.ColvName;
   Result.ColvType := aUniFieldX.ColvType;
   Result.TypeName := aUniFieldX.TypeName;
+  Result.DATALENG := aUniFieldX.DATALENG;
   Result.DataSize := aUniFieldX.DataSize;
   Result.DataType := aUniFieldX.DataType;
   Result.ObjtName := aUniFieldX.ObjtName;
@@ -616,7 +641,7 @@ end;
 
 class function TUniFieldX.ExpSqlInORACLE(aTabl: string): string;
 begin
-  Result:='SELECT COLUMN_ID AS COLINDEX,COLUMN_NAME AS COLVNAME,1 AS COLVTYPE,DATA_TYPE AS TYPENAME,DATA_LENGTH AS DATASIZE,'
+  Result:='SELECT COLUMN_ID AS COLINDEX,COLUMN_NAME AS COLVNAME,1 AS COLVTYPE,DATA_TYPE AS TYPENAME,DATA_LENGTH AS DATASIZE,NVL(DATA_SCALE,-1) AS DATASCAL,'
          +'    CASE WHEN EXISTS (SELECT 1 FROM USER_CONS_COLUMNS WHERE TABLE_NAME=$TABL AND POSITION >0 AND USER_CONS_COLUMNS.COLUMN_NAME=USER_TAB_COLUMNS.COLUMN_NAME) THEN 1 ELSE 0 END AS ISKEY'
          +'    FROM USER_TAB_COLUMNS'
          +'    WHERE  TABLE_NAME=$TABL ORDER BY COLUMN_ID';
@@ -630,7 +655,7 @@ end;
 
 class function TUniFieldX.ExpSQLInORACLE(aTabl, aColv: string): string;
 begin
-  Result:='SELECT COLUMN_ID AS COLINDEX,COLUMN_NAME AS COLVNAME,1 AS COLVTYPE,DATA_TYPE AS TYPENAME,DATA_LENGTH AS DATASIZE,'
+  Result:='SELECT COLUMN_ID AS COLINDEX,COLUMN_NAME AS COLVNAME,1 AS COLVTYPE,DATA_TYPE AS TYPENAME,DATA_LENGTH AS DATASIZE,NVL(DATA_SCALE,-1) AS DATASCAL,'
          +'    CASE WHEN EXISTS (SELECT 1 FROM USER_CONS_COLUMNS WHERE TABLE_NAME=$TABL AND POSITION >0 AND USER_CONS_COLUMNS.COLUMN_NAME=USER_TAB_COLUMNS.COLUMN_NAME) THEN 1 ELSE 0 END AS ISKEY'
          +'    FROM USER_TAB_COLUMNS'
          +'    WHERE  TABLE_NAME=$TABL AND COLUMN_NAME=$COLV ORDER BY COLUMN_ID';
