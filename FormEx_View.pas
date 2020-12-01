@@ -1,22 +1,30 @@
 unit FormEx_View;
-//YXC_2012_08_29_10_18_51
-//有个Form_View是MDI方式的.避免混淆.
+//#YXC_2012_08_29_10_18_51
+//#有个Form_View是MDI方式的.避免混淆.
+
+
 interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, RzPanel, RzCommon;
+  Dialogs, RzPanel, RzCommon, RzBtnEdt;
 
 type
   TFormExView = class(TForm)
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+  private
+    FBtnWidthWhenEdit: Integer;    //#TRzButtonEdit.Button
+    FAltWidthWhenEdit: Integer;    //#TRzButtonEdit.AltBtn
   protected
     procedure SetInitialize;virtual;
     procedure SetGridParams;virtual;
     procedure SetCommParams;virtual;
     procedure SetComboItems;virtual;
     procedure TryFreeAndNil;virtual;
+  published
+    property BtnWidthWhenEdit: Integer read FBtnWidthWhenEdit write FBtnWidthWhenEdit;
+    property AltWidthWhenEdit: Integer read FAltWidthWhenEdit write FAltWidthWhenEdit;
   end;
 
 var
@@ -55,6 +63,11 @@ begin
     if Components[I] is TRzToolbar then
     begin
       TRzToolbar(Components[I]).BorderSides := TRzToolbar(Components[I]).BorderSides - [sdTop];
+    end else
+    if Components[I] is TRzButtonEdit then
+    begin
+      TRzButtonEdit(Components[I]).ButtonWidth := 25;
+      TRzButtonEdit(Components[I]).AltBtnWidth := 25;
     end;
   end;
 end;
