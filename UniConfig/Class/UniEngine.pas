@@ -152,6 +152,7 @@ type
     class function  ExistFieldInOracle(aTable, aField: string; aUniConnection: TUniConnection): Boolean;
     class function  ExistConst(aConstraintType, aConstraintName: string; aUniConnection: TUniConnection): Boolean;
     class function  ExistIndex(aIndexName: string; aUniConnection: TUniConnection): Boolean;
+    class function  ExistSeque(aSequeName: string; aUniConnection: TUniConnection): Boolean;
 
     class function  ExistInKey(aConstraintType, aField, aTable: string; aUniConnection: TUniConnection): Boolean;
     class function  AlterField(aTable, aField: string; length: Integer; aUniConnection: TUniConnection): Boolean;
@@ -1205,6 +1206,21 @@ class function TUniEngine.ExistInKey(aConstraintType, aField,
   aTable: string; aUniConnection: TUniConnection): Boolean;
 begin
 
+end;
+
+class function TUniEngine.ExistSeque(aSequeName: string; aUniConnection: TUniConnection): Boolean;
+var
+  cSQL: string;
+begin
+  Result := False;
+
+  if aUniConnection.ProviderName = CONST_PROVIDER_ORACLE then
+  begin
+    cSQL := 'SELECT COUNT(*) AS VALUE FROM USER_SEQUENCES WHERE SEQUENCE_NAME = %S';
+    cSQL := Format(cSQL, [QuotedStr(aSequeName)]);
+
+    Result := CheckField(cSQL,'VALUE',aUniConnection, 0) > 0;
+  end;
 end;
 
 //class function TUniEngine.TOJSON(aList: TStringList;AOperateType:TOperateType): string;
