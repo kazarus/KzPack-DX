@@ -79,7 +79,7 @@ type
     procedure FillCnfg(aIndx: Integer; aCnfg: TUniConfig); overload;
   public
     function  ExptCnfg: TUniConfig; overload;
-    procedure ExptCnfg(var aCnfg: TUniConfig); overload;
+    procedure ExptCnfg(var aUniConfig: TUniConfig); overload;
   public
     procedure FreeAndNilList(AList: TStringList);
     procedure ClearGrid(AGrid: TAdvStringGrid; ARowCount: Integer; ADefaultRowCount: Integer = 2);
@@ -89,7 +89,7 @@ var
   DialogListUniConfig: TDialogListUniConfig;
 
 function ViewListUniConfig(aEditMode: TDialogListUniConfigEditMode; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
-function ViewListUniConfig(aEditMode: TDialogListUniConfigEditMode; var aCnfg: TUniConfig; IsCreate: Boolean = True; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
+function ViewListUniConfig(aEditMode: TDialogListUniConfigEditMode; var aUniConfig: TUniConfig; IsCreate: Boolean = True; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
 function ViewListUniConfigEx(aEditMode: TDialogListUniConfigEditMode; uDefault: TUniConfig = nil; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
 
 implementation
@@ -128,7 +128,7 @@ begin
   end;
 end;
 
-function ViewListUniConfig(AEditMode: TDialogListUniConfigEditMode; var aCnfg: TUniConfig; IsCreate: Boolean; aConnectionMark: string; aLoadLast: Boolean): Integer;
+function ViewListUniConfig(AEditMode: TDialogListUniConfigEditMode; var aUniConfig: TUniConfig; IsCreate: Boolean; aConnectionMark: string; aLoadLast: Boolean): Integer;
 begin
   try
     DialogListUniConfig := TDialogListUniConfig.Create(nil);
@@ -142,10 +142,10 @@ begin
     begin
       if IsCreate then
       begin
-        aCnfg := DialogListUniConfig.ExptCnfg;
+        aUniConfig := DialogListUniConfig.ExptCnfg;
       end else
       begin
-        DialogListUniConfig.ExptCnfg(aCnfg);
+        DialogListUniConfig.ExptCnfg(aUniConfig);
       end;
     end;
   finally
@@ -459,12 +459,12 @@ begin
   FreeAndNil(AList);
 end;
 
-procedure TDialogListUniConfig.ExptCnfg(var aCnfg: TUniConfig);
+procedure TDialogListUniConfig.ExptCnfg(var aUniConfig: TUniConfig);
 begin
   with Grid_Cnfg do
   begin
     if Objects[0, RealRow] = nil then Exit;
-    TUniConfig.CopyIt(TUniConfig(Objects[0, RealRow]), aCnfg);
+    TUniConfig.CopyIt(TUniConfig(Objects[0, RealRow]), aUniConfig);
   end;
 end;
 
@@ -850,8 +850,7 @@ end;
 
 procedure TDialogListUniConfig.copyCnfg(uDefault: TUniConfig);
 begin
-  if uDefault = nil then
-    Exit;
+  if uDefault = nil then Exit;
 
   if FuDefault = nil then
   begin

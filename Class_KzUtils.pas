@@ -113,7 +113,7 @@ type
     class function  FormatCode(aValue, ALength: Integer): string; overload;
 
     class function  TryFormatCode(ALength, aBoolBack: Integer; const AStrSub, ASource: string): string; overload;
-    class function  FormatCode(aValue: string; ALength: Integer; AStrSub: string): string; overload;
+    class function  FormatCode(ASource: string; ALength: Integer; AStrSub: string): string; overload;
   public
     //PerlRegEx
     class function  StrsStrCutted(const Source: string; aRegEx: string): TStrings;deprecated;
@@ -266,9 +266,9 @@ begin
   end;
 end;
 
-class function TKzUtils.FormatCode(aValue: string; ALength: Integer; AStrSub: string): string;
+class function TKzUtils.FormatCode(ASource: string; ALength: Integer; AStrSub: string): string;
 begin
-  Result := TryFormatCode(ALength, 1, AStrSub, aValue);
+  Result := TryFormatCode(ALength, 1, AStrSub, ASource);
 end;
 
 class function TKzUtils.FormatCode(aValue, ALength: Integer): string;
