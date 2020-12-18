@@ -368,9 +368,11 @@ end;
 
 procedure TForm1.Button8Click(Sender: TObject);
 begin
+  //#TDialogIcon = (diNone, diWarning, diHelp, diError, diInformation, diShield);
+
   case CustomDialog('定制提醒', '您定制的大衣已经被别人抢走了！',
     '选择接下来您要进行的操作：'#13#10#13#10'抢回来 - 尝试抢回，也可能失败'#13#10'放弃 - 放弃吧，总可以，至少还可以相信命运',
-    ['抢回来', '放弃'], diWarning) of
+    ['抢回来', '放弃'], diInformation) of
     0:
       ShowMessage('勇士啊，可对方已经把大衣烧掉了');
     1:
@@ -382,8 +384,7 @@ end;
 
 procedure TForm1.Button9Click(Sender: TObject);
 begin
-  CustomDialog('定制图标', '这个图标来自于shell32.dll', '', ['确定'], 48, 'shell32',
-    TSize.Create(64, 64));
+  CustomDialog('提示', '是否保存修改?', '', ['确定保存','放弃保存','容我想想'], 48, 'shell32', TSize.Create(64, 64));
 end;
 
 procedure TForm1.DoDialogResult(FBuilder: IDialogBuilder);

@@ -496,6 +496,8 @@ begin
           AlignWithMargins := True;
           Layout := tlCenter;
           Caption := AMessage;
+          Font.Name := 'Î¢ÈíÑÅºÚ';
+          Font.Size := 9;
         end;
       end;
     end;
@@ -506,6 +508,8 @@ begin
         AlignWithMargins := True;
         Margins.Left := AIconImage.Left + ABuilder.ItemSpace + AIconImage.Width;
         Margins.Right := Margins.Left;
+        Font.Name := 'Î¢ÈíÑÅºÚ';
+        Font.Size := 9;
         Caption := AMessage;
       end;
     end;
@@ -519,12 +523,15 @@ begin
       begin
         ParentBackground := false;
         Padding.Right := ABuilder.ItemSpace div 2;
+        //#Color := clWhite;
       end;
       for I := 0 to High(AButtons) do
       begin
         with TButton(AddControl(TButton).Control) do
         begin
           Caption := AButtons[I];
+          Font.Name := 'Î¢ÈíÑÅºÚ';
+          Font.Size := 9;
           ModalResult := 100 + I;
         end;
       end;
