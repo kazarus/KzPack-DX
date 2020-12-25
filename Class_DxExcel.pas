@@ -327,7 +327,7 @@ procedure TDxCellStyl.Initialize;
 begin
   DataType := cdtString;
   CellText := '';
-  FontName := 'ËÎÌå';
+  FontName := 'Î¢ÈíÑÅºÚ';
   FontSize := 10;
   //@IsfsBold :=False;
   FontStyle := [];

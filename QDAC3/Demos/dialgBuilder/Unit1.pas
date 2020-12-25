@@ -24,6 +24,7 @@ type
     Button11: TButton;
     Button12: TButton;
     Button13: TButton;
+    Button14: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -37,6 +38,7 @@ type
     procedure Button11Click(Sender: TObject);
     procedure Button12Click(Sender: TObject);
     procedure Button13Click(Sender: TObject);
+    procedure Button14Click(Sender: TObject);
   private
     { Private declarations }
     FBuilder: IDialogBuilder;
@@ -170,6 +172,18 @@ begin
     begin
       ShowMessage('中二啊，你纠结中机会已经飞走了');
     end;
+  end;
+end;
+
+procedure TForm1.Button14Click(Sender: TObject);
+begin
+  case CustomDialog('提示', '','数据已经修改,是否保存?                ',['确定','取消','关闭'], diWarning) of
+    0:
+      ShowMessage('勇士啊，可对方已经把大衣烧掉了');
+    1:
+      ShowMessage('懦夫呀，你怎么可以这样就放弃');
+    -1:
+      ShowMessage('中二啊，你纠结中机会已经飞走了');
   end;
 end;
 
@@ -384,7 +398,7 @@ end;
 
 procedure TForm1.Button9Click(Sender: TObject);
 begin
-  CustomDialog('提示', '是否保存修改?', '', ['确定保存','放弃保存','容我想想'], 48, 'shell32', TSize.Create(64, 64));
+  CustomDialog('提示', '', '是否保存修改?                         ', ['确定','取消','关闭'], 48, 'shell32', TSize.Create(64, 64));
 end;
 
 procedure TForm1.DoDialogResult(FBuilder: IDialogBuilder);

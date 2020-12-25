@@ -137,4 +137,13 @@ object Form1: TForm1
     TabOrder = 12
     OnClick = Button13Click
   end
+  object Button14: TButton
+    Left = 157
+    Top = 164
+    Width = 120
+    Height = 32
+    Caption = 'CustomDialog 1'
+    TabOrder = 13
+    OnClick = Button14Click
+  end
 end
