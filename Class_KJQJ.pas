@@ -63,9 +63,12 @@ type
   public
     class function  getSourceND(Sender: TRzComboBox): Integer;
     class function  getSourceQJ(Sender: TRzComboBox): Integer;
+    class function  getSourceDT(Sender: TRzComboBox): Integer;
+
   public
     class procedure setSourceND(Sender: TRzComboBox; aValue: Integer);
     class procedure setSourceQJ(Sender: TRzComboBox; aValue: Integer);
+    class procedure setSourceDT(Sender: TRzComboBox; aValue: Integer);
   end;
 
 implementation
@@ -208,6 +211,26 @@ begin
   end;
 end;
 
+class function TKJQJ.getSourceDT(Sender: TRzComboBox): Integer;
+var
+  I: Integer;
+  xKJQJ: TKJQJ;
+begin
+  Result := 0;
+  if Sender = nil then Exit;
+  if Sender.Items.Count = 0 then Exit;
+  if Sender.ItemIndex = -1 then Exit;
+
+
+  with Sender do
+  begin
+    xKJQJ := TKJQJ(Sender.Items.Objects[Sender.ItemIndex]);
+    if xKJQJ = nil then Exit;
+
+    Result := xKJQJ.GetKJNDKJQJ;
+  end;
+end;
+
 class function TKJQJ.getSOURCEND(Sender: TRzComboBox): Integer;
 var
   I: Integer;
@@ -274,6 +297,27 @@ end;
 procedure TKJQJ.setKJNDKJQJ(aValue: Integer);
 begin
 
+end;
+
+class procedure TKJQJ.setSourceDT(Sender: TRzComboBox; aValue: Integer);
+var
+  I: Integer;
+  cKJQJ: TKJQJ;
+begin
+  with Sender do
+  begin
+    for I := 0 to Items.Count - 1 do
+    begin
+      cKJQJ := TKJQJ(Items.Objects[I]);
+      if cKJQJ = nil then Continue;
+
+      if cKJQJ.GetKJNDKJQJ = aValue then
+      begin
+        ItemIndex := I;
+        Break;
+      end;
+    end;
+  end;
 end;
 
 class procedure TKJQJ.setSourceND(Sender: TRzComboBox; aValue: Integer);

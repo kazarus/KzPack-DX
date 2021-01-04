@@ -35,6 +35,7 @@ type
     class function  GetOrd(aChar:Char):Integer;
     class function  GetChr(aIndx:Integer):string;
     class function  IfThen(aBool:Boolean;aTrue,aFail:Variant):Variant;
+    class function  IfThenI(aBool:Boolean;aTrue,aFail:Integer):Integer;
     class function  GetGUID:string;
   private
     class function  GetShellFolders(strDir: string): string;
@@ -886,8 +887,16 @@ begin
   end;
 end;
 
-class function TKzUtils.IfThen(aBool: Boolean; aTrue,
-  aFail: Variant): Variant;
+class function TKzUtils.IfThen(aBool: Boolean; aTrue, aFail: Variant): Variant;
+begin
+  Result:=AFail;
+  if aBool then
+  begin
+    Result:=ATrue;
+  end;
+end;
+
+class function TKzUtils.IfThenI(aBool: Boolean; aTrue, aFail: Integer): Integer;
 begin
   Result:=AFail;
   if aBool then
