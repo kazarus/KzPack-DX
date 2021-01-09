@@ -89,7 +89,7 @@ var
   DialogListUniConfig: TDialogListUniConfig;
 
 function ViewListUniConfig(aEditMode: TDialogListUniConfigEditMode; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
-function ViewListUniConfig(aEditMode: TDialogListUniConfigEditMode; var aUniConfig: TUniConfig; IsCreate: Boolean = True; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
+function ViewListUniConfig(aEditMode: TDialogListUniConfigEditMode; var aUniConfig: TUniConfig; IsCreate: Boolean = False; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
 function ViewListUniConfigEx(aEditMode: TDialogListUniConfigEditMode; uDefault: TUniConfig = nil; aConnectionMark: string = ''; aLoadLast: Boolean = False): Integer; overload;
 
 implementation
