@@ -32,7 +32,7 @@ unit UniEngine;
 
 interface
 uses
-  Classes,SysUtils,Variants,Uni,Types,TypInfo,Xml.XMLDoc,Xml.XMLIntf;
+  Classes, SysUtils, Variants, Uni, Types, TypInfo, Xml.XMLDoc, Xml.XMLIntf;
 
 type
   TUniEngine     =class;
@@ -108,14 +108,6 @@ type
     class procedure ListDB(aSQL: string; aUniConnection: TUniConnection; var Result: TCollection; withSorted: Boolean = False); overload; virtual;
     class procedure ListDB(aSQL: string; Fields: array of string; aUniConnection: TUniConnection; var Result: TStringList; withSorted: Boolean = False); overload; virtual;
 
-
-    //@replace with qjson
-    //#class function  TOJSON(aList:TStringList;AOperateType:TOperateType=otNormal):string;overload;
-    //#class function  TOJSON(AObjt:TUniEngine;AOperateType:TOperateType=otNormal):string;overload;
-    //#class procedure INJSON(AValue:string;AClass:TUniEngineClass;var aList:TStringList;ACleanList:Boolean=True);overload;
-    //#class procedure INJSON(AValue:string;AClass:TUniEngineClass;var AObjt:TUniEngine;ACleanList:Boolean=True);overload;
-
-
     class procedure STRIDX(Args: array of string; aList: TStringList; aSeparator: string = '-'; withQuoted: Boolean = False); overload;
     class function  STRDIY(Args: array of string; aList: TStringList; aSeparator: string = ','; withQuoted: Boolean = False): string; overload;
     class function  STRDIY(Args: array of string; aList: TCollection; aSeparator: string = ','; bSeparator: string = '-'; withQuoted: Boolean = False): string; overload;
@@ -168,8 +160,7 @@ uses
   UniConfig, Class_KzDebug;
 
 
-class function TUniEngine.CheckExist(aTable: string;
-  Args: array of Variant): Boolean;
+class function TUniEngine.CheckExist(aTable: string; Args: array of Variant): Boolean;
 begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.CheckExist] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
@@ -179,8 +170,7 @@ begin
   
 end;
 
-class function TUniEngine.CheckField(aField, aTable: string;
-  Args: array of Variant): Integer;
+class function TUniEngine.CheckField(aField, aTable: string; Args: array of Variant): Integer;
 begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.CheckField] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
@@ -216,11 +206,10 @@ begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.DeleteDB] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
 
-procedure TUniEngine.DeleteDB(aTabs: array of string; aSQLWhere: string;
-  aUniConnection: TUniConnection);
+procedure TUniEngine.DeleteDB(aTabs: array of string; aSQLWhere: string; aUniConnection: TUniConnection);
 var
-  I:Integer;
-  cSQL:string;
+  I: Integer;
+  cSQL: string;
 begin
   for I := 0 to Length(aTabs)-1 do
   begin
@@ -397,23 +386,23 @@ begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.ExecuteSQL] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
 
-class function TUniEngine.ReadDB(aSQL: string;
-  aUniConnection: TUniConnection): TUniEngine;
+class function TUniEngine.ReadDB(aSQL: string; aUniConnection: TUniConnection): TUniEngine;
 var
-  UniQuery:TUniQuery;
+  UniQuery: TUniQuery;
 begin
   Result:=nil;
   try
-    UniQuery:=TUniQuery.Create(nil);
-    UniQuery.Connection :=aUniConnection;
+    UniQuery := TUniQuery.Create(nil);
+    UniQuery.Connection := aUniConnection;
     //UniQuery.Prepared   :=True;
 
-    if aSQL='' then raise Exception.Create('SQL=NIL');
+    if aSQL = '' then raise Exception.Create('SQL=NIL');
 
     UniQuery.SQL.Text:=aSQL;
     UniQuery.Open;
 
     if UniQuery.RecordCount=0 then Exit;
+
     while not UniQuery.Eof do
     begin
       Result:=ReadDS(UniQuery);
@@ -425,11 +414,11 @@ begin
 end;
 
 
-class function TUniEngine.StrsDB(aSQL: string; Fields: array of string;
-  aUniConnection: TUniConnection;withSorted:Boolean): TStringList;
+class function TUniEngine.StrsDB(aSQL: string; Fields: array of string; aUniConnection: TUniConnection; withSorted: Boolean): TStringList;
 var
-  UniQuery:TUniQuery;
-  UniEngine:TUniEngine;
+  UniQuery: TUniQuery;
+  UniEngine: TUniEngine;
+
   //YXC_2010_08_09_11_30_01
   I:Integer;
   TMPA:string;
@@ -476,8 +465,7 @@ begin
   end;
 end;
 
-class function TUniEngine.StrsDB(aSQL: string;
-  Fields: array of string;withSorted:Boolean): TStringList;
+class function TUniEngine.StrsDB(aSQL: string; Fields: array of string; withSorted: Boolean): TStringList;
 begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.StrsDB] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
@@ -529,8 +517,7 @@ begin
   end;
 end;
 
-class function TUniEngine.StrsDB(aSQL: string;
-  aUniConnection: TUniConnection; withSorted:Boolean): TStringList;
+class function TUniEngine.StrsDB(aSQL: string; aUniConnection: TUniConnection; withSorted: Boolean): TStringList;
 var
   UniQuery:TUniQuery;
   UniEngine:TUniEngine;
@@ -605,73 +592,78 @@ begin
   Result:='';
 end;
 
-class function TUniEngine.ExistField(aTable, aField: string;
-  aUniConnection: TUniConnection): Boolean;
+class function TUniEngine.ExistField(aTable, aField: string; aUniConnection: TUniConnection): Boolean;
 var
-  IdexA:Integer;
-  ListA:TStringList;
-  UniTable:TUniTable;  
+  cIndx: Integer;
+  cList: TStringList;
+  UniTable: TUniTable;
 begin
-  Result:=False;
+  Result := False;
+
+  if aUniConnection.ProviderName = CONST_PROVIDER_ACCESS then
+  begin
+    aTable := StringReplace(aTable, '[', '`', [rfReplaceAll]);
+    aTable := StringReplace(aTable, ']', '`', [rfReplaceAll]);
+  end;
 
   if not ExistTable(aTable,aUniConnection) then
   begin
     raise Exception.CreateFmt('NOT EXIST SUCH TABLE:%S',[aTable]);
   end;
   
-  UniTable:=TUniTable.Create(nil);
-  UniTable.Connection:=aUniConnection;
-  UniTable.TableName:=aTable;
-  ListA:=TStringList.Create;
-  UniTable.GetFieldNames(ListA);
-  
-  ListA.Sorted:=True;
-  Result:=ListA.IndexOf(aField)<>-1;
-  {IdexA:=-1;
-  if ListA.Find(aField,IdexA) then
+  UniTable := TUniTable.Create(nil);
+  UniTable.Connection := aUniConnection;
+  UniTable.TableName := aTable;
+  cList := TStringList.Create;
+  UniTable.GetFieldNames(cList);
+
+  cList.Sorted := True;
+  Result := cList.IndexOf(aField) <> -1;
+
+  {cIndx:=-1;
+  if cList.Find(aField,cIndx) then
   begin
-    Result:=IdexA<>-1;
+    Result:=cIndx<>-1;
   end;}
 
   FreeAndNil(UniTable);
-  FreeAndNil(ListA);  
+  FreeAndNil(cList);
 end;
 
-class function TUniEngine.ExistTable(aTable: string;
-  aUniConnection: TUniConnection): Boolean;
+class function TUniEngine.ExistTable(aTable: string; aUniConnection: TUniConnection): Boolean;
 var
-  IdexA:Integer;
-  ListA:TStringList;
+  cIndx: Integer;
+  cList: TStringList;
 begin
-  Result:=False;
+  Result := False;
+
   if aUniConnection=nil then Exit;
 
   try
-    ListA:=TStringList.Create;
-    aUniConnection.GetTableNames(ListA);
-    if (ListA<>nil) and (ListA.Count>0) then
+    cList := TStringList.Create;
+    aUniConnection.GetTableNames(cList);
+    if (cList <> nil) and (cList.Count > 0) then
     begin
-      ListA.Sorted:=True;
-      Result:=ListA.IndexOf(aTable)<>-1;
-      {IdexA:=-1;
-      if ListA.Find(aTable,IdexA) then
+      cList.Sorted := True;
+      Result := cList.IndexOf(aTable) <> -1;
+      {cIndx:=-1;
+      if cList.Find(aTable,cIndx) then
       begin
-        Result:=IdexA<>-1;
+        Result:=cIndx<>-1;
       end;}
     end;
   finally
-    FreeAndNil(ListA);
+    FreeAndNil(cList);
   end;
 end;
 
-class function TUniEngine.CheckExist(aTable: string;
-  Args: array of Variant; aUniConnection: TUniConnection;aSQLAddition:string): Boolean;
+class function TUniEngine.CheckExist(aTable: string; Args: array of Variant; aUniConnection: TUniConnection; aSQLAddition: string): Boolean;
 var
-  UniQuery:TUniQuery;
-  aSQL :string;
-  Temp :string;
-  AValue:Variant;
-  I,ALen:Integer;
+  I, ALen: Integer;
+  aSQL: string;
+  Temp: string;
+  AValue: Variant;
+  UniQuery: TUniQuery;
 begin
   Result:=False;
   
@@ -721,14 +713,13 @@ begin
 end;
 
 
-class function TUniEngine.CheckField(aField, aTable: string;
-  Args: array of Variant; aUniConnection: TUniConnection;aSQLAddition:string): Integer;
+class function TUniEngine.CheckField(aField, aTable: string; Args: array of Variant; aUniConnection: TUniConnection; aSQLAddition: string): Integer;
 var
-  UniQuery:TUniQuery;
-  aSQL :string;
-  Temp :string;
-  AValue:Variant;
-  I,ALen :Integer;
+  I, ALen: Integer;
+  aSQL: string;
+  Temp: string;
+  AValue: Variant;
+  UniQuery: TUniQuery;
 begin
   Result:=-1;
 
@@ -779,11 +770,10 @@ begin
 end;
 
 
-class function TUniEngine.AlterField(aTable, aField: string; length: Integer;
-  aUniConnection: TUniConnection): Boolean;
+class function TUniEngine.AlterField(aTable, aField: string; length: Integer; aUniConnection: TUniConnection): Boolean;
 var
-  cSQL:string;
-  cSize:Integer;
+  cSQL: string;
+  cSize: Integer;
 begin
   Result := False;
 
@@ -803,14 +793,13 @@ begin
   Result := True;
 end;
 
-class function TUniEngine.CheckCount(aField, aTable: string;
-  Args: array of Variant; aUniConnection: TUniConnection;aSQLAddition:string): Integer;
+class function TUniEngine.CheckCount(aField, aTable: string; Args: array of Variant; aUniConnection: TUniConnection; aSQLAddition: string): Integer;
 var
-  UniQuery:TUniQuery;
-  aSQL :string;
-  Temp :string;
-  AValue:Variant;
-  I,ALen :Integer;
+  I, ALen: Integer;
+  aSQL: string;
+  Temp: string;
+  AValue: Variant;
+  UniQuery: TUniQuery;
 begin
   Result:=-1;
 
@@ -956,8 +945,7 @@ begin
 end;
 
 
-class function TUniEngine.ExistConst(aConstraintType,
-  aConstraintName: string; aUniConnection: TUniConnection): Boolean;
+class function TUniEngine.ExistConst(aConstraintType, aConstraintName: string; aUniConnection: TUniConnection): Boolean;
 begin
   Result := False;
   if aUniConnection.ProviderName = CONST_PROVIDER_SQLSRV then
@@ -985,12 +973,11 @@ begin
   end;
 end;
 
-class function TUniEngine.GetServDat(
-  aUniConnection: TUniConnection): TDateTime;
+class function TUniEngine.GetServDat(aUniConnection: TUniConnection): TDateTime;
 var
-  SQLA:string;
-  UniDataSet:TUniQuery;
-  UniConnct :TUniConnection;
+  SQLA: string;
+  UniDataSet: TUniQuery;
+  UniConnct: TUniConnection;
 begin
   Result:=Now;
 
@@ -1025,30 +1012,25 @@ class function TUniEngine.ListDB(aSQL: string;withSorted:Boolean): TStringList;
 begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.ListDB] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
-
-class function TUniEngine.ListDB(aSQL: string;
-  aUniConnection: TUniConnection;withSorted:Boolean): TStringList;
+class function TUniEngine.ListDB(aSQL: string; aUniConnection: TUniConnection; withSorted: Boolean): TStringList;
 begin
   Result:=StrsDB(aSQL,aUniConnection,withSorted);
 end;
 
-class function TUniEngine.ListDB(aSQL: string;
-  Fields: array of string;withSorted:Boolean): TStringList;
+class function TUniEngine.ListDB(aSQL: string; Fields: array of string; withSorted: Boolean): TStringList;
 begin
   raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.ListDB] AT [UniEngine.pas]'+#13+'此函数已被更新或弃用,请向开发人员报告错误场合.');
 end;
 
-class function TUniEngine.ListDB(aSQL: string; Fields: array of string;
-  aUniConnection: TUniConnection;withSorted:Boolean): TStringList;
+class function TUniEngine.ListDB(aSQL: string; Fields: array of string; aUniConnection: TUniConnection; withSorted: Boolean): TStringList;
 begin
   Result:=StrsDB(aSQL,Fields,aUniConnection,withSorted);
 end;
 
-class procedure TUniEngine.ListDB(aSQL: string;
-  aUniConnection: TUniConnection; var Result: TStringList;withSorted:Boolean);
+class procedure TUniEngine.ListDB(aSQL: string; aUniConnection: TUniConnection; var Result: TStringList; withSorted: Boolean);
 var
-  UniQuery :TUniQuery;
-  UniEngine:TUniEngine;
+  UniQuery: TUniQuery;
+  UniEngine: TUniEngine;
 begin
   if Result=nil then Exit;
   
@@ -1092,15 +1074,13 @@ begin
 end;
 
 
-class procedure TUniEngine.ListDB(aSQL: string; Fields: array of string;
-  aUniConnection: TUniConnection; var Result: TStringList;withSorted:Boolean);
+class procedure TUniEngine.ListDB(aSQL: string; Fields: array of string; aUniConnection: TUniConnection; var Result: TStringList; withSorted: Boolean);
 var
-  UniQuery :TUniQuery;
-  UniEngine:TUniEngine;
-  //YXC_2010_08_09_11_30_01
-  I:Integer;
-  TMPA:string;
-  TMPB:string;
+  I: Integer;
+  TMPA: string;
+  TMPB: string;
+  UniQuery: TUniQuery;
+  UniEngine: TUniEngine;
 begin
   if Result=nil then Exit;
 
@@ -1155,8 +1135,7 @@ begin
   end;
 end;
 
-class procedure TUniEngine.ReadDB(aSQL: string;
-  aUniConnection: TUniConnection; var Result: TUniEngine);
+class procedure TUniEngine.ReadDB(aSQL: string; aUniConnection: TUniConnection; var Result: TUniEngine);
 var
   UniQuery:TUniQuery;
 begin
@@ -1184,8 +1163,7 @@ begin
 end;
 
 
-class function TUniEngine.ExistIndex(aIndexName: string;
-  aUniConnection: TUniConnection): Boolean;
+class function TUniEngine.ExistIndex(aIndexName: string; aUniConnection: TUniConnection): Boolean;
 begin
   Result := False;
   if aUniConnection.ProviderName = CONST_PROVIDER_SQLSRV then
@@ -1202,8 +1180,7 @@ begin
   end;
 end;
 
-class function TUniEngine.ExistInKey(aConstraintType, aField,
-  aTable: string; aUniConnection: TUniConnection): Boolean;
+class function TUniEngine.ExistInKey(aConstraintType, aField, aTable: string; aUniConnection: TUniConnection): Boolean;
 begin
 
 end;
@@ -1223,152 +1200,12 @@ begin
   end;
 end;
 
-//class function TUniEngine.TOJSON(aList: TStringList;AOperateType:TOperateType): string;
-//var
-//  I,M,N:Integer;
-//  Instance:TUniEngine;
-//
-//  TMPA:string;
-//
-//  NameA:string;
-//  Value:string;
-//
-//  PropList:PPropList;
-//begin
-//  Result:='';
-//
-//  if (aList=nil) or (aList.Count=0) then Exit;
-//
-//  for I:=0 to aList.Count -1 do
-//  begin
-//    Instance:=TUniEngine(aList.Objects[I]);
-//
-//    TMPA:='';
-//    M:=GetPropList(Instance,PropList);
-//    for N:=Low(PropList^) to M-1 do
-//    begin
-//      case AOperateType of
-//        otUpperCase:NameA:=UpperCase(PropList[N]^.Name);
-//        otLowerCase:NameA:=LowerCase(PropList[N]^.Name);
-//      else;
-//        NameA:=PropList[N]^.Name;
-//      end;
-//
-//      Value:=GetPropValue(Instance,PropList[N]^.Name);
-//      Value:=TKzUtils.jsencode(Value);
-//
-//      TMPA:=TMPA+Format(',"%s":"%s"',[NameA,Value]);
-//    end;
-//
-//    Delete(TMPA,1,1);
-//    TMPA :=Format('{%S}',[TMPA]);
-//    Result:=Result+','+TMPA;
-//
-//    FreeMem(PropList);
-//  end;
-//
-//  Delete(Result,1,1);
-//  Result:=Format('[%S]',[Result]);
-//end;
-
-//class procedure TUniEngine.INJSON(AValue:string;AClass:TUniEngineClass;var aList: TStringList;ACleanList:Boolean);
-//var
-//  I,M,N:Integer; //for avlaue
-//  X,Y,Z:Integer; //for rtti
-//
-//  TMPA:string;
-//
-//  ListA:TStrings;
-//  ListB:TStrings;
-//  NameA:string;
-//  Value:string;
-//
-//  PropName:string;
-//  PropList:PPropList;
-//  Instance:TUniEngine;
-//begin
-//  if Trim(AValue)='' then Exit;
-//
-//  try
-//    //if nothing to set propvalue
-//    Y:=GetPropList(AClass.ClassInfo,PropList);
-//    if Y=0 then Exit;
-//
-//    //make it clean and sorted is false.
-//    if (aList=nil) then Exit;
-//    if ACleanList  then
-//    begin
-//      TKzUtils.JustCleanList(aList);
-//    end;
-//    //make sure the list.sort = false. otherwise, it will be igonre same strsindex. code as follow.
-//    {if not Sorted then
-//      Result := FCount
-//    else
-//      if Find(S, Result) then
-//        case Duplicates of
-//          dupIgnore: Exit;
-//          dupError: Error(@SDuplicateString, 0);
-//        end;
-//    InsertItem(Result, S, AObject);}
-//    aList.Sorted:=False;
-//
-//    //delete head and tail
-//    if AValue[1]='[' then
-//    begin
-//      Delete(AValue,1,1);
-//    end;
-//    if AValue[Length(AValue)]=']' then
-//    begin
-//      Delete(AValue,Length(AValue),1);
-//    end;
-//
-//
-//    ListA:=TKzUtils.StrsStrCutted(AValue,'\{*\}');
-//    for I:=0 to ListA.Count-1 do
-//    begin
-//      TMPA:=Trim(ListA.Strings[I]);
-//
-//      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\:','=');
-//      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\{','');
-//      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\"','');
-//
-//      if Trim(TMPA)='' then Continue;
-//
-//      ListB:=TKzUtils.StrsStrCutted(TMPA,'\,');
-//
-//      Instance:=AClass.Create;
-//      for X:=Low(PropList^) to Y-1 do
-//      begin
-//        PropName:=PropList[X]^.Name;
-//
-//        for M:=0 to ListB.Count-1 do
-//        begin
-//          NameA:=UpperCase(ListB.Names[M]);
-//
-//          if UpperCase(PropName)=NameA then
-//          begin
-//            Value:=TKzUtils.jsdecode(ListB.ValueFromIndex[M]);
-//            SetPropValue(Instance,PropName,Value);
-//          end;
-//        end;
-//      end;
-//
-//      aList.AddObject(Instance.GetStrsIndex,Instance);
-//      FreeAndNil(ListB);
-//    end;
-//  finally
-//    FreeAndNil(ListA);
-//    FreeMem(PropList);
-//  end;
-//end;
-
-class procedure TUniEngine.STRIDX(Args: array of string;
-  aList: TStringList; aSeparator: string; withQuoted:Boolean);
+class procedure TUniEngine.STRIDX(Args: array of string; aList: TStringList; aSeparator: string; withQuoted: Boolean);
 var
-  I,M  :Integer;
-  cName:string;
-  cText:string;
-  Instance:TUniEngine;
+  I, M: Integer;
+  cName: string;
+  cText: string;
+  Instance: TUniEngine;
 begin
   if (aList=nil) or (aList.Count=0) then Exit;
   aList.Sorted:=False;
@@ -1404,13 +1241,12 @@ begin
   end;
 end;
 
-class function TUniEngine.STRDIY(Args: array of string;
-  aList: TStringList;aSeparator: string;withQuoted:Boolean): string;
+class function TUniEngine.STRDIY(Args: array of string; aList: TStringList; aSeparator: string; withQuoted: Boolean): string;
 var
-  I,M:Integer;
-  Instance:TUniEngine;
-  cName:string;
-  cText:string;
+  I, M: Integer;
+  cName: string;
+  cText: string;
+  Instance: TUniEngine;
 begin
   Result:='';
   if (aList=nil) or (aList.Count=0) then Exit;
@@ -1441,134 +1277,10 @@ begin
   Delete(Result,1,Length(aSeparator));
 end;
 
-//class procedure TUniEngine.INJSON(AValue: string; AClass: TUniEngineClass;
-//  var AObjt: TUniEngine; ACleanList: Boolean);
-//begin
-//  raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.INJSON] AT [UniEngine.pas]');
-//end;
-
-//class function TUniEngine.TOJSON(AObjt: TUniEngine;
-//  AOperateType: TOperateType): string;
-//begin
-//  raise Exception.Create('NOT SUPPORT THIS METHOD:[TUniEngine.TOJSON] AT [UniEngine.pas]');
-//end;
-
-//function TUniEngine.TOJSON(AOperateType: TOperateType): string;
-//var
-//  I,M,N:Integer;
-//  Instance:TUniEngine;
-//
-//  TMPA:string;
-//
-//  NameA:string;
-//  Value:string;
-//
-//  PropList:PPropList;
-//begin
-//  Result:='';
-//
-//  Instance:=Self;
-//
-//  TMPA:='';
-//  M:=GetPropList(Instance,PropList);
-//  for N:=Low(PropList^) to M-1 do
-//  begin
-//    case AOperateType of
-//      otUpperCase:NameA:=UpperCase(PropList[N]^.Name);
-//      otLowerCase:NameA:=LowerCase(PropList[N]^.Name);
-//    else;
-//      NameA:=PropList[N]^.Name;
-//    end;
-//
-//    Value:=GetPropValue(Instance,PropList[N]^.Name);
-//    Value:=TKzUtils.jsencode(Value);
-//
-//    TMPA:=TMPA+Format(',"%s":"%s"',[NameA,Value]);
-//  end;
-//
-//  Delete(TMPA,1,1);
-//  Result:=Format('{%S}',[TMPA]);
-//
-//  FreeMem(PropList);
-//end;
-
-//procedure TUniEngine.INJSON(AValue: string);
-//var
-//  I,M,N:Integer; //for avlaue
-//  X,Y,Z:Integer; //for rtti
-//
-//  TMPA:string;
-//
-//  ListA:TStrings;
-//  ListB:TStrings;
-//  NameA:string;
-//  Value:string;
-//
-//  PropName:string;
-//  PropList:PPropList;
-//  Instance:TUniEngine;
-//begin
-//  if Trim(AValue)='' then Exit;
-//
-//  try
-//    //if nothing to set propvalue
-//    Y:=GetPropList(Self.ClassInfo,PropList);
-//    if Y=0 then Exit;
-//
-//    //delete head and tail
-//    if AValue[1]='[' then
-//    begin
-//      Delete(AValue,1,1);
-//    end;
-//    if AValue[Length(AValue)]=']' then
-//    begin
-//      Delete(AValue,Length(AValue),1);
-//    end;
-//
-//
-//    ListA:=TKzUtils.StrsStrCutted(AValue,'\{*\}');
-//    for I:=0 to ListA.Count-1 do
-//    begin
-//      TMPA:=Trim(ListA.Strings[I]);
-//
-//      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\:','=');
-//      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\{','');
-//      TMPA:=TKzUtils.RegReplaceAll(TMPA,'\"','');
-//
-//      if Trim(TMPA)='' then Continue;
-//
-//      ListB:=TKzUtils.StrsStrCutted(TMPA,'\,');
-//
-//      Instance:=Self;
-//      for X:=Low(PropList^) to Y-1 do
-//      begin
-//        PropName:=PropList[X]^.Name;
-//
-//        for M:=0 to ListB.Count-1 do
-//        begin
-//          NameA:=UpperCase(ListB.Names[M]);
-//
-//          if UpperCase(PropName)=NameA then
-//          begin
-//            Value:=TKzUtils.jsdecode(ListB.ValueFromIndex[M]);
-//            SetPropValue(Instance,PropName,Value);
-//          end;
-//        end;
-//      end;
-//
-//      FreeAndNil(ListB);
-//    end;
-//  finally
-//    FreeAndNil(ListA);
-//    FreeMem(PropList);
-//  end;
-//end;
-
-class function TUniEngine.ExistFieldInOracle(aTable, aField: string;
-  aUniConnection: TUniConnection): Boolean;
+class function TUniEngine.ExistFieldInOracle(aTable, aField: string; aUniConnection: TUniConnection): Boolean;
 var
-  ListA:TStringList;
-  UniDataSet:TUniQuery;
+  cList: TStringList;
+  UniDataSet: TUniQuery;
 begin
   Result:=False;
 
@@ -1580,18 +1292,17 @@ begin
   UniDataSet:=GetDataSet(Format('SELECT * FROM %S WHERE ROWNUM<1',[aTable]),aUniConnection);
   if UniDataSet<>nil then
   begin
-    Result:=UniDataSet.FindField(aField)<>nil;
+    Result := UniDataSet.FindField(aField) <> nil;
     FreeAndNil(UniDataSet);
   end;
 end;
 
 class procedure TUniEngine.GetDataSet(aSQL: string; Fields: array of string; aUniConnection: TUniConnection; var Result: TStringList; aSeparator: string; aFetchAll: Boolean);
 var
-  I:Integer;
-  TMPA:string;
-  TMPB:string;
-  
-  UniQuery:TUniQuery;
+  I: Integer;
+  TMPA: string;
+  TMPB: string;
+  UniQuery: TUniQuery;
 begin
   if Result=nil then Exit;
 
@@ -1637,12 +1348,10 @@ begin
 
 end;
 
-class procedure TUniEngine.ListDB(aSQL: string;
-  aUniConnection: TUniConnection; var Result: TCollection;
-  withSorted: Boolean);
+class procedure TUniEngine.ListDB(aSQL: string; aUniConnection: TUniConnection; var Result: TCollection; withSorted: Boolean);
 var
-  UniQuery :TUniQuery;
-  UniEngine:TUniEngine;
+  UniQuery: TUniQuery;
+  UniEngine: TUniEngine;
 begin
   if Result=nil then Exit;
   
@@ -1682,13 +1391,12 @@ begin
   end;
 end;
 
-class function TUniEngine.STRDIY(Args: array of string; aList: TCollection;
-  aSeparator: string; bSeparator:string; withQuoted: Boolean): string;
+class function TUniEngine.STRDIY(Args: array of string; aList: TCollection; aSeparator: string; bSeparator: string; withQuoted: Boolean): string;
 var
-  I,M:Integer;
-  Instance:TUniEngine;
-  cName:string;
-  cText:string;
+  I, M: Integer;
+  cName: string;
+  cText: string;
+  Instance: TUniEngine;
 begin
   Result:='';
   if (aList=nil) or (aList.Count=0) then Exit;
@@ -1721,11 +1429,11 @@ end;
 
 class procedure TUniEngine.CopyIt(sList: TCollection; var tList: TCollection);
 var
-  I:Integer;
-  cObject:TUniEngine;
-  xObject:TUniEngine;
+  I: Integer;
+  cObject: TUniEngine;
+  xObject: TUniEngine;
 begin
-  if tList = nil then Exit;
+  if (tList = nil) then Exit;
   if (sList = nil) or (sList.Count = 0) then Exit;
 
   for I := 0 to sList.Count-1 do
@@ -1739,9 +1447,9 @@ end;
 
 class procedure TUniEngine.CopyIt(sList: TCollection; var tList: TStringList;aClass:TUniEngineClass);
 var
-  I:Integer;
-  cObject:TUniEngine;
-  xObject:TUniEngine;
+  I: Integer;
+  cObject: TUniEngine;
+  xObject: TUniEngine;
 begin
   if tList = nil then Exit;
   if (sList = nil) or (sList.Count = 0) then Exit;
