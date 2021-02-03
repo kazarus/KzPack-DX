@@ -879,6 +879,7 @@ begin
         CellA.Widt:=ColWidths[I-DecCount];
       end;
 
+      //#XC-DEV@2021-02-03-17-47-33-<
       if Assigned(OnKzPrintGridValidCols) then
       begin
         OnKzPrintGridValidCols(Self,SourceGrid,I,CellA);
@@ -888,7 +889,13 @@ begin
       begin
         FreeAndNil(CellA);
         Continue;
-      end;  
+      end;
+
+      if CellA.newWidth <> 0 then
+      begin
+        CellA.Widt := CellA.newWidth;
+      end;
+      //#XC-DEV@2021-02-03-17-47-33->
 
       TotlWidth :=TotlWidth + CellA.Widt;
       //CellA.Text+IntTostr(CellA.Widt)
@@ -964,6 +971,24 @@ begin
             CellA.TopX    :=GetTopCellRect(M,I);
             CellA.Left    :=GetLefCellRect(M,I);
 
+            //#XC-DEV@2021-02-03-17-47-33-<
+            if Assigned(OnKzPrintGridValidCols) then
+            begin
+              OnKzPrintGridValidCols(Self,SourceGrid,I,CellA);
+            end;
+
+            if CellA.Widt=0 then
+            begin
+              FreeAndNil(CellA);
+              Continue;
+            end;
+
+            if CellA.newWidth <> 0 then
+            begin
+              CellA.Widt := CellA.newWidth;
+            end;
+            //#XC-DEV@2021-02-03-17-47-33->
+
             FTreeCellWhenMultiHead.AddObject(CellA.RowIndex,CellA);
 
             Y:=Y+CellA.Widt;
@@ -997,6 +1022,24 @@ begin
             if CellProperties[M,I].CellSpanY<>0 then
             begin
               CellA.Widt    :=ColWidths[M];
+
+              //#XC-DEV@2021-02-03-17-47-33-<
+              if Assigned(OnKzPrintGridValidCols) then
+              begin
+                OnKzPrintGridValidCols(Self,SourceGrid,M,CellA);
+              end;
+
+              if CellA.Widt=0 then
+              begin
+                FreeAndNil(CellA);
+                Continue;
+              end;
+
+              if CellA.newWidth <> 0 then
+              begin
+                CellA.Widt := CellA.newWidth;
+              end;
+              //#XC-DEV@2021-02-03-17-47-33->
             end else
             begin
               CellA.Widt    :=0;
@@ -1030,7 +1073,25 @@ begin
           CellA.GapX    :=CellProperties[M,I].CellSpanX;          
           CellA.GapY    :=CellProperties[M,I].CellSpanY;
           CellA.TopX    :=GetTopCellRect(M,I);
-          CellA.Left    :=GetLefCellRect(M,I);            
+          CellA.Left    :=GetLefCellRect(M,I);
+
+          //#XC-DEV@2021-02-03-17-47-33-<
+          if Assigned(OnKzPrintGridValidCols) then
+          begin
+            OnKzPrintGridValidCols(Self,SourceGrid,M,CellA);
+          end;
+
+          if CellA.Widt=0 then
+          begin
+            FreeAndNil(CellA);
+            Continue;
+          end;
+
+          if CellA.newWidth <> 0 then
+          begin
+            CellA.Widt := CellA.newWidth;
+          end;
+          //#XC-DEV@2021-02-03-17-47-33->
 
           FTreeCellWhenMultiHead.AddObject(CellA.RowIndex,CellA);          
 
