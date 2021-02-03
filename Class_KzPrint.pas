@@ -51,6 +51,7 @@ type
     AutoNumb:Boolean; //automate number index
     RowIndex:Integer; //*new
     ColIndex:Integer; //*new
+    newWidth:Integer; //*new
   public
     function  GetStrIndex:string;
     class function  CopyIt(AKzCellText:TKzCellText):TKzCellText;overload;
@@ -253,19 +254,19 @@ type
     function  GetMemoAlign(AValue:string):TfrxAlign;
     function  GetFrameType(AValue:Integer):TfrxFrameTypes;
   protected
-    function PreparX:Boolean;
-    function PrepareMultiHead:Boolean;
+    function  PreparX:Boolean;
+    function  PrepareMultiHead:Boolean;
   public
     procedure PushVariable(AVarName,Value:string);overload;
     procedure PushVariable(AValueInFormat:string);overload;
   public
-    function DesignX:Boolean;
+    function  DesignX:Boolean;
 
-    function Execute:Boolean;
-    function ExportX:TfrxReport;            //loke same as execute method,just return tfrxreport
-    
-    function ExecuteMultiHead:Boolean;
-    function ExportxMultiHead:TfrxReport;   //loke same as execute method,just return tfrxreport
+    function  Execute:Boolean;
+    function  ExportX:TfrxReport;            //loke same as execute method,just return tfrxreport
+
+    function  ExecuteMultiHead:Boolean;
+    function  ExportxMultiHead:TfrxReport;   //loke same as execute method,just return tfrxreport
   public
     constructor Create;
     destructor  Destroy; override;
@@ -1414,29 +1415,10 @@ begin
   WordWrap := False;
 end;
 
-{ TKzCellText }
-
 class function TKzCellText.CopyIt(AKzCellText: TKzCellText): TKzCellText;
 begin
   Result:=TKzCellText.Create;
-
-  Result.Idex:=AKzCellText.Idex;
-  Result.Text:=AKzCellText.Text;
-  Result.Widt:=AKzCellText.Widt;
-  Result.High:=AKzCellText.High;
-  Result.Left:=AKzCellText.Left;
-  Result.Fill:=AKzCellText.Fill;
-  Result.Alig:=AKzCellText.Alig;
-  Result.Scal:=AKzCellText.Scal;
-  Result.GapX:=AKzCellText.GapX;
-  Result.GapY:=AKzCellText.GapY;
-  Result.PagX:=AKzCellText.PagX;
-  Result.TopX:=AKzCellText.TopX;
-  Result.TestFill:=AKzCellText.TestFill;
-  Result.TestHide:=AKzCellText.TestHide;
-  Result.AutoNumb:=AKzCellText.AutoNumb;
-  Result.RowIndex:=AKzCellText.RowIndex;
-  Result.ColIndex:=AKzCellText.ColIndex;
+  TKzCellText.CopyIt(AKzCellText, Result);
 end;
 
 class procedure TKzCellText.CopyIt(AKzCellText: TKzCellText;
@@ -1456,11 +1438,13 @@ begin
   Result.GapY:=AKzCellText.GapY;
   Result.PagX:=AKzCellText.PagX;
   Result.TopX:=AKzCellText.TopX;
-  Result.TestFill:=AKzCellText.TestFill;
-  Result.TestHide:=AKzCellText.TestHide;
-  Result.AutoNumb:=AKzCellText.AutoNumb;
-  Result.RowIndex:=AKzCellText.RowIndex;
-  Result.ColIndex:=AKzCellText.ColIndex;
+
+  Result.TestFill := AKzCellText.TestFill;
+  Result.TestHide := AKzCellText.TestHide;
+  Result.AutoNumb := AKzCellText.AutoNumb;
+  Result.RowIndex := AKzCellText.RowIndex;
+  Result.ColIndex := AKzCellText.ColIndex;
+  Result.newWidth := AKzCellText.newWidth;
 end;
 
 function TKzCellText.GetStrIndex: string;
