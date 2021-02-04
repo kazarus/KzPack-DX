@@ -118,6 +118,10 @@ object FormListLoad: TFormListLoad
     FixedDimension = 26
     object TabSheet1: TRzTabSheet
       Caption = 'TabSheet1'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Grid_Data: TAdvStringGrid
         Left = 0
         Top = 0

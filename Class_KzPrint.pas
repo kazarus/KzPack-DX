@@ -51,6 +51,7 @@ type
     AutoNumb:Boolean; //automate number index
     RowIndex:Integer; //*new
     ColIndex:Integer; //*new
+    newWidth:Integer; //*new
   public
     function  GetStrIndex:string;
     class function  CopyIt(AKzCellText:TKzCellText):TKzCellText;overload;
@@ -253,19 +254,19 @@ type
     function  GetMemoAlign(AValue:string):TfrxAlign;
     function  GetFrameType(AValue:Integer):TfrxFrameTypes;
   protected
-    function PreparX:Boolean;
-    function PrepareMultiHead:Boolean;
+    function  PreparX:Boolean;
+    function  PrepareMultiHead:Boolean;
   public
     procedure PushVariable(AVarName,Value:string);overload;
     procedure PushVariable(AValueInFormat:string);overload;
   public
-    function DesignX:Boolean;
+    function  DesignX:Boolean;
 
-    function Execute:Boolean;
-    function ExportX:TfrxReport;            //loke same as execute method,just return tfrxreport
-    
-    function ExecuteMultiHead:Boolean;
-    function ExportxMultiHead:TfrxReport;   //loke same as execute method,just return tfrxreport
+    function  Execute:Boolean;
+    function  ExportX:TfrxReport;            //loke same as execute method,just return tfrxreport
+
+    function  ExecuteMultiHead:Boolean;
+    function  ExportxMultiHead:TfrxReport;   //loke same as execute method,just return tfrxreport
   public
     constructor Create;
     destructor  Destroy; override;
@@ -878,6 +879,7 @@ begin
         CellA.Widt:=ColWidths[I-DecCount];
       end;
 
+      //#XC-DEV@2021-02-03-17-47-33-<
       if Assigned(OnKzPrintGridValidCols) then
       begin
         OnKzPrintGridValidCols(Self,SourceGrid,I,CellA);
@@ -887,7 +889,13 @@ begin
       begin
         FreeAndNil(CellA);
         Continue;
-      end;  
+      end;
+
+      if CellA.newWidth <> 0 then
+      begin
+        CellA.Widt := CellA.newWidth;
+      end;
+      //#XC-DEV@2021-02-03-17-47-33->
 
       TotlWidth :=TotlWidth + CellA.Widt;
       //CellA.Text+IntTostr(CellA.Widt)
@@ -963,6 +971,24 @@ begin
             CellA.TopX    :=GetTopCellRect(M,I);
             CellA.Left    :=GetLefCellRect(M,I);
 
+            //#XC-DEV@2021-02-03-17-47-33-<
+            if Assigned(OnKzPrintGridValidCols) then
+            begin
+              OnKzPrintGridValidCols(Self,SourceGrid,I,CellA);
+            end;
+
+            if CellA.Widt=0 then
+            begin
+              FreeAndNil(CellA);
+              Continue;
+            end;
+
+            if CellA.newWidth <> 0 then
+            begin
+              CellA.Widt := CellA.newWidth;
+            end;
+            //#XC-DEV@2021-02-03-17-47-33->
+
             FTreeCellWhenMultiHead.AddObject(CellA.RowIndex,CellA);
 
             Y:=Y+CellA.Widt;
@@ -996,6 +1022,24 @@ begin
             if CellProperties[M,I].CellSpanY<>0 then
             begin
               CellA.Widt    :=ColWidths[M];
+
+              //#XC-DEV@2021-02-03-17-47-33-<
+              if Assigned(OnKzPrintGridValidCols) then
+              begin
+                OnKzPrintGridValidCols(Self,SourceGrid,M,CellA);
+              end;
+
+              if CellA.Widt=0 then
+              begin
+                FreeAndNil(CellA);
+                Continue;
+              end;
+
+              if CellA.newWidth <> 0 then
+              begin
+                CellA.Widt := CellA.newWidth;
+              end;
+              //#XC-DEV@2021-02-03-17-47-33->
             end else
             begin
               CellA.Widt    :=0;
@@ -1029,7 +1073,25 @@ begin
           CellA.GapX    :=CellProperties[M,I].CellSpanX;          
           CellA.GapY    :=CellProperties[M,I].CellSpanY;
           CellA.TopX    :=GetTopCellRect(M,I);
-          CellA.Left    :=GetLefCellRect(M,I);            
+          CellA.Left    :=GetLefCellRect(M,I);
+
+          //#XC-DEV@2021-02-03-17-47-33-<
+          if Assigned(OnKzPrintGridValidCols) then
+          begin
+            OnKzPrintGridValidCols(Self,SourceGrid,M,CellA);
+          end;
+
+          if CellA.Widt=0 then
+          begin
+            FreeAndNil(CellA);
+            Continue;
+          end;
+
+          if CellA.newWidth <> 0 then
+          begin
+            CellA.Widt := CellA.newWidth;
+          end;
+          //#XC-DEV@2021-02-03-17-47-33->
 
           FTreeCellWhenMultiHead.AddObject(CellA.RowIndex,CellA);          
 
@@ -1414,29 +1476,10 @@ begin
   WordWrap := False;
 end;
 
-{ TKzCellText }
-
 class function TKzCellText.CopyIt(AKzCellText: TKzCellText): TKzCellText;
 begin
   Result:=TKzCellText.Create;
-
-  Result.Idex:=AKzCellText.Idex;
-  Result.Text:=AKzCellText.Text;
-  Result.Widt:=AKzCellText.Widt;
-  Result.High:=AKzCellText.High;
-  Result.Left:=AKzCellText.Left;
-  Result.Fill:=AKzCellText.Fill;
-  Result.Alig:=AKzCellText.Alig;
-  Result.Scal:=AKzCellText.Scal;
-  Result.GapX:=AKzCellText.GapX;
-  Result.GapY:=AKzCellText.GapY;
-  Result.PagX:=AKzCellText.PagX;
-  Result.TopX:=AKzCellText.TopX;
-  Result.TestFill:=AKzCellText.TestFill;
-  Result.TestHide:=AKzCellText.TestHide;
-  Result.AutoNumb:=AKzCellText.AutoNumb;
-  Result.RowIndex:=AKzCellText.RowIndex;
-  Result.ColIndex:=AKzCellText.ColIndex;
+  TKzCellText.CopyIt(AKzCellText, Result);
 end;
 
 class procedure TKzCellText.CopyIt(AKzCellText: TKzCellText;
@@ -1456,11 +1499,13 @@ begin
   Result.GapY:=AKzCellText.GapY;
   Result.PagX:=AKzCellText.PagX;
   Result.TopX:=AKzCellText.TopX;
-  Result.TestFill:=AKzCellText.TestFill;
-  Result.TestHide:=AKzCellText.TestHide;
-  Result.AutoNumb:=AKzCellText.AutoNumb;
-  Result.RowIndex:=AKzCellText.RowIndex;
-  Result.ColIndex:=AKzCellText.ColIndex;
+
+  Result.TestFill := AKzCellText.TestFill;
+  Result.TestHide := AKzCellText.TestHide;
+  Result.AutoNumb := AKzCellText.AutoNumb;
+  Result.RowIndex := AKzCellText.RowIndex;
+  Result.ColIndex := AKzCellText.ColIndex;
+  Result.newWidth := AKzCellText.newWidth;
 end;
 
 function TKzCellText.GetStrIndex: string;
