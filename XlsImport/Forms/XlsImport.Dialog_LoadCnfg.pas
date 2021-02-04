@@ -94,8 +94,8 @@ end;
 
 procedure TDialogLoadCnfg.ImptCnfg(var aLoadCnfg: TLoadCnfg);
 var
-  cKJQJ:TKJQJ;
-  cPage:TLoadPage;
+  cKJQJ: TKJQJ;
+  cPAGE: TLoadPage;
 begin
   if Comb_RealPage.ItemIndex = -1 then
   begin
@@ -105,12 +105,12 @@ begin
 
   with Comb_RealPage do
   begin
-    cPage := TLoadPage(Comb_RealPage.Items.Objects[Comb_RealPage.ItemIndex]);
-    if cPage = nil then Exit;
+    cPAGE := TLoadPage(Comb_RealPage.Items.Objects[Comb_RealPage.ItemIndex]);
+    if cPAGE = nil then Exit;
   end;
 
-  aLoadCnfg.PAGEINDX := cPage.PAGEINDX;
-  aLoadCnfg.PAGENAME := cPage.PAGENAME;
+  aLoadCnfg.PAGEINDX := cPAGE.PAGEINDX;
+  aLoadCnfg.PAGENAME := cPAGE.PAGENAME;
 
   aLoadCnfg.ROWTITLE := StrToIntDef(Edit_RowTitle.Text, 5);
   aLoadCnfg.ROWSTART := StrToIntDef(Edit_RowStart.Text, 5);
@@ -292,7 +292,9 @@ procedure TDialogLoadCnfg.SetInitialize;
 begin
   FListKJQJ := nil;
   FListPage := nil;
+
   inherited;
+
   InitCnfg;
 end;
 
