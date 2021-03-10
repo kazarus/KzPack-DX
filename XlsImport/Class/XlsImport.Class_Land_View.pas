@@ -56,8 +56,8 @@ var
   cIndx: Integer;
   cITEM: TElTreeItem;
   dItem: TElTreeItem;
-  cCELL: TLandCELL;
-  xCELL: TLandCELL;
+  cCELL: TLandCell;
+  xCELL: TLandCell;
 
   function GetSpanX(aItem:TEltreeItem):Integer;
   var

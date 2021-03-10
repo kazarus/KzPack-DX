@@ -356,9 +356,6 @@ begin
   if FListCutX<>nil then TKzUtils.TryFreeAndNil(FListCutX);
 
   if FTreeCellWhenMultiHead<>nil then FreeAndNil(FTreeCellWhenMultiHead);
-
-
-
   inherited;
 end;
 
