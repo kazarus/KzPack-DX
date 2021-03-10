@@ -971,7 +971,7 @@ begin
             //#XC-DEV@2021-02-03-17-47-33-<
             if Assigned(OnKzPrintGridValidCols) then
             begin
-              OnKzPrintGridValidCols(Self,SourceGrid,I,CellA);
+              OnKzPrintGridValidCols(Self,SourceGrid,M,CellA);
             end;
 
             if CellA.Widt=0 then
