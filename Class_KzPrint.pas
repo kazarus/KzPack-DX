@@ -129,6 +129,8 @@ type
   //procedure OnKzPrintGridValidRows(Sender: TObject; AActvGrid:TAdvStringGrid;ARow:Integer;var Valid:Boolean);
   TKzPrintGridValidCols=procedure (Sender: TObject; AActvGrid:TAdvStringGrid;ACol:Integer;var CellA:TKzCellText) of object;
   //procedure OnKzPrintGridValidCols(Sender: TObject; AActvGrid:TAdvStringGrid;ACol:Integer;var CellA:TKzCellText);
+  TKzPrintGridValidCol2=procedure (Sender: TObject; AActvGrid:TAdvStringGrid;aStartCol, aEndedCol:Integer;var CellA:TKzCellText) of object;
+  //procedure OnKzPrintGridValidCols(Sender: TObject; AActvGrid:TAdvStringGrid;aStartCol, aEndedCol:Integer;var CellA:TKzCellText);
 
     
   TKzPrint=class(TObject)
@@ -197,7 +199,7 @@ type
     FRowBodyStart      :Integer;//the start line of body.
     FRowBodyEnded      :Integer;//the ended line of body.
 
-    FTheRowMostDetailed:Integer;//*new:like his name.
+    FTheRowMostDetailEd:Integer;//*new:like his name.
     FRowHeadStart      :Integer;//*new:the start line of head
     FRowHeadEnded      :Integer;//*new:the end   line of head
 
@@ -221,6 +223,7 @@ type
   public
     OnKzPrintGridValidRows:TKzPrintGridValidRows;
     OnKzPrintGridValidCols:TKzPrintGridValidCols;
+    OnKzPrintGridValidCol2:TKzPrintGridValidCol2;
   protected
     procedure SetCellTextParams;
     procedure SetCellTextParamsWhenMultiHead;    //just for fill head 
@@ -983,6 +986,17 @@ begin
             //#合并单元格时,宽度只能取界面.
             if CellA.GapX = 0 then
             begin
+              if CellA.newWidth <> 0 then
+              begin
+                CellA.Widt := CellA.newWidth;
+              end;
+            end else
+            begin
+              if Assigned(OnKzPrintGridValidCol2) then
+              begin
+                OnKzPrintGridValidCol2(Self,SourceGrid,M, M + CellA.GapX,CellA);
+              end;
+
               if CellA.newWidth <> 0 then
               begin
                 CellA.Widt := CellA.newWidth;
