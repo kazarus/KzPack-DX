@@ -980,9 +980,13 @@ begin
               Continue;
             end;
 
-            if CellA.newWidth <> 0 then
+            //#合并单元格时,宽度只能取界面.
+            if CellA.GapX = 0 then
             begin
-              CellA.Widt := CellA.newWidth;
+              if CellA.newWidth <> 0 then
+              begin
+                CellA.Widt := CellA.newWidth;
+              end;
             end;
             //#XC-DEV@2021-02-03-17-47-33->
 
